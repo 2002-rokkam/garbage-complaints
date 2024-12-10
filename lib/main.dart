@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'AuthorityLoginScreen.dart';
 import 'ComplaintScreen.dart';
+import 'OfficeLoginScreen.dart';
 
 
 void main() async {
@@ -146,7 +147,7 @@ class HomeScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const AuthorityLoginScreen()),
+                            builder: (context) => const OfficeLoginScreen()),
                       );
                     },
                   ),
@@ -155,7 +156,6 @@ class HomeScreen extends StatelessWidget {
 
               const SizedBox(height: 20),
 
-              // Helpline and Feedback Section
               Card(
                 elevation: 4,
                 shape: RoundedRectangleBorder(

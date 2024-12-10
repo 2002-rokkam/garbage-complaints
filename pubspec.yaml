@@ -47,6 +47,10 @@ dependencies:
   firebase_core: ^2.24.2
   localstorage: ^4.0.1+4
   cloud_firestore: ^4.11.0
+  firebase_storage: ^11.6.0
+  qr_code_scanner: ^1.0.1
+  table_calendar: ^3.1.2
+  geocoding: ^3.0.0
 
 dev_dependencies:
   flutter_test:

@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart'; // For kIsWeb
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class ComplaintScreen extends StatefulWidget {
   const ComplaintScreen({Key? key}) : super(key: key);
@@ -71,6 +72,41 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
       );
     }
   }
+
+  // Future<void> _pickImage() async {
+  //   try {
+  //     final pickedFile =
+  //         await _picker.pickImage(source: ImageSource.camera, imageQuality: 80);
+  //     if (pickedFile != null) {
+  //       final position = await _determinePosition();
+  //       final imageBytes = await pickedFile.readAsBytes();
+  //       final fileName = DateTime.now().millisecondsSinceEpoch.toString();
+  //       final storageRef = FirebaseStorage.instance
+  //           .ref()
+  //           .child('complaint_images/$fileName.jpg');
+
+  //       // Upload image to Firebase Storage
+  //       final uploadTask = storageRef.putData(imageBytes);
+  //       final snapshot = await uploadTask.whenComplete(() => null);
+  //       final imageUrl = await snapshot.ref.getDownloadURL();
+
+  //       setState(() {
+  //         imageData.add({
+  //           'image': imageBytes,
+  //           'caption': '',
+  //           'latitude': position.latitude,
+  //           'longitude': position.longitude,
+  //           'url': imageUrl, // Save the download URL
+  //         });
+  //       });
+  //     }
+  //   } catch (e) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text("Error: ${e.toString()}")),
+  //     );
+  //   }
+  // }
+
 
   @override
   Widget build(BuildContext context) {
@@ -267,6 +303,57 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                       );
                     }
                   },
+                  // onPressed: () async {
+                  //   if (selectedDistrict != null &&
+                  //       selectedGP != null &&
+                  //       imageData.isNotEmpty) {
+                  //     try {
+                  //       List<Map<String, dynamic>> photoData =
+                  //           imageData.map((data) {
+                  //         return {
+                  //           'caption': data['caption'],
+                  //           'latitude': data['latitude'],
+                  //           'longitude': data['longitude'],
+                  //           'url': data['url'], // Include the image URL
+                  //         };
+                  //       }).toList();
+
+                  //       Map<String, dynamic> complaintData = {
+                  //         'district': selectedDistrict,
+                  //         'gram_panchayat': selectedGP,
+                  //         'photos': photoData,
+                  //         'timestamp': FieldValue.serverTimestamp(),
+                  //       };
+
+                  //       // Add data to Firestore
+                  //       await FirebaseFirestore.instance
+                  //           .collection('complaints')
+                  //           .add(complaintData);
+
+                  //       ScaffoldMessenger.of(context).showSnackBar(
+                  //         const SnackBar(
+                  //             content:
+                  //                 Text("Complaint Submitted Successfully!")),
+                  //       );
+
+                  //       // Clear the form
+                  //       setState(() {
+                  //         selectedDistrict = null;
+                  //         selectedGP = null;
+                  //         imageData.clear();
+                  //       });
+                  //     } catch (e) {
+                  //       ScaffoldMessenger.of(context).showSnackBar(
+                  //         SnackBar(content: Text("Error: ${e.toString()}")),
+                  //       );
+                  //     }
+                  //   } else {
+                  //     ScaffoldMessenger.of(context).showSnackBar(
+                  //       const SnackBar(
+                  //           content: Text("Please fill all details.")),
+                  //     );
+                  //   }
+                  // },
 
                   child: const Text(
                     "Submit Complaint / Feedback",
