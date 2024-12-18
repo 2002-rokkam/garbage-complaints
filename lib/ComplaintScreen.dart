@@ -1,28 +1,105 @@
+// ComplaintScreen.dart
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart'; // For kIsWeb
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class ComplaintScreen extends StatefulWidget {
-  const ComplaintScreen({Key? key}) : super(key: key);
+  final String phoneNumber;
+
+  const ComplaintScreen({Key? key, required this.phoneNumber})
+      : super(key: key);
 
   @override
   _ComplaintScreenState createState() => _ComplaintScreenState();
 }
 
 class _ComplaintScreenState extends State<ComplaintScreen> {
+  late String _phoneNumber;
+
+  @override
+  void initState() {
+    super.initState();
+    _phoneNumber = widget.phoneNumber;
+  }
+
   String? selectedDistrict;
   String? selectedGP;
   final ImagePicker _picker = ImagePicker();
   final List<Map<String, dynamic>> imageData = [];
-  final List<String> previousComplaints = [
-    'Complaint 1: Unresolved',
-    'Complaint 2: Resolved'
-  ];
+
+  Future<void> submitComplaint() async {
+    if (selectedDistrict != null &&
+        selectedGP != null &&
+        imageData.isNotEmpty) {
+      try {
+        var uri = Uri.parse(
+            'https://1745-122-172-84-220.ngrok-free.app/api/complaints-register');
+
+        var request = http.MultipartRequest('POST', uri)
+          ..fields['mobile_number'] = _phoneNumber
+          ..fields['district'] = selectedDistrict!
+          ..fields['gram_panchayat'] = selectedGP!
+          ..fields['caption'] = caption;
+
+        // Add photos and geo-coordinates
+        for (int i = 0; i < imageData.length; i++) {
+          var image = imageData[i]['image'] as Uint8List;
+          var latitude = imageData[i]['latitude'].toString();
+          var longitude = imageData[i]['longitude'].toString();
+
+          // Add photo as multipart file
+          request.files.add(http.MultipartFile.fromBytes(
+            'photos',
+            image,
+            filename: 'photo${i + 1}.jpg',
+          ));
+
+          // Add latitude and longitude for each photo
+          request.fields['latitude_photo${i + 1}.jpg'] = latitude;
+          request.fields['longitude_photo${i + 1}.jpg'] = longitude;
+        }
+
+        var response = await request.send();
+
+        if (response.statusCode == 201) {
+          final responseData = await response.stream.bytesToString();
+          final jsonResponse = jsonDecode(responseData);
+
+          if (jsonResponse['message'] == 'Complaint registered successfully!') {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                  content: Text("Complaint Submitted Successfully!")),
+            );
+
+            // Clear the form after submission
+            setState(() {
+              selectedDistrict = null;
+              selectedGP = null;
+              imageData.clear();
+              caption = '';
+            });
+          }
+        } else {
+          throw 'Failed to submit complaint. Try again later.';
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error: ${e.toString()}")),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please fill all details.")),
+      );
+    }
+  }
+
+  String caption = '';
 
   Future<Position> _determinePosition() async {
     if (kIsWeb) {
@@ -49,6 +126,8 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
     }
   }
 
+  bool hasCapturedImage = false; // Track if an image has been captured
+
   Future<void> _pickImage() async {
     try {
       final pickedFile =
@@ -60,10 +139,11 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
         setState(() {
           imageData.add({
             'image': imageBytes,
-            'caption': '',
+            'caption': caption, // Assign the common caption
             'latitude': position.latitude,
             'longitude': position.longitude,
           });
+          hasCapturedImage = true;
         });
       }
     } catch (e) {
@@ -73,132 +153,346 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
     }
   }
 
-  // Future<void> _pickImage() async {
-  //   try {
-  //     final pickedFile =
-  //         await _picker.pickImage(source: ImageSource.camera, imageQuality: 80);
-  //     if (pickedFile != null) {
-  //       final position = await _determinePosition();
-  //       final imageBytes = await pickedFile.readAsBytes();
-  //       final fileName = DateTime.now().millisecondsSinceEpoch.toString();
-  //       final storageRef = FirebaseStorage.instance
-  //           .ref()
-  //           .child('complaint_images/$fileName.jpg');
+  void _showBottomSheet(
+      String title, List<String> options, Function(String) onSelect) {
+    TextEditingController searchController = TextEditingController();
+    List<String> filteredOptions = List.from(options);
 
-  //       // Upload image to Firebase Storage
-  //       final uploadTask = storageRef.putData(imageBytes);
-  //       final snapshot = await uploadTask.whenComplete(() => null);
-  //       final imageUrl = await snapshot.ref.getDownloadURL();
-
-  //       setState(() {
-  //         imageData.add({
-  //           'image': imageBytes,
-  //           'caption': '',
-  //           'latitude': position.latitude,
-  //           'longitude': position.longitude,
-  //           'url': imageUrl, // Save the download URL
-  //         });
-  //       });
-  //     }
-  //   } catch (e) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text("Error: ${e.toString()}")),
-  //     );
-  //   }
-  // }
-
-
-  @override
-  Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("File Complaint / Feedback"),
-        backgroundColor: Colors.deepPurple,
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(screenWidth * 0.05),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // District Dropdown
-              Card(
-                margin: const EdgeInsets.symmetric(vertical: 8),
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
-                child: Padding(
-                  padding: const EdgeInsets.all(1.0),
-                  child: DropdownButtonFormField<String>(
-                    value: selectedDistrict,
-                    decoration: const InputDecoration(
-                      labelText: "Select District",
-                      border: InputBorder.none,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return DraggableScrollableSheet(
+              initialChildSize: 0.7, // Starts at 50% of the screen height
+              minChildSize: 0.7, // Minimum size is 50% of the screen height
+              maxChildSize: 0.7, // Maximum size is 90% of the screen height
+              expand: false,
+              builder: (_, controller) => Column(
+                children: [
+                  // Sheet Header
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12.0),
+                    child: Text(
+                      title,
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-                    onChanged: (district) {
-                      setState(() {
-                        selectedDistrict = district;
-                        selectedGP = null;
-                      });
-                    },
-                    items: districts.map((district) {
-                      return DropdownMenuItem(
-                          value: district, child: Text(district));
-                    }).toList(),
                   ),
-                ),
-              ),
+                  Divider(),
 
-              // Gram Panchayat Dropdown
-              if (selectedDistrict != null)
-                Card(
-                  margin: const EdgeInsets.symmetric(vertical: 8),
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(1.0),
-                    child: DropdownButtonFormField<String>(
-                      value: selectedGP,
-                      decoration: const InputDecoration(
-                        labelText: "Select Gram Panchayat",
-                        border: InputBorder.none,
+                  // Search Bar
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: TextField(
+                      controller: searchController,
+                      decoration: InputDecoration(
+                        hintText: "Search $title",
+                        prefixIcon: Icon(Icons.search),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
-                      onChanged: (gp) => setState(() => selectedGP = gp),
-                      items: districtToGPs[selectedDistrict]!
-                          .map((gp) =>
-                              DropdownMenuItem(value: gp, child: Text(gp)))
-                          .toList(),
+                      onChanged: (query) {
+                        setModalState(() {
+                          filteredOptions = options
+                              .where((option) => option
+                                  .toLowerCase()
+                                  .contains(query.toLowerCase()))
+                              .toList();
+                        });
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 8),
+
+                  // List of Options
+                  Expanded(
+                    child: ListView.builder(
+                      controller:
+                          controller, // Attach to DraggableScrollableSheet
+                      itemCount: filteredOptions.length,
+                      itemBuilder: (_, index) {
+                        return ListTile(
+                          title: Text(filteredOptions[index]),
+                          onTap: () {
+                            onSelect(filteredOptions[index]);
+                            Navigator.pop(
+                                context); // Close the sheet after selection
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+@override
+Widget build(BuildContext context) {
+  final screenWidth = MediaQuery.of(context).size.width;
+  final screenHeight = MediaQuery.of(context).size.height;
+
+  return Scaffold(
+    appBar: PreferredSize(
+      preferredSize: Size.fromHeight(screenHeight * 0.18), // Adjust height relative to screen height
+      child: Container(
+        width: double.infinity,
+        height: screenHeight * 0.18,
+        decoration: const ShapeDecoration(
+          color: Color(0xFF5C964A),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(24),
+              bottomRight: Radius.circular(24),
+            ),
+          ),
+        ),
+        child: Center(
+          child: const Text(
+            "File Complaint / Feedback",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+    ),
+    body: SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.all(screenWidth * 0.05), // Padding adjusted based on screen width
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 16),
+            Text(
+              'File Your Complaint',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: screenWidth * 0.05, // Adjust font size based on screen width
+                fontFamily: 'Roboto',
+                fontWeight: FontWeight.w500,
+                height: 0.05,
+                letterSpacing: 0.20,
+              ),
+            ),
+            const SizedBox(height: 36),
+            // Select District UI
+            GestureDetector(
+              onTap: () => _showBottomSheet(
+                "Select District",
+                districts,
+                (district) => setState(() {
+                  selectedDistrict = district;
+                  selectedGP = null; // Reset GP when district changes
+                }),
+              ),
+              child: Container(
+                width: screenWidth * 0.92, // Make the container width relative to screen size
+                height: 52,
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        selectedDistrict ?? 'Select District',
+                        style: TextStyle(
+                          color: selectedDistrict == null
+                              ? Color(0xFFA4A4A4)
+                              : Colors.black,
+                          fontSize: screenWidth * 0.04, // Adjust font size based on screen width
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w400,
+                          height: 1.2,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ),
+                    const Icon(Icons.arrow_drop_down,
+                        color: Color(0xFFA4A4A4)),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            // Select Gram Panchayat UI
+            GestureDetector(
+              onTap: () => _showBottomSheet(
+                "Select Gram Panchayat",
+                districtToGPs[selectedDistrict]!,
+                (gp) => setState(() => selectedGP = gp),
+              ),
+              child: Container(
+                width: screenWidth * 0.92, // Make the container width relative to screen size
+                height: 52,
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        selectedGP ?? 'Select Gram Panchayat',
+                        style: TextStyle(
+                          color: selectedGP == null
+                              ? Color(0xFFA4A4A4)
+                              : Colors.black,
+                          fontSize: screenWidth * 0.04, // Adjust font size based on screen width
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w400,
+                          height: 1.2,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ),
+                    const Icon(Icons.arrow_drop_down,
+                        color: Color(0xFFA4A4A4)),
+                  ],
+                ),
+              ),
+            ),
+            // Caption Input Field
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20.0),
+              child: Container(
+                width: double.infinity,
+                height: 56,
+                padding: const EdgeInsets.only(top: 4, bottom: 4),
+                decoration: ShapeDecoration(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(4),
+                      topRight: Radius.circular(4),
+                    ),
+                  ),
+                  color: Colors.white, // Optional background for better contrast
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        onChanged: (text) {
+                          setState(() {
+                            caption = text; // Store the caption
+                          });
+                        },
+                        style: TextStyle(
+                          fontSize: screenWidth * 0.04, // Adjust font size based on screen width
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black, // Adjust for user input
+                        ),
+                        decoration: InputDecoration(
+                          // Add border here
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(
+                                8.0), // You can adjust the radius here
+                            borderSide: BorderSide(
+                                color: Colors.grey,
+                                width: 1.0), // Border color and width
+                          ),
+                          hintText: 'Add a description',
+                          hintStyle: TextStyle(
+                            color: Color(0xFFA4A4A4),
+                            fontSize: screenWidth * 0.04, // Adjust font size
+                            fontFamily: 'Roboto',
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 10),
+            const Divider(
+              color: Colors.grey, // Line color
+              thickness: 1, // Line thickness
+              indent: 10, // Left indent to give spacing
+              endIndent: 10, // Right indent to give spacing
+            ),
+            const SizedBox(height: 20),
+            // Image Capture UI
+            if (!hasCapturedImage) ...[
+              // Display "Click and Capture" in the center initially
+              Center(
+                child: GestureDetector(
+                  onTap: _pickImage,
+                  child: Container(
+                    width: screenWidth * 0.4, // Adjust container width relative to screen
+                    height: screenHeight * 0.23, // Adjust height relative to screen
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start, // Start the alignment for single line text
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 50),
+                        Container(
+                          width: 59.78,
+                          height: 59.78,
+                          decoration: const BoxDecoration(),
+                          child: const Icon(
+                            Icons.camera, // Using camera icon
+                            size: 50, // Adjust the size of the icon if needed
+                          ),
+                        ),
+                        const SizedBox(height: 18),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 30),
+                          child: const Text(
+                            'Click and Capture',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontFamily: 'Roboto',
+                              fontWeight: FontWeight.w400,
+                              height: 1.25, // Adjust line height
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-
-              // Take Photo Button
-              Center(
-                child: ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepPurple,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
-                  ),
-                  onPressed: _pickImage,
-                  icon: const Icon(Icons.camera_alt),
-                  label: const Text("Take Geo-Tagged Photo"),
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // Image Previews
-              if (imageData.isNotEmpty)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+              )
+            ] else ...[
+              // After capturing an image
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (imageData.isNotEmpty) ...[
                     const Text(
                       "Preview Photos:",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                     const SizedBox(height: 8),
                     SingleChildScrollView(
@@ -207,197 +501,94 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                         children: imageData.map((data) {
                           return Padding(
                             padding: const EdgeInsets.only(right: 16),
-                            child: Column(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: Image.memory(
-                                    Uint8List.fromList(data['image']),
-                                    height: 200,
-                                    width: 150,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                SizedBox(
-                                  width: 150,
-                                  child: TextField(
-                                    decoration: const InputDecoration(
-                                      labelText: "Add a caption",
-                                      border: OutlineInputBorder(),
-                                    ),
-                                    onChanged: (caption) {
-                                      setState(() => data['caption'] = caption);
-                                    },
-                                  ),
-                                ),
-                              ],
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Image.memory(
+                                Uint8List.fromList(data['image']),
+                                height: screenHeight * 0.2, // Set image height relative to screen
+                                width: screenWidth * 0.35, // Set image width relative to screen
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           );
-                        }).toList(),
+                        }).toList()
+                          ..add(
+                            Padding(
+                              padding: const EdgeInsets.only(right: 16),
+                              child: GestureDetector(
+                                onTap: _pickImage,
+                                child: Container(
+                                  width: screenWidth * 0.3,
+                                  height: screenWidth * 0.3,
+                                  decoration: ShapeDecoration(
+                                    color: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      side: BorderSide(width: 1, color: Color(0xFF5C964A)),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Container(
+                                          width: 59.78,
+                                          height: 59.78,
+                                          decoration: const BoxDecoration(),
+                                          child: const FlutterLogo(),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        const Text(
+                                          'Click and Capture',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 12,
+                                            fontFamily: 'Roboto',
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                       ),
                     ),
                   ],
-                ),
-
-              // Submit Button
-              const SizedBox(height: 16),
-              Center(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepPurple,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 14, horizontal: 24),
-                  ),
-                  onPressed: () async {
-                    if (selectedDistrict != null &&
-                        selectedGP != null &&
-                        imageData.isNotEmpty) {
-                      try {
-                        // Prepare data to store
-                        List<Map<String, dynamic>> photoData =
-                            imageData.map((data) {
-                          return {
-                            'caption': data['caption'],
-                            'latitude': data['latitude'],
-                            'longitude': data['longitude'],
-                          };
-                        }).toList();
-
-                        Map<String, dynamic> complaintData = {
-                          'district': selectedDistrict,
-                          'gram_panchayat': selectedGP,
-                          'photos': photoData,
-                          'timestamp': FieldValue.serverTimestamp(),
-                        };
-
-                        // Add data to Firestore
-                        await FirebaseFirestore.instance
-                            .collection('complaints')
-                            .add(complaintData);
-
-                        // Show success message
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content:
-                                  Text("Complaint Submitted Successfully!")),
-                        );
-
-                        // Clear the form
-                        setState(() {
-                          selectedDistrict = null;
-                          selectedGP = null;
-                          imageData.clear();
-                        });
-                      } catch (e) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Error: ${e.toString()}")),
-                        );
-                      }
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text("Please fill all details.")),
-                      );
-                    }
-                  },
-                  // onPressed: () async {
-                  //   if (selectedDistrict != null &&
-                  //       selectedGP != null &&
-                  //       imageData.isNotEmpty) {
-                  //     try {
-                  //       List<Map<String, dynamic>> photoData =
-                  //           imageData.map((data) {
-                  //         return {
-                  //           'caption': data['caption'],
-                  //           'latitude': data['latitude'],
-                  //           'longitude': data['longitude'],
-                  //           'url': data['url'], // Include the image URL
-                  //         };
-                  //       }).toList();
-
-                  //       Map<String, dynamic> complaintData = {
-                  //         'district': selectedDistrict,
-                  //         'gram_panchayat': selectedGP,
-                  //         'photos': photoData,
-                  //         'timestamp': FieldValue.serverTimestamp(),
-                  //       };
-
-                  //       // Add data to Firestore
-                  //       await FirebaseFirestore.instance
-                  //           .collection('complaints')
-                  //           .add(complaintData);
-
-                  //       ScaffoldMessenger.of(context).showSnackBar(
-                  //         const SnackBar(
-                  //             content:
-                  //                 Text("Complaint Submitted Successfully!")),
-                  //       );
-
-                  //       // Clear the form
-                  //       setState(() {
-                  //         selectedDistrict = null;
-                  //         selectedGP = null;
-                  //         imageData.clear();
-                  //       });
-                  //     } catch (e) {
-                  //       ScaffoldMessenger.of(context).showSnackBar(
-                  //         SnackBar(content: Text("Error: ${e.toString()}")),
-                  //       );
-                  //     }
-                  //   } else {
-                  //     ScaffoldMessenger.of(context).showSnackBar(
-                  //       const SnackBar(
-                  //           content: Text("Please fill all details.")),
-                  //     );
-                  //   }
-                  // },
-
-                  child: const Text(
-                    "Submit Complaint / Feedback",
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ),
+                ],
               ),
-
-              const SizedBox(height: 16),
-
-              // Previous Complaints
-              const Text(
-                "Previous Complaints:",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-              Divider(color: Colors.deepPurple.shade200, thickness: 1),
-              ...previousComplaints.map((complaint) => Card(
-                    margin: const EdgeInsets.symmetric(vertical: 4),
-                    elevation: 2,
-                    child: ListTile(
-                      title: Text(complaint),
-                      trailing: Icon(Icons.arrow_forward_ios,
-                          color: Colors.deepPurple.shade300),
-                      onTap: () => showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: const Text("Complaint Details"),
-                          content: Text("Details for: $complaint"),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text("Close"),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  )),
             ],
+
+            const SizedBox(height: 16),
+          ],
+        ),
+      ),
+    ),
+    bottomSheet: Padding(
+      padding: EdgeInsets.all(screenWidth * 0.05), // Padding relative to screen width
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Color.fromRGBO(92, 150, 74, 1),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
+        ),
+        onPressed: submitComplaint,
+        child: const Text(
+          "Submit Complaint",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 14,
+            fontFamily: 'Roboto',
+            fontWeight: FontWeight.w500,
+            letterSpacing: 0.10,
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }
 
 final List<String> districts = [

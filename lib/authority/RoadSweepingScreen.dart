@@ -1,7 +1,9 @@
+// authority/RoadSweepingScreen.dart
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
+import 'dart:io';
 
 class RoadSweepingScreen extends StatefulWidget {
   const RoadSweepingScreen({super.key});
@@ -78,7 +80,7 @@ class _RoadSweepingScreenState extends State<RoadSweepingScreen> {
   }
 
   // Function to show image preview
-  void _showImagePreview(BuildContext context, String imagePath) {
+ void _showImagePreview(BuildContext context, String imagePath) {
     showDialog(
       context: context,
       builder: (context) {
@@ -87,7 +89,7 @@ class _RoadSweepingScreenState extends State<RoadSweepingScreen> {
           child: Stack(
             children: [
               Center(
-                child: Image.asset(imagePath, fit: BoxFit.contain),
+                child: Image.file(File(imagePath), fit: BoxFit.contain),
               ),
               Positioned(
                 top: 8,
@@ -194,8 +196,15 @@ class _RoadSweepingScreenState extends State<RoadSweepingScreen> {
                           subtitle: Text(
                             "Lat: ${beforeImage['latitude']}, Long: ${beforeImage['longitude']}",
                           ),
-                          leading: Image.asset(beforeImage['imagePath'],
-                              width: 50, height: 50),
+                          leading: Image.file(
+                            File(beforeImage[
+                                'imagePath']), // Use File to load the image
+                            width: 50,
+                            height: 50,
+                            fit: BoxFit
+                                .cover, // Ensure the image fits within the given dimensions
+                          ),
+
                           trailing: IconButton(
                             icon: const Icon(Icons.delete),
                             onPressed: () {
