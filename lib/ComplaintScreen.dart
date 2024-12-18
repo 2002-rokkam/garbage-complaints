@@ -129,6 +129,13 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
   bool hasCapturedImage = false; // Track if an image has been captured
 
   Future<void> _pickImage() async {
+    if (imageData.length >= 3) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("You can only capture up to 3 images.")),
+      );
+      return; // Exit early if 3 images are already captured
+    }
+
     try {
       final pickedFile =
           await _picker.pickImage(source: ImageSource.camera, imageQuality: 80);
@@ -151,6 +158,65 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
         SnackBar(content: Text("Error: ${e.toString()}")),
       );
     }
+  }
+
+// 2. Delete Image with Confirmation Dialog
+  Future<void> _deleteImage(int index) async {
+    bool? confirmDelete = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Deletion'),
+          content: const Text('Are you sure you want to delete this image?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmDelete == true) {
+      setState(() {
+        imageData.removeAt(index); // Remove the image from the list
+      });
+    }
+  }
+  void _showDeleteConfirmation(Map<String, dynamic> imageDataToDelete) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Confirm Deletion"),
+          content: const Text("Are you sure you want to delete this image?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                // Remove the image if user confirms
+                setState(() {
+                  imageData.remove(imageDataToDelete);
+                });
+                Navigator.pop(context); // Close the dialog
+              },
+              child: const Text("Yes"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(
+                    context); // Just close the dialog without deleting
+              },
+              child: const Text("No"),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _showBottomSheet(
@@ -456,12 +522,13 @@ Widget build(BuildContext context) {
                       children: [
                         const SizedBox(height: 50),
                         Container(
-                          width: 59.78,
-                          height: 59.78,
+                          width: 79.78,
+                          height: 79.78,
                           decoration: const BoxDecoration(),
                           child: const Icon(
-                            Icons.camera, // Using camera icon
-                            size: 50, // Adjust the size of the icon if needed
+                            Icons.camera_alt_rounded,
+                            size: 80, 
+                            color: Colors.green, // Adjust the size of the icon if needed
                           ),
                         ),
                         const SizedBox(height: 18),
@@ -485,92 +552,117 @@ Widget build(BuildContext context) {
                 ),
               )
             ] else ...[
-              // After capturing an image
               Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (imageData.isNotEmpty) ...[
-                    const Text(
-                      "Preview Photos:",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                    ),
-                    const SizedBox(height: 8),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: imageData.map((data) {
-                          return Padding(
-                            padding: const EdgeInsets.only(right: 16),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child: Image.memory(
-                                Uint8List.fromList(data['image']),
-                                height: screenHeight * 0.2, // Set image height relative to screen
-                                width: screenWidth * 0.35, // Set image width relative to screen
-                                fit: BoxFit.cover,
+               crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (imageData.isNotEmpty) ...[
+                  const Text(
+                    "Preview Photos:",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  const SizedBox(height: 8),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: imageData.asMap().entries.map((entry) {
+                        int index = entry.key;
+                        var data = entry.value;
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 16),
+                          child: Stack(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Image.memory(
+                                  Uint8List.fromList(data['image']),
+                                  height: screenHeight * 0.2,
+                                  width: screenWidth * 0.35,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
-                            ),
-                          );
-                        }).toList()
-                          ..add(
-                            Padding(
-                              padding: const EdgeInsets.only(right: 16),
-                              child: GestureDetector(
-                                onTap: _pickImage,
-                                child: Container(
-                                  width: screenWidth * 0.3,
-                                  height: screenWidth * 0.3,
-                                  decoration: ShapeDecoration(
-                                    color: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      side: BorderSide(width: 1, color: Color(0xFF5C964A)),
+                              Positioned(
+                                top: 8,
+                                right: 8,
+                                child: GestureDetector(
+                                  onTap: () => _deleteImage(index), // Trigger image delete
+                                  child: Container(
+                                    padding: const EdgeInsets.all(4),
+                                    decoration: BoxDecoration(
+                                      color: Colors.red,
                                       borderRadius: BorderRadius.circular(12),
                                     ),
-                                  ),
-                                  child: Center(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Container(
-                                          width: 59.78,
-                                          height: 59.78,
-                                          decoration: const BoxDecoration(),
-                                          child: const FlutterLogo(),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        const Text(
-                                          'Click and Capture',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 12,
-                                            fontFamily: 'Roboto',
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                      ],
+                                    child: const Icon(
+                                      Icons.delete,
+                                      color: Colors.white,
+                                      size: 18,
                                     ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList()
+                        ..add(
+                          Padding(
+                            padding: const EdgeInsets.only(right: 16),
+                            child: GestureDetector(
+                              onTap: _pickImage, // Trigger image capture
+                              child: Container(
+                                width: screenWidth * 0.3,
+                                height: screenWidth * 0.45,
+                                decoration: ShapeDecoration(
+                                  color: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    side: const BorderSide(width: 1, color: Color(0xFF5C964A)),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                        width: 59.78,
+                                        height: 59.78,
+                                        decoration: const BoxDecoration(),
+                                       child: const Icon(
+                                            Icons.camera_alt_rounded,
+                                            size: 60,
+                                            color: Colors.green, 
+                                          ), 
+                                      ),
+                                      const SizedBox(height: 8),
+                                      const Text(
+                                        'Click and Capture',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 12,
+                                          fontFamily: 'Roboto',
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                      ),
+                        ),
                     ),
-                  ],
+                  ),
                 ],
-              ),
-            ],
-
-            const SizedBox(height: 16),
+              ],
+            ),
           ],
-        ),
+       ] ),
       ),
     ),
     bottomSheet: Padding(
-      padding: EdgeInsets.all(screenWidth * 0.05), // Padding relative to screen width
+      padding: EdgeInsets.all(screenWidth * 0.05),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Color.fromRGBO(92, 150, 74, 1),
+          backgroundColor: const Color.fromRGBO(92, 150, 74, 1),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
         ),
