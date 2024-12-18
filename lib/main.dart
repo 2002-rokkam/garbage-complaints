@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'AuthorityLoginScreen.dart';
+import 'ComplaintRegisterScreen.dart';
 import 'ComplaintScreen.dart';
 import 'OfficeLoginScreen.dart';
 import 'PhoneAuthScreen.dart';
@@ -148,7 +149,7 @@ class HomeScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const OfficeLoginScreen()),
+                            builder: (context) => ComplaintRegisterScreen()),
                       );
                     },
                   ),

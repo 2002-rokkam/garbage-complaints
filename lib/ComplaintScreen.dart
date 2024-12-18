@@ -8,6 +8,8 @@ import 'package:flutter/foundation.dart'; // For kIsWeb
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import 'ComplaintRegisterScreen.dart';
+
 class ComplaintScreen extends StatefulWidget {
   final String phoneNumber;
 
@@ -69,21 +71,12 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
         if (response.statusCode == 201) {
           final responseData = await response.stream.bytesToString();
           final jsonResponse = jsonDecode(responseData);
-
-          if (jsonResponse['message'] == 'Complaint registered successfully!') {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                  content: Text("Complaint Submitted Successfully!")),
-            );
-
-            // Clear the form after submission
-            setState(() {
-              selectedDistrict = null;
-              selectedGP = null;
-              imageData.clear();
-              caption = '';
-            });
-          }
+           Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    ComplaintRegisterScreen()), // Replace with your SuccessScreen widget
+          );
         } else {
           throw 'Failed to submit complaint. Try again later.';
         }
@@ -188,36 +181,6 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
       });
     }
   }
-  void _showDeleteConfirmation(Map<String, dynamic> imageDataToDelete) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Confirm Deletion"),
-          content: const Text("Are you sure you want to delete this image?"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                // Remove the image if user confirms
-                setState(() {
-                  imageData.remove(imageDataToDelete);
-                });
-                Navigator.pop(context); // Close the dialog
-              },
-              child: const Text("Yes"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(
-                    context); // Just close the dialog without deleting
-              },
-              child: const Text("No"),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   void _showBottomSheet(
       String title, List<String> options, Function(String) onSelect) {
@@ -250,8 +213,6 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                     ),
                   ),
                   Divider(),
-
-                  // Search Bar
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: TextField(
@@ -275,12 +236,10 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                     ),
                   ),
                   SizedBox(height: 8),
-
-                  // List of Options
                   Expanded(
                     child: ListView.builder(
                       controller:
-                          controller, // Attach to DraggableScrollableSheet
+                          controller, 
                       itemCount: filteredOptions.length,
                       itemBuilder: (_, index) {
                         return ListTile(
@@ -288,7 +247,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                           onTap: () {
                             onSelect(filteredOptions[index]);
                             Navigator.pop(
-                                context); // Close the sheet after selection
+                                context); 
                           },
                         );
                       },
@@ -302,50 +261,74 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
       },
     );
   }
-@override
-Widget build(BuildContext context) {
-  final screenWidth = MediaQuery.of(context).size.width;
-  final screenHeight = MediaQuery.of(context).size.height;
 
-  return Scaffold(
-    appBar: PreferredSize(
-      preferredSize: Size.fromHeight(screenHeight * 0.18), // Adjust height relative to screen height
-      child: Container(
-        width: double.infinity,
-        height: screenHeight * 0.18,
-        decoration: const ShapeDecoration(
-          color: Color(0xFF5C964A),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(24),
-              bottomRight: Radius.circular(24),
+  @override
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    return Scaffold(
+     appBar: PreferredSize(
+        preferredSize: Size.fromHeight(
+          screenHeight * 0.18, 
+        ),
+        child: Container(
+          width: double.infinity,
+          height: screenHeight * 0.18,
+          decoration: const ShapeDecoration(
+            color: Color(0xFF5C964A),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(24),
+                bottomRight: Radius.circular(24),
+              ),
             ),
           ),
-        ),
-        child: Center(
-          child: const Text(
-            "File Complaint / Feedback",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
+          child: Padding(
+            padding: const EdgeInsets.only(
+                left: 16.0), 
+            child: Row(
+              children: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                const Expanded(
+                  child: Center(
+                    child: Text(
+                      "File Complaint / Feedback",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
       ),
-    ),
-    body: SingleChildScrollView(
-      child: Padding(
-        padding: EdgeInsets.all(screenWidth * 0.05), // Padding adjusted based on screen width
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(
+              screenWidth * 0.05), // Padding adjusted based on screen width
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             const SizedBox(height: 16),
             Text(
               'File Your Complaint',
               style: TextStyle(
                 color: Colors.black,
-                fontSize: screenWidth * 0.05, // Adjust font size based on screen width
+                fontSize: screenWidth *
+                    0.05, // Adjust font size based on screen width
                 fontFamily: 'Roboto',
                 fontWeight: FontWeight.w500,
                 height: 0.05,
@@ -364,7 +347,8 @@ Widget build(BuildContext context) {
                 }),
               ),
               child: Container(
-                width: screenWidth * 0.92, // Make the container width relative to screen size
+                width: screenWidth *
+                    0.92, // Make the container width relative to screen size
                 height: 52,
                 padding: const EdgeInsets.symmetric(vertical: 4),
                 decoration: BoxDecoration(
@@ -383,7 +367,8 @@ Widget build(BuildContext context) {
                           color: selectedDistrict == null
                               ? Color(0xFFA4A4A4)
                               : Colors.black,
-                          fontSize: screenWidth * 0.04, // Adjust font size based on screen width
+                          fontSize: screenWidth *
+                              0.04, // Adjust font size based on screen width
                           fontFamily: 'Roboto',
                           fontWeight: FontWeight.w400,
                           height: 1.2,
@@ -391,8 +376,7 @@ Widget build(BuildContext context) {
                         ),
                       ),
                     ),
-                    const Icon(Icons.arrow_drop_down,
-                        color: Color(0xFFA4A4A4)),
+                    const Icon(Icons.arrow_drop_down, color: Color(0xFFA4A4A4)),
                   ],
                 ),
               ),
@@ -407,7 +391,8 @@ Widget build(BuildContext context) {
                 (gp) => setState(() => selectedGP = gp),
               ),
               child: Container(
-                width: screenWidth * 0.92, // Make the container width relative to screen size
+                width: screenWidth *
+                    0.92, // Make the container width relative to screen size
                 height: 52,
                 padding: const EdgeInsets.symmetric(vertical: 4),
                 decoration: BoxDecoration(
@@ -426,7 +411,8 @@ Widget build(BuildContext context) {
                           color: selectedGP == null
                               ? Color(0xFFA4A4A4)
                               : Colors.black,
-                          fontSize: screenWidth * 0.04, // Adjust font size based on screen width
+                          fontSize: screenWidth *
+                              0.04, // Adjust font size based on screen width
                           fontFamily: 'Roboto',
                           fontWeight: FontWeight.w400,
                           height: 1.2,
@@ -434,8 +420,7 @@ Widget build(BuildContext context) {
                         ),
                       ),
                     ),
-                    const Icon(Icons.arrow_drop_down,
-                        color: Color(0xFFA4A4A4)),
+                    const Icon(Icons.arrow_drop_down, color: Color(0xFFA4A4A4)),
                   ],
                 ),
               ),
@@ -454,7 +439,8 @@ Widget build(BuildContext context) {
                       topRight: Radius.circular(4),
                     ),
                   ),
-                  color: Colors.white, // Optional background for better contrast
+                  color:
+                      Colors.white, // Optional background for better contrast
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -469,7 +455,8 @@ Widget build(BuildContext context) {
                           });
                         },
                         style: TextStyle(
-                          fontSize: screenWidth * 0.04, // Adjust font size based on screen width
+                          fontSize: screenWidth *
+                              0.04, // Adjust font size based on screen width
                           fontFamily: 'Roboto',
                           fontWeight: FontWeight.w400,
                           color: Colors.black, // Adjust for user input
@@ -508,16 +495,15 @@ Widget build(BuildContext context) {
             const SizedBox(height: 20),
             // Image Capture UI
             if (!hasCapturedImage) ...[
-              // Display "Click and Capture" in the center initially
               Center(
                 child: GestureDetector(
                   onTap: _pickImage,
                   child: Container(
-                    width: screenWidth * 0.4, // Adjust container width relative to screen
-                    height: screenHeight * 0.23, // Adjust height relative to screen
+                    width: screenWidth * 0.4,
+                    height: screenHeight * 0.23,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.start, // Start the alignment for single line text
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         const SizedBox(height: 50),
@@ -527,8 +513,8 @@ Widget build(BuildContext context) {
                           decoration: const BoxDecoration(),
                           child: const Icon(
                             Icons.camera_alt_rounded,
-                            size: 80, 
-                            color: Colors.green, // Adjust the size of the icon if needed
+                            size: 80,
+                            color: Colors.green,
                           ),
                         ),
                         const SizedBox(height: 18),
@@ -553,134 +539,142 @@ Widget build(BuildContext context) {
               )
             ] else ...[
               Column(
-               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (imageData.isNotEmpty) ...[
-                  const Text(
-                    "Preview Photos:",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  const SizedBox(height: 8),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: imageData.asMap().entries.map((entry) {
-                        int index = entry.key;
-                        var data = entry.value;
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 16),
-                          child: Stack(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: Image.memory(
-                                  Uint8List.fromList(data['image']),
-                                  height: screenHeight * 0.2,
-                                  width: screenWidth * 0.35,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              Positioned(
-                                top: 8,
-                                right: 8,
-                                child: GestureDetector(
-                                  onTap: () => _deleteImage(index), // Trigger image delete
-                                  child: Container(
-                                    padding: const EdgeInsets.all(4),
-                                    decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: const Icon(
-                                      Icons.delete,
-                                      color: Colors.white,
-                                      size: 18,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }).toList()
-                        ..add(
-                          Padding(
-                            padding: const EdgeInsets.only(right: 16),
-                            child: GestureDetector(
-                              onTap: _pickImage, // Trigger image capture
-                              child: Container(
-                                width: screenWidth * 0.3,
-                                height: screenWidth * 0.45,
-                                decoration: ShapeDecoration(
-                                  color: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    side: const BorderSide(width: 1, color: Color(0xFF5C964A)),
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (imageData.isNotEmpty) ...[
+                    const Text(
+                      "Preview Photos:",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    const SizedBox(height: 8),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          // Display each image and add delete button
+                          ...imageData.asMap().entries.map((entry) {
+                            int index = entry.key;
+                            var data = entry.value;
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 16),
+                              child: Stack(
+                                children: [
+                                  ClipRRect(
                                     borderRadius: BorderRadius.circular(12),
+                                    child: Image.memory(
+                                      Uint8List.fromList(data['image']),
+                                      height: screenHeight * 0.2,
+                                      width: screenWidth * 0.35,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
-                                ),
-                                child: Center(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Container(
-                                        width: 59.78,
-                                        height: 59.78,
-                                        decoration: const BoxDecoration(),
-                                       child: const Icon(
-                                            Icons.camera_alt_rounded,
-                                            size: 60,
-                                            color: Colors.green, 
-                                          ), 
-                                      ),
-                                      const SizedBox(height: 8),
-                                      const Text(
-                                        'Click and Capture',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 12,
-                                          fontFamily: 'Roboto',
-                                          fontWeight: FontWeight.w400,
+                                  Positioned(
+                                    top: 8,
+                                    right: 8,
+                                    child: GestureDetector(
+                                      onTap: () => _deleteImage(
+                                          index), // Trigger image delete
+                                      child: Container(
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: BoxDecoration(
+                                          color: Colors.red,
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                        ),
+                                        child: const Icon(
+                                          Icons.delete,
+                                          color: Colors.white,
+                                          size: 18,
                                         ),
                                       ),
-                                    ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                          if (imageData.length < 3)
+                            Padding(
+                              padding: const EdgeInsets.only(right: 16),
+                              child: GestureDetector(
+                                onTap: _pickImage, // Trigger image capture
+                                child: Container(
+                                  width: screenWidth * 0.3,
+                                  height: screenWidth * 0.45,
+                                  decoration: ShapeDecoration(
+                                    color: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      side: const BorderSide(
+                                          width: 1, color: Color(0xFF5C964A)),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Container(
+                                          width: 59.78,
+                                          height: 59.78,
+                                          decoration: const BoxDecoration(),
+                                          child: const Icon(
+                                            Icons.camera_alt_rounded,
+                                            size: 60,
+                                            color: Colors.green,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        const Text(
+                                          'Click and Capture',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 12,
+                                            fontFamily: 'Roboto',
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        ),
+                        ],
+                      ),
                     ),
-                  ),
+                  ],
                 ],
-              ],
-            ),
-          ],
-       ] ),
-      ),
-    ),
-    bottomSheet: Padding(
-      padding: EdgeInsets.all(screenWidth * 0.05),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color.fromRGBO(92, 150, 74, 1),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
-        ),
-        onPressed: submitComplaint,
-        child: const Text(
-          "Submit Complaint",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 14,
-            fontFamily: 'Roboto',
-            fontWeight: FontWeight.w500,
-            letterSpacing: 0.10,
+              )
+            ],
+          ]
           ),
         ),
       ),
-    ),
-  );
-}
+      bottomSheet: Padding(
+        padding: EdgeInsets.all(screenWidth * 0.05),
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color.fromRGBO(92, 150, 74, 1),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
+          ),
+          onPressed: submitComplaint,
+          child: const Text(
+            "Submit Complaint",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              fontFamily: 'Roboto',
+              fontWeight: FontWeight.w500,
+              letterSpacing: 0.10,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 final List<String> districts = [
