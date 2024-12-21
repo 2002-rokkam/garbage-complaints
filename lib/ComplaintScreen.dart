@@ -9,6 +9,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'ComplaintRegisterScreen.dart';
+import 'ViewComplaintsScreen.dart';
 
 class ComplaintScreen extends StatefulWidget {
   final String phoneNumber;
@@ -40,7 +41,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
         imageData.isNotEmpty) {
       try {
         var uri = Uri.parse(
-            'https://1745-122-172-84-220.ngrok-free.app/api/complaints-register');
+            'https://3720-223-185-51-171.ngrok-free.app/api/complaints-register');
 
         var request = http.MultipartRequest('POST', uri)
           ..fields['mobile_number'] = _phoneNumber
@@ -653,24 +654,60 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
       ),
       bottomSheet: Padding(
         padding: EdgeInsets.all(screenWidth * 0.05),
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color.fromRGBO(92, 150, 74, 1),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
-          ),
-          onPressed: submitComplaint,
-          child: const Text(
-            "Submit Complaint",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 14,
-              fontFamily: 'Roboto',
-              fontWeight: FontWeight.w500,
-              letterSpacing: 0.10,
+        child: Column(
+          children: [
+            // Submit Complaint Button
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromRGBO(92, 150, 74, 1),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
+              ),
+              onPressed: submitComplaint,
+              child: const Text(
+                "Submit Complaint",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontFamily: 'Roboto',
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: 0.10,
+                ),
+              ),
             ),
-          ),
+            const SizedBox(height: 10),
+            // View Complaints Button
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromRGBO(92, 150, 74, 1),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
+              ),
+              onPressed: () async {
+                // Navigate to the ViewComplaintsScreen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ViewComplaintsScreen(),
+                  ),
+                );
+              },
+              child: const Text(
+                "View Complaints",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontFamily: 'Roboto',
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: 0.10,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

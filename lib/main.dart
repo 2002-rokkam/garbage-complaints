@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'AuthorityLoginScreen.dart';
 import 'ComplaintRegisterScreen.dart';
 import 'ComplaintScreen.dart';
+import 'CustomScreen.dart';
 import 'OfficeLoginScreen.dart';
 import 'PhoneAuthScreen.dart';
 
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       home: const HomeScreen(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -149,7 +151,7 @@ class HomeScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ComplaintRegisterScreen()),
+                            builder: (context) => CustomScreen()),
                       );
                     },
                   ),

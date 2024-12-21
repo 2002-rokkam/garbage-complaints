@@ -1,6 +1,14 @@
+// authority/CSCSectionScreen.dart
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:intl/intl.dart';
+import 'package:table_calendar/table_calendar.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'package:intl/intl.dart';
 
 class CSCSectionScreen extends StatefulWidget {
   const CSCSectionScreen({super.key});
@@ -13,6 +21,10 @@ class _CSCSectionScreenState extends State<CSCSectionScreen> {
   final List<File> _beforeImages = [];
   final List<File> _afterImages = [];
   final ImagePicker _picker = ImagePicker();
+
+  DateTime selectedDate = DateTime.now();
+  DateTime currentMonth =
+      DateTime.now(); // Initially focused on the current month
 
   // Method to pick an image from the gallery or camera
   Future<void> _pickImage(String type) async {
@@ -85,11 +97,54 @@ class _CSCSectionScreenState extends State<CSCSectionScreen> {
     );
   }
 
+  // Method to get all the days of the current month
+  List<DateTime> _getDaysInMonth(DateTime date) {
+    final firstDayOfMonth = DateTime(date.year, date.month, 1);
+    final lastDayOfMonth = DateTime(date.year, date.month + 1, 0);
+    List<DateTime> days = [];
+
+    for (int i = 0; i <= lastDayOfMonth.day - 1; i++) {
+      days.add(firstDayOfMonth.add(Duration(days: i)));
+    }
+    return days;
+  }
+
+  // Method to pick a date using the DatePicker
+  void _pickDate(BuildContext context) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (pickedDate != null && pickedDate != selectedDate) {
+      setState(() {
+        selectedDate = pickedDate;
+        currentMonth =
+            DateTime(pickedDate.year, pickedDate.month); // Update current month
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    List<DateTime> daysInCurrentMonth = _getDaysInMonth(currentMonth);
+
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         title: const Text("CSC Section"),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.calendar_today),
+            onPressed: () => _pickDate(context),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -97,6 +152,61 @@ class _CSCSectionScreenState extends State<CSCSectionScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              // Scrollable Date Line for the Current Month
+              Container(
+                height: 80.0,
+                child: Column(
+                  children: [
+                    Text(
+                      DateFormat('MMMM yyyy').format(currentMonth),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: daysInCurrentMonth.length,
+                        itemBuilder: (context, index) {
+                          DateTime date = daysInCurrentMonth[index];
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectedDate = date;
+                              });
+                            },
+                            child: Container(
+                              margin: EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    DateFormat('d').format(date),
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: isSameDay(date, selectedDate)
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                      color: isSameDay(date, selectedDate)
+                                          ? Colors.blue
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                  Text(
+                                    DateFormat('E').format(date),
+                                    style: TextStyle(fontSize: 12),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+
               // Before and After Buttons
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
