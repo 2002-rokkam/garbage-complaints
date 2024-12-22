@@ -229,6 +229,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'authority/CSCSectionScreen.dart';
+import 'authority/CustomScreen.dart';
 
 // Placeholder screen widgets for navigation (add actual screen widgets)
 class DoorToDoorScreen extends StatelessWidget {
@@ -489,7 +490,7 @@ class _CustomScreenState extends State<CustomScreen> {
   Widget _getPage(String routeName) {
     switch (routeName) {
       case 'DoorToDoorScreen':
-        return DoorToDoorScreen();
+        return ResponsiveScreen();
       case 'RoadSweepingScreen':
         return RoadSweepingScreen();
       case 'DrainCleaningScreen':

@@ -16,7 +16,6 @@ class CSCSectionScreen extends StatefulWidget {
   @override
   _CSCSectionScreenState createState() => _CSCSectionScreenState();
 }
-
 class _CSCSectionScreenState extends State<CSCSectionScreen> {
   final List<File> _beforeImages = [];
   final List<File> _afterImages = [];
@@ -63,50 +62,28 @@ class _CSCSectionScreenState extends State<CSCSectionScreen> {
     );
   }
 
-  // Widget to display a list of images
-  Widget _buildImageList(List<File> images, String title) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-        ),
-        const SizedBox(height: 8),
-        images.isEmpty
-            ? const Text("No images uploaded.")
-            : Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: images
-                    .map(
-                      (image) => GestureDetector(
-                        onTap: () => _viewImage(image),
-                        child: Image.file(
-                          image,
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    )
-                    .toList(),
-              ),
-        const SizedBox(height: 16),
-      ],
-    );
-  }
+  // Get the list of 10 consecutive dates centered around the selected date
+  List<DateTime> _getVisibleDates() {
+    final today = selectedDate;
+    final daysBefore = 2; // 5 days before
+    final daysAfter = 40; // 4 days after
 
-  // Method to get all the days of the current month
-  List<DateTime> _getDaysInMonth(DateTime date) {
-    final firstDayOfMonth = DateTime(date.year, date.month, 1);
-    final lastDayOfMonth = DateTime(date.year, date.month + 1, 0);
-    List<DateTime> days = [];
+    List<DateTime> dates = [];
 
-    for (int i = 0; i <= lastDayOfMonth.day - 1; i++) {
-      days.add(firstDayOfMonth.add(Duration(days: i)));
+    // Add 5 days before the current date
+    for (int i = daysBefore; i > 0; i--) {
+      dates.add(today.subtract(Duration(days: i)));
     }
-    return days;
+
+    // Add the selected date
+    dates.add(today);
+
+    // Add 4 days after the current date
+    for (int i = 1; i <= daysAfter; i++) {
+      dates.add(today.add(Duration(days: i)));
+    }
+
+    return dates;
   }
 
   // Method to pick a date using the DatePicker
@@ -128,7 +105,7 @@ class _CSCSectionScreenState extends State<CSCSectionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<DateTime> daysInCurrentMonth = _getDaysInMonth(currentMonth);
+    List<DateTime> visibleDates = _getVisibleDates(); // List of 10 dates
 
     return Scaffold(
       appBar: AppBar(
@@ -152,22 +129,39 @@ class _CSCSectionScreenState extends State<CSCSectionScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Scrollable Date Line for the Current Month
+              // Scrollable Date Line for the Visible Dates (10 dates)
               Container(
                 height: 80.0,
-                child: Column(
+                child: Row(
                   children: [
-                    Text(
-                      DateFormat('MMMM yyyy').format(currentMonth),
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    // Month Label (Dec, Jan)
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 8.0),
+                      padding: EdgeInsets.symmetric(
+                          vertical: 16.0, horizontal: 12.0),
+                      decoration: BoxDecoration(
+                        color: Colors.blueGrey,
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Text(
+                        DateFormat('MMM')
+                            .format(selectedDate), // Short month name
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
+                    // Dates Row
                     Expanded(
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: daysInCurrentMonth.length,
+                        itemCount: visibleDates.length,
                         itemBuilder: (context, index) {
-                          DateTime date = daysInCurrentMonth[index];
+                          DateTime date = visibleDates[index];
+                          bool isToday = isSameDay(date, DateTime.now());
+                          bool isSelected = isSameDay(date, selectedDate);
+
                           return GestureDetector(
                             onTap: () {
                               setState(() {
@@ -175,7 +169,16 @@ class _CSCSectionScreenState extends State<CSCSectionScreen> {
                               });
                             },
                             child: Container(
-                              margin: EdgeInsets.symmetric(horizontal: 8.0),
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
+                              decoration: BoxDecoration(
+                                color: isSelected
+                                    ? Colors.green
+                                    : (isToday ? Colors.yellow : Colors.red),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              width: 50,
+                              height: 50,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -183,17 +186,16 @@ class _CSCSectionScreenState extends State<CSCSectionScreen> {
                                     DateFormat('d').format(date),
                                     style: TextStyle(
                                       fontSize: 18,
-                                      fontWeight: isSameDay(date, selectedDate)
-                                          ? FontWeight.bold
-                                          : FontWeight.normal,
-                                      color: isSameDay(date, selectedDate)
-                                          ? Colors.blue
-                                          : Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
                                     ),
                                   ),
                                   Text(
                                     DateFormat('E').format(date),
-                                    style: TextStyle(fontSize: 12),
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -232,6 +234,45 @@ class _CSCSectionScreenState extends State<CSCSectionScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  bool isSameDay(DateTime date1, DateTime date2) {
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
+  }
+
+  Widget _buildImageList(List<File> images, String title) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        ),
+        const SizedBox(height: 8),
+        images.isEmpty
+            ? const Text("No images uploaded.")
+            : Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: images
+                    .map(
+                      (image) => GestureDetector(
+                        onTap: () => _viewImage(image),
+                        child: Image.file(
+                          image,
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    )
+                    .toList(),
+              ),
+        const SizedBox(height: 16),
+      ],
     );
   }
 }
