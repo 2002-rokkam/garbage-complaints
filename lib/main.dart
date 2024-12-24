@@ -6,7 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'AuthorityLoginScreen.dart';
 import 'ComplaintRegisterScreen.dart';
 import 'ComplaintScreen.dart';
-import 'CustomScreen.dart';
+import 'WorkerScreen.dart';
 import 'OfficeLoginScreen.dart';
 import 'PhoneAuthScreen.dart';
 
@@ -151,7 +151,7 @@ class HomeScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => CustomScreen()),
+                            builder: (context) => AuthorityLoginScreen()),
                       );
                     },
                   ),

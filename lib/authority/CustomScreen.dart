@@ -1,11 +1,17 @@
 // authority/CustomScreen.dart
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:dio/dio.dart';  // For API calls
 import 'dart:io';
 import 'package:slider_button/slider_button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ResponsiveScreen extends StatefulWidget {
+  final String section;
+
+  const ResponsiveScreen({Key? key, required this.section}) : super(key: key);
   @override
   _ResponsiveScreenState createState() => _ResponsiveScreenState();
 }
@@ -15,7 +21,7 @@ class _ResponsiveScreenState extends State<ResponsiveScreen> {
 
   void addNewContainer() {
     setState(() {
-      beforeAfterContainers.add(BeforeAfterContainer());
+      beforeAfterContainers.add(BeforeAfterContainer(section: widget.section));
     });
   }
 
@@ -33,7 +39,7 @@ class _ResponsiveScreenState extends State<ResponsiveScreen> {
             padding: EdgeInsets.all(16),
             child: Column(
               children: [
-                BeforeAfterContainer(),
+                BeforeAfterContainer(section: widget.section),
                 ...beforeAfterContainers,
               ],
             ),
@@ -68,6 +74,10 @@ class _ResponsiveScreenState extends State<ResponsiveScreen> {
 }
 
 class BeforeAfterContainer extends StatefulWidget {
+    final String section;
+
+  const BeforeAfterContainer({Key? key, required this.section})
+      : super(key: key);
   @override
   _BeforeAfterContainerState createState() => _BeforeAfterContainerState();
 }
@@ -79,6 +89,77 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
 
   bool _isBeforeSliderEnabled = false;
   bool _isAfterSliderEnabled = false;
+  String activityId = '';  // Placeholder for the activity ID
+// Helper function to get the worker_id from SharedPreferences
+  Future<int> getWorkerId() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int workerId = prefs.getInt('worker_id') ?? -1;
+    return workerId;
+  }
+
+// Helper function to make API call for the before image
+  Future<String> _getAddressFromLatLong(
+      double latitude, double longitude) async {
+    try {
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(latitude, longitude);
+      if (placemarks.isNotEmpty) {
+        Placemark place = placemarks.first;
+        return '${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
+      } else {
+        return "No address found";
+      }
+    } catch (e) {
+      print("Error fetching address: $e");
+      return "Error fetching address";
+    }
+  }
+
+  Future<void> _submitBeforeImage() async {
+    try {
+      if (_beforeImage == null) return;
+
+      int workerId = await getWorkerId();
+      if (workerId == -1) {
+        print("Error: worker_id not found in SharedPreferences.");
+        return;
+      }
+
+      double latitude = _beforeImage!['latitude'];
+      double longitude = _beforeImage!['longitude'];
+
+      // Fetch the address
+      String address = await _getAddressFromLatLong(latitude, longitude);
+
+      FormData formData = FormData.fromMap({
+        'worker_id': workerId,
+        'section': widget.section,
+        'before_image':
+            await MultipartFile.fromFile(_beforeImage!['imagePath']),
+        'latitude_before': latitude,
+        'longitude_before': longitude,
+        'status': 'trip started',
+        'address': address,
+      });
+
+      Dio dio = Dio();
+      Response response = await dio.post(
+        'https://cc8b-2401-4900-882f-6635-1516-9fae-e339-4326.ngrok-free.app/api/submit-activity',
+        data: formData,
+      );
+
+      if (response.statusCode == 200) {
+        setState(() {
+          activityId = response.data['data']['id'].toString();
+        });
+        print("Activity created successfully!");
+      } else {
+        print("Error: ${response.data['message']}");
+      }
+    } catch (e) {
+      print("Error submitting before image: $e");
+    }
+  }
 
   Future<void> _captureImage(String type) async {
     XFile? image = await _picker.pickImage(source: ImageSource.camera);
@@ -86,10 +167,15 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
 
     Position position = await _getCurrentLocation();
 
+    // Fetch address for the captured coordinates
+    String address =
+        await _getAddressFromLatLong(position.latitude, position.longitude);
+
     Map<String, dynamic> imageData = {
       'imagePath': image.path,
       'latitude': position.latitude,
       'longitude': position.longitude,
+      'address': address,
     };
 
     setState(() {
@@ -100,6 +186,39 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
         _afterImage = imageData;
       }
     });
+  }
+
+
+  // Helper function to make API call for after image
+  Future<void> _submitAfterImage() async {
+    try {
+      print("Submitting After Image...");
+      print("Activity ID: $activityId");
+      print("After Image Data: $_afterImage");
+
+      if (_afterImage == null || activityId.isEmpty) {
+        print("Error: After image data or activity ID is missing.");
+        return;
+      }
+      FormData formData = FormData.fromMap({
+        'activity_id': activityId,
+        'after_image': await MultipartFile.fromFile(_afterImage!['imagePath']),
+        'latitude_after': _afterImage!['latitude'],
+        'longitude_after': _afterImage!['longitude'],
+        'status': 'Completed',
+      });
+
+      Dio dio = Dio();
+      Response response = await dio.put('https://cc8b-2401-4900-882f-6635-1516-9fae-e339-4326.ngrok-free.app/api/submit-activity/', data: formData);
+
+      if (response.statusCode == 200) {
+        print("After image submitted successfully!");
+      } else {
+        print("Error: ${response.data['message']}");
+      }
+    } catch (e) {
+      print("Error submitting after image: $e");
+    }
   }
 
   Future<Position> _getCurrentLocation() async {
@@ -116,8 +235,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
       }
     }
 
-    return await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
   }
 
   void _deleteImage(String type) {
@@ -214,7 +332,8 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                 ),
               ),
               GestureDetector(
-                onTap: _isAfterSliderEnabled ? () => _captureImage('after') : null,
+                                onTap:
+                    _isAfterSliderEnabled ? () => _captureImage('after') : null,
                 child: Stack(
                   children: [
                     Container(
@@ -268,9 +387,13 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
           if (_beforeImage != null && !_isAfterSliderEnabled)
             SliderButton(
               action: () async {
+                if (!mounted) return; // Ensure the widget is still in the tree
                 setState(() {
                   _isAfterSliderEnabled = true;
                 });
+
+                // Submit before image to the server
+                await _submitBeforeImage();
               },
               label: Text(
                 "Slide to confirm 'Before'",
@@ -287,8 +410,13 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
           if (_afterImage != null)
             SliderButton(
               action: () async {
-                // Final action or confirmation
-                print("After image confirmed");
+                try {
+                  if (!mounted) return;
+                  await _submitAfterImage();
+                  print("After image slider action completed.");
+                } catch (e) {
+                  print("Error in slider action: $e");
+                }
               },
               label: Text(
                 "Slide to confirm 'After'",
@@ -302,8 +430,10 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
               highlightedColor: Color(0xFF4C8431),
               baseColor: Colors.green,
             ),
+
         ],
       ),
     );
   }
 }
+
