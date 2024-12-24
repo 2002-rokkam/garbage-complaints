@@ -1,14 +1,9 @@
 // authority/CustomScreen.dart
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:io';
-import 'package:slider_button/slider_button.dart'; 
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:slider_button/slider_button.dart'; // Import the slider_button package
+import 'package:slider_button/slider_button.dart';
 
 class ResponsiveScreen extends StatefulWidget {
   @override
@@ -38,7 +33,7 @@ class _ResponsiveScreenState extends State<ResponsiveScreen> {
             padding: EdgeInsets.all(16),
             child: Column(
               children: [
-                BeforeAfterContainer(), // Initial container
+                BeforeAfterContainer(),
                 ...beforeAfterContainers,
               ],
             ),
@@ -71,7 +66,6 @@ class _ResponsiveScreenState extends State<ResponsiveScreen> {
     );
   }
 }
-// Import the slider_button package
 
 class BeforeAfterContainer extends StatefulWidget {
   @override
@@ -80,8 +74,11 @@ class BeforeAfterContainer extends StatefulWidget {
 
 class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
   final ImagePicker _picker = ImagePicker();
-  List<Map<String, dynamic>> _beforeImages = [];
-  List<Map<String, dynamic>> _afterImages = [];
+  Map<String, dynamic>? _beforeImage;
+  Map<String, dynamic>? _afterImage;
+
+  bool _isBeforeSliderEnabled = false;
+  bool _isAfterSliderEnabled = false;
 
   Future<void> _captureImage(String type) async {
     XFile? image = await _picker.pickImage(source: ImageSource.camera);
@@ -89,7 +86,6 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
 
     Position position = await _getCurrentLocation();
 
-    // Store image and location data
     Map<String, dynamic> imageData = {
       'imagePath': image.path,
       'latitude': position.latitude,
@@ -98,9 +94,10 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
 
     setState(() {
       if (type == 'before') {
-        _beforeImages.add(imageData);
-      } else {
-        _afterImages.add(imageData);
+        _beforeImage = imageData;
+        _isBeforeSliderEnabled = true;
+      } else if (type == 'after') {
+        _afterImage = imageData;
       }
     });
   }
@@ -121,6 +118,18 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
 
     return await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
+  }
+
+  void _deleteImage(String type) {
+    setState(() {
+      if (type == 'before') {
+        _beforeImage = null;
+        _isBeforeSliderEnabled = false;
+        _isAfterSliderEnabled = false;
+      } else if (type == 'after') {
+        _afterImage = null;
+      }
+    });
   }
 
   @override
@@ -156,99 +165,143 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               GestureDetector(
-                onTap: () => _captureImage('before'),
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.4,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Color(0xFF6B6B6B), width: 1),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: _beforeImages.isEmpty
-                      ? Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              'images/CSC.png',
-                              width: 24,
-                              height: 24,
+                onTap: _beforeImage == null ? () => _captureImage('before') : null,
+                child: Stack(
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Color(0xFF6B6B6B), width: 1),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: _beforeImage == null
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  'images/CSC.png',
+                                  width: 24,
+                                  height: 24,
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  'Before',
+                                  style: TextStyle(
+                                    color: Color(0xFF6B6B6B),
+                                    fontSize: 14,
+                                    fontFamily: 'Nunito Sans',
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Image.file(
+                              File(_beforeImage!['imagePath']),
+                              fit: BoxFit.cover,
                             ),
-                            SizedBox(height: 8),
-                            Text(
-                              'Before',
-                              style: TextStyle(
-                                color: Color(0xFF6B6B6B),
-                                fontSize: 14,
-                                fontFamily: 'Nunito Sans',
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ],
-                        )
-                      : Image.file(
-                          File(_beforeImages.last['imagePath']),
-                          fit: BoxFit.cover,
+                    ),
+                    if (_beforeImage != null && !_isAfterSliderEnabled)
+                      Positioned(
+                        top: 4,
+                        right: 4,
+                        child: GestureDetector(
+                          onTap: () => _deleteImage('before'),
+                          child: Icon(Icons.close, color: Colors.red, size: 20),
                         ),
+                      ),
+                  ],
                 ),
               ),
               GestureDetector(
-                onTap: () => _captureImage('after'),
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.4,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Color(0xFF6B6B6B), width: 1),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: _afterImages.isEmpty
-                      ? Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              'images/CSC.png',
-                              width: 24,
-                              height: 24,
+                onTap: _isAfterSliderEnabled ? () => _captureImage('after') : null,
+                child: Stack(
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Color(0xFF6B6B6B), width: 1),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: _afterImage == null
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  'images/CSC.png',
+                                  width: 24,
+                                  height: 24,
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  'After',
+                                  style: TextStyle(
+                                    color: Color(0xFF6B6B6B),
+                                    fontSize: 14,
+                                    fontFamily: 'Nunito Sans',
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Image.file(
+                              File(_afterImage!['imagePath']),
+                              fit: BoxFit.cover,
                             ),
-                            SizedBox(height: 8),
-                            Text(
-                              'After',
-                              style: TextStyle(
-                                color: Color(0xFF6B6B6B),
-                                fontSize: 14,
-                                fontFamily: 'Nunito Sans',
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ],
-                        )
-                      : Image.file(
-                          File(_afterImages.last['imagePath']),
-                          fit: BoxFit.cover,
+                    ),
+                    if (_afterImage != null)
+                      Positioned(
+                        top: 4,
+                        right: 4,
+                        child: GestureDetector(
+                          onTap: () => _deleteImage('after'),
+                          child: Icon(Icons.close, color: Colors.red, size: 20),
                         ),
+                      ),
+                  ],
                 ),
               ),
             ],
           ),
           SizedBox(height: 16),
-          // Replace the button with the swipe slider button
-          SliderButton(
-            action: () async {
-              // Action to perform when slider is successfully slid
-              print("Payment successful");
-              // You can replace this with any other function or navigation
-            },
-            label: Text(
-              "Slide to Complete",
-              style: TextStyle(color: Colors.white, fontSize: 18),
+          if (_beforeImage != null && !_isAfterSliderEnabled)
+            SliderButton(
+              action: () async {
+                setState(() {
+                  _isAfterSliderEnabled = true;
+                });
+              },
+              label: Text(
+                "Slide to confirm 'Before'",
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              icon: Icon(Icons.check, color: Colors.white),
+              width: MediaQuery.of(context).size.width * 0.8,
+              backgroundColor: Color(0xFF5C964A),
+              buttonColor: Colors.white,
+              radius: 30,
+              highlightedColor: Color(0xFF4C8431),
+              baseColor: Colors.green,
             ),
-            icon: Icon(Icons.check, color: Colors.white),
-            width: MediaQuery.of(context).size.width * 0.8,
-            backgroundColor: Color(0xFF5C964A),
-            buttonColor: Colors.white,
-            radius: 30,
-            highlightedColor: Color(0xFF4C8431),
-            baseColor: Colors.green,
-          ),
+          if (_afterImage != null)
+            SliderButton(
+              action: () async {
+                // Final action or confirmation
+                print("After image confirmed");
+              },
+              label: Text(
+                "Slide to confirm 'After'",
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              icon: Icon(Icons.check, color: Colors.white),
+              width: MediaQuery.of(context).size.width * 0.8,
+              backgroundColor: Color(0xFF5C964A),
+              buttonColor: Colors.white,
+              radius: 30,
+              highlightedColor: Color(0xFF4C8431),
+              baseColor: Colors.green,
+            ),
         ],
       ),
     );
