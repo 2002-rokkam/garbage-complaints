@@ -3,47 +3,127 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:dio/dio.dart';  // For API calls
+import 'package:dio/dio.dart';
 import 'dart:io';
 import 'package:slider_button/slider_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 class ResponsiveScreen extends StatefulWidget {
   final String section;
 
   const ResponsiveScreen({Key? key, required this.section}) : super(key: key);
+
   @override
   _ResponsiveScreenState createState() => _ResponsiveScreenState();
 }
 
 class _ResponsiveScreenState extends State<ResponsiveScreen> {
   List<Widget> beforeAfterContainers = [];
+  bool isLoading = true; 
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchActivities();
+  }
+
+  Future<void> _fetchActivities() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    Future<int> getWorkerId() async {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      int workerId = prefs.getInt('worker_id') ?? -1;
+      return workerId;
+    }
+
+    try {
+      int workerId = await getWorkerId();
+      Dio dio = Dio();
+      final response = await dio.get(
+          'https://68d6-223-185-47-62.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+        List activities = data['activities'];
+
+        setState(() {
+          beforeAfterContainers = activities
+              .where((activity) => activity['status'] == 'trip started')
+              .map((activity) => BeforeAfterContainer(
+                    section: widget.section,
+                    initialData:
+                        activity, 
+                    onReload: _fetchActivities,
+                  ))
+              .toList();
+        });
+      } else {
+        print("Error fetching activities: ${response.data['message']}");
+      }
+    } catch (e) {
+      print("Error fetching activities: $e");
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   void addNewContainer() {
     setState(() {
-      beforeAfterContainers.add(BeforeAfterContainer(section: widget.section));
+      beforeAfterContainers.add(BeforeAfterContainer(
+        section: widget.section,
+        initialData: null, 
+        onReload: _fetchActivities, 
+      ));
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xFF5C964A),
-        title: Text('App Header'),
-        centerTitle: true,
+      backgroundColor: Color.fromRGBO(239, 239, 239, 1),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(100),
+        child: AppBar(
+          backgroundColor: Color(0xFF5C964A),
+          centerTitle: true,
+          title: Column(
+            mainAxisAlignment:
+                MainAxisAlignment.center, 
+            children: [
+              SizedBox(height: 40),
+              Text(
+                '${widget.section}',
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.white, 
+                ), 
+              ),
+            ],
+          ),
+        ),
       ),
       body: Stack(
         children: [
-          SingleChildScrollView(
-            padding: EdgeInsets.all(16),
-            child: Column(
-              children: [
-                BeforeAfterContainer(section: widget.section),
-                ...beforeAfterContainers,
-              ],
-            ),
-          ),
+          isLoading
+              ? Center(
+                  child: CircularProgressIndicator())
+              : SingleChildScrollView(
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                    children: beforeAfterContainers.isNotEmpty
+                        ? beforeAfterContainers
+                        : [
+                            BeforeAfterContainer(
+                              section: widget.section,
+                              onReload:
+                                  _fetchActivities, 
+                            ),
+                          ],
+                  ),
+                ),
           Positioned(
             bottom: 16,
             right: 16,
@@ -74,10 +154,17 @@ class _ResponsiveScreenState extends State<ResponsiveScreen> {
 }
 
 class BeforeAfterContainer extends StatefulWidget {
-    final String section;
+  final String section;
+  final Map<String, dynamic>? initialData; 
+  final Function onReload; 
 
-  const BeforeAfterContainer({Key? key, required this.section})
+  const BeforeAfterContainer(
+      {Key? key,
+      required this.section,
+      this.initialData,
+      required this.onReload})
       : super(key: key);
+
   @override
   _BeforeAfterContainerState createState() => _BeforeAfterContainerState();
 }
@@ -89,15 +176,50 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
 
   bool _isBeforeSliderEnabled = false;
   bool _isAfterSliderEnabled = false;
-  String activityId = '';  // Placeholder for the activity ID
-// Helper function to get the worker_id from SharedPreferences
+  String activityId = ''; 
+  bool _isSubmitting = false; 
+  bool _isLoading = false; 
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.initialData != null) {
+      activityId = widget.initialData!['id'].toString();
+
+      if (widget.initialData!['before_image'] != null) {
+        _beforeImage = {
+          'imagePath': widget.initialData!['before_image'],
+          'latitude': widget.initialData!['latitude_before'],
+          'longitude': widget.initialData!['longitude_before'],
+          'address': widget.initialData!['address'],
+        };
+      }
+
+      if (widget.initialData!['status'] == 'trip started') {
+        _isAfterSliderEnabled = true; 
+      }
+
+      if (widget.initialData!['after_image'] != null) {
+        _afterImage = {
+          'imagePath': widget.initialData!['after_image'],
+          'latitude': widget.initialData!['latitude_after'],
+          'longitude': widget.initialData!['longitude_after'],
+          'address': widget.initialData!['address'],
+        };
+      }
+    } else {
+      _isBeforeSliderEnabled = true;
+      _isAfterSliderEnabled = false;
+    }
+  }
+
   Future<int> getWorkerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     int workerId = prefs.getInt('worker_id') ?? -1;
     return workerId;
   }
 
-// Helper function to make API call for the before image
   Future<String> _getAddressFromLatLong(
       double latitude, double longitude) async {
     try {
@@ -128,7 +250,6 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
       double latitude = _beforeImage!['latitude'];
       double longitude = _beforeImage!['longitude'];
 
-      // Fetch the address
       String address = await _getAddressFromLatLong(latitude, longitude);
 
       FormData formData = FormData.fromMap({
@@ -144,14 +265,16 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
 
       Dio dio = Dio();
       Response response = await dio.post(
-        'https://cc8b-2401-4900-882f-6635-1516-9fae-e339-4326.ngrok-free.app/api/submit-activity',
+        'https://68d6-223-185-47-62.ngrok-free.app/api/submit-activity',
         data: formData,
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         setState(() {
           activityId = response.data['data']['id'].toString();
         });
+        widget.onReload();
+
         print("Activity created successfully!");
       } else {
         print("Error: ${response.data['message']}");
@@ -167,7 +290,6 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
 
     Position position = await _getCurrentLocation();
 
-    // Fetch address for the captured coordinates
     String address =
         await _getAddressFromLatLong(position.latitude, position.longitude);
 
@@ -188,8 +310,6 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
     });
   }
 
-
-  // Helper function to make API call for after image
   Future<void> _submitAfterImage() async {
     try {
       print("Submitting After Image...");
@@ -209,7 +329,9 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
       });
 
       Dio dio = Dio();
-      Response response = await dio.put('https://cc8b-2401-4900-882f-6635-1516-9fae-e339-4326.ngrok-free.app/api/submit-activity/', data: formData);
+      Response response = await dio.put(
+          'https://68d6-223-185-47-62.ngrok-free.app/api/submit-activity',
+          data: formData);
 
       if (response.statusCode == 200) {
         print("After image submitted successfully!");
@@ -235,7 +357,8 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
       }
     }
 
-    return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    return await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
   }
 
   void _deleteImage(String type) {
@@ -283,7 +406,9 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               GestureDetector(
-                onTap: _beforeImage == null ? () => _captureImage('before') : null,
+                onTap: _isBeforeSliderEnabled && _beforeImage == null
+                    ? () => _captureImage('before')
+                    : null,
                 child: Stack(
                   children: [
                     Container(
@@ -332,7 +457,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                 ),
               ),
               GestureDetector(
-                                onTap:
+                onTap:
                     _isAfterSliderEnabled ? () => _captureImage('after') : null,
                 child: Stack(
                   children: [
@@ -385,55 +510,79 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
           ),
           SizedBox(height: 16),
           if (_beforeImage != null && !_isAfterSliderEnabled)
-            SliderButton(
-              action: () async {
-                if (!mounted) return; // Ensure the widget is still in the tree
-                setState(() {
-                  _isAfterSliderEnabled = true;
-                });
+            Container(
+              height: 50.0,
+              child: _isLoading
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : SliderButton(
+                      action: () async {
+                        setState(() {
+                          _isLoading = true; 
+                        });
 
-                // Submit before image to the server
-                await _submitBeforeImage();
-              },
-              label: Text(
-                "Slide to confirm 'Before'",
-                style: TextStyle(color: Colors.white, fontSize: 18),
-              ),
-              icon: Icon(Icons.check, color: Colors.white),
-              width: MediaQuery.of(context).size.width * 0.8,
-              backgroundColor: Color(0xFF5C964A),
-              buttonColor: Colors.white,
-              radius: 30,
-              highlightedColor: Color(0xFF4C8431),
-              baseColor: Colors.green,
+                        try {
+                          await _submitBeforeImage(); 
+                          setState(() {
+                            _isBeforeSliderEnabled = false;
+                            _isAfterSliderEnabled = true; 
+                          });
+                        } catch (e) {
+                          print("Error in slider action: $e");
+                        } finally {
+                          setState(() {
+                            _isLoading = false;
+                          });
+                        }
+                      },
+                      label: Text(
+                        "Slide to confirm 'Before'",
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                      icon: Icon(Icons.check, color: Colors.white),
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      backgroundColor: Color(0xFF5C964A),
+                      buttonColor: Colors.white,
+                      radius: 30,
+                    ),
             ),
-          if (_afterImage != null)
-            SliderButton(
-              action: () async {
-                try {
-                  if (!mounted) return;
-                  await _submitAfterImage();
-                  print("After image slider action completed.");
-                } catch (e) {
-                  print("Error in slider action: $e");
-                }
-              },
-              label: Text(
-                "Slide to confirm 'After'",
-                style: TextStyle(color: Colors.white, fontSize: 18),
-              ),
-              icon: Icon(Icons.check, color: Colors.white),
-              width: MediaQuery.of(context).size.width * 0.8,
-              backgroundColor: Color(0xFF5C964A),
-              buttonColor: Colors.white,
-              radius: 30,
-              highlightedColor: Color(0xFF4C8431),
-              baseColor: Colors.green,
-            ),
+          if (_afterImage != null && !_isSubmitting)
+            Container(
+              height: 50.0,
+              child: _isLoading 
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : SliderButton(
+                      action: () async {
+                        setState(() {
+                          _isLoading = true; 
+                        });
 
+                        try {
+                          await _submitAfterImage();
+                        } catch (e) {
+                          print("Error in slider action: $e");
+                        } finally {
+                          setState(() {
+                            _isLoading = false; 
+                          });
+                        }
+                      },
+                      label: Text(
+                        "Slide to confirm 'After'",
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                      icon: Icon(Icons.check, color: Colors.white),
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      backgroundColor: Color(0xFF5C964A),
+                      buttonColor: Colors.white,
+                      radius: 30,
+                    ),
+            ),
         ],
       ),
     );
   }
 }
-

@@ -55,7 +55,12 @@ class _WorkerScreenState extends State<WorkerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+      onWillPop: () async {
+        // Disable back button
+        return false;
+      },
+    child: Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFF5C964A),
         flexibleSpace: Container(
@@ -127,7 +132,7 @@ class _WorkerScreenState extends State<WorkerScreen> {
           ),
         ],
       ),
-    );
+    ) );
   }
 
   // Image container for the PageView
