@@ -7,6 +7,7 @@ import 'package:dio/dio.dart';
 import 'dart:io';
 import 'package:slider_button/slider_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 class ResponsiveScreen extends StatefulWidget {
   final String section;
 
@@ -18,7 +19,7 @@ class ResponsiveScreen extends StatefulWidget {
 
 class _ResponsiveScreenState extends State<ResponsiveScreen> {
   List<Widget> beforeAfterContainers = [];
-  bool isLoading = true; 
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -41,7 +42,7 @@ class _ResponsiveScreenState extends State<ResponsiveScreen> {
       int workerId = await getWorkerId();
       Dio dio = Dio();
       final response = await dio.get(
-          'https://68d6-223-185-47-62.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+          'https://f827-2401-4900-882e-cef3-39e1-4161-da52-3ce0.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
 
       if (response.statusCode == 200) {
         final data = response.data;
@@ -52,8 +53,7 @@ class _ResponsiveScreenState extends State<ResponsiveScreen> {
               .where((activity) => activity['status'] == 'trip started')
               .map((activity) => BeforeAfterContainer(
                     section: widget.section,
-                    initialData:
-                        activity, 
+                    initialData: activity,
                     onReload: _fetchActivities,
                   ))
               .toList();
@@ -74,8 +74,8 @@ class _ResponsiveScreenState extends State<ResponsiveScreen> {
     setState(() {
       beforeAfterContainers.add(BeforeAfterContainer(
         section: widget.section,
-        initialData: null, 
-        onReload: _fetchActivities, 
+        initialData: null,
+        onReload: _fetchActivities,
       ));
     });
   }
@@ -90,64 +90,58 @@ class _ResponsiveScreenState extends State<ResponsiveScreen> {
           backgroundColor: Color(0xFF5C964A),
           centerTitle: true,
           title: Column(
-            mainAxisAlignment:
-                MainAxisAlignment.center, 
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(height: 40),
               Text(
                 '${widget.section}',
                 style: TextStyle(
                   fontSize: 20,
-                  color: Colors.white, 
-                ), 
+                  color: Colors.white,
+                ),
               ),
             ],
           ),
         ),
       ),
-      body: Stack(
-        children: [
-          isLoading
-              ? Center(
-                  child: CircularProgressIndicator())
-              : SingleChildScrollView(
-                  padding: EdgeInsets.all(16),
-                  child: Column(
-                    children: beforeAfterContainers.isNotEmpty
-                        ? beforeAfterContainers
-                        : [
-                            BeforeAfterContainer(
-                              section: widget.section,
-                              onReload:
-                                  _fetchActivities, 
-                            ),
-                          ],
-                  ),
-                ),
-          Positioned(
-            bottom: 16,
-            right: 16,
-            child: FloatingActionButton.extended(
-              onPressed: addNewContainer,
-              backgroundColor: Color(0xFFFFD262),
-              label: Row(
-                children: [
-                  FlutterLogo(size: 24),
-                  SizedBox(width: 12),
-                  Text(
-                    'Add More',
-                    style: TextStyle(
-                      color: Color(0xFF252525),
-                      fontSize: 14,
-                      fontFamily: 'Nunito Sans',
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          children: isLoading
+              ? [Center(child: CircularProgressIndicator())]
+              : beforeAfterContainers.isNotEmpty
+                  ? beforeAfterContainers
+                  : [
+                      BeforeAfterContainer(
+                        section: widget.section,
+                        onReload: _fetchActivities,
+                      ),
+                    ],
+        ),
+      ),
+      // Floating action button will stay fixed at the bottom of the screen
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: addNewContainer,
+        backgroundColor: Color(0xFFFFD262),
+        label: Row(
+          children: [
+            Icon(
+              Icons.add,
+              size: 24,
+              color: Color(0xFF252525),
+            ),
+            SizedBox(width: 12),
+            Text(
+              'Add More',
+              style: TextStyle(
+                color: Color(0xFF252525),
+                fontSize: 14,
+                fontFamily: 'Nunito Sans',
+                fontWeight: FontWeight.w500,
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -155,8 +149,8 @@ class _ResponsiveScreenState extends State<ResponsiveScreen> {
 
 class BeforeAfterContainer extends StatefulWidget {
   final String section;
-  final Map<String, dynamic>? initialData; 
-  final Function onReload; 
+  final Map<String, dynamic>? initialData;
+  final Function onReload;
 
   const BeforeAfterContainer(
       {Key? key,
@@ -176,9 +170,9 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
 
   bool _isBeforeSliderEnabled = false;
   bool _isAfterSliderEnabled = false;
-  String activityId = ''; 
-  bool _isSubmitting = false; 
-  bool _isLoading = false; 
+  String activityId = '';
+  bool _isSubmitting = false;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -197,7 +191,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
       }
 
       if (widget.initialData!['status'] == 'trip started') {
-        _isAfterSliderEnabled = true; 
+        _isAfterSliderEnabled = true;
       }
 
       if (widget.initialData!['after_image'] != null) {
@@ -265,7 +259,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
 
       Dio dio = Dio();
       Response response = await dio.post(
-        'https://68d6-223-185-47-62.ngrok-free.app/api/submit-activity',
+        'https://f827-2401-4900-882e-cef3-39e1-4161-da52-3ce0.ngrok-free.app/api/submit-activity',
         data: formData,
       );
 
@@ -320,6 +314,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
         print("Error: After image data or activity ID is missing.");
         return;
       }
+
       FormData formData = FormData.fromMap({
         'activity_id': activityId,
         'after_image': await MultipartFile.fromFile(_afterImage!['imagePath']),
@@ -330,11 +325,113 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
 
       Dio dio = Dio();
       Response response = await dio.put(
-          'https://68d6-223-185-47-62.ngrok-free.app/api/submit-activity',
+          'https://f827-2401-4900-882e-cef3-39e1-4161-da52-3ce0.ngrok-free.app/api/submit-activity',
           data: formData);
 
       if (response.statusCode == 200) {
         print("After image submitted successfully!");
+
+        // Show custom popup
+        showDialog(
+          context: context,
+          barrierDismissible: false, // Prevent dismissal by tapping outside
+          builder: (BuildContext context) {
+            final screenWidth = MediaQuery.of(context).size.width;
+            final screenHeight = MediaQuery.of(context).size.height;
+
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Container(
+                width: screenWidth * 0.9, // 90% of screen width
+                padding: EdgeInsets.symmetric(
+                  vertical: screenHeight *
+                      0.05, // Adjust vertical padding based on height
+                  horizontal: screenWidth *
+                      0.05, // Adjust horizontal padding based on width
+                ),
+                decoration: ShapeDecoration(
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: Column(
+                  mainAxisSize:
+                      MainAxisSize.min, // Adjust height based on children
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: screenWidth * 0.3, // 30% of screen width
+                      height: screenWidth * 0.3, // Maintain square aspect ratio
+                      clipBehavior: Clip.antiAlias,
+                      decoration: BoxDecoration(),
+                      child: Image.asset(
+                        'images/done.png',
+                        width: 24,
+                        height: 24,
+                      ),
+                    ),
+                    SizedBox(
+                        height: screenHeight * 0.03), // Spacing based on height
+                    SizedBox(
+                      width: screenWidth * 0.8, // 80% of screen width
+                      child: Text(
+                        'Successfully uploaded receipt!',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Color(0xFF1D1B20),
+                          fontSize: screenWidth *
+                              0.06, // Font size relative to screen width
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w400,
+                          height: 1.33,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                        height: screenHeight * 0.04), // Spacing based on height
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop(); // Close the popup
+                        widget.onReload(); // Reload the screen
+                      },
+                      child: Container(
+                        width: screenWidth *
+                            0.25, // Button width relative to screen
+                        height: screenHeight *
+                            0.05, // Button height relative to screen
+                        padding: EdgeInsets.symmetric(
+                          horizontal: screenWidth * 0.05,
+                          vertical: screenHeight * 0.01,
+                        ),
+                        decoration: ShapeDecoration(
+                          color: Color(0x335C964A),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Close',
+                            style: TextStyle(
+                              color: Color(0xFF3E6632),
+                              fontSize: screenWidth *
+                                  0.035, // Font size relative to screen width
+                              fontFamily: 'Nunito Sans',
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
       } else {
         print("Error: ${response.data['message']}");
       }
@@ -519,14 +616,14 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                   : SliderButton(
                       action: () async {
                         setState(() {
-                          _isLoading = true; 
+                          _isLoading = true;
                         });
 
                         try {
-                          await _submitBeforeImage(); 
+                          await _submitBeforeImage();
                           setState(() {
                             _isBeforeSliderEnabled = false;
-                            _isAfterSliderEnabled = true; 
+                            _isAfterSliderEnabled = true;
                           });
                         } catch (e) {
                           print("Error in slider action: $e");
@@ -550,14 +647,14 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
           if (_afterImage != null && !_isSubmitting)
             Container(
               height: 50.0,
-              child: _isLoading 
+              child: _isLoading
                   ? Center(
                       child: CircularProgressIndicator(),
                     )
                   : SliderButton(
                       action: () async {
                         setState(() {
-                          _isLoading = true; 
+                          _isLoading = true;
                         });
 
                         try {
@@ -566,7 +663,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                           print("Error in slider action: $e");
                         } finally {
                           setState(() {
-                            _isLoading = false; 
+                            _isLoading = false;
                           });
                         }
                       },

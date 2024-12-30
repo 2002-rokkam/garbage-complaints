@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'authority/CSCSectionScreen.dart';
 import 'authority/CustomScreen.dart';
+import 'authority/RRCSectionScreen.dart';
 
 class WorkerScreen extends StatefulWidget {
   @override
@@ -234,7 +235,7 @@ class _WorkerScreenState extends State<WorkerScreen> {
       case 'CSCScreen':
         return ResponsiveScreen(section: 'CSC');
       case 'RRCScreen':
-        return ResponsiveScreen(section: 'RRC');
+        return RRCScreen(section: 'RRC');
       case 'WagesScreen':
         return ResponsiveScreen(section: 'Wages');
       default:
