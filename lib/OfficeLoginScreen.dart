@@ -1,3 +1,4 @@
+// OfficeLoginScreen.dart
 // import 'package:flutter/material.dart';
 
 // import 'authority/CSCSectionScreen.dart';
@@ -115,8 +116,6 @@ class OfficeLoginScreen extends StatelessWidget {
       D2DSectionScreen(),
       RoadSweepingScreen(),
       DrainCleaningSectionScreen(),
-      CSCSectionScreen(),
-      RRCSectionScreen(),
       WagesSectionScreen(),
       ComplaintsSectionScreen(),
     ];
