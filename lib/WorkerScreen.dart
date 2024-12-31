@@ -1,9 +1,8 @@
 // WorkerScreen.dart
 import 'package:flutter/material.dart';
 import 'dart:async';
-
-import 'authority/CSCSectionScreen.dart';
 import 'authority/CustomScreen.dart';
+import 'authority/D2DSectionScreen.dart';
 import 'authority/RRCSectionScreen.dart';
 
 class WorkerScreen extends StatefulWidget {
@@ -227,7 +226,7 @@ class _WorkerScreenState extends State<WorkerScreen> {
   Widget _getPage(String routeName) {
     switch (routeName) {
       case 'DoorToDoorScreen':
-        return ResponsiveScreen(section: 'Door to Door');
+        return D2DSectionScreen(section: 'Door to Door');
       case 'RoadSweepingScreen':
         return ResponsiveScreen(section: 'Road Sweeping');
       case 'DrainCleaningScreen':

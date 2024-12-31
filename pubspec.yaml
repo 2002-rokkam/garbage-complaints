@@ -55,6 +55,7 @@ dependencies:
   flutter_slider_drawer: ^2.1.3
   slider_button: ^2.1.0
   dio: ^5.7.0
+  flutter_barcode_scanner: ^2.0.0
 
 dev_dependencies:
   flutter_test:
