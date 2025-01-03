@@ -119,7 +119,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
 
       Dio dio = Dio();
       Response response = await dio.post(
-        'https://f827-2401-4900-882e-cef3-39e1-4161-da52-3ce0.ngrok-free.app/api/submit-activity',
+        'https://8250-122-172-86-111.ngrok-free.app/api/submit-activity',
         data: formData,
       );
 
@@ -185,7 +185,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
 
       Dio dio = Dio();
       Response response = await dio.put(
-          'https://f827-2401-4900-882e-cef3-39e1-4161-da52-3ce0.ngrok-free.app/api/submit-activity',
+          'https://8250-122-172-86-111.ngrok-free.app/api/submit-activity',
           data: formData);
 
       if (response.statusCode == 200) {
@@ -396,8 +396,8 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                                 ),
                               ],
                             )
-                          :  Image.network(
-                              'https://f827-2401-4900-882e-cef3-39e1-4161-da52-3ce0.ngrok-free.app${_beforeImage!['imagePath']}',
+                          : Image.network(
+                              'https://8250-122-172-86-111.ngrok-free.app${_beforeImage!['imagePath']}',
                               // Replace with your network image URL
                               fit: BoxFit.cover,
                               loadingBuilder: (BuildContext context,
@@ -426,7 +426,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                                 return Center(
                                     child: Text('Failed to load image'));
                               },
-                            ),   
+                            ),
                     ),
                     if (_beforeImage != null && !_isAfterSliderEnabled)
                       Positioned(
@@ -473,9 +473,9 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                                 ),
                               ],
                             )
-                          :  Image.network(
-                                      'https://f827-2401-4900-882e-cef3-39e1-4161-da52-3ce0.ngrok-free.app${_afterImage!['imagePath']}',
- // Replace with your network image URL
+                          : Image.network(
+                              'https://8250-122-172-86-111.ngrok-free.app${_afterImage!['imagePath']}',
+                              // Replace with your network image URL
                               fit: BoxFit.cover,
                               loadingBuilder: (BuildContext context,
                                   Widget child,

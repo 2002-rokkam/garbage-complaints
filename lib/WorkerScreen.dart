@@ -4,6 +4,7 @@ import 'dart:async';
 import 'authority/CustomScreen.dart';
 import 'authority/D2DSectionScreen.dart';
 import 'authority/RRCSectionScreen.dart';
+import 'authority/workerComplaintsScreen.dart';
 
 class WorkerScreen extends StatefulWidget {
   @override
@@ -13,7 +14,6 @@ class WorkerScreen extends StatefulWidget {
 class _WorkerScreenState extends State<WorkerScreen> {
   final PageController _pageController = PageController();
 
-  // List of items for the buttons, with label and image URL
   final List<Map<String, String>> buttonItems = [
     {
       'label': 'Door to Door',
@@ -60,82 +60,161 @@ class _WorkerScreenState extends State<WorkerScreen> {
         // Disable back button
         return false;
       },
-    child: Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF5C964A),
-        flexibleSpace: Container(
-          height: 100,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: const Color(0xFF5C964A),
+          flexibleSpace: Container(
+            height: 100,
+          ),
         ),
-      ),
-      body: Column(
-        children: [
-          // AppBar extending to the image start
-          Container(
-            height: 200,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xFF5C964A), // Green
-                  Color.fromRGBO(239, 239, 239, 1),
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                stops: [0.5, 0.5],
-              ),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(24),
-                bottomRight: Radius.circular(24),
-              ),
-            ),
-            child: Stack(
-              children: [
-                Positioned(
-                  bottom: 50,
-                  left: 16,
-                  right: 16,
-                  child: Container(
-                    height: 150,
-                    child: PageView(
-                      controller: _pageController,
-                      children: [
-                        _buildImageContainer(
-                            'https://docs.flutter.dev/assets/images/dash/dash-fainting.gif'),
-                        _buildImageContainer(
-                            'https://europe1.discourse-cdn.com/figma/original/3X/7/1/7105e9c010b3d1f0ea893ed5ca3bd58e6cec090e.gif'),
-                        _buildImageContainer(
-                            'https://gifyard.com/wp-content/uploads/2023/01/girl-laughs.gif'),
-                      ],
-                    ),
+        body: SingleChildScrollView(
+          // Wrap the body in SingleChildScrollView
+          child: Column(
+            children: [
+              // AppBar extending to the image start
+              Container(
+                height: 200,
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFF5C964A), // Green
+                      Color.fromRGBO(239, 239, 239, 1),
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    stops: [0.5, 0.5],
+                  ),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(24),
+                    bottomRight: Radius.circular(24),
                   ),
                 ),
-              ],
-            ),
-          ),
-          // Dynamic Button Grid
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
+                child: Stack(
+                  children: [
+                    Positioned(
+                      bottom: 50,
+                      left: 16,
+                      right: 16,
+                      child: Container(
+                        height: 150,
+                        child: PageView(
+                          controller: _pageController,
+                          children: [
+                            _buildImageContainer(
+                                'https://docs.flutter.dev/assets/images/dash/dash-fainting.gif'),
+                            _buildImageContainer(
+                                'https://europe1.discourse-cdn.com/figma/original/3X/7/1/7105e9c010b3d1f0ea893ed5ca3bd58e6cec090e.gif'),
+                            _buildImageContainer(
+                                'https://gifyard.com/wp-content/uploads/2023/01/girl-laughs.gif'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                itemCount: buttonItems.length,
-                itemBuilder: (context, index) {
-                  final item = buttonItems[index];
-                  return _buildButton(item['label']!, item['imageUrl']!,
-                      item['route']!, context);
-                },
               ),
-            ),
+              // Dynamic Button Grid
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: GridView.builder(
+                  shrinkWrap:
+                      true, // Ensures the grid only takes necessary space
+                  physics:
+                      NeverScrollableScrollPhysics(), // Disable scrolling in GridView
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                  ),
+                  itemCount: buttonItems.length,
+                  itemBuilder: (context, index) {
+                    final item = buttonItems[index];
+                    return _buildButton(item['label']!, item['imageUrl']!,
+                        item['route']!, context);
+                  },
+                ),
+              ),
+              // Complaints Container
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          workerComplaintsScreen(), // Add new screen for complaints
+                    ),
+                  );
+                },
+                child: Container(
+                    width: 370,
+                    height: 139,
+                    decoration: ShapeDecoration(
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      shadows: [
+                        BoxShadow(
+                          color: Color(0x14000000),
+                          blurRadius: 16,
+                          offset: Offset(0, 8),
+                          spreadRadius: 0,
+                        ),
+                        BoxShadow(
+                          color: Color(0x0A000000),
+                          blurRadius: 4,
+                          offset: Offset(0, 0),
+                          spreadRadius: 0,
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment
+                          .center, // Center the items horizontally
+                      crossAxisAlignment: CrossAxisAlignment
+                          .center, // Center the items vertically
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 64,
+                              height: 64,
+                              clipBehavior: Clip.antiAlias,
+                              decoration: BoxDecoration(),
+                              child: Image.asset(
+                                'images/Complaints.png', // Load from local assets
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            const SizedBox(
+                                height: 10), // Space between logo and text
+                            Text(
+                              'Complaints',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontFamily: 'Nunito Sans',
+                                fontWeight: FontWeight.w400,
+                                height: 1.25,
+                                letterSpacing: 0.16,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    )),
+              ),
+              SizedBox(height: 16), // Add some padding below the container
+            ],
           ),
-        ],
+        ),
       ),
-    ) );
+    );
   }
 
-  // Image container for the PageView
   Widget _buildImageContainer(String imageUrl) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -149,7 +228,6 @@ class _WorkerScreenState extends State<WorkerScreen> {
     );
   }
 
-  // Button widget with dynamic label, image, and navigation
   Widget _buildButton(
       String label, String imageUrl, String routeName, BuildContext context) {
     return GestureDetector(

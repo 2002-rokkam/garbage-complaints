@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'BeforeAfterContainer.dart';
 import 'QRTab.dart'; // Add this package
 
-
 class D2DSectionScreen extends StatefulWidget {
   final String section;
 
@@ -40,7 +39,7 @@ class _D2DSectionScreenState extends State<D2DSectionScreen> {
       int workerId = await getWorkerId();
       Dio dio = Dio();
       final response = await dio.get(
-          'https://f827-2401-4900-882e-cef3-39e1-4161-da52-3ce0.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+          'https://8250-122-172-86-111.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
 
       if (response.statusCode == 200) {
         final data = response.data;

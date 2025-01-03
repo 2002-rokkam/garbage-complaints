@@ -40,7 +40,7 @@ class _ResponsiveScreenState extends State<ResponsiveScreen> {
       int workerId = await getWorkerId();
       Dio dio = Dio();
       final response = await dio.get(
-          'https://f827-2401-4900-882e-cef3-39e1-4161-da52-3ce0.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+          'https://8250-122-172-86-111.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
 
       if (response.statusCode == 200) {
         final data = response.data;

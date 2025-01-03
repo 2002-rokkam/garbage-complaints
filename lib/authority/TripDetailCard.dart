@@ -5,7 +5,6 @@ import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // For JSON encoding
 
-
 class TripDetailCard extends StatefulWidget {
   @override
   _TripDetailCardState createState() => _TripDetailCardState();
@@ -65,7 +64,7 @@ class _TripDetailCardState extends State<TripDetailCard> {
       // Submit the data using Dio
       final dio = Dio();
       final response = await dio.post(
-        'https://f827-2401-4900-882e-cef3-39e1-4161-da52-3ce0.ngrok-free.app/api/submit-activity',
+        'https://8250-122-172-86-111.ngrok-free.app/api/submit-activity',
         data: formData,
       );
 

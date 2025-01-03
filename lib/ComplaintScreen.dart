@@ -41,7 +41,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
         imageData.isNotEmpty) {
       try {
         var uri = Uri.parse(
-            'https://3720-223-185-51-171.ngrok-free.app/api/complaints-register');
+            'https://8250-122-172-86-111.ngrok-free.app/api/complaints-register');
 
         var request = http.MultipartRequest('POST', uri)
           ..fields['mobile_number'] = _phoneNumber
@@ -72,7 +72,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
         if (response.statusCode == 201) {
           final responseData = await response.stream.bytesToString();
           final jsonResponse = jsonDecode(responseData);
-           Navigator.pushReplacement(
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(
                 builder: (context) =>
@@ -239,16 +239,14 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                   SizedBox(height: 8),
                   Expanded(
                     child: ListView.builder(
-                      controller:
-                          controller, 
+                      controller: controller,
                       itemCount: filteredOptions.length,
                       itemBuilder: (_, index) {
                         return ListTile(
                           title: Text(filteredOptions[index]),
                           onTap: () {
                             onSelect(filteredOptions[index]);
-                            Navigator.pop(
-                                context); 
+                            Navigator.pop(context);
                           },
                         );
                       },
@@ -269,9 +267,9 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-     appBar: PreferredSize(
+      appBar: PreferredSize(
         preferredSize: Size.fromHeight(
-          screenHeight * 0.18, 
+          screenHeight * 0.18,
         ),
         child: Container(
           width: double.infinity,
@@ -286,8 +284,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
             ),
           ),
           child: Padding(
-            padding: const EdgeInsets.only(
-                left: 16.0), 
+            padding: const EdgeInsets.only(left: 16.0),
             child: Row(
               children: [
                 IconButton(
@@ -316,7 +313,6 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
           ),
         ),
       ),
-
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(
@@ -648,8 +644,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                 ],
               )
             ],
-          ]
-          ),
+          ]),
         ),
       ),
       bottomSheet: Padding(
@@ -663,7 +658,8 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
               ),
               onPressed: submitComplaint,
               child: const Text(
@@ -685,7 +681,8 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
               ),
               onPressed: () async {
                 // Navigate to the ViewComplaintsScreen

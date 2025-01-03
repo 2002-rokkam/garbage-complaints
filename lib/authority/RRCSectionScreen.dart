@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'BeforeAfterContainer.dart';
-import 'TripDetailCard.dart'; // HTTP requests
+import 'RCCCalendarActivityScreen.dart';
+import 'TripDetailCard.dart';
+
 class RRCScreen extends StatefulWidget {
   final String section;
 
@@ -17,7 +19,7 @@ class _RRCScreenState extends State<RRCScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   List<Widget> beforeAfterContainers = [];
-  List tripDetails = []; // Keeping it empty, no API call for trip details
+  List tripDetails = [];
   bool isLoading = true;
 
   @override
@@ -50,7 +52,7 @@ class _RRCScreenState extends State<RRCScreen>
       int workerId = await getWorkerId();
       Dio dio = Dio();
       final response = await dio.get(
-          'https://f827-2401-4900-882e-cef3-39e1-4161-da52-3ce0.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+          'https://8250-122-172-86-111.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
 
       if (response.statusCode == 200) {
         final data = response.data;
@@ -65,7 +67,6 @@ class _RRCScreenState extends State<RRCScreen>
                     onReload: _fetchActivities,
                   ))
               .toList();
-          // Trip details API call is removed
         });
       } else {
         print("Error fetching activities: ${response.data['message']}");
@@ -89,6 +90,17 @@ class _RRCScreenState extends State<RRCScreen>
     });
   }
 
+  // Navigate to the new screen and send section data
+  void navigateToNewScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RCCCalendarActivityScreen(
+            section: widget.section), // Send section data
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,6 +121,20 @@ class _RRCScreenState extends State<RRCScreen>
             ),
           ],
         ),
+        leading: IconButton(
+          // Back button
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context); // Pop the current screen
+          },
+        ),
+        actions: [
+          IconButton(
+            // Calendar Icon
+            icon: Icon(Icons.calendar_today),
+            onPressed: navigateToNewScreen, // Navigate to the new screen
+          ),
+        ],
         bottom: TabBar(
           controller: _tabController,
           indicatorColor: Colors.white,
@@ -137,13 +163,11 @@ class _RRCScreenState extends State<RRCScreen>
                           ],
                   ),
                 ),
-
-                // Tab 2: Trip Details (Now Static or Empty)
+                // Tab 2: Trip Details (Static or Empty)
                 SingleChildScrollView(
                   padding: EdgeInsets.all(16),
                   child: Column(
                     children: [
-                      // Displaying one or more TripDetailCard widgets statically
                       TripDetailCard(),
                     ],
                   ),
