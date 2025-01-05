@@ -109,7 +109,7 @@ class _CitizensScreenState extends State<CitizensScreen> {
           children: [
             // Fixed image slider
             Container(
-              height: 200,
+              height: 180,
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
@@ -124,7 +124,7 @@ class _CitizensScreenState extends State<CitizensScreen> {
               child: Stack(
                 children: [
                   Positioned(
-                    bottom: 40,
+                    bottom: 10,
                     left: 16,
                     right: 16,
                     child: Container(
@@ -167,25 +167,19 @@ class _CitizensScreenState extends State<CitizensScreen> {
                 child: Column(
                   children: [
                     // Dynamic Button Grid
-                    Padding(
+                   Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                      child: GridView.builder(
-                        shrinkWrap:
-                            true, // Ensures the grid only takes necessary space
-                        physics:
-                            NeverScrollableScrollPhysics(), // Disable scrolling in GridView
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 12,
-                          mainAxisSpacing: 16,
-                        ),
-                        itemCount: buttonItems.length,
-                        itemBuilder: (context, index) {
-                          final item = buttonItems[index];
-                          return _buildButton(item['label']!, item['imageUrl']!,
-                              item['route']!, context);
-                        },
+                      child: Wrap(
+                        spacing: 1, // Horizontal space between buttons
+                        runSpacing: 16, // Vertical space between rows
+                        children: buttonItems.map((item) {
+                          return _buildButton(
+                            item['label']!,
+                            item['imageUrl']!,
+                            item['route']!,
+                            context,
+                          );
+                        }).toList(),
                       ),
                     ),
                     // Complaints label
@@ -313,11 +307,11 @@ class _CitizensScreenState extends State<CitizensScreen> {
         );
       },
       child: Container(
-        width: 120, // Adjusted width
-        height: 80, // Adjusted height
-        padding: const EdgeInsets.all(12), // Adjusted padding
-        margin: const EdgeInsets.symmetric(
-            horizontal: 8), // Added margin from left and right
+        width: 165, // Fixed width for all buttons
+        height: 120, // Fixed height for all buttons
+        padding: const EdgeInsets.all(8), // Adjust padding
+        margin:
+            const EdgeInsets.symmetric(horizontal: 8), // Margin between buttons
         decoration: ShapeDecoration(
           color: Colors.white,
           shape: RoundedRectangleBorder(
@@ -339,33 +333,32 @@ class _CitizensScreenState extends State<CitizensScreen> {
           ],
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          // Move label to bottom
+          mainAxisAlignment:
+              MainAxisAlignment.center, // Keep vertically centered
+          crossAxisAlignment:
+              CrossAxisAlignment.start, // Align children to the start (left)
           children: [
+            // Image size adjusted to fit inside the fixed size
             Container(
-              width: 51,
-              height: 62,
+              width: 60, // Fixed image width
+              height: 60, // Fixed image height
               clipBehavior: Clip.antiAlias,
               decoration: BoxDecoration(),
               child: Image.asset(
-                imageUrl, // Load from local assets
+                imageUrl,
                 fit: BoxFit.cover,
               ),
             ),
-            // Adjust the label placement here
-            SizedBox(height: 26),
-            SizedBox(
-              width: double.infinity,
-              child: Text(
-                label,
-                textAlign: TextAlign.start, // Center-align the label
-                style: const TextStyle(
-                  color: Color(0xFF6B6B6B),
-                  fontSize: 14, // Smaller font size
-                  fontFamily: 'Nunito Sans',
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.16,
-                ),
+            SizedBox(height: 8), // Adjusted the gap
+            Text(
+              label,
+              textAlign: TextAlign.start, // Align text to the left
+              style: const TextStyle(
+                color: Color(0xFF6B6B6B),
+                fontSize: 12, // Adjust font size as needed
+                fontFamily: 'Nunito Sans',
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.16,
               ),
             ),
           ],

@@ -32,8 +32,16 @@ class _WorkerScreenState extends State<WorkerScreen> {
       'imageUrl': 'images/drainage_collectin.png',
       'route': 'DrainCleaningScreen'
     },
-    {'label': 'Community Service Centre', 'imageUrl': 'images/CSC.png', 'route': 'CSCScreen'},
-    {'label': 'Resource Recovery Centre', 'imageUrl': 'images/RRC.png', 'route': 'RRCScreen'},
+    {
+      'label': 'Community Service Centre',
+      'imageUrl': 'images/CSC.png',
+      'route': 'CSCScreen'
+    },
+    {
+      'label': 'Resource Recovery Centre',
+      'imageUrl': 'images/RRC.png',
+      'route': 'RRCScreen'
+    },
     {'label': 'Wages', 'imageUrl': 'images/wages.png', 'route': 'WagesScreen'},
   ];
 
@@ -102,7 +110,7 @@ class _WorkerScreenState extends State<WorkerScreen> {
           children: [
             // Fixed image slider
             Container(
-              height: 200,
+              height: 180,
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
@@ -117,7 +125,7 @@ class _WorkerScreenState extends State<WorkerScreen> {
               child: Stack(
                 children: [
                   Positioned(
-                    bottom: 40,
+                    bottom: 10,
                     left: 16,
                     right: 16,
                     child: Container(
@@ -145,7 +153,7 @@ class _WorkerScreenState extends State<WorkerScreen> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Action',
+                  'Home',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -159,8 +167,42 @@ class _WorkerScreenState extends State<WorkerScreen> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
+
+                     Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                      child: Wrap(
+                        spacing: 1, // Horizontal space between buttons
+                        runSpacing: 16, // Vertical space between rows
+                        children: buttonItems.map((item) {
+                          return _buildButton(
+                            item['label']!,
+                            item['imageUrl']!,
+                            item['route']!,
+                            context,
+                          );
+                        }).toList(),
+                      ),
+                    ),
                     // Complaints Container
-                    GestureDetector(
+                    
+                    SizedBox(height: 16),
+                    // Scrollable "Home" label and buttons grid
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 4.0),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Action',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ),
+                   GestureDetector(
                       onTap: () {
                         Navigator.push(
                           context,
@@ -229,46 +271,6 @@ class _WorkerScreenState extends State<WorkerScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 16),
-                    // Scrollable "Home" label and buttons grid
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0, vertical: 4.0),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Home',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                      child: GridView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 12,
-                          mainAxisSpacing: 16,
-                        ),
-                        itemCount: buttonItems.length,
-                        itemBuilder: (context, index) {
-                          final item = buttonItems[index];
-                          return _buildButton(
-                            item['label']!,
-                            item['imageUrl']!,
-                            item['route']!,
-                            context,
-                          );
-                        },
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -278,7 +280,6 @@ class _WorkerScreenState extends State<WorkerScreen> {
       ),
     );
   }
-
 
   Widget _buildImageContainer(String imageUrl) {
     return Container(
@@ -305,11 +306,11 @@ class _WorkerScreenState extends State<WorkerScreen> {
         );
       },
       child: Container(
-        width: 120, // Adjusted width
-        height: 80, // Adjusted height
-        padding: const EdgeInsets.all(12), // Adjusted padding
-        margin: const EdgeInsets.symmetric(
-            horizontal: 8), // Added margin from left and right
+        width: 165, // Fixed width for all buttons
+        height: 120, // Fixed height for all buttons
+        padding: const EdgeInsets.all(8), // Adjust padding
+        margin:
+            const EdgeInsets.symmetric(horizontal: 8), // Margin between buttons
         decoration: ShapeDecoration(
           color: Colors.white,
           shape: RoundedRectangleBorder(
@@ -331,37 +332,37 @@ class _WorkerScreenState extends State<WorkerScreen> {
           ],
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          // Move label to bottom
+          mainAxisAlignment:
+              MainAxisAlignment.center, // Keep vertically centered
+          crossAxisAlignment:
+              CrossAxisAlignment.start, // Align children to the start (left)
           children: [
+            // Image size adjusted to fit inside the fixed size
             Container(
-              width: 51,
-              height: 62,
+              width: 60, // Fixed image width
+              height: 60, // Fixed image height
               clipBehavior: Clip.antiAlias,
               decoration: BoxDecoration(),
               child: Image.asset(
-                imageUrl, // Load from local assets
+                imageUrl,
                 fit: BoxFit.cover,
               ),
             ),
-            // Adjust the label placement here
-            SizedBox(height: 26),
-            SizedBox(
-              width: double.infinity,
-              child: Text(
-                label,
-                textAlign: TextAlign.start, // Center-align the label
-                style: const TextStyle(
-                  color: Color(0xFF6B6B6B),
-                  fontSize: 14, // Smaller font size
-                  fontFamily: 'Nunito Sans',
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.16,
-                ),
+            SizedBox(height: 8), // Adjusted the gap
+            Text(
+              label,
+              textAlign: TextAlign.start, // Align text to the left
+              style: const TextStyle(
+                color: Color(0xFF6B6B6B),
+                fontSize: 12, // Adjust font size as needed
+                fontFamily: 'Nunito Sans',
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.16,
               ),
             ),
           ],
         ),
+
       ),
     );
   }
