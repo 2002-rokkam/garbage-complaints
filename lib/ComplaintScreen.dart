@@ -41,7 +41,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
         imageData.isNotEmpty) {
       try {
         var uri = Uri.parse(
-            'https://8250-122-172-86-111.ngrok-free.app/api/complaints-register');
+            'https://d029-122-172-86-111.ngrok-free.app/api/complaints-register');
 
         var request = http.MultipartRequest('POST', uri)
           ..fields['mobile_number'] = _phoneNumber
@@ -49,20 +49,17 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
           ..fields['gram_panchayat'] = selectedGP!
           ..fields['caption'] = caption;
 
-        // Add photos and geo-coordinates
         for (int i = 0; i < imageData.length; i++) {
           var image = imageData[i]['image'] as Uint8List;
           var latitude = imageData[i]['latitude'].toString();
           var longitude = imageData[i]['longitude'].toString();
 
-          // Add photo as multipart file
           request.files.add(http.MultipartFile.fromBytes(
             'photos',
             image,
             filename: 'photo${i + 1}.jpg',
           ));
 
-          // Add latitude and longitude for each photo
           request.fields['latitude_photo${i + 1}.jpg'] = latitude;
           request.fields['longitude_photo${i + 1}.jpg'] = longitude;
         }
@@ -76,7 +73,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    ComplaintRegisterScreen()), // Replace with your SuccessScreen widget
+                    ComplaintRegisterScreen()),
           );
         } else {
           throw 'Failed to submit complaint. Try again later.';
@@ -120,14 +117,14 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
     }
   }
 
-  bool hasCapturedImage = false; // Track if an image has been captured
+  bool hasCapturedImage = false;
 
   Future<void> _pickImage() async {
     if (imageData.length >= 3) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("You can only capture up to 3 images.")),
       );
-      return; // Exit early if 3 images are already captured
+      return;
     }
 
     try {
@@ -140,7 +137,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
         setState(() {
           imageData.add({
             'image': imageBytes,
-            'caption': caption, // Assign the common caption
+            'caption': caption,
             'latitude': position.latitude,
             'longitude': position.longitude,
           });

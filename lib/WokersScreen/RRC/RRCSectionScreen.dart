@@ -1,8 +1,8 @@
-// authority/RRCSectionScreen.dart
+// WokersScreen/RRC/RRCSectionScreen.dart
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'BeforeAfterContainer.dart';
+import '../WorkerCommon/BeforeAfterContainer.dart';
 import 'RCCCalendarActivityScreen.dart';
 import 'TripDetailCard.dart';
 
@@ -52,7 +52,7 @@ class _RRCScreenState extends State<RRCScreen>
       int workerId = await getWorkerId();
       Dio dio = Dio();
       final response = await dio.get(
-          'https://8250-122-172-86-111.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+          'https://d029-122-172-86-111.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
 
       if (response.statusCode == 200) {
         final data = response.data;
@@ -107,11 +107,11 @@ class _RRCScreenState extends State<RRCScreen>
       backgroundColor: Color.fromRGBO(239, 239, 239, 1),
       appBar: AppBar(
         backgroundColor: Color(0xFF5C964A),
-        centerTitle: true,
-        title: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        centerTitle: false, // Don't center the title
+        title: Row(
+          mainAxisAlignment:
+              MainAxisAlignment.center, // Center title in the row
           children: [
-            SizedBox(height: 40),
             Text(
               '${widget.section}',
               style: TextStyle(
@@ -122,22 +122,31 @@ class _RRCScreenState extends State<RRCScreen>
           ],
         ),
         leading: IconButton(
-          // Back button
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white, // Make back button white
+          ),
           onPressed: () {
-            Navigator.pop(context); // Pop the current screen
+            Navigator.pop(context);
           },
         ),
         actions: [
           IconButton(
-            // Calendar Icon
-            icon: Icon(Icons.calendar_today),
-            onPressed: navigateToNewScreen, // Navigate to the new screen
+            icon: Icon(
+              Icons.calendar_today,
+              color: Colors.white, // Make calendar icon white
+            ),
+            onPressed: navigateToNewScreen,
           ),
         ],
         bottom: TabBar(
           controller: _tabController,
-          indicatorColor: Colors.white,
+          labelColor: Colors.white, // Set label color to white
+          unselectedLabelColor:
+              Colors.white, // Unselected tabs will also be white
+          indicatorColor: Color.fromRGBO(
+              255, 210, 98, 1), // The selected tab underline color
+          indicatorWeight: 3.0,
           tabs: [
             Tab(text: 'Before After'),
             Tab(text: 'Trip Details'),

@@ -1,8 +1,9 @@
-// authority/D2DSectionScreen.dart
+// WokersScreen/D2D/D2DSectionScreen.dart
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'BeforeAfterContainer.dart';
+import '../WorkerCommon/BeforeAfterContainer.dart';
+import 'D2DCalnderActivity.dart';
 import 'QRTab.dart'; // Add this package
 
 class D2DSectionScreen extends StatefulWidget {
@@ -39,7 +40,7 @@ class _D2DSectionScreenState extends State<D2DSectionScreen> {
       int workerId = await getWorkerId();
       Dio dio = Dio();
       final response = await dio.get(
-          'https://8250-122-172-86-111.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+          'https://d029-122-172-86-111.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
 
       if (response.statusCode == 200) {
         final data = response.data;
@@ -85,11 +86,17 @@ class _D2DSectionScreenState extends State<D2DSectionScreen> {
         backgroundColor: const Color.fromRGBO(239, 239, 239, 1),
         appBar: AppBar(
           backgroundColor: const Color(0xFF5C964A),
-          centerTitle: true,
-          title: Column(
+          leading: IconButton(
+            icon:
+                const Icon(Icons.arrow_back, color: Colors.white), // Back Icon
+            onPressed: () {
+              Navigator.pop(context); // Go back to previous screen
+            },
+          ),
+          title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 40),
+              // The section title centered
               Text(
                 '${widget.section}',
                 style: const TextStyle(
@@ -99,12 +106,39 @@ class _D2DSectionScreenState extends State<D2DSectionScreen> {
               ),
             ],
           ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.calendar_today,
+                  color: Colors.white), // Calendar Icon
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        D2DCalnderActivityScreen(section: widget.section),
+                  ),
+                );
+              },
+            ),
+          ],
           bottom: const TabBar(
             tabs: [
-              Tab(text: "Before After"),
-              Tab(text: "QR"),
-              Tab(text: "GPS"),
+              Tab(
+                text: "Before After",
+              ),
+              Tab(
+                text: "QR",
+              ),
+              Tab(
+                text: "GPS",
+              ),
             ],
+            labelColor: Colors.white, // Set label color to white
+            unselectedLabelColor:
+                Colors.white, // Unselected tabs will also be white
+            indicatorColor: Color.fromRGBO(
+                255, 210, 98, 1), // The selected tab underline color
+            indicatorWeight: 3.0, // Thicker underline
           ),
         ),
         body: TabBarView(

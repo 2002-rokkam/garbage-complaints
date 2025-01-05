@@ -40,7 +40,7 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
     });
 
     final url = Uri.parse(
-        'https://8250-122-172-86-111.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+        'https://d029-122-172-86-111.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
 
     try {
       final response = await http.get(url);
@@ -244,7 +244,7 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
                                             decoration: ShapeDecoration(
                                               image: DecorationImage(
                                                 image: NetworkImage(
-                                                  'https://8250-122-172-86-111.ngrok-free.app${activity['before_image']}',
+                                                  'https://d029-122-172-86-111.ngrok-free.app${activity['before_image']}',
                                                 ),
                                                 fit: BoxFit.cover,
                                               ),
@@ -260,7 +260,7 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
                                             decoration: ShapeDecoration(
                                               image: DecorationImage(
                                                 image: NetworkImage(
-                                                  'https://8250-122-172-86-111.ngrok-free.app${activity['after_image']}',
+                                                  'https://d029-122-172-86-111.ngrok-free.app${activity['after_image']}',
                                                 ),
                                                 fit: BoxFit.cover,
                                               ),

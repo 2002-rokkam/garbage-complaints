@@ -1,21 +1,21 @@
-// authority/CustomScreen.dart
+// WokersScreen/WorkerCommon/ActionScreen.dart
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'BeforeAfterContainer.dart';
-import 'History.dart';
+import 'CalendarActivityScreen.dart';
 
-class ResponsiveScreen extends StatefulWidget {
+class ActionScreen extends StatefulWidget {
   final String section;
 
-  const ResponsiveScreen({Key? key, required this.section}) : super(key: key);
+  const ActionScreen({Key? key, required this.section}) : super(key: key);
 
   @override
-  _ResponsiveScreenState createState() => _ResponsiveScreenState();
+  _ActionScreenState createState() => _ActionScreenState();
 }
 
-class _ResponsiveScreenState extends State<ResponsiveScreen> {
+class _ActionScreenState extends State<ActionScreen> {
   List<Widget> beforeAfterContainers = [];
   bool isLoading = true;
 
@@ -40,7 +40,7 @@ class _ResponsiveScreenState extends State<ResponsiveScreen> {
       int workerId = await getWorkerId();
       Dio dio = Dio();
       final response = await dio.get(
-          'https://8250-122-172-86-111.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+          'https://d029-122-172-86-111.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
 
       if (response.statusCode == 200) {
         final data = response.data;
@@ -87,10 +87,17 @@ class _ResponsiveScreenState extends State<ResponsiveScreen> {
         child: AppBar(
           backgroundColor: Color(0xFF5C964A),
           centerTitle: true,
-          title: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          automaticallyImplyLeading: false, // To remove the default back button
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment
+                .spaceBetween, // Ensures space between the elements
             children: [
-              SizedBox(height: 40),
+              IconButton(
+                icon: Icon(Icons.arrow_back, color: Colors.white),
+                onPressed: () {
+                  Navigator.pop(context); // Handle back navigation
+                },
+              ),
               Text(
                 '${widget.section}',
                 style: TextStyle(
@@ -98,26 +105,23 @@ class _ResponsiveScreenState extends State<ResponsiveScreen> {
                   color: Colors.white,
                 ),
               ),
+              IconButton(
+                icon: Icon(Icons.calendar_today, color: Colors.white),
+                onPressed: () {
+                  // Navigate to the CalendarScreen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          CalendarActivityScreen(section: widget.section),
+                    ),
+                  );
+                },
+              ),
             ],
           ),
-          actions: [
-            IconButton(
-              icon: Icon(Icons.calendar_today, color: Colors.white),
-              onPressed: () {
-                // Navigate to the new CalendarScreen and pass the section
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        CalendarActivityScreen(section: widget.section),
-                  ),
-                );
-              },
-            ),
-          ],
         ),
       ),
-
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),
         child: Column(

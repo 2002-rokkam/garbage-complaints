@@ -1,11 +1,8 @@
-// authority/workerComplaintsScreen.dart
+// WokersScreen/WorkerComplaints/WorkerComplaintsListScreen.dart
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:geocoding/geocoding.dart';
-import 'package:table_calendar/table_calendar.dart';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'dart:io';
 import 'package:dio/dio.dart';
@@ -13,118 +10,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class workerComplaintsScreen extends StatefulWidget {
-  @override
-  _workerComplaintsScreenState createState() => _workerComplaintsScreenState();
-}
-
-class _workerComplaintsScreenState extends State<workerComplaintsScreen> {
-  DateTime _selectedDay = DateTime.now();
-  Map<DateTime, int> complaintCounts = {};
-  List<dynamic> complaints = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchComplaintData();
-  }
-
-  Future<void> _fetchComplaintData() async {
-    final url =
-        'https://8250-122-172-86-111.ngrok-free.app/api/complaints-by-gram-panchayat?gram_panchayat=Srinagar';
-    try {
-      final response = await http.get(Uri.parse(url));
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final complaintsList = data['complaints'];
-
-        Map<DateTime, int> counts = {};
-        for (var complaint in complaintsList) {
-          final date = DateTime.parse(complaint['created_at']).toLocal();
-          final day = DateTime(date.year, date.month, date.day);
-          counts[day] = (counts[day] ?? 0) + 1;
-        }
-
-        setState(() {
-          complaints = complaintsList;
-          complaintCounts = counts;
-        });
-      } else {
-        throw Exception('Failed to load complaints');
-      }
-    } catch (e) {
-      print('Error fetching complaints: $e');
-    }
-  }
-
-  void _onDateSelected(DateTime selectedDay, DateTime focusedDay) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ComplaintsListScreen(
-          date: selectedDay,
-          complaints: complaints,
-          onUpdate: _fetchComplaintData, // Pass the refresh method
-        ),
-      ),
-    );
-  }
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Complaints Calendar'),
-      ),
-      backgroundColor: Color.fromRGBO(239, 239, 239, 1),
-      body: Column(
-        children: [
-          TableCalendar(
-            firstDay: DateTime.utc(2024, 1, 1),
-            lastDay: DateTime.utc(2025, 12, 31),
-            focusedDay: DateTime.now(),
-            calendarFormat: CalendarFormat.month,
-            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-            onDaySelected: _onDateSelected,
-            calendarBuilders: CalendarBuilders(
-              markerBuilder: (context, date, _) {
-                final count = complaintCounts[date] ?? 0;
-                if (count > 0) {
-                  return Positioned(
-                    bottom: 1,
-                    child: Container(
-                      width: 16,
-                      height: 16,
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: Text(
-                          '$count',
-                          style: TextStyle(color: Colors.white, fontSize: 10),
-                        ),
-                      ),
-                    ),
-                  );
-                }
-                return null;
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class ComplaintsListScreen extends StatelessWidget {
+class WorkerComplaintsListScreen extends StatelessWidget {
   final DateTime date;
   final List<dynamic> complaints;
   final VoidCallback onUpdate; // Callback to refresh data
 
-  ComplaintsListScreen(
+  WorkerComplaintsListScreen(
       {required this.date, required this.complaints, required this.onUpdate});
 
   @override
@@ -138,7 +29,16 @@ class ComplaintsListScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Complaints on ${date.toLocal()}'.split(' ')[0]),
+        title: Text(
+          'Complaints on ${date.toLocal()}'.split(' ')[0],
+          style: TextStyle(
+            color: Colors.white, // White text color
+            fontSize: 20, // Optional: Adjust font size
+            fontWeight: FontWeight.bold, // Optional: Bold text
+          ),
+        ),
+        backgroundColor: Color(0xFF5C964A), // Set green color for the app bar
+        toolbarHeight: 80.0,
       ),
       backgroundColor: Color.fromRGBO(239, 239, 239, 1),
       body: selectedDateComplaints.isEmpty
@@ -160,7 +60,6 @@ class ComplaintsListScreen extends StatelessWidget {
   }
 }
 
-
 class ComplaintCard extends StatefulWidget {
   final dynamic complaint;
   final VoidCallback onUpdate; // Callback for refreshing data
@@ -171,15 +70,14 @@ class ComplaintCard extends StatefulWidget {
   _ComplaintCardState createState() => _ComplaintCardState();
 }
 
-
 class _ComplaintCardState extends State<ComplaintCard> {
   String _address = "Fetching address...";
   File? _imageFile;
   double? _latitude;
   double? _longitude;
-late int workerId;
+  late int workerId;
   String _workerEmail = '';
-  
+
   @override
   void initState() {
     super.initState();
@@ -292,7 +190,7 @@ late int workerId;
     );
   }
 
-Future<int> getWorkerId() async {
+  Future<int> getWorkerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     int workerId = prefs.getInt('worker_id') ?? -1;
     return workerId;
@@ -329,7 +227,7 @@ Future<int> getWorkerId() async {
 
     try {
       Response response = await dio.post(
-        'https://8250-122-172-86-111.ngrok-free.app/api/update-complaint/${widget.complaint['complaint_id']}',
+        'https://d029-122-172-86-111.ngrok-free.app/api/update-complaint/${widget.complaint['complaint_id']}',
         data: formData,
       );
 
@@ -337,8 +235,8 @@ Future<int> getWorkerId() async {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Complaint updated successfully'),
         ));
-        widget.onUpdate(); 
-        Navigator.pop(context,true);// Notify parent to refresh data
+        widget.onUpdate();
+        Navigator.pop(context, true); // Notify parent to refresh data
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Failed to update complaint'),
@@ -351,96 +249,94 @@ Future<int> getWorkerId() async {
     }
   }
 
-void _showResolvedPhoto(Map<String, dynamic>? resolvedPhoto) {
-  if (resolvedPhoto != null && resolvedPhoto['image'] != null) {
-    final imageUrl =
-        'https://8250-122-172-86-111.ngrok-free.app${resolvedPhoto['image']}';
+  void _showResolvedPhoto(Map<String, dynamic>? resolvedPhoto) {
+    if (resolvedPhoto != null && resolvedPhoto['image'] != null) {
+      final imageUrl =
+          'https://d029-122-172-86-111.ngrok-free.app${resolvedPhoto['image']}';
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Image.network(imageUrl),
-              SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text('Close'),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  } else {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text('No resolved photo available'),
-    ));
-  }
-}
-
-
- @override
-Widget build(BuildContext context) {
-  final images = widget.complaint['photos'];
-  final status = widget.complaint['status'];
-  final createdAt = DateTime.parse(widget.complaint['created_at']).toLocal();
-  final caption = widget.complaint['caption'];
-  final resolvedPhoto = widget.complaint['resolved_photo'];
-
-  return Container(
-    margin: EdgeInsets.only(bottom: 16.0),
-    width: 370,
-    decoration: ShapeDecoration(
-      color: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Auto-Scrolling Carousel Slider with Overlayed Date and Status
-        Container(
-          width: 370,
-          height: 188.59,
-          child: Stack(
-            children: [
-              // Carousel
-              CarouselSlider(
-                options: CarouselOptions(
-                  height: 188.59,
-                  autoPlay: true,
-                  autoPlayInterval: Duration(seconds: 3),
-                  autoPlayAnimationDuration: Duration(milliseconds: 800),
-                  viewportFraction: 1.0,
-                  enlargeCenterPage: false,
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.network(imageUrl),
+                SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('Close'),
                 ),
-                items: images.map<Widget>((image) {
-                  return ClipRRect(
-                    borderRadius:
-                        BorderRadius.circular(16), // Rounded corners
-                    child: Container(
-                      width: 370,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage(
-                            'https://8250-122-172-86-111.ngrok-free.app${image['image']}',
+              ],
+            ),
+          );
+        },
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('No resolved photo available'),
+      ));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final images = widget.complaint['photos'];
+    final status = widget.complaint['status'];
+    final createdAt = DateTime.parse(widget.complaint['created_at']).toLocal();
+    final caption = widget.complaint['caption'];
+    final resolvedPhoto = widget.complaint['resolved_photo'];
+
+    return Container(
+      margin: EdgeInsets.only(bottom: 16.0),
+      width: 370,
+      decoration: ShapeDecoration(
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Auto-Scrolling Carousel Slider with Overlayed Date and Status
+          Container(
+            width: 370,
+            height: 188.59,
+            child: Stack(
+              children: [
+                // Carousel
+                CarouselSlider(
+                  options: CarouselOptions(
+                    height: 188.59,
+                    autoPlay: true,
+                    autoPlayInterval: Duration(seconds: 3),
+                    autoPlayAnimationDuration: Duration(milliseconds: 800),
+                    viewportFraction: 1.0,
+                    enlargeCenterPage: false,
+                  ),
+                  items: images.map<Widget>((image) {
+                    return ClipRRect(
+                      borderRadius:
+                          BorderRadius.circular(16), // Rounded corners
+                      child: Container(
+                        width: 370,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: NetworkImage(
+                              'https://d029-122-172-86-111.ngrok-free.app${image['image']}',
+                            ),
+                            fit: BoxFit.cover,
                           ),
-                          fit: BoxFit.cover,
                         ),
                       ),
-                    ),
-                  );
-                }).toList(),
-              ),
-              // Date and Status Overlay
-              // Date and Status Overlay
+                    );
+                  }).toList(),
+                ),
+                // Date and Status Overlay
                 Positioned(
                   top: 12,
                   right: 12,
@@ -455,7 +351,7 @@ Widget build(BuildContext context) {
                             horizontal: 10, vertical: 5),
                         decoration: ShapeDecoration(
                           color: status == "Resolved"
-                              ? Colors.green
+                              ? Color(0xFF5C964A)
                               : Colors
                                   .orange, // Green for Resolved, Orange for Pending/Other
                           shape: RoundedRectangleBorder(
@@ -500,77 +396,76 @@ Widget build(BuildContext context) {
                     ],
                   ),
                 ),
-
-            ],
+              ],
+            ),
           ),
-        ),
 
-        SizedBox(height: 8),
-        // Location and Caption
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 12.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Icon(Icons.location_pin, color: Colors.red),
-                  SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      _address,
-                      style: TextStyle(
-                        color: Color(0xFF252525),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+          SizedBox(height: 8),
+          // Location and Caption
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.location_pin, color: Colors.red),
+                    SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        _address,
+                        style: TextStyle(
+                          color: Color(0xFF252525),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      overflow: TextOverflow.ellipsis,
                     ),
+                  ],
+                ),
+                SizedBox(height: 8),
+                Text(
+                  caption,
+                  style: TextStyle(
+                    color: Color(0xFF252525),
+                    fontSize: 16,
                   ),
-                ],
-              ),
-              SizedBox(height: 8),
-              Text(
-                caption,
-                style: TextStyle(
-                  color: Color(0xFF252525),
-                  fontSize: 16,
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 16),
+          // Conditional Button
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 12.0),
+            child: Container(
+              width: double.infinity,
+              height: 40,
+              decoration: ShapeDecoration(
+                color: Color(0xFF5C964A),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(100),
                 ),
               ),
-            ],
-          ),
-        ),
-        SizedBox(height: 16),
-        // Conditional Button
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 12.0),
-          child: Container(
-            width: double.infinity,
-            height: 40,
-            decoration: ShapeDecoration(
-              color: Color.fromARGB(255, 18, 137, 2),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(100),
-              ),
-            ),
-            child: TextButton(
-              onPressed: status == "Resolved"
-                  ? () => _showResolvedPhoto(resolvedPhoto)
-                  : _pickImage,
-              child: Text(
-                status == "Resolved" ? 'View Reply' : 'Reply with Image',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
+              child: TextButton(
+                onPressed: status == "Resolved"
+                    ? () => _showResolvedPhoto(resolvedPhoto)
+                    : _pickImage,
+                child: Text(
+                  status == "Resolved" ? 'View Reply' : 'Reply with Image',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-        SizedBox(height: 8),
-      ],
-    ),
-  );
-}
+          SizedBox(height: 8),
+        ],
+      ),
+    );
+  }
 }

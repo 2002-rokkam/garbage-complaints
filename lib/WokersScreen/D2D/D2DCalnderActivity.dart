@@ -1,23 +1,22 @@
-// authority/RCCCalendarActivityScreen.dart
+// WokersScreen/D2D/D2DCalnderActivity.dart
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// Main screen to manage the TabController
-class RCCCalendarActivityScreen extends StatefulWidget {
+class D2DCalnderActivityScreen extends StatefulWidget {
   final String section;
 
-  const RCCCalendarActivityScreen({Key? key, required this.section})
+  const D2DCalnderActivityScreen({Key? key, required this.section})
       : super(key: key);
 
   @override
-  _RCCCalendarActivityScreenState createState() =>
-      _RCCCalendarActivityScreenState();
+  _D2DCalnderActivityScreenState createState() =>
+      _D2DCalnderActivityScreenState();
 }
 
-class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
+class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
     with SingleTickerProviderStateMixin {
   DateTime _selectedDate = DateTime.now();
   List _activities = [];
@@ -45,7 +44,7 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
     });
 
     final url = Uri.parse(
-        'https://8250-122-172-86-111.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+        'https://d029-122-172-86-111.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
 
     try {
       final response = await http.get(url);
@@ -95,9 +94,15 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
         backgroundColor: Color(0xFF5C964A), // Green background color
         bottom: TabBar(
           controller: _tabController,
+          labelColor: Colors.white, // Set label color to white
+          unselectedLabelColor:
+              Colors.white, // Unselected tabs will also be white
+          indicatorColor: Color.fromRGBO(
+              255, 210, 98, 1), // The selected tab underline color
+          indicatorWeight: 3.0,
           tabs: [
             Tab(text: 'Before & After'),
-            Tab(text: 'Trip Details'),
+            Tab(text: 'QR Data'),
           ],
         ),
       ),
@@ -150,10 +155,8 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
                     : TabBarView(
                         controller: _tabController,
                         children: [
-                          // Before & After Tab
-                          BeforeAfterTab(activities: selectedActivities),
-                          // Trip Details Tab
-                          TripDetailsTab(),
+                          D2DBeforeAfterTab(activities: selectedActivities),
+                          D2DQRDetailsTab(),
                         ],
                       ),
           ),
@@ -163,10 +166,10 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
   }
 }
 
-class BeforeAfterTab extends StatelessWidget {
+class D2DBeforeAfterTab extends StatelessWidget {
   final List activities;
 
-  const BeforeAfterTab({Key? key, required this.activities}) : super(key: key);
+  const D2DBeforeAfterTab({Key? key, required this.activities}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -266,7 +269,7 @@ class BeforeAfterTab extends StatelessWidget {
                           decoration: ShapeDecoration(
                             image: DecorationImage(
                               image: NetworkImage(
-                                'https://8250-122-172-86-111.ngrok-free.app${activity['before_image']}',
+                                'https://d029-122-172-86-111.ngrok-free.app${activity['before_image']}',
                               ),
                               fit: BoxFit.cover,
                             ),
@@ -281,7 +284,7 @@ class BeforeAfterTab extends StatelessWidget {
                           decoration: ShapeDecoration(
                             image: DecorationImage(
                               image: NetworkImage(
-                                'https://8250-122-172-86-111.ngrok-free.app${activity['after_image']}',
+                                'https://d029-122-172-86-111.ngrok-free.app${activity['after_image']}',
                               ),
                               fit: BoxFit.cover,
                             ),
@@ -303,26 +306,39 @@ class BeforeAfterTab extends StatelessWidget {
   }
 }
 
-class TripDetailsTab extends StatefulWidget {
-  const TripDetailsTab({Key? key}) : super(key: key);
+class D2DQRDetailsTab extends StatefulWidget {
+  const D2DQRDetailsTab({Key? key}) : super(key: key);
 
   @override
-  _TripDetailsTabState createState() => _TripDetailsTabState();
+  _D2DQRDetailsTabState createState() => _D2DQRDetailsTabState();
 }
 
-class _TripDetailsTabState extends State<TripDetailsTab> {
+class _D2DQRDetailsTabState extends State<D2DQRDetailsTab> {
   bool _isLoading = true;
   List _tripDetails = [];
 
   @override
   void initState() {
     super.initState();
-    fetchTripDetails();
+    initializeWorkerIdAndFetchDetails();
+  }
+
+  Future<void> initializeWorkerIdAndFetchDetails() async {
+    workerId = await getWorkerId();
+    if (workerId != -1) {
+      fetchTripDetails();
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+      // Handle the case where workerId is not available
+      print('Worker ID not found.');
+    }
   }
 
   Future<void> fetchTripDetails() async {
     final url = Uri.parse(
-        'https://8250-122-172-86-111.ngrok-free.app/api/worker/4/section/Waste Details');
+        'https://d029-122-172-86-111.ngrok-free.app/api/worker/$workerId/section/D2D_QR');
 
     try {
       final response = await http.get(url);
@@ -344,9 +360,18 @@ class _TripDetailsTabState extends State<TripDetailsTab> {
     }
   }
 
+  late int workerId;
+
+  Future<int> getWorkerId() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int workerId = prefs.getInt('worker_id') ?? -1;
+    return workerId;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      padding: const EdgeInsets.all(16.0),
       child: _isLoading
           ? Center(child: CircularProgressIndicator())
           : _tripDetails.isEmpty
@@ -354,58 +379,47 @@ class _TripDetailsTabState extends State<TripDetailsTab> {
               : Column(
                   children: _tripDetails.map((trip) {
                     return Card(
+                      elevation: 4, // Adds a shadow for depth
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(12), // Rounded corners
+                      ),
+                      margin: EdgeInsets.only(bottom: 16),
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(16.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'Trips: ${trip['trips']}',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            Row(
+                              children: [
+                                Icon(Icons.location_on, color: Colors.green),
+                                SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    'QR Scanned Data: ${trip['QRAddress']}',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
                             ),
-                            SizedBox(height: 8),
-                            Text(
-                              'Quantity of Waste: ${trip['quantity_waste']} kg',
-                              style: TextStyle(
-                                color: Color(0xFF252525),
-                                fontSize: 14,
-                              ),
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              'Segregated Degradable: ${trip['segregated_degradable']} kg',
-                              style: TextStyle(
-                                color: Color(0xFF252525),
-                                fontSize: 14,
-                              ),
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              'Segregated Non-Degradable: ${trip['segregated_non_degradable']} kg',
-                              style: TextStyle(
-                                color: Color(0xFF252525),
-                                fontSize: 14,
-                              ),
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              'Segregated Plastic: ${trip['segregated_plastic']} kg',
-                              style: TextStyle(
-                                color: Color(0xFF252525),
-                                fontSize: 14,
-                              ),
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              'Date: ${trip['date_time']}',
-                              style: TextStyle(
-                                color: Color(0xFF252525),
-                                fontSize: 14,
-                              ),
+                            SizedBox(height: 12),
+                            Row(
+                              children: [
+                                Icon(Icons.calendar_today, color: Colors.grey),
+                                SizedBox(width: 8),
+                                Text(
+                                  '${trip['date_time']}',
+                                  style: TextStyle(
+                                    color: Colors.black87,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),

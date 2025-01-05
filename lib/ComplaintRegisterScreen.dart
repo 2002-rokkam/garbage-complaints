@@ -1,9 +1,7 @@
 // ComplaintRegisterScreen.dart
 
 import 'package:flutter/material.dart';
-
 import 'main.dart';
-
 class ComplaintRegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -16,7 +14,6 @@ class ComplaintRegisterScreen extends StatelessWidget {
         ),
         child: Stack(
           children: [
-            // Top Green Header
             Positioned(
               left: 0,
               top: 0,
@@ -33,7 +30,6 @@ class ComplaintRegisterScreen extends StatelessWidget {
               ),
             ),
             // Time and Status Row
-            // Complaints Header
             Positioned(
               left: 0,
               top: 52,
@@ -68,7 +64,6 @@ class ComplaintRegisterScreen extends StatelessWidget {
                 ),
               ),
             ),
-            // Complaint Image Placeholder
             Positioned(
               left: 0,
               top: 150,
@@ -84,7 +79,6 @@ class ComplaintRegisterScreen extends StatelessWidget {
                 ),
               ),
             ),
-            // Flutter Logo Center
             Positioned(
               left: MediaQuery.of(context).size.width / 2 - 31,
               top: 528,
@@ -101,7 +95,6 @@ class ComplaintRegisterScreen extends StatelessWidget {
                 ),
               ),
             ),
-            // Complaint Filed Text
             Positioned(
               left: MediaQuery.of(context).size.width / 2 - 122,
               top: 634,
@@ -152,7 +145,7 @@ class ComplaintRegisterScreen extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            HomeScreen()), // Replace 'HomeScreen()' with your home screen widget
+                            HomeScreen()), 
                   );
                 },
                 child: Container(
@@ -161,7 +154,7 @@ class ComplaintRegisterScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Color(0xFF5C964A),
                     borderRadius:
-                        BorderRadius.circular(20), // Added border radius
+                        BorderRadius.circular(20), 
                     shape: BoxShape.rectangle,
                   ),
                   child: Center(
@@ -179,7 +172,6 @@ class ComplaintRegisterScreen extends StatelessWidget {
                 ),
               ),
             )
-
           ],
         ),
       ),

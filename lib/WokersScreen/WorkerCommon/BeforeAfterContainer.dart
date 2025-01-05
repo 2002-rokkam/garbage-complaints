@@ -119,7 +119,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
 
       Dio dio = Dio();
       Response response = await dio.post(
-        'https://8250-122-172-86-111.ngrok-free.app/api/submit-activity',
+        'https://d029-122-172-86-111.ngrok-free.app/api/submit-activity',
         data: formData,
       );
 
@@ -185,7 +185,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
 
       Dio dio = Dio();
       Response response = await dio.put(
-          'https://8250-122-172-86-111.ngrok-free.app/api/submit-activity',
+          'https://d029-122-172-86-111.ngrok-free.app/api/submit-activity',
           data: formData);
 
       if (response.statusCode == 200) {
@@ -330,6 +330,43 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
     });
   }
 
+  Future<bool> _isAfterImageWithinRadius() async {
+    if (_beforeImage == null || _afterImage == null) {
+      return false;
+    }
+
+    double beforeLatitude = _beforeImage!['latitude'];
+    double beforeLongitude = _beforeImage!['longitude'];
+
+    double afterLatitude = _afterImage!['latitude'];
+    double afterLongitude = _afterImage!['longitude'];
+
+    // Calculate the distance using Geolocator (or any other method you prefer)
+    double distance = await Geolocator.distanceBetween(
+        beforeLatitude, beforeLongitude, afterLatitude, afterLongitude);
+
+    // Check if the distance is within the 50 meters radius
+    return distance <= 50.0; // Return true if within 50 meters, otherwise false
+  }
+
+  void _showPopup(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Error'),
+        content: Text(message),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -352,7 +389,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Image.asset(
-                'images/CSC.png',
+                'images/d2d.png',
                 width: 24,
                 height: 24,
               ),
@@ -380,7 +417,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Image.asset(
-                                  'images/CSC.png',
+                                  'images/Camera.png',
                                   width: 24,
                                   height: 24,
                                 ),
@@ -397,7 +434,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                               ],
                             )
                           : Image.network(
-                              'https://8250-122-172-86-111.ngrok-free.app${_beforeImage!['imagePath']}',
+                              'https://d029-122-172-86-111.ngrok-free.app${_beforeImage!['imagePath']}',
                               // Replace with your network image URL
                               fit: BoxFit.cover,
                               loadingBuilder: (BuildContext context,
@@ -427,6 +464,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                                     child: Text('Failed to load image'));
                               },
                             ),
+                            
                     ),
                     if (_beforeImage != null && !_isAfterSliderEnabled)
                       Positioned(
@@ -457,7 +495,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Image.asset(
-                                  'images/CSC.png',
+                                  'images/Camera.png',
                                   width: 24,
                                   height: 24,
                                 ),
@@ -474,7 +512,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                               ],
                             )
                           : Image.network(
-                              'https://8250-122-172-86-111.ngrok-free.app${_afterImage!['imagePath']}',
+                              'https://d029-122-172-86-111.ngrok-free.app${_afterImage!['imagePath']}',
                               // Replace with your network image URL
                               fit: BoxFit.cover,
                               loadingBuilder: (BuildContext context,
@@ -560,38 +598,47 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
             ),
           if (_afterImage != null && !_isSubmitting)
             Container(
-              height: 50.0,
-              child: _isLoading
-                  ? Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : SliderButton(
-                      action: () async {
-                        setState(() {
-                          _isLoading = true;
-                        });
-
-                        try {
-                          await _submitAfterImage();
-                        } catch (e) {
-                          print("Error in slider action: $e");
-                        } finally {
+                height: 50.0,
+                child: _isLoading
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : SliderButton(
+                        action: () async {
                           setState(() {
-                            _isLoading = false;
+                            _isLoading = true;
                           });
-                        }
-                      },
-                      label: Text(
-                        "Slide to confirm 'After'",
-                        style: TextStyle(color: Colors.white, fontSize: 18),
-                      ),
-                      icon: Icon(Icons.check, color: Colors.white),
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      backgroundColor: Color(0xFF5C964A),
-                      buttonColor: Colors.white,
-                      radius: 30,
-                    ),
-            ),
+
+                          try {
+                            // Check distance only after the slider is moved
+                            bool isWithinRadius =
+                                await _isAfterImageWithinRadius();
+
+                            if (isWithinRadius) {
+                              await _submitAfterImage();
+                            } else {
+                              // Show popup if the after image is not within the 50-meter radius
+                              _showPopup(
+                                  'Error: After image is too far from the before image.');
+                            }
+                          } catch (e) {
+                            print("Error in slider action: $e");
+                          } finally {
+                            setState(() {
+                              _isLoading = false;
+                            });
+                          }
+                        },
+                        label: Text(
+                          "Slide to confirm 'After'",
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
+                        icon: Icon(Icons.check, color: Colors.white),
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        backgroundColor: Color(0xFF5C964A),
+                        buttonColor: Colors.white,
+                        radius: 30,
+                      )),
         ],
       ),
     );
