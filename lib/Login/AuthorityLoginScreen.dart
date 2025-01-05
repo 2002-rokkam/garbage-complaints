@@ -1,9 +1,10 @@
-// AuthorityLoginScreen.dart
+// Login/AuthorityLoginScreen.dart
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'WokersScreen/WorkerScreen.dart';
+import '../WokersScreen/WorkerScreen.dart';
+import 'PhoneAuthScreen.dart';
 
 class AuthorityLoginScreen extends StatefulWidget {
   @override
@@ -165,13 +166,24 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
                             ),
                           ),
                     SizedBox(height: 20),
-                    Text(
-                      'Login as Citizen',
-                      style: TextStyle(
-                        color: Color(0xFF5C964A),
-                        fontSize: 16,
-                        fontFamily: 'Roboto',
-                        decoration: TextDecoration.underline,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                PhoneInputScreen(), // Replace with your CitizenLoginScreen
+                          ),
+                        );
+                      },
+                      child: Text(
+                        'Login as Citizen',
+                        style: TextStyle(
+                          color: Color(0xFF5C964A),
+                          fontSize: 16,
+                          fontFamily: 'Roboto',
+                          decoration: TextDecoration.underline,
+                        ),
                       ),
                     ),
                   ],

@@ -1,21 +1,24 @@
-// WokersScreen/WorkerCommon/CalendarActivityScreen.dart
+// authority/VDOCalendarActivityScreen.dart
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class CalendarActivityScreen extends StatefulWidget {
+class VDOCalendarActivityScreen extends StatefulWidget {
   final String section;
 
-  const CalendarActivityScreen({Key? key, required this.section})
+  const VDOCalendarActivityScreen({Key? key, required this.section})
       : super(key: key);
 
   @override
-  _CalendarActivityScreenState createState() => _CalendarActivityScreenState();
+  _VDOCalendarActivityScreenState createState() =>
+      _VDOCalendarActivityScreenState();
 }
 
-class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
+class _VDOCalendarActivityScreenState extends State<VDOCalendarActivityScreen> {
   DateTime _selectedDate = DateTime.now();
   List _activities = [];
   bool _isLoading = false;
@@ -40,14 +43,17 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
     });
 
     final url = Uri.parse(
-        'https://d029-122-172-86-111.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+        'https://d029-122-172-86-111.ngrok-free.app/api/vdo-section-dashboard?district=ak&gram_panchayat=hi&section=${widget.section}');
 
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
+
+        // Extracting activities for the specific section
+        var sectionActivities = data['section_data'][widget.section] ?? [];
         setState(() {
-          _activities = data['activities'];
+          _activities = sectionActivities;
         });
       } else {
         throw Exception('Failed to load activities');
@@ -140,8 +146,6 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
                           children: selectedActivities.map((activity) {
                             return Card(
                               child: Container(
-                                width: 370,
-                                height: 201.88,
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(8),
@@ -155,6 +159,8 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize
+                                        .min, // This allows the container to grow based on content
                                     children: [
                                       // Top Row: Logo, Status, and Date-Time
                                       Row(
@@ -273,13 +279,18 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
                                         ],
                                       ),
                                       SizedBox(height: 8),
-                                      Text(
-                                        activity['address'] ?? 'No Address',
-                                        style: TextStyle(
-                                          color: Color(0xFF252525),
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                        ),
+                                      // Address and Worker Email
+                                      Wrap(
+                                        children: [
+                                          Text(
+                                            '${activity['address']} \nWorked by: ${activity['worker_name']}',
+                                            style: TextStyle(
+                                              color: Color(0xFF252525),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),

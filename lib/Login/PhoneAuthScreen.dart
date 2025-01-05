@@ -1,7 +1,8 @@
-// PhoneAuthScreen.dart
+// Login/PhoneAuthScreen.dart
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'AuthorityLoginScreen.dart';
 import 'OTPVerificationScreen.dart';
 
 class PhoneInputScreen extends StatefulWidget {
@@ -201,7 +202,13 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
               bottom: 30,
               left: MediaQuery.of(context).size.width / 2 - 100,
               child: GestureDetector(
-                onTap: () {},
+                onTap: () {
+                   Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AuthorityLoginScreen()),
+                  );
+                },
                 child: const Text(
                   'Login as Administration',
                   style: TextStyle(

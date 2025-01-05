@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'AuthorityLoginScreen.dart';
-import 'PhoneAuthScreen.dart';
+import 'Login/AuthorityLoginScreen.dart';
+import 'Login/PhoneAuthScreen.dart';
+import 'authority/VDOScreen.dart';
 
 
 void main() async {
@@ -133,7 +134,7 @@ class HomeScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const PhoneInputScreen(),
+                          builder: (context) => VDOScreen(),
                         ),
                       );
                     },
