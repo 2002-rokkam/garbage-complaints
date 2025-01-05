@@ -2,7 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Add this import
-import 'ComplaintScreen.dart';
+import 'CitizensScreen/CitizensScreen.dart';
+import 'CitizensScreen/ComplaintsScreen/ComplaintScreen.dart';
 
 class OTPVerificationScreen extends StatefulWidget {
   final String verificationId;
@@ -50,7 +51,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
         context,
         MaterialPageRoute(
           builder: (context) =>
-              ComplaintScreen(phoneNumber: widget.phoneNumber),
+              CitizensScreen(),
         ),
       );
     } catch (e) {

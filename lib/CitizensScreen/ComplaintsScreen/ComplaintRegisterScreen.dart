@@ -1,7 +1,6 @@
-// ComplaintRegisterScreen.dart
-
+// CitizensScreen/ComplaintsScreen/ComplaintRegisterScreen.dart
 import 'package:flutter/material.dart';
-import 'main.dart';
+import '../CitizensScreen.dart';
 class ComplaintRegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -145,7 +144,7 @@ class ComplaintRegisterScreen extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            HomeScreen()), 
+                            CitizensScreen()), 
                   );
                 },
                 child: Container(

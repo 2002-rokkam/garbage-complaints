@@ -1,4 +1,4 @@
-// ComplaintScreen.dart
+// CitizensScreen/ComplaintsScreen/ComplaintScreen.dart
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -7,16 +7,12 @@ import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart'; // For kIsWeb
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'ComplaintRegisterScreen.dart';
 import 'ViewComplaintsScreen.dart';
 
 class ComplaintScreen extends StatefulWidget {
-  final String phoneNumber;
-
-  const ComplaintScreen({Key? key, required this.phoneNumber})
-      : super(key: key);
-
   @override
   _ComplaintScreenState createState() => _ComplaintScreenState();
 }
@@ -24,11 +20,26 @@ class ComplaintScreen extends StatefulWidget {
 class _ComplaintScreenState extends State<ComplaintScreen> {
   late String _phoneNumber;
 
-  @override
+ @override
   void initState() {
     super.initState();
-    _phoneNumber = widget.phoneNumber;
+    _getPhoneNumberFromSharedPrefs(); // Make sure this works as expected
   }
+
+  Future<void> _getPhoneNumberFromSharedPrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? storedPhoneNumber = prefs.getString('phone_number');
+    if (storedPhoneNumber != null) {
+      setState(() {
+        _phoneNumber = storedPhoneNumber;
+      });
+    } else {
+      setState(() {
+        _phoneNumber = ''; // Or handle it as an error
+      });
+    }
+  }
+
 
   String? selectedDistrict;
   String? selectedGP;
@@ -48,6 +59,11 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
           ..fields['district'] = selectedDistrict!
           ..fields['gram_panchayat'] = selectedGP!
           ..fields['caption'] = caption;
+
+          print('Mobile Number: ${_phoneNumber}');
+        print('District: ${selectedDistrict}');
+        print('Gram Panchayat: ${selectedGP}');
+        print('Caption: $caption');
 
         for (int i = 0; i < imageData.length; i++) {
           var image = imageData[i]['image'] as Uint8List;
@@ -71,9 +87,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
           final jsonResponse = jsonDecode(responseData);
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    ComplaintRegisterScreen()),
+            MaterialPageRoute(builder: (context) => ComplaintRegisterScreen()),
           );
         } else {
           throw 'Failed to submit complaint. Try again later.';
@@ -180,7 +194,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
     }
   }
 
-  void _showBottomSheet(
+  void _showSheet(
       String title, List<String> options, Function(String) onSelect) {
     TextEditingController searchController = TextEditingController();
     List<String> filteredOptions = List.from(options);
@@ -296,7 +310,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                 const Expanded(
                   child: Center(
                     child: Text(
-                      "File Complaint / Feedback",
+                      "File Complaint",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -332,7 +346,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
             const SizedBox(height: 36),
             // Select District UI
             GestureDetector(
-              onTap: () => _showBottomSheet(
+              onTap: () => _showSheet(
                 "Select District",
                 districts,
                 (district) => setState(() {
@@ -379,7 +393,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
 
             // Select Gram Panchayat UI
             GestureDetector(
-              onTap: () => _showBottomSheet(
+              onTap: () => _showSheet(
                 "Select Gram Panchayat",
                 districtToGPs[selectedDistrict]!,
                 (gp) => setState(() => selectedGP = gp),
@@ -645,8 +659,11 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
         ),
       ),
       bottomSheet: Padding(
-        padding: EdgeInsets.all(screenWidth * 0.05),
+        padding: EdgeInsets.only(
+            bottom: screenHeight * 0.03), // Adjust padding if needed
         child: Column(
+          mainAxisSize: MainAxisSize
+              .min, // Ensures the column does not take up the full height
           children: [
             // Submit Complaint Button
             ElevatedButton(
@@ -661,37 +678,6 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
               onPressed: submitComplaint,
               child: const Text(
                 "Submit Complaint",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontFamily: 'Roboto',
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: 0.10,
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            // View Complaints Button
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromRGBO(92, 150, 74, 1),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding:
-                    const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
-              ),
-              onPressed: () async {
-                // Navigate to the ViewComplaintsScreen
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ViewComplaintsScreen(),
-                  ),
-                );
-              },
-              child: const Text(
-                "View Complaints",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 14,
