@@ -8,9 +8,7 @@ import 'package:flutter/foundation.dart'; // For kIsWeb
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'ComplaintRegisterScreen.dart';
-import 'ViewComplaintsScreen.dart';
 
 class ComplaintScreen extends StatefulWidget {
   @override
@@ -18,33 +16,30 @@ class ComplaintScreen extends StatefulWidget {
 }
 
 class _ComplaintScreenState extends State<ComplaintScreen> {
-  late String _phoneNumber;
-
- @override
-  void initState() {
-    super.initState();
-    _getPhoneNumberFromSharedPrefs(); // Make sure this works as expected
-  }
-
-  Future<void> _getPhoneNumberFromSharedPrefs() async {
-    final prefs = await SharedPreferences.getInstance();
-    String? storedPhoneNumber = prefs.getString('phone_number');
-    if (storedPhoneNumber != null) {
-      setState(() {
-        _phoneNumber = storedPhoneNumber;
-      });
-    } else {
-      setState(() {
-        _phoneNumber = ''; // Or handle it as an error
-      });
-    }
-  }
-
-
+  late String _idToken;
   String? selectedDistrict;
   String? selectedGP;
   final ImagePicker _picker = ImagePicker();
   final List<Map<String, dynamic>> imageData = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTokenFromSharedPrefs();
+  }
+
+  Future<void> _loadTokenFromSharedPrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? idToken = prefs.getString('id_token');
+    if (idToken != null) {
+      setState(() {
+        _idToken = idToken;
+      });
+    } else {
+      // Handle missing token (e.g., redirect to login screen)
+      throw 'Token not found. Please log in again.';
+    }
+  }
 
   Future<void> submitComplaint() async {
     if (selectedDistrict != null &&
@@ -52,18 +47,12 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
         imageData.isNotEmpty) {
       try {
         var uri = Uri.parse(
-            'https://d029-122-172-86-111.ngrok-free.app/api/complaints-register');
+            'https://cc33-122-172-85-145.ngrok-free.app/api/complaints-register');
 
         var request = http.MultipartRequest('POST', uri)
-          ..fields['mobile_number'] = _phoneNumber
           ..fields['district'] = selectedDistrict!
           ..fields['gram_panchayat'] = selectedGP!
           ..fields['caption'] = caption;
-
-          print('Mobile Number: ${_phoneNumber}');
-        print('District: ${selectedDistrict}');
-        print('Gram Panchayat: ${selectedGP}');
-        print('Caption: $caption');
 
         for (int i = 0; i < imageData.length; i++) {
           var image = imageData[i]['image'] as Uint8List;
@@ -79,6 +68,8 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
           request.fields['latitude_photo${i + 1}.jpg'] = latitude;
           request.fields['longitude_photo${i + 1}.jpg'] = longitude;
         }
+
+        request.headers['Authorization'] = 'token $_idToken';
 
         var response = await request.send();
 

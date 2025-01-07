@@ -1,4 +1,4 @@
-// authority/BeforeAfterContainer.dart
+// WokersScreen/WorkerCommon/BeforeAfterContainer.dart
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:image_picker/image_picker.dart';
@@ -119,7 +119,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
 
       Dio dio = Dio();
       Response response = await dio.post(
-        'https://d029-122-172-86-111.ngrok-free.app/api/submit-activity',
+        'https://cc33-122-172-85-145.ngrok-free.app/api/submit-activity',
         data: formData,
       );
 
@@ -185,7 +185,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
 
       Dio dio = Dio();
       Response response = await dio.put(
-          'https://d029-122-172-86-111.ngrok-free.app/api/submit-activity',
+          'https://cc33-122-172-85-145.ngrok-free.app/api/submit-activity',
           data: formData);
 
       if (response.statusCode == 200) {
@@ -434,7 +434,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                               ],
                             )
                           : Image.network(
-                              'https://d029-122-172-86-111.ngrok-free.app${_beforeImage!['imagePath']}',
+                              'https://cc33-122-172-85-145.ngrok-free.app${_beforeImage!['imagePath']}',
                               // Replace with your network image URL
                               fit: BoxFit.cover,
                               loadingBuilder: (BuildContext context,
@@ -464,7 +464,6 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                                     child: Text('Failed to load image'));
                               },
                             ),
-                            
                     ),
                     if (_beforeImage != null && !_isAfterSliderEnabled)
                       Positioned(
@@ -512,7 +511,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                               ],
                             )
                           : Image.network(
-                              'https://d029-122-172-86-111.ngrok-free.app${_afterImage!['imagePath']}',
+                              'https://cc33-122-172-85-145.ngrok-free.app${_afterImage!['imagePath']}',
                               // Replace with your network image URL
                               fit: BoxFit.cover,
                               loadingBuilder: (BuildContext context,

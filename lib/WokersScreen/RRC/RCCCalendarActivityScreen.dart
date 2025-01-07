@@ -44,7 +44,7 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
     });
 
     final url = Uri.parse(
-        'https://d029-122-172-86-111.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+        'https://cc33-122-172-85-145.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
 
     try {
       final response = await http.get(url);
@@ -99,7 +99,7 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
               Colors.white, // Unselected tabs will also be white
           indicatorColor: Color.fromRGBO(
               255, 210, 98, 1), // The selected tab underline color
-          indicatorWeight: 3.0, 
+          indicatorWeight: 3.0,
           tabs: [
             Tab(text: 'Before & After'),
             Tab(text: 'Trip Details'),
@@ -171,7 +171,8 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
 class RRCBeforeAfterTab extends StatelessWidget {
   final List activities;
 
-  const RRCBeforeAfterTab({Key? key, required this.activities}) : super(key: key);
+  const RRCBeforeAfterTab({Key? key, required this.activities})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -271,7 +272,7 @@ class RRCBeforeAfterTab extends StatelessWidget {
                           decoration: ShapeDecoration(
                             image: DecorationImage(
                               image: NetworkImage(
-                                'https://d029-122-172-86-111.ngrok-free.app${activity['before_image']}',
+                                'https://cc33-122-172-85-145.ngrok-free.app${activity['before_image']}',
                               ),
                               fit: BoxFit.cover,
                             ),
@@ -286,7 +287,7 @@ class RRCBeforeAfterTab extends StatelessWidget {
                           decoration: ShapeDecoration(
                             image: DecorationImage(
                               image: NetworkImage(
-                                'https://d029-122-172-86-111.ngrok-free.app${activity['after_image']}',
+                                'https://cc33-122-172-85-145.ngrok-free.app${activity['after_image']}',
                               ),
                               fit: BoxFit.cover,
                             ),
@@ -319,7 +320,6 @@ class _TripDetailsTabState extends State<TripDetailsTab> {
   bool _isLoading = true;
   List _tripDetails = [];
 
- 
   @override
   void initState() {
     super.initState();
@@ -341,7 +341,7 @@ class _TripDetailsTabState extends State<TripDetailsTab> {
 
   Future<void> fetchTripDetails() async {
     final url = Uri.parse(
-        'https://d029-122-172-86-111.ngrok-free.app/api/worker/$workerId/section/Waste Details');
+        'https://cc33-122-172-85-145.ngrok-free.app/api/worker/$workerId/section/Waste Details');
 
     try {
       final response = await http.get(url);
@@ -365,12 +365,11 @@ class _TripDetailsTabState extends State<TripDetailsTab> {
 
   late int workerId;
 
-   Future<int> getWorkerId() async {
+  Future<int> getWorkerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     int workerId = prefs.getInt('worker_id') ?? -1;
     return workerId;
   }
-
 
   @override
   Widget build(BuildContext context) {

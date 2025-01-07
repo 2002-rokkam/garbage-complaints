@@ -16,7 +16,8 @@ class VDORCCCalendarActivityScreen extends StatefulWidget {
       _VDORCCCalendarActivityScreenState();
 }
 
-class _VDORCCCalendarActivityScreenState extends State<VDORCCCalendarActivityScreen>
+class _VDORCCCalendarActivityScreenState
+    extends State<VDORCCCalendarActivityScreen>
     with SingleTickerProviderStateMixin {
   DateTime _selectedDate = DateTime.now();
   List _activities = [];
@@ -36,7 +37,7 @@ class _VDORCCCalendarActivityScreenState extends State<VDORCCCalendarActivityScr
     return workerId;
   }
 
-   Future<void> fetchActivities() async {
+  Future<void> fetchActivities() async {
     int workerId = await getWorkerId();
 
     setState(() {
@@ -44,7 +45,7 @@ class _VDORCCCalendarActivityScreenState extends State<VDORCCCalendarActivityScr
     });
 
     final url = Uri.parse(
-        'https://d029-122-172-86-111.ngrok-free.app/api/vdo-section-dashboard?district=ak&gram_panchayat=hi&section=${widget.section}');
+        'https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard?district=ak&gram_panchayat=hi&section=${widget.section}');
 
     try {
       final response = await http.get(url);
@@ -275,7 +276,7 @@ class RRCBeforeAfterTab extends StatelessWidget {
                           decoration: ShapeDecoration(
                             image: DecorationImage(
                               image: NetworkImage(
-                                'https://d029-122-172-86-111.ngrok-free.app${activity['before_image']}',
+                                'https://cc33-122-172-85-145.ngrok-free.app${activity['before_image']}',
                               ),
                               fit: BoxFit.cover,
                             ),
@@ -290,7 +291,7 @@ class RRCBeforeAfterTab extends StatelessWidget {
                           decoration: ShapeDecoration(
                             image: DecorationImage(
                               image: NetworkImage(
-                                'https://d029-122-172-86-111.ngrok-free.app${activity['after_image']}',
+                                'https://cc33-122-172-85-145.ngrok-free.app${activity['after_image']}',
                               ),
                               fit: BoxFit.cover,
                             ),
@@ -325,6 +326,7 @@ class RRCBeforeAfterTab extends StatelessWidget {
     );
   }
 }
+
 class TripDetailsTab extends StatefulWidget {
   const TripDetailsTab({Key? key}) : super(key: key);
 
@@ -357,7 +359,7 @@ class _TripDetailsTabState extends State<TripDetailsTab> {
 
   Future<void> fetchTripDetails() async {
     final url = Uri.parse(
-        'https://d029-122-172-86-111.ngrok-free.app/api/vdo-section-dashboard?district=ak&gram_panchayat=hi&section=Waste Details');
+        'https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard?district=ak&gram_panchayat=hi&section=Waste Details');
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {

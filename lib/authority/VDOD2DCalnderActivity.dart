@@ -16,7 +16,8 @@ class VDOD2DCalnderActivityScreen extends StatefulWidget {
       _VDOD2DCalnderActivityScreenState();
 }
 
-class _VDOD2DCalnderActivityScreenState extends State<VDOD2DCalnderActivityScreen>
+class _VDOD2DCalnderActivityScreenState
+    extends State<VDOD2DCalnderActivityScreen>
     with SingleTickerProviderStateMixin {
   DateTime _selectedDate = DateTime.now();
   List _activities = [];
@@ -36,7 +37,7 @@ class _VDOD2DCalnderActivityScreenState extends State<VDOD2DCalnderActivityScree
     return workerId;
   }
 
- Future<void> fetchActivities() async {
+  Future<void> fetchActivities() async {
     int workerId = await getWorkerId();
 
     setState(() {
@@ -44,7 +45,7 @@ class _VDOD2DCalnderActivityScreenState extends State<VDOD2DCalnderActivityScree
     });
 
     final url = Uri.parse(
-        'https://d029-122-172-86-111.ngrok-free.app/api/vdo-section-dashboard?district=ak&gram_panchayat=hi&section=${widget.section}');
+        'https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard?district=ak&gram_panchayat=hi&section=${widget.section}');
 
     try {
       final response = await http.get(url);
@@ -181,164 +182,149 @@ class D2DBeforeAfterTab extends StatelessWidget {
       child: Column(
         children: activities.map((activity) {
           return Card(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(
-                                    color: Color(0xFFFFD262),
-                                    width: 1,
-                                  ),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: Color(0xFFFFD262),
+                  width: 1,
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize
+                      .min, // This allows the container to grow based on content
+                  children: [
+                    // Top Row: Logo, Status, and Date-Time
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              width: 40.42,
+                              height: 40.42,
+                              decoration: ShapeDecoration(
+                                color: Color(0xFFFFF2C6),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(59),
                                 ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize
-                                        .min, // This allows the container to grow based on content
-                                    children: [
-                                      // Top Row: Logo, Status, and Date-Time
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Container(
-                                                width: 40.42,
-                                                height: 40.42,
-                                                decoration: ShapeDecoration(
-                                                  color: Color(0xFFFFF2C6),
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            59),
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(width: 8),
-                                              Container(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 10,
-                                                        vertical: 5),
-                                                decoration: ShapeDecoration(
-                                                  color: (activity['status'] ??
-                                                              'Pending') ==
-                                                          'Completed'
-                                                      ? Color(0xFF5C964A)
-                                                      : Color(0xFFFFA726),
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            18),
-                                                  ),
-                                                ),
-                                                child: Center(
-                                                  child: Text(
-                                                    activity['status'] ??
-                                                        'Pending',
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Container(
-                                            width: 120,
-                                            height: 26,
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 10, vertical: 5),
-                                            decoration: ShapeDecoration(
-                                              color: Colors.white,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(26),
-                                              ),
-                                            ),
-                                            child: Center(
-                                              child: Text(
-                                                activity['date_time'] ?? 'N/A',
-                                                style: TextStyle(
-                                                  color: Color(0xFF252525),
-                                                  fontSize: 12,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(height: 8),
-                                      // Before and After Images
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          Container(
-                                            width: 150.10,
-                                            height: 99.52,
-                                            decoration: ShapeDecoration(
-                                              image: DecorationImage(
-                                                image: NetworkImage(
-                                                  'https://d029-122-172-86-111.ngrok-free.app${activity['before_image']}',
-                                                ),
-                                                fit: BoxFit.cover,
-                                              ),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(6),
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            width: 150.10,
-                                            height: 99.52,
-                                            decoration: ShapeDecoration(
-                                              image: DecorationImage(
-                                                image: NetworkImage(
-                                                  'https://d029-122-172-86-111.ngrok-free.app${activity['after_image']}',
-                                                ),
-                                                fit: BoxFit.cover,
-                                              ),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(6),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(height: 8),
-                                      // Address and Worker Email
-                                      Wrap(
-                                        children: [
-                                          Text(
-                                            '${activity['address']} \nWorked by: ${activity['worker_name']}',
-                                            style: TextStyle(
-                                              color: Color(0xFF252525),
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                              ),
+                            ),
+                            SizedBox(width: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
+                              decoration: ShapeDecoration(
+                                color: (activity['status'] ?? 'Pending') ==
+                                        'Completed'
+                                    ? Color(0xFF5C964A)
+                                    : Color(0xFFFFA726),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18),
+                                ),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  activity['status'] ?? 'Pending',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                               ),
-                            );
-          
+                            ),
+                          ],
+                        ),
+                        Container(
+                          width: 120,
+                          height: 26,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 5),
+                          decoration: ShapeDecoration(
+                            color: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(26),
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              activity['date_time'] ?? 'N/A',
+                              style: TextStyle(
+                                color: Color(0xFF252525),
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8),
+                    // Before and After Images
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Container(
+                          width: 150.10,
+                          height: 99.52,
+                          decoration: ShapeDecoration(
+                            image: DecorationImage(
+                              image: NetworkImage(
+                                'https://cc33-122-172-85-145.ngrok-free.app${activity['before_image']}',
+                              ),
+                              fit: BoxFit.cover,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: 150.10,
+                          height: 99.52,
+                          decoration: ShapeDecoration(
+                            image: DecorationImage(
+                              image: NetworkImage(
+                                'https://cc33-122-172-85-145.ngrok-free.app${activity['after_image']}',
+                              ),
+                              fit: BoxFit.cover,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8),
+                    // Address and Worker Email
+                    Wrap(
+                      children: [
+                        Text(
+                          '${activity['address']} \nWorked by: ${activity['worker_name']}',
+                          style: TextStyle(
+                            color: Color(0xFF252525),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
         }).toList(),
       ),
     );
   }
 }
+
 class D2DQRDetailsTab extends StatefulWidget {
   const D2DQRDetailsTab({Key? key}) : super(key: key);
 
@@ -371,7 +357,7 @@ class _D2DQRDetailsTabState extends State<D2DQRDetailsTab> {
 
   Future<void> fetchTripDetails() async {
     final url = Uri.parse(
-        'https://d029-122-172-86-111.ngrok-free.app/api/vdo-section-dashboard?district=ak&gram_panchayat=hi&section=D2D_QR');
+        'https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard?district=ak&gram_panchayat=hi&section=D2D_QR');
 
     try {
       final response = await http.get(url);

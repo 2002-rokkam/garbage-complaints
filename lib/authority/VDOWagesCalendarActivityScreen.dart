@@ -43,7 +43,7 @@ class _WagesCalendarActivityScreenState
     });
 
     final url = Uri.parse(
-        'https://d029-122-172-86-111.ngrok-free.app/api/vdo-section-dashboard?district=ak&gram_panchayat=hi&section=${widget.section}');
+        'https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard?district=ak&gram_panchayat=hi&section=${widget.section}');
 
     try {
       final response = await http.get(url);
@@ -181,14 +181,14 @@ class _WagesCalendarActivityScreenState
                                       decoration: BoxDecoration(
                                         image: DecorationImage(
                                           image: NetworkImage(
-                                            'https://d029-122-172-86-111.ngrok-free.app${activity['before_image']}',
+                                            'https://cc33-122-172-85-145.ngrok-free.app${activity['before_image']}',
                                           ),
                                           fit: BoxFit.cover,
                                         ),
                                         borderRadius: BorderRadius.circular(6),
                                       ),
                                     ),
-                                  ),                                                                  
+                                  ),
                                   SizedBox(height: 8),
                                   Text(
                                     'Worked by: ${activity['worker_name']}',

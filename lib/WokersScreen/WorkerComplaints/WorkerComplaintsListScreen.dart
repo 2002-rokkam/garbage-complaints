@@ -227,7 +227,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
 
     try {
       Response response = await dio.post(
-        'https://d029-122-172-86-111.ngrok-free.app/api/update-complaint/${widget.complaint['complaint_id']}',
+        'https://cc33-122-172-85-145.ngrok-free.app/api/update-complaint/${widget.complaint['complaint_id']}',
         data: formData,
       );
 
@@ -252,7 +252,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
   void _showResolvedPhoto(Map<String, dynamic>? resolvedPhoto) {
     if (resolvedPhoto != null && resolvedPhoto['image'] != null) {
       final imageUrl =
-          'https://d029-122-172-86-111.ngrok-free.app${resolvedPhoto['image']}';
+          'https://cc33-122-172-85-145.ngrok-free.app${resolvedPhoto['image']}';
 
       showDialog(
         context: context,
@@ -327,7 +327,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                         decoration: BoxDecoration(
                           image: DecorationImage(
                             image: NetworkImage(
-                              'https://d029-122-172-86-111.ngrok-free.app${image['image']}',
+                              'https://cc33-122-172-85-145.ngrok-free.app${image['image']}',
                             ),
                             fit: BoxFit.cover,
                           ),

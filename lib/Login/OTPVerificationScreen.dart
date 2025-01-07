@@ -1,9 +1,10 @@
 // Login/OTPVerificationScreen.dart
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:shared_preferences/shared_preferences.dart'; // Add this import
+import 'package:shared_preferences/shared_preferences.dart';
 import '../CitizensScreen/CitizensScreen.dart';
-import '../CitizensScreen/ComplaintsScreen/ComplaintScreen.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class OTPVerificationScreen extends StatefulWidget {
   final String verificationId;
@@ -26,7 +27,8 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
   final List<Color> _borderColors = List.generate(6, (index) => Colors.grey);
   bool _isLoading = false;
 
-  void _verifyOTP() async {
+  // Verify OTP and sign in user
+  Future<void> _verifyOTP() async {
     String otp = _controllers.map((controller) => controller.text).join();
     if (otp.length != 6) {
       _setBorderColor(const Color.fromARGB(255, 201, 15, 2));
@@ -35,33 +37,62 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
 
     setState(() => _isLoading = true);
     try {
-      final PhoneAuthCredential credential = PhoneAuthProvider.credential(
+      // Use Firebase PhoneAuthProvider for OTP verification
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
         verificationId: widget.verificationId,
         smsCode: otp,
       );
 
-      await _auth.signInWithCredential(credential);
-      _setBorderColor(Colors.green);
+      UserCredential userCredential =
+          await _auth.signInWithCredential(credential);
+      String? idToken = await userCredential.user?.getIdToken();
 
-      // Store the phone number in SharedPreferences
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('phone_number', widget.phoneNumber);
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>
-              CitizensScreen(),
-        ),
-      );
+      if (idToken != null) {
+        final response = await _sendTokenToBackend(idToken);
+        if (response.statusCode == 200) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => CitizensScreen()),
+          );
+        } else {
+          _setBorderColor(const Color.fromARGB(255, 229, 17, 2));
+        }
+      }
     } catch (e) {
-      setState(() {
-        _isLoading = false;
-        _setBorderColor(Color.fromARGB(255, 229, 17, 2));
-      });
+      print("Error during verification: $e");
+      _setBorderColor(const Color.fromARGB(255, 229, 17, 2));
+    } finally {
+      setState(() => _isLoading = false);
     }
   }
 
+  // Send token to backend API and save the received token to SharedPreferences
+  Future<http.Response> _sendTokenToBackend(String idToken) async {
+    final url = Uri.parse(
+        "https://cc33-122-172-85-145.ngrok-free.app/api/customer-login");
+    final response = await http.post(
+      url,
+      headers: {
+        "Authorization": "Bearer $idToken",
+        "Content-Type": "application/json",
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final responseData = jsonDecode(response.body);
+      final token = responseData['data']['token'];
+
+      // Save the token in SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('id_token', token);
+      print('Token saved to SharedPreferences: $token');
+    } else {
+      throw 'Failed to login. Status code: ${response.statusCode}';
+    }
+    return response;
+  }
+
+  // Update border color for OTP fields
   void _setBorderColor(Color color) {
     setState(() {
       for (int i = 0; i < 6; i++) {

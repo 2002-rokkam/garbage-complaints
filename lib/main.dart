@@ -4,7 +4,6 @@ import 'package:http/http.dart' as http;
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'Login/AuthorityLoginScreen.dart';
-import 'Login/PhoneAuthScreen.dart';
 import 'authority/VDOScreen.dart';
 
 
@@ -118,9 +117,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
               ),
-
               const SizedBox(height: 20),
-
               // Feedback and Login Buttons
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,

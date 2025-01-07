@@ -1,4 +1,4 @@
-// authority/QRTab.dart
+// WokersScreen/D2D/QRTab.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:dio/dio.dart';
@@ -57,7 +57,7 @@ class QRTab extends StatelessWidget {
   Future<void> submitData(String scannedData, BuildContext context) async {
     final dio = Dio();
     const url =
-        'https://d029-122-172-86-111.ngrok-free.app/api/submit-activity';
+        'https://cc33-122-172-85-145.ngrok-free.app/api/submit-activity';
 
     try {
       FormData formData = FormData.fromMap({
@@ -116,7 +116,7 @@ class QRTab extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment(0.0, 1.00),
               end: Alignment(0, -1),
-              colors: [ Color(0xFFFFC400),Color(0x00FFC400),Color(0x00FFC400)],
+              colors: [Color(0xFFFFC400), Color(0x00FFC400), Color(0x00FFC400)],
             ),
           ),
           child: Center(

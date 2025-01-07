@@ -1,4 +1,4 @@
-// authority/WagesCalendarActivityScreen.dart
+// WokersScreen/Wages/WagesCalendarActivityScreen.dart
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
@@ -42,7 +42,7 @@ class _WagesCalendarActivityScreenState
     });
 
     final url = Uri.parse(
-        'https://d029-122-172-86-111.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+        'https://cc33-122-172-85-145.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
 
     try {
       final response = await http.get(url);
@@ -175,7 +175,7 @@ class _WagesCalendarActivityScreenState
                                       decoration: BoxDecoration(
                                         image: DecorationImage(
                                           image: NetworkImage(
-                                            'https://d029-122-172-86-111.ngrok-free.app${activity['before_image']}',
+                                            'https://cc33-122-172-85-145.ngrok-free.app${activity['before_image']}',
                                           ),
                                           fit: BoxFit.cover,
                                         ),

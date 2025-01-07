@@ -52,7 +52,7 @@ class _RRCScreenState extends State<RRCScreen>
       int workerId = await getWorkerId();
       Dio dio = Dio();
       final response = await dio.get(
-          'https://d029-122-172-86-111.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+          'https://cc33-122-172-85-145.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
 
       if (response.statusCode == 200) {
         final data = response.data;

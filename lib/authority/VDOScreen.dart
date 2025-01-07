@@ -2,16 +2,13 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
-import '../WokersScreen/D2D/D2DSectionScreen.dart';
-import '../WokersScreen/RRC/RRCSectionScreen.dart';
-import '../WokersScreen/Wages/WagesActionScreen.dart';
-import '../WokersScreen/WorkerCommon/ActionScreen.dart';
 import '../WokersScreen/WorkerComplaints/workerComplaintsScreen.dart';
 import 'VDOCalendarActivityScreen.dart';
 import 'VDOD2DCalnderActivity.dart';
 import 'VDORCCCalendarActivityScreen.dart';
 import 'VDOWagesCalendarActivityScreen.dart';
-
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class VDOScreen extends StatefulWidget {
   @override
@@ -21,6 +18,9 @@ class VDOScreen extends StatefulWidget {
 class _VDOScreenState extends State<VDOScreen> {
   final PageController _pageController = PageController();
 
+  int totalComplaints = 0;
+  int pendingComplaints = 0;
+  int resolvedComplaints = 0;
   final List<Map<String, String>> buttonItems = [
     {
       'label': 'Door to Door',
@@ -53,7 +53,7 @@ class _VDOScreenState extends State<VDOScreen> {
   @override
   void initState() {
     super.initState();
-    // Auto-scroll images
+    fetchData();
     Future.delayed(Duration.zero, () {
       Timer.periodic(const Duration(seconds: 3), (Timer timer) {
         if (_pageController.hasClients) {
@@ -66,6 +66,22 @@ class _VDOScreenState extends State<VDOScreen> {
         }
       });
     });
+  }
+
+  Future<void> fetchData() async {
+    final response = await http.get(Uri.parse(
+        'https://cc33-122-172-85-145.ngrok-free.app/api/complaints-by-gram-panchayat?gram_panchayat=Banera'));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      setState(() {
+        totalComplaints = data['total_complaints'];
+        pendingComplaints = data['pending_complaints'];
+        resolvedComplaints = data['resolved_complaints'];
+      });
+    } else {
+      throw Exception('Failed to load data');
+    }
   }
 
   @override
@@ -158,7 +174,7 @@ class _VDOScreenState extends State<VDOScreen> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Home',
+                  'Action',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -167,47 +183,13 @@ class _VDOScreenState extends State<VDOScreen> {
                 ),
               ),
             ),
+
             // Scrollable content
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-
-                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                      child: Wrap(
-                        spacing: 1, // Horizontal space between buttons
-                        runSpacing: 16, // Vertical space between rows
-                        children: buttonItems.map((item) {
-                          return _buildButton(
-                            item['label']!,
-                            item['imageUrl']!,
-                            item['route']!,
-                            context,
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                    // Complaints Container
-                    
-                    SizedBox(height: 16),
-                    // Scrollable "Home" label and buttons grid
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0, vertical: 4.0),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Action',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    ),
-                   GestureDetector(
+                    GestureDetector(
                       onTap: () {
                         Navigator.push(
                           context,
@@ -222,8 +204,7 @@ class _VDOScreenState extends State<VDOScreen> {
                         decoration: ShapeDecoration(
                           color: Colors.white,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
+                              borderRadius: BorderRadius.circular(8)),
                           shadows: [
                             BoxShadow(
                               color: Color(0x14000000),
@@ -240,40 +221,248 @@ class _VDOScreenState extends State<VDOScreen> {
                           ],
                         ),
                         child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  width: 64,
-                                  height: 64,
-                                  clipBehavior: Clip.antiAlias,
-                                  decoration: BoxDecoration(),
-                                  child: Image.asset(
-                                    'images/Complaints.png',
-                                    fit: BoxFit.cover,
+                            Padding(
+                              padding: const EdgeInsets.all(36.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Total Complaints',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontFamily: 'Nunito Sans',
+                                      fontWeight: FontWeight.w400,
+                                      height: 1.25,
+                                      letterSpacing: 0.16,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  'Complaints',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                    fontFamily: 'Nunito Sans',
-                                    fontWeight: FontWeight.w400,
-                                    height: 1.25,
-                                    letterSpacing: 0.16,
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    totalComplaints.toString(),
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 24,
+                                      fontFamily: 'Nunito Sans',
+                                      fontWeight: FontWeight.w400,
+                                      height: 1.0,
+                                      letterSpacing: 0.24,
+                                    ),
                                   ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(36.0),
+                              child: Container(
+                                width: 64,
+                                height: 64,
+                                clipBehavior: Clip.antiAlias,
+                                decoration: BoxDecoration(),
+                                child: Image.asset(
+                                  'images/Complaints.png',
+                                  fit: BoxFit.cover,
                                 ),
-                              ],
+                              ),
                             ),
                           ],
                         ),
+                      ),
+                    ),
+                    SizedBox(height: 16),
+
+                    Row(
+                      mainAxisAlignment:
+                          MainAxisAlignment.spaceEvenly, // Adjusts the spacing
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => workerComplaintsScreen(),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            width: 170, // Adjust width as needed
+                            height: 139,
+                            decoration: ShapeDecoration(
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              shadows: [
+                                BoxShadow(
+                                  color: Color(0x14000000),
+                                  blurRadius: 16,
+                                  offset: Offset(0, 8),
+                                  spreadRadius: 0,
+                                ),
+                                BoxShadow(
+                                  color: Color(0x0A000000),
+                                  blurRadius: 4,
+                                  offset: Offset(0, 0),
+                                  spreadRadius: 0,
+                                ),
+                              ],
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    width: 44,
+                                    height: 44,
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: BoxDecoration(),
+                                    child: Image.asset(
+                                      'images/pending.png',
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    pendingComplaints.toString(),
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18, // Adjust size as needed
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                      height: 5), // Adjust spacing as needed
+                                  Text(
+                                    'Pending ',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontFamily: 'Nunito Sans',
+                                      fontWeight: FontWeight.w400,
+                                      height: 1.25,
+                                      letterSpacing: 0.16,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => workerComplaintsScreen(),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            width: 170, // Adjust width as needed
+                            height: 139,
+                            decoration: ShapeDecoration(
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              shadows: [
+                                BoxShadow(
+                                  color: Color(0x14000000),
+                                  blurRadius: 16,
+                                  offset: Offset(0, 8),
+                                  spreadRadius: 0,
+                                ),
+                                BoxShadow(
+                                  color: Color(0x0A000000),
+                                  blurRadius: 4,
+                                  offset: Offset(0, 0),
+                                  spreadRadius: 0,
+                                ),
+                              ],
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    width: 44,
+                                    height: 44,
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: BoxDecoration(),
+                                    child: Image.asset(
+                                      'images/resved.png',
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    resolvedComplaints.toString(),
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18, // Adjust size as needed
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                      height: 5), // Adjust spacing as needed
+                                  Text(
+                                    'Resolved ',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontFamily: 'Nunito Sans',
+                                      fontWeight: FontWeight.w400,
+                                      height: 1.25,
+                                      letterSpacing: 0.16,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    // Scrollable "Home" label and buttons grid
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 4.0),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Home',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                      child: Wrap(
+                        spacing: 1, // Horizontal space between buttons
+                        runSpacing: 16, // Vertical space between rows
+                        children: buttonItems.map((item) {
+                          return _buildButton(
+                            item['label']!,
+                            item['imageUrl']!,
+                            item['route']!,
+                            context,
+                          );
+                        }).toList(),
                       ),
                     ),
                   ],
@@ -367,7 +556,6 @@ class _VDOScreenState extends State<VDOScreen> {
             ),
           ],
         ),
-
       ),
     );
   }

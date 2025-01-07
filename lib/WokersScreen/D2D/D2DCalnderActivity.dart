@@ -44,7 +44,7 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
     });
 
     final url = Uri.parse(
-        'https://d029-122-172-86-111.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+        'https://cc33-122-172-85-145.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
 
     try {
       final response = await http.get(url);
@@ -169,7 +169,8 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
 class D2DBeforeAfterTab extends StatelessWidget {
   final List activities;
 
-  const D2DBeforeAfterTab({Key? key, required this.activities}) : super(key: key);
+  const D2DBeforeAfterTab({Key? key, required this.activities})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -269,7 +270,7 @@ class D2DBeforeAfterTab extends StatelessWidget {
                           decoration: ShapeDecoration(
                             image: DecorationImage(
                               image: NetworkImage(
-                                'https://d029-122-172-86-111.ngrok-free.app${activity['before_image']}',
+                                'https://cc33-122-172-85-145.ngrok-free.app${activity['before_image']}',
                               ),
                               fit: BoxFit.cover,
                             ),
@@ -284,7 +285,7 @@ class D2DBeforeAfterTab extends StatelessWidget {
                           decoration: ShapeDecoration(
                             image: DecorationImage(
                               image: NetworkImage(
-                                'https://d029-122-172-86-111.ngrok-free.app${activity['after_image']}',
+                                'https://cc33-122-172-85-145.ngrok-free.app${activity['after_image']}',
                               ),
                               fit: BoxFit.cover,
                             ),
@@ -338,7 +339,7 @@ class _D2DQRDetailsTabState extends State<D2DQRDetailsTab> {
 
   Future<void> fetchTripDetails() async {
     final url = Uri.parse(
-        'https://d029-122-172-86-111.ngrok-free.app/api/worker/$workerId/section/D2D_QR');
+        'https://cc33-122-172-85-145.ngrok-free.app/api/worker/$workerId/section/D2D_QR');
 
     try {
       final response = await http.get(url);
