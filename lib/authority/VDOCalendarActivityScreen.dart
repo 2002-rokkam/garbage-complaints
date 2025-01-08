@@ -2,8 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -37,13 +35,18 @@ class _VDOCalendarActivityScreenState extends State<VDOCalendarActivityScreen> {
 
   Future<void> fetchActivities() async {
     String workerId = await getWorkerId();
-
+  print(workerId);
     setState(() {
       _isLoading = true;
     });
 
+    // Construct the URL with the workerId parameter
     final url = Uri.parse(
-        'https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard?district=ak&gram_panchayat=hi&section=${widget.section}');
+            'https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard')
+        .replace(queryParameters: {
+      'worker_id': workerId,
+      'section': widget.section,
+    });
 
     try {
       final response = await http.get(url);
@@ -66,6 +69,7 @@ class _VDOCalendarActivityScreenState extends State<VDOCalendarActivityScreen> {
       });
     }
   }
+
 
   List getActivitiesForSelectedDate() {
     return _activities
@@ -250,7 +254,7 @@ class _VDOCalendarActivityScreenState extends State<VDOCalendarActivityScreen> {
                                             decoration: ShapeDecoration(
                                               image: DecorationImage(
                                                 image: NetworkImage(
-                                                  'https://cc33-122-172-85-145.ngrok-free.app${activity['before_image']}',
+                                                  '${activity['before_image']}',
                                                 ),
                                                 fit: BoxFit.cover,
                                               ),
@@ -266,7 +270,7 @@ class _VDOCalendarActivityScreenState extends State<VDOCalendarActivityScreen> {
                                             decoration: ShapeDecoration(
                                               image: DecorationImage(
                                                 image: NetworkImage(
-                                                  'https://cc33-122-172-85-145.ngrok-free.app${activity['after_image']}',
+                                                  '${activity['after_image']}',
                                                 ),
                                                 fit: BoxFit.cover,
                                               ),

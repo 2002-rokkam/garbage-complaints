@@ -72,7 +72,6 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-
               // Stylish Info Section
               Card(
                 elevation: 4,

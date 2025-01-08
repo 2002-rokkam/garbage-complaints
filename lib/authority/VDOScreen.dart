@@ -2,13 +2,14 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
-import '../WokersScreen/WorkerComplaints/workerComplaintsScreen.dart';
 import 'VDOCalendarActivityScreen.dart';
 import 'VDOD2DCalnderActivity.dart';
 import 'VDORCCCalendarActivityScreen.dart';
 import 'VDOWagesCalendarActivityScreen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'VDOWorkerComplaintsCalender.dart';
 
 class VDOScreen extends StatefulWidget {
   @override
@@ -21,6 +22,7 @@ class _VDOScreenState extends State<VDOScreen> {
   int totalComplaints = 0;
   int pendingComplaints = 0;
   int resolvedComplaints = 0;
+
   final List<Map<String, String>> buttonItems = [
     {
       'label': 'Door to Door',
@@ -69,18 +71,31 @@ class _VDOScreenState extends State<VDOScreen> {
   }
 
   Future<void> fetchData() async {
-    final response = await http.get(Uri.parse(
-        'https://cc33-122-172-85-145.ngrok-free.app/api/complaints-by-gram-panchayat?gram_panchayat=Banera'));
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? gramPanchayat = prefs.getString('gram_panchayat');
+    print(gramPanchayat);
+    if (gramPanchayat != null) {
+      final response = await http.get(Uri.parse(
+              'https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard')
+          .replace(queryParameters: {
+        'gram_panchayat': gramPanchayat,
+      }));
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      setState(() {
-        totalComplaints = data['total_complaints'];
-        pendingComplaints = data['pending_complaints'];
-        resolvedComplaints = data['resolved_complaints'];
-      });
+      print('Status Code: ${response.statusCode}');
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        print('API Response: $data');
+        setState(() {
+          totalComplaints = data['total_complaints'];
+          pendingComplaints = data['pending_complaints'];
+          resolvedComplaints = data['resolved_complaints'];
+        });
+      } else {
+        throw Exception('Failed to load data');
+      }
     } else {
-      throw Exception('Failed to load data');
+      throw Exception('Gram Panchayat not found in preferences');
     }
   }
 
@@ -194,7 +209,7 @@ class _VDOScreenState extends State<VDOScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => workerComplaintsScreen(),
+                            builder: (context) => VDOWorkerComplaintsCalender(),
                           ),
                         );
                       },
@@ -281,12 +296,7 @@ class _VDOScreenState extends State<VDOScreen> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => workerComplaintsScreen(),
-                              ),
-                            );
+                            
                           },
                           child: Container(
                             width: 170, // Adjust width as needed
@@ -357,12 +367,7 @@ class _VDOScreenState extends State<VDOScreen> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => workerComplaintsScreen(),
-                              ),
-                            );
+                           
                           },
                           child: Container(
                             width: 170, // Adjust width as needed
@@ -527,11 +532,10 @@ class _VDOScreenState extends State<VDOScreen> {
         ),
         child: Column(
           mainAxisAlignment:
-              MainAxisAlignment.center, // Keep vertically centered
+              MainAxisAlignment.center, 
           crossAxisAlignment:
-              CrossAxisAlignment.start, // Align children to the start (left)
+              CrossAxisAlignment.start, 
           children: [
-            // Image size adjusted to fit inside the fixed size
             Container(
               width: 60, // Fixed image width
               height: 60, // Fixed image height

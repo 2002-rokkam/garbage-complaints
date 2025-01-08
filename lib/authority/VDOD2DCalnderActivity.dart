@@ -44,8 +44,12 @@ class _VDOD2DCalnderActivityScreenState
       _isLoading = true;
     });
 
-    final url = Uri.parse(
-        'https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard?district=ak&gram_panchayat=hi&section=${widget.section}');
+        final url = Uri.parse(
+            'https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard')
+        .replace(queryParameters: {
+      'worker_id': workerId,
+      'section': widget.section,
+    });
 
     try {
       final response = await http.get(url);
@@ -274,7 +278,7 @@ class D2DBeforeAfterTab extends StatelessWidget {
                           decoration: ShapeDecoration(
                             image: DecorationImage(
                               image: NetworkImage(
-                                'https://cc33-122-172-85-145.ngrok-free.app${activity['before_image']}',
+                                '${activity['before_image']}',
                               ),
                               fit: BoxFit.cover,
                             ),
@@ -289,7 +293,7 @@ class D2DBeforeAfterTab extends StatelessWidget {
                           decoration: ShapeDecoration(
                             image: DecorationImage(
                               image: NetworkImage(
-                                'https://cc33-122-172-85-145.ngrok-free.app${activity['after_image']}',
+                                '${activity['after_image']}',
                               ),
                               fit: BoxFit.cover,
                             ),
@@ -325,6 +329,7 @@ class D2DBeforeAfterTab extends StatelessWidget {
   }
 }
 
+
 class D2DQRDetailsTab extends StatefulWidget {
   const D2DQRDetailsTab({Key? key}) : super(key: key);
 
@@ -335,6 +340,7 @@ class D2DQRDetailsTab extends StatefulWidget {
 class _D2DQRDetailsTabState extends State<D2DQRDetailsTab> {
   bool _isLoading = true;
   List _tripDetails = [];
+  late String workerId;
 
   @override
   void initState() {
@@ -343,29 +349,31 @@ class _D2DQRDetailsTabState extends State<D2DQRDetailsTab> {
   }
 
   Future<void> initializeWorkerIdAndFetchDetails() async {
-    String workerId = await getWorkerId();
-    if (workerId != "") {
+    workerId = await getWorkerId(); // Assign to the class-level workerId
+    if (workerId.isNotEmpty) {
       fetchTripDetails();
     } else {
       setState(() {
         _isLoading = false;
       });
-      // Handle the case where workerId is not available
       print('Worker ID not found.');
     }
   }
 
   Future<void> fetchTripDetails() async {
     final url = Uri.parse(
-        'https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard?district=ak&gram_panchayat=hi&section=D2D_QR');
+            'https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard')
+        .replace(queryParameters: {
+      'worker_id': workerId,
+      'section': 'D2D_QR',
+    });
 
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         setState(() {
-          _tripDetails = data['section_data']
-              ['D2D_QR']; // Accessing the correct key in the response
+          _tripDetails = data['section_data']['D2D_QR'];
           _isLoading = false;
         });
       } else {
@@ -379,12 +387,9 @@ class _D2DQRDetailsTabState extends State<D2DQRDetailsTab> {
     }
   }
 
-  late int workerId;
-
   Future<String> getWorkerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String workerId = prefs.getString('worker_id') ?? "";
-    return workerId;
+    return prefs.getString('worker_id') ?? "";
   }
 
   @override
@@ -398,10 +403,9 @@ class _D2DQRDetailsTabState extends State<D2DQRDetailsTab> {
               : Column(
                   children: _tripDetails.map((trip) {
                     return Card(
-                      elevation: 4, // Adds a shadow for depth
+                      elevation: 4,
                       shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(12), // Rounded corners
+                        borderRadius: BorderRadius.circular(12),
                       ),
                       margin: EdgeInsets.only(bottom: 16),
                       child: Padding(
@@ -421,7 +425,6 @@ class _D2DQRDetailsTabState extends State<D2DQRDetailsTab> {
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                     ),
-                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                               ],

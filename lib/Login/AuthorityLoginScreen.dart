@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../WokersScreen/WorkerScreen.dart';
+import '../authority/VDOScreen.dart';
 import 'PhoneAuthScreen.dart';
 
 class AuthorityLoginScreen extends StatefulWidget {
@@ -50,12 +51,27 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
             SnackBar(content: Text('Login successful!')),
           );
 
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => WorkerScreen(),
-            ),
-          );
+          // Navigate to appropriate screen based on user position
+          if (user['Position'] == 'Worker') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => WorkerScreen(),
+              ),
+            );
+          } else if (user['Position'] == 'Vdo') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => VDOScreen(), // Navigate to BDO screen
+              ),
+            );
+          } else {
+            // Handle other positions or show a fallback screen
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Unknown position: ${user['Position']}')),
+            );
+          }
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Login failed: ${data['message']}')),
@@ -222,10 +238,6 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
             if (value == null || value.isEmpty) {
               return 'Please enter your $label';
             }
-            // if (label == 'Email' &&
-            //     !RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-            //   return 'Please enter a valid email';
-            // }
             return null;
           },
         ),

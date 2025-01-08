@@ -86,6 +86,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
       // Save the token in SharedPreferences
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('id_token', token);
+
       print('Token saved to SharedPreferences: $token');
     } else {
       throw 'Failed to login. Status code: ${response.statusCode}';

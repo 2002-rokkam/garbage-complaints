@@ -42,8 +42,12 @@ class _WagesCalendarActivityScreenState
       _isLoading = true;
     });
 
-    final url = Uri.parse(
-        'https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard?district=ak&gram_panchayat=hi&section=${widget.section}');
+        final url = Uri.parse(
+            'https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard')
+        .replace(queryParameters: {
+      'worker_id': workerId,
+      'section': widget.section,
+    });
 
     try {
       final response = await http.get(url);
@@ -181,7 +185,7 @@ class _WagesCalendarActivityScreenState
                                       decoration: BoxDecoration(
                                         image: DecorationImage(
                                           image: NetworkImage(
-                                            'https://cc33-122-172-85-145.ngrok-free.app${activity['before_image']}',
+                                            '${activity['before_image']}',
                                           ),
                                           fit: BoxFit.cover,
                                         ),

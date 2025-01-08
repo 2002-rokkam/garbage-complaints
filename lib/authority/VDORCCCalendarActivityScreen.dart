@@ -44,8 +44,12 @@ class _VDORCCCalendarActivityScreenState
       _isLoading = true;
     });
 
-    final url = Uri.parse(
-        'https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard?district=ak&gram_panchayat=hi&section=${widget.section}');
+            final url = Uri.parse(
+            'https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard')
+        .replace(queryParameters: {
+      'worker_id': workerId,
+      'section': widget.section,
+    });
 
     try {
       final response = await http.get(url);
@@ -276,7 +280,7 @@ class RRCBeforeAfterTab extends StatelessWidget {
                           decoration: ShapeDecoration(
                             image: DecorationImage(
                               image: NetworkImage(
-                                'https://cc33-122-172-85-145.ngrok-free.app${activity['before_image']}',
+                                '${activity['before_image']}',
                               ),
                               fit: BoxFit.cover,
                             ),
@@ -291,7 +295,7 @@ class RRCBeforeAfterTab extends StatelessWidget {
                           decoration: ShapeDecoration(
                             image: DecorationImage(
                               image: NetworkImage(
-                                'https://cc33-122-172-85-145.ngrok-free.app${activity['after_image']}',
+                                '${activity['after_image']}',
                               ),
                               fit: BoxFit.cover,
                             ),
@@ -337,6 +341,7 @@ class TripDetailsTab extends StatefulWidget {
 class _TripDetailsTabState extends State<TripDetailsTab> {
   bool _isLoading = true;
   List _tripDetails = [];
+  String workerId = ""; // Initialize workerId with an empty string
 
   @override
   void initState() {
@@ -345,9 +350,9 @@ class _TripDetailsTabState extends State<TripDetailsTab> {
   }
 
   Future<void> initializeWorkerIdAndFetchDetails() async {
-    String workerId = await getWorkerId();
-    if (workerId != "") {
-      fetchTripDetails();
+    workerId = await getWorkerId(); // Assign workerId here
+    if (workerId.isNotEmpty) {
+      await fetchTripDetails(); // Ensure fetchTripDetails is awaited
     } else {
       setState(() {
         _isLoading = false;
@@ -359,7 +364,11 @@ class _TripDetailsTabState extends State<TripDetailsTab> {
 
   Future<void> fetchTripDetails() async {
     final url = Uri.parse(
-        'https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard?district=ak&gram_panchayat=hi&section=Waste Details');
+            'https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard')
+        .replace(queryParameters: {
+      'worker_id': workerId,
+      'section': 'Waste Details',
+    });
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
@@ -380,12 +389,9 @@ class _TripDetailsTabState extends State<TripDetailsTab> {
     }
   }
 
-  late int workerId;
-
   Future<String> getWorkerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String workerId = prefs.getString('worker_id') ?? "";
-    return workerId;
+    return prefs.getString('worker_id') ?? "";
   }
 
   @override
