@@ -140,6 +140,9 @@ class _ComplaintCardState extends State<ComplaintCard> {
     setState(() {
       _latitude = position.latitude;
       _longitude = position.longitude;
+      print(_latitude);
+            print(_longitude);
+
     });
   }
 
@@ -214,22 +217,21 @@ class _ComplaintCardState extends State<ComplaintCard> {
 
     Dio dio = Dio();
     FormData formData = FormData.fromMap({
-      'solved_compliant': await MultipartFile.fromFile(
+      'solved_image': await MultipartFile.fromFile(
         _imageFile!.path,
-        filename: 'solved_complaint_image.jpg',
+        filename: 'solved_complaint_image11111.jpg',
       ),
       'solved_lat': _latitude,
       'solved_long': _longitude,
       'worker_id': workerId,
-      'worker_email': _workerEmail,
     });
-
+print(formData);
     try {
       Response response = await dio.post(
-        'https://cc33-122-172-85-145.ngrok-free.app/api/update-complaint/"${widget.complaint['complaint_id']}"',
+        'https://cc33-122-172-85-145.ngrok-free.app/api/update-complaint/${widget.complaint['complaint_id']}',
         data: formData,
       );
-
+      
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Complaint updated successfully'),
