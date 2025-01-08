@@ -39,17 +39,12 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
         final data = json.decode(response.body);
 
         // Check if login is successful
-        if (data['message'] == "Login successful.") {
-          final user = data['user'];
-
-          // Save user details in SharedPreferences
+        if (data['message'] == "Login Successful") {
+          final user = data;
           final SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setInt('worker_id', user['id']);
-          await prefs.setString('username', user['username']);
-          await prefs.setString('email', user['email']);
-          await prefs.setString('district', user['district']);
-          await prefs.setString('gram_panchayat', user['gram_panchayat']);
-          await prefs.setString('position', user['position']);
+          await prefs.setString('worker_id', user['User Id']);
+          await prefs.setString('position', user['Position']);
+          await prefs.setString('gram_panchayat', user['gp']);
 
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Login successful!')),
@@ -227,10 +222,10 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
             if (value == null || value.isEmpty) {
               return 'Please enter your $label';
             }
-            if (label == 'Email' &&
-                !RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-              return 'Please enter a valid email';
-            }
+            // if (label == 'Email' &&
+            //     !RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+            //   return 'Please enter a valid email';
+            // }
             return null;
           },
         ),

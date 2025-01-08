@@ -43,13 +43,13 @@ class _RRCScreenState extends State<RRCScreen>
       isLoading = true;
     });
 
-    Future<int> getWorkerId() async {
+    Future<String> getWorkerId() async {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      return prefs.getInt('worker_id') ?? -1;
+      return prefs.getString('worker_id') ?? "";
     }
 
     try {
-      int workerId = await getWorkerId();
+      String workerId = await getWorkerId();
       Dio dio = Dio();
       final response = await dio.get(
           'https://cc33-122-172-85-145.ngrok-free.app/api/worker/$workerId/section/${widget.section}');

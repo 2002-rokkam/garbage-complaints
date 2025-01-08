@@ -1,4 +1,4 @@
-// authority/ComplaintsSectionScreen.dart
+// WokersScreen/WorkerCommon/ComplaintsSectionScreen.dart
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:image_picker/image_picker.dart';
@@ -47,7 +47,6 @@ class _ComplaintsSectionScreenState extends State<ComplaintsSectionScreen> {
         _selectedImage = File(image.path);
       });
 
-      // Simulate marking complaint as resolved
       setState(() {
         _selectedComplaints.remove(complaint);
         _complaints[_selectedDate] = _selectedComplaints;
@@ -94,7 +93,6 @@ class _ComplaintsSectionScreenState extends State<ComplaintsSectionScreen> {
             ),
           ),
 
-          // Display Complaints for Selected Date
           Expanded(
             child: _selectedComplaints.isEmpty
                 ? const Center(

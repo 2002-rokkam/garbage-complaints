@@ -39,7 +39,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
     super.initState();
 
     if (widget.initialData != null) {
-      activityId = widget.initialData!['id'].toString();
+      activityId = widget.initialData!['record_id'].toString();
 
       if (widget.initialData!['before_image'] != null) {
         _beforeImage = {
@@ -68,9 +68,9 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
     }
   }
 
-  Future<int> getWorkerId() async {
+  Future<String> getWorkerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    int workerId = prefs.getInt('worker_id') ?? -1;
+    String workerId = prefs.getString('worker_id') ?? "";
     return workerId;
   }
 
@@ -95,8 +95,8 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
     try {
       if (_beforeImage == null) return;
 
-      int workerId = await getWorkerId();
-      if (workerId == -1) {
+      String workerId = await getWorkerId();
+      if (workerId == "") {
         print("Error: worker_id not found in SharedPreferences.");
         return;
       }
@@ -124,8 +124,9 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
       );
 
       if (response.statusCode == 201) {
+        print(response);
         setState(() {
-          activityId = response.data['data']['id'].toString();
+          activityId = response.data['data']['record_id'].toString();
         });
         widget.onReload();
 
@@ -238,7 +239,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                     SizedBox(
                       width: screenWidth * 0.8, // 80% of screen width
                       child: Text(
-                        'Successfully uploaded receipt!',
+                        'Successfully Submited!',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Color(0xFF1D1B20),
@@ -434,7 +435,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                               ],
                             )
                           : Image.network(
-                              'https://cc33-122-172-85-145.ngrok-free.app${_beforeImage!['imagePath']}',
+                              '${_beforeImage!['imagePath']}',
                               // Replace with your network image URL
                               fit: BoxFit.cover,
                               loadingBuilder: (BuildContext context,
@@ -511,7 +512,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                               ],
                             )
                           : Image.network(
-                              'https://cc33-122-172-85-145.ngrok-free.app${_afterImage!['imagePath']}',
+                              '${_afterImage!['imagePath']}',
                               // Replace with your network image URL
                               fit: BoxFit.cover,
                               loadingBuilder: (BuildContext context,

@@ -30,14 +30,14 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
     _tabController = TabController(length: 2, vsync: this);
   }
 
-  Future<int> getWorkerId() async {
+  Future<String> getWorkerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    int workerId = prefs.getInt('worker_id') ?? -1;
+    String workerId = prefs.getString('worker_id') ?? "";
     return workerId;
   }
 
   Future<void> fetchActivities() async {
-    int workerId = await getWorkerId();
+    String workerId = await getWorkerId();
 
     setState(() {
       _isLoading = true;
@@ -133,19 +133,7 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
                 ),
               ),
             ),
-          ),
-          // Total Activities Summary
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Total activities done on ${_selectedDate.toLocal().toString().split(' ')[0]} = ${selectedActivities.length}',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-          ),
+          ),         
           // TabBarView for Before & After and Trip Details
           Expanded(
             child: _isLoading
@@ -155,12 +143,14 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
                     : TabBarView(
                         controller: _tabController,
                         children: [
-                          // Before & After Tab
-                          RRCBeforeAfterTab(activities: selectedActivities),
-                          // Trip Details Tab
-                          TripDetailsTab(),
+                          RRCBeforeAfterTab(
+                            activities: selectedActivities,
+                            totalActivities: selectedActivities.length,
+                          ),
+                          TripDetailsTab(selectedDate: _selectedDate),
                         ],
                       ),
+
           ),
         ],
       ),
@@ -170,147 +160,170 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
 
 class RRCBeforeAfterTab extends StatelessWidget {
   final List activities;
+  final int totalActivities;
 
-  const RRCBeforeAfterTab({Key? key, required this.activities})
+  const RRCBeforeAfterTab(
+      {Key? key, required this.activities, required this.totalActivities})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
-        children: activities.map((activity) {
-          return Card(
-            child: Container(
-              width: 370,
-              height: 201.88,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: Color(0xFFFFD262),
-                  width: 1,
-                ),
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'Total activities done on ${DateTime.now().toLocal().toString().split(' ')[0]} = $totalActivities',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Top Row: Status, and Date-Time
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              width: 40.42,
-                              height: 40.42,
-                              decoration: ShapeDecoration(
-                                color: Color(0xFFFFF2C6),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(59),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 8),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 5),
-                              decoration: ShapeDecoration(
-                                color: (activity['status'] ?? 'Pending') ==
-                                        'Completed'
-                                    ? Color(0xFF5C964A)
-                                    : Color(0xFFFFA726),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18),
-                                ),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  activity['status'] ?? 'Pending',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
+            ),
+          ),
+          ...activities.map((activity) {
+            return Card(
+              child: Container(
+                width: 370,
+                height: 201.88,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Color(0xFFFFD262),
+                    width: 1,
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                width: 40.42,
+                                height: 40.42,
+                                decoration: ShapeDecoration(
+                                  color: Color(0xFFFFF2C6),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(59),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          width: 120,
-                          height: 26,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 5),
-                          decoration: ShapeDecoration(
-                            color: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(26),
-                            ),
+                              SizedBox(width: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 5),
+                                decoration: ShapeDecoration(
+                                  color: (activity['status'] ?? 'Pending') ==
+                                          'Completed'
+                                      ? Color(0xFF5C964A)
+                                      : Color(0xFFFFA726),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18),
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    activity['status'] ?? 'Pending',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          child: Center(
-                            child: Text(
-                              activity['date_time'] ?? 'N/A',
-                              style: TextStyle(
-                                color: Color(0xFF252525),
-                                fontSize: 12,
+                          Container(
+                            width: 120,
+                            height: 26,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                            decoration: ShapeDecoration(
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(26),
+                              ),
+                            ),
+                            child: Center(
+                              child: Text(
+                                activity['date_time'] ?? 'N/A',
+                                style: TextStyle(
+                                  color: Color(0xFF252525),
+                                  fontSize: 12,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 8),
-                    // Before and After Images
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Container(
-                          width: 150.10,
-                          height: 99.52,
-                          decoration: ShapeDecoration(
-                            image: DecorationImage(
-                              image: NetworkImage(
-                                'https://cc33-122-172-85-145.ngrok-free.app${activity['before_image']}',
+                        ],
+                      ),
+                      SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            width: 150.10,
+                            height: 99.52,
+                            decoration: ShapeDecoration(
+                              image: DecorationImage(
+                                image:
+                                    NetworkImage('${activity['before_image']}'),
+                                fit: BoxFit.cover,
                               ),
-                              fit: BoxFit.cover,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(6),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6),
+                              ),
                             ),
                           ),
-                        ),
-                        Container(
-                          width: 150.10,
-                          height: 99.52,
-                          decoration: ShapeDecoration(
-                            image: DecorationImage(
-                              image: NetworkImage(
-                                'https://cc33-122-172-85-145.ngrok-free.app${activity['after_image']}',
+                          Container(
+                            width: 150.10,
+                            height: 99.52,
+                            decoration: ShapeDecoration(
+                              image: DecorationImage(
+                                image:
+                                    NetworkImage('${activity['after_image']}'),
+                                fit: BoxFit.cover,
                               ),
-                              fit: BoxFit.cover,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(6),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6),
+                              ),
                             ),
                           ),
+                        ],
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        activity['address'] ?? 'No Address',
+                        style: TextStyle(
+                          color: Color(0xFF252525),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
                         ),
-                      ],
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        }).toList(),
+            );
+          }).toList(),
+        ],
       ),
     );
   }
 }
 
+
 class TripDetailsTab extends StatefulWidget {
-  const TripDetailsTab({Key? key}) : super(key: key);
+  final DateTime selectedDate;
+
+  const TripDetailsTab({Key? key, required this.selectedDate}) : super(key: key);
 
   @override
   _TripDetailsTabState createState() => _TripDetailsTabState();
@@ -319,6 +332,7 @@ class TripDetailsTab extends StatefulWidget {
 class _TripDetailsTabState extends State<TripDetailsTab> {
   bool _isLoading = true;
   List _tripDetails = [];
+  late String workerId;
 
   @override
   void initState() {
@@ -328,13 +342,12 @@ class _TripDetailsTabState extends State<TripDetailsTab> {
 
   Future<void> initializeWorkerIdAndFetchDetails() async {
     workerId = await getWorkerId();
-    if (workerId != -1) {
+    if (workerId.isNotEmpty) {
       fetchTripDetails();
     } else {
       setState(() {
         _isLoading = false;
       });
-      // Handle the case where workerId is not available
       print('Worker ID not found.');
     }
   }
@@ -348,8 +361,7 @@ class _TripDetailsTabState extends State<TripDetailsTab> {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         setState(() {
-          _tripDetails =
-              data['activities']; // Extracting activities from the response
+          _tripDetails = data['activities']; // Extracting activities
           _isLoading = false;
         });
       } else {
@@ -363,83 +375,106 @@ class _TripDetailsTabState extends State<TripDetailsTab> {
     }
   }
 
-  late int workerId;
-
-  Future<int> getWorkerId() async {
+  Future<String> getWorkerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    int workerId = prefs.getInt('worker_id') ?? -1;
-    return workerId;
+    return prefs.getString('worker_id') ?? "";
+  }
+
+  List getTripsForSelectedDate() {
+    return _tripDetails.where((trip) {
+      final tripDate = DateTime.parse(trip['date_time']).toLocal();
+      return tripDate.year == widget.selectedDate.year &&
+          tripDate.month == widget.selectedDate.month &&
+          tripDate.day == widget.selectedDate.day;
+    }).toList();
   }
 
   @override
   Widget build(BuildContext context) {
+    final selectedTrips = getTripsForSelectedDate();
+
     return SingleChildScrollView(
-      child: _isLoading
-          ? Center(child: CircularProgressIndicator())
-          : _tripDetails.isEmpty
-              ? Center(child: Text('No trip details available.'))
-              : Column(
-                  children: _tripDetails.map((trip) {
-                    return Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Trips: ${trip['trips']}',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'Total trips on ${widget.selectedDate.toLocal().toString().split(' ')[0]} = ${selectedTrips.length}',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+          ),
+          _isLoading
+              ? Center(child: CircularProgressIndicator())
+              : selectedTrips.isEmpty
+                  ? Center(child: Text('No trip details for selected date.'))
+                  : Column(
+                      children: selectedTrips.map((trip) {
+                        return Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Trips: ${trip['trips']}',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  'Quantity of Waste: ${trip['quantity_waste']} kg',
+                                  style: TextStyle(
+                                    color: Color(0xFF252525),
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  'Segregated Degradable: ${trip['segregated_degradable']} kg',
+                                  style: TextStyle(
+                                    color: Color(0xFF252525),
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  'Segregated Non-Degradable: ${trip['segregated_non_degradable']} kg',
+                                  style: TextStyle(
+                                    color: Color(0xFF252525),
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  'Segregated Plastic: ${trip['segregated_plastic']} kg',
+                                  style: TextStyle(
+                                    color: Color(0xFF252525),
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  'Date: ${trip['date_time']}',
+                                  style: TextStyle(
+                                    color: Color(0xFF252525),
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
                             ),
-                            SizedBox(height: 8),
-                            Text(
-                              'Quantity of Waste: ${trip['quantity_waste']} kg',
-                              style: TextStyle(
-                                color: Color(0xFF252525),
-                                fontSize: 14,
-                              ),
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              'Segregated Degradable: ${trip['segregated_degradable']} kg',
-                              style: TextStyle(
-                                color: Color(0xFF252525),
-                                fontSize: 14,
-                              ),
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              'Segregated Non-Degradable: ${trip['segregated_non_degradable']} kg',
-                              style: TextStyle(
-                                color: Color(0xFF252525),
-                                fontSize: 14,
-                              ),
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              'Segregated Plastic: ${trip['segregated_plastic']} kg',
-                              style: TextStyle(
-                                color: Color(0xFF252525),
-                                fontSize: 14,
-                              ),
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              'Date: ${trip['date_time']}',
-                              style: TextStyle(
-                                color: Color(0xFF252525),
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+        ],
+      ),
     );
   }
 }

@@ -31,14 +31,14 @@ class _VDOD2DCalnderActivityScreenState
     _tabController = TabController(length: 2, vsync: this);
   }
 
-  Future<int> getWorkerId() async {
+  Future<String> getWorkerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    int workerId = prefs.getInt('worker_id') ?? -1;
+    String workerId = prefs.getString('worker_id') ?? "";
     return workerId;
   }
 
   Future<void> fetchActivities() async {
-    int workerId = await getWorkerId();
+    String workerId = await getWorkerId();
 
     setState(() {
       _isLoading = true;
@@ -343,8 +343,8 @@ class _D2DQRDetailsTabState extends State<D2DQRDetailsTab> {
   }
 
   Future<void> initializeWorkerIdAndFetchDetails() async {
-    workerId = await getWorkerId();
-    if (workerId != -1) {
+    String workerId = await getWorkerId();
+    if (workerId != "") {
       fetchTripDetails();
     } else {
       setState(() {
@@ -381,9 +381,9 @@ class _D2DQRDetailsTabState extends State<D2DQRDetailsTab> {
 
   late int workerId;
 
-  Future<int> getWorkerId() async {
+  Future<String> getWorkerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    int workerId = prefs.getInt('worker_id') ?? -1;
+    String workerId = prefs.getString('worker_id') ?? "";
     return workerId;
   }
 

@@ -723,9 +723,9 @@ final List<String> districts = [
 
 final Map<String, List<String>> districtToGPs = {
   'Ajmer': [
-    'Pisangan',
-    'Pushkar',
-    'Jawaja',
+    'Gp1',
+    'Gp2',
+    'gp1',
     'Srinagar',
     'Silora',
     'Tantoti',

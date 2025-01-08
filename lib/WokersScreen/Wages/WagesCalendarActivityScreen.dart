@@ -28,14 +28,14 @@ class _WagesCalendarActivityScreenState
     fetchActivities();
   }
 
-  Future<int> getWorkerId() async {
+  Future<String> getWorkerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    int workerId = prefs.getInt('worker_id') ?? -1;
+    String workerId = prefs.getString('worker_id') ?? "";
     return workerId;
   }
 
   Future<void> fetchActivities() async {
-    int workerId = await getWorkerId();
+    String workerId = await getWorkerId();
 
     setState(() {
       _isLoading = true;
@@ -175,7 +175,7 @@ class _WagesCalendarActivityScreenState
                                       decoration: BoxDecoration(
                                         image: DecorationImage(
                                           image: NetworkImage(
-                                            'https://cc33-122-172-85-145.ngrok-free.app${activity['before_image']}',
+                                            '${activity['before_image']}',
                                           ),
                                           fit: BoxFit.cover,
                                         ),

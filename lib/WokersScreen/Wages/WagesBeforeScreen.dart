@@ -27,9 +27,9 @@ class _WagesBeforeScreenState extends State<WagesBeforeScreen> {
   Map<String, dynamic>? _beforeImage;
   bool _isLoading = false;
 
-  Future<int> getWorkerId() async {
+  Future<String> getWorkerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    int workerId = prefs.getInt('worker_id') ?? -1;
+    String workerId = prefs.getString('worker_id') ?? "";
     return workerId;
   }
 
@@ -54,8 +54,8 @@ class _WagesBeforeScreenState extends State<WagesBeforeScreen> {
     try {
       if (_beforeImage == null) return;
 
-      int workerId = await getWorkerId();
-      if (workerId == -1) {
+      String workerId = await getWorkerId();
+      if (workerId == "") {
         print("Error: worker_id not found in SharedPreferences.");
         return;
       }

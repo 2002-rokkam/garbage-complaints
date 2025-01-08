@@ -75,7 +75,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
   File? _imageFile;
   double? _latitude;
   double? _longitude;
-  late int workerId;
+  late String workerId;
   String _workerEmail = '';
 
   @override
@@ -189,15 +189,14 @@ class _ComplaintCardState extends State<ComplaintCard> {
       },
     );
   }
-
-  Future<int> getWorkerId() async {
+  Future<String> getWorkerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    int workerId = prefs.getInt('worker_id') ?? -1;
+    String workerId = prefs.getString('worker_id') ?? "";
     return workerId;
   }
 
   Future<void> _loadWorkerDetails() async {
-    workerId = await getWorkerId();
+     workerId = await getWorkerId();
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -227,7 +226,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
 
     try {
       Response response = await dio.post(
-        'https://cc33-122-172-85-145.ngrok-free.app/api/update-complaint/${widget.complaint['complaint_id']}',
+        'https://cc33-122-172-85-145.ngrok-free.app/api/update-complaint/"${widget.complaint['complaint_id']}"',
         data: formData,
       );
 
@@ -252,7 +251,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
   void _showResolvedPhoto(Map<String, dynamic>? resolvedPhoto) {
     if (resolvedPhoto != null && resolvedPhoto['image'] != null) {
       final imageUrl =
-          'https://cc33-122-172-85-145.ngrok-free.app${resolvedPhoto['image']}';
+          '${resolvedPhoto['image']}';
 
       showDialog(
         context: context,
@@ -327,7 +326,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                         decoration: BoxDecoration(
                           image: DecorationImage(
                             image: NetworkImage(
-                              'https://cc33-122-172-85-145.ngrok-free.app${image['image']}',
+                              '${image['image']}',
                             ),
                             fit: BoxFit.cover,
                           ),

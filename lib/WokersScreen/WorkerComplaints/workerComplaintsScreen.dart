@@ -24,9 +24,10 @@ class _workerComplaintsScreenState extends State<workerComplaintsScreen> {
 
   Future<void> _fetchComplaintData() async {
     final url =
-        'https://cc33-122-172-85-145.ngrok-free.app/api/complaints-by-gram-panchayat?gram_panchayat=Sheo';
+        'https://cc33-122-172-85-145.ngrok-free.app/api/complaintdetails-by-gram-panchayat/?gram_panchayat=Gp1';
     try {
       final response = await http.get(Uri.parse(url));
+      print(response);
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final complaintsList = data['complaints'];

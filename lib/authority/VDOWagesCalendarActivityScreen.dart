@@ -29,14 +29,14 @@ class _WagesCalendarActivityScreenState
     fetchActivities();
   }
 
-  Future<int> getWorkerId() async {
+  Future<String> getWorkerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    int workerId = prefs.getInt('worker_id') ?? -1;
+    String workerId = prefs.getString('worker_id') ?? "";
     return workerId;
   }
 
   Future<void> fetchActivities() async {
-    int workerId = await getWorkerId();
+    String workerId = await getWorkerId();
 
     setState(() {
       _isLoading = true;

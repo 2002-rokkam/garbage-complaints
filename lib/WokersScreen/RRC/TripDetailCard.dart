@@ -22,9 +22,9 @@ class _TripDetailCardState extends State<TripDetailCard> {
       TextEditingController();
 
   // Method to retrieve worker ID from shared preferences
-  Future<int> getWorkerId() async {
+  Future<String> getWorkerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    int workerId = prefs.getInt('worker_id') ?? -1;
+    String workerId = prefs.getString('worker_id') ?? "";
     return workerId;
   }
 
@@ -34,7 +34,7 @@ class _TripDetailCardState extends State<TripDetailCard> {
       final workerId = await getWorkerId();
 
       // Validate worker ID
-      if (workerId == -1) {
+      if (workerId == "") {
         print("Error: worker_id not found in SharedPreferences.");
         return;
       }
@@ -60,6 +60,7 @@ class _TripDetailCardState extends State<TripDetailCard> {
         'segregated_non_degradable': segregatedNonDegradable,
         'segregated_plastic': segregatedPlastic,
       });
+      print(workerId);
 
       // Submit the data using Dio
       final dio = Dio();
@@ -67,7 +68,6 @@ class _TripDetailCardState extends State<TripDetailCard> {
         'https://cc33-122-172-85-145.ngrok-free.app/api/submit-activity',
         data: formData,
       );
-
       if (response.statusCode == 201) {
         print("Form submitted successfully!");
         print("Response: ${response.data}");
