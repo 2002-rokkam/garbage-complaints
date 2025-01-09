@@ -10,6 +10,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'VDOWorkerComplaintsCalender.dart';
+import 'contractorDetails.dart';
+import 'fillContractorDetails.dart';
 
 class VDOScreen extends StatefulWidget {
   @override
@@ -50,7 +52,14 @@ class _VDOScreenState extends State<VDOScreen> {
       'route': 'RRCScreen'
     },
     {'label': 'Wages', 'imageUrl': 'images/wages.png', 'route': 'WagesScreen'},
+    {
+      'label': 'Contractor Details',
+      'imageUrl':
+          'images/wages.png', // You can use a different image if you prefer
+      'route': 'ContractorDetailsScreen'
+    },
   ];
+
 
   @override
   void initState() {
@@ -76,7 +85,7 @@ class _VDOScreenState extends State<VDOScreen> {
     print(gramPanchayat);
     if (gramPanchayat != null) {
       final response = await http.get(Uri.parse(
-              'https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard')
+              'https://cc33-122-172-85-145.ngrok-free.app/api/complaints-by-gram-panchayat/ ')
           .replace(queryParameters: {
         'gram_panchayat': gramPanchayat,
       }));
@@ -578,8 +587,11 @@ class _VDOScreenState extends State<VDOScreen> {
         return VDORCCCalendarActivityScreen(section: 'RRC');
       case 'WagesScreen':
         return VDOWagesCalendarActivityScreen(section: 'Wages');
+      case 'ContractorDetailsScreen':
+        return FillContractorDetailsScreen(); // Add this case
       default:
         return Scaffold(body: Center(child: Text('Page not found')));
     }
   }
+
 }

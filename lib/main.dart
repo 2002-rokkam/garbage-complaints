@@ -6,7 +6,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'Login/AuthorityLoginScreen.dart';
 import 'authority/VDOScreen.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(); 
