@@ -1,4 +1,4 @@
-// authority/VDORCCCalendarActivityScreen.dart
+// authority/VDO/VDORCCCalendarActivityScreen.dart
 // import 'package:flutter/material.dart';
 // import 'package:table_calendar/table_calendar.dart';
 // import 'package:http/http.dart' as http;
@@ -499,6 +499,7 @@ class _VDORCCCalendarActivityScreenState
     with SingleTickerProviderStateMixin {
   DateTime _selectedDate = DateTime.now();
   List _activities = [];
+  List _tripDetails = [];
   bool _isLoading = false;
   late TabController _tabController;
 
@@ -545,6 +546,35 @@ class _VDORCCCalendarActivityScreenState
       setState(() {
         _isLoading = false;
       });
+    }
+  }
+
+  Future<void> fetchTripDetails() async {
+    String workerId = await getWorkerId();
+
+    final url = Uri.parse(
+            'https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard')
+        .replace(queryParameters: {
+      'worker_id': workerId,
+      'section': 'Waste Details',
+    });
+
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        setState(() {
+          _tripDetails = data['section_data']['Waste Details']
+              .where((trip) =>
+                  DateTime.parse(trip['date_time']).toLocal().day ==
+                  _selectedDate.day)
+              .toList();
+        });
+      } else {
+        throw Exception('Failed to load trip details');
+      }
+    } catch (e) {
+      print('Error: $e');
     }
   }
 
@@ -601,6 +631,7 @@ class _VDORCCCalendarActivityScreenState
                 setState(() {
                   _selectedDate = selectedDay;
                 });
+                fetchTripDetails();
               },
               calendarStyle: CalendarStyle(
                 selectedDecoration: BoxDecoration(
@@ -633,42 +664,202 @@ class _VDORCCCalendarActivityScreenState
                     : TabBarView(
                         controller: _tabController,
                         children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => BeforeAfterScreen(
-                                    activities: selectedActivities,
+                          Card(
+                            margin: const EdgeInsets.all(8.0),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Total Activities: ${selectedActivities.length}',
+                                    style: TextStyle(fontSize: 16),
                                   ),
-                                ),
-                              );
-                            },
-                            child: Center(
-                              child: Text('Tap to view Before & After details'),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      TextButton(
+                                        onPressed: () {
+                                          if (_tabController.index == 0) {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    BeforeAfterScreen(
+                                                  activities:
+                                                      selectedActivities,
+                                                ),
+                                              ),
+                                            );
+                                          } else {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    TripDetailsScreen(
+                                                  tripDetails: _tripDetails,
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        child: Text('View All'),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                          GestureDetector(
-                            onTap: () async {
-                              String workerId = await getWorkerId();
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => TripDetailsScreen(
-                                    workerId: workerId,
-                                    selectedDate: _selectedDate,
+                          Card(
+                            margin: const EdgeInsets.all(8.0),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Total Trip Details: ${_tripDetails.length}',
+                                    style: TextStyle(fontSize: 16),
                                   ),
-                                ),
-                              );
-                            },
-                            child:
-                                Center(child: Text('Tap to view Trip Details')),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                     
+                                      TextButton(
+                                        onPressed: () {
+                                          if (_tabController.index == 0) {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    BeforeAfterScreen(
+                                                  activities:
+                                                      selectedActivities,
+                                                ),
+                                              ),
+                                            );
+                                          } else {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    TripDetailsScreen(
+                                                  tripDetails: _tripDetails,
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        child: Text('View All'),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ],
                       ),
           ),
         ],
       ),
+    );
+  }
+
+}
+
+class TripDetailsScreen extends StatelessWidget {
+  final List tripDetails;
+
+  const TripDetailsScreen({Key? key, required this.tripDetails})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Trip Details'),
+        backgroundColor: Color(0xFF5C964A),
+      ),
+      body: tripDetails.isEmpty
+          ? Center(
+              child: Text('No trip details available for the selected date.'))
+          : SingleChildScrollView(
+              child: Column(
+                children: tripDetails.map((trip) {
+                  return Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Worker Email: ${trip['worker_name']}',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            'Trips: ${trip['trips']}',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            'Quantity of Waste: ${trip['quantity_waste']} kg',
+                            style: TextStyle(
+                              color: Color(0xFF252525),
+                              fontSize: 14,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            'Segregated Degradable: ${trip['segregated_degradable']} kg',
+                            style: TextStyle(
+                              color: Color(0xFF252525),
+                              fontSize: 14,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            'Segregated Non-Degradable: ${trip['segregated_non_degradable']} kg',
+                            style: TextStyle(
+                              color: Color(0xFF252525),
+                              fontSize: 14,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            'Segregated Plastic: ${trip['segregated_plastic']} kg',
+                            style: TextStyle(
+                              color: Color(0xFF252525),
+                              fontSize: 14,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            'Date: ${trip['date_time']}',
+                            style: TextStyle(
+                              color: Color(0xFF252525),
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
     );
   }
 }
@@ -825,137 +1016,137 @@ class BeforeAfterScreen extends StatelessWidget {
   }
 }
 
-class TripDetailsScreen extends StatefulWidget {
-  final String workerId;
-  final DateTime selectedDate;
+// class TripDetailsScreen extends StatefulWidget {
+//   final String workerId;
+//   final DateTime selectedDate;
 
-  const TripDetailsScreen({Key? key, required this.workerId, required this.selectedDate}) : super(key: key);
+//   const TripDetailsScreen({Key? key, required this.workerId, required this.selectedDate}) : super(key: key);
 
-  @override
-  _TripDetailsScreenState createState() => _TripDetailsScreenState();
-}
+//   @override
+//   _TripDetailsScreenState createState() => _TripDetailsScreenState();
+// }
 
-class _TripDetailsScreenState extends State<TripDetailsScreen> {
-  bool _isLoading = true;
-  List _tripDetails = [];
+// class _TripDetailsScreenState extends State<TripDetailsScreen> {
+//   bool _isLoading = true;
+//   List _tripDetails = [];
 
-  @override
-  void initState() {
-    super.initState();
-    fetchTripDetails();
-  }
+//   @override
+//   void initState() {
+//     super.initState();
+//     fetchTripDetails();
+//   }
 
-  Future<void> fetchTripDetails() async {
-    final url = Uri.parse('https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard')
-        .replace(queryParameters: {
-      'worker_id': widget.workerId,
-      'section': 'Waste Details',
-    });
-    try {
-      final response = await http.get(url);
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        setState(() {
-          _tripDetails = data['section_data']['Waste Details']
-              .where((trip) => DateTime.parse(trip['date_time']).toLocal().day == widget.selectedDate.day)
-              .toList();
-          _isLoading = false;
-        });
-      } else {
-        throw Exception('Failed to load trip details');
-      }
-    } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
-      print('Error: $e');
-    }
-  }
+//   Future<void> fetchTripDetails() async {
+//     final url = Uri.parse('https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard')
+//         .replace(queryParameters: {
+//       'worker_id': widget.workerId,
+//       'section': 'Waste Details',
+//     });
+//     try {
+//       final response = await http.get(url);
+//       if (response.statusCode == 200) {
+//         final data = json.decode(response.body);
+//         setState(() {
+//           _tripDetails = data['section_data']['Waste Details']
+//               .where((trip) => DateTime.parse(trip['date_time']).toLocal().day == widget.selectedDate.day)
+//               .toList();
+//           _isLoading = false;
+//         });
+//       } else {
+//         throw Exception('Failed to load trip details');
+//       }
+//     } catch (e) {
+//       setState(() {
+//         _isLoading = false;
+//       });
+//       print('Error: $e');
+//     }
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Trip Details'),
-        backgroundColor: Color(0xFF5C964A),
-      ),
-      body: _isLoading
-          ? Center(child: CircularProgressIndicator())
-          : _tripDetails.isEmpty
-              ? Center(child: Text('No trip details available for the selected date.'))
-              : SingleChildScrollView(
-                  child: Column(
-                    children: _tripDetails.map((trip) {
-                      return Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Worker Email: ${trip['worker_name']}',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(height: 8),
-                              Text(
-                                'Trips: ${trip['trips']}',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(height: 8),
-                              Text(
-                                'Quantity of Waste: ${trip['quantity_waste']} kg',
-                                style: TextStyle(
-                                  color: Color(0xFF252525),
-                                  fontSize: 14,
-                                ),
-                              ),
-                              SizedBox(height: 8),
-                              Text(
-                                'Segregated Degradable: ${trip['segregated_degradable']} kg',
-                                style: TextStyle(
-                                  color: Color(0xFF252525),
-                                  fontSize: 14,
-                                ),
-                              ),
-                              SizedBox(height: 8),
-                              Text(
-                                'Segregated Non-Degradable: ${trip['segregated_non_degradable']} kg',
-                                style: TextStyle(
-                                  color: Color(0xFF252525),
-                                  fontSize: 14,
-                                ),
-                              ),
-                              SizedBox(height: 8),
-                              Text(
-                                'Segregated Plastic: ${trip['segregated_plastic']} kg',
-                                style: TextStyle(
-                                  color: Color(0xFF252525),
-                                  fontSize: 14,
-                                ),
-                              ),
-                              SizedBox(height: 8),
-                              Text(
-                                'Date: ${trip['date_time']}',
-                                style: TextStyle(
-                                  color: Color(0xFF252525),
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Trip Details'),
+//         backgroundColor: Color(0xFF5C964A),
+//       ),
+//       body: _isLoading
+//           ? Center(child: CircularProgressIndicator())
+//           : _tripDetails.isEmpty
+//               ? Center(child: Text('No trip details available for the selected date.'))
+//               : SingleChildScrollView(
+//                   child: Column(
+//                     children: _tripDetails.map((trip) {
+//                       return Card(
+//                         child: Padding(
+//                           padding: const EdgeInsets.all(8.0),
+//                           child: Column(
+//                             crossAxisAlignment: CrossAxisAlignment.start,
+//                             children: [
+//                               Text(
+//                                 'Worker Email: ${trip['worker_name']}',
+//                                 style: TextStyle(
+//                                   color: Colors.black,
+//                                   fontSize: 16,
+//                                   fontWeight: FontWeight.bold,
+//                                 ),
+//                               ),
+//                               SizedBox(height: 8),
+//                               Text(
+//                                 'Trips: ${trip['trips']}',
+//                                 style: TextStyle(
+//                                   color: Colors.black,
+//                                   fontSize: 16,
+//                                   fontWeight: FontWeight.bold,
+//                                 ),
+//                               ),
+//                               SizedBox(height: 8),
+//                               Text(
+//                                 'Quantity of Waste: ${trip['quantity_waste']} kg',
+//                                 style: TextStyle(
+//                                   color: Color(0xFF252525),
+//                                   fontSize: 14,
+//                                 ),
+//                               ),
+//                               SizedBox(height: 8),
+//                               Text(
+//                                 'Segregated Degradable: ${trip['segregated_degradable']} kg',
+//                                 style: TextStyle(
+//                                   color: Color(0xFF252525),
+//                                   fontSize: 14,
+//                                 ),
+//                               ),
+//                               SizedBox(height: 8),
+//                               Text(
+//                                 'Segregated Non-Degradable: ${trip['segregated_non_degradable']} kg',
+//                                 style: TextStyle(
+//                                   color: Color(0xFF252525),
+//                                   fontSize: 14,
+//                                 ),
+//                               ),
+//                               SizedBox(height: 8),
+//                               Text(
+//                                 'Segregated Plastic: ${trip['segregated_plastic']} kg',
+//                                 style: TextStyle(
+//                                   color: Color(0xFF252525),
+//                                   fontSize: 14,
+//                                 ),
+//                               ),
+//                               SizedBox(height: 8),
+//                               Text(
+//                                 'Date: ${trip['date_time']}',
+//                                 style: TextStyle(
+//                                   color: Color(0xFF252525),
+//                                   fontSize: 14,
+//                                 ),
+//                               ),
+//                             ],
+//                           ),
+//                         ),
+//                       );
+//                     }).toList(),
+//                   ),
+//                 ),
+//     );
+//   }
+// }

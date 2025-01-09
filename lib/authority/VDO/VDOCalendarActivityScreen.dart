@@ -1,4 +1,4 @@
-// authority/VDOCalendarActivityScreen.dart
+// authority/VDO/VDOCalendarActivityScreen.dart
 // import 'package:flutter/material.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:table_calendar/table_calendar.dart';
@@ -313,7 +313,6 @@
 
 
 // authority/VDOCalendarActivityScreen.dart
-// authority/VDOCalendarActivityScreen.dart
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -334,7 +333,6 @@ class VDOCalendarActivityScreen extends StatefulWidget {
 class _VDOCalendarActivityScreenState extends State<VDOCalendarActivityScreen> {
   DateTime _selectedDate = DateTime.now();
   List _activities = [];
-  bool _isLoading = false;
 
   @override
   void initState() {
@@ -350,7 +348,6 @@ class _VDOCalendarActivityScreenState extends State<VDOCalendarActivityScreen> {
   Future<void> fetchActivities() async {
     String workerId = await getWorkerId();
     setState(() {
-      _isLoading = true;
     });
 
     final url = Uri.parse(
@@ -375,7 +372,6 @@ class _VDOCalendarActivityScreenState extends State<VDOCalendarActivityScreen> {
       print(e);
     } finally {
       setState(() {
-        _isLoading = false;
       });
     }
   }

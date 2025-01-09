@@ -1,4 +1,4 @@
-// authority/VDOD2DCalnderActivity.dart
+// authority/VDO/VDOD2DCalnderActivity.dart
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
@@ -16,9 +16,7 @@ class VDOD2DCalnderActivityScreen extends StatefulWidget {
       _VDOD2DCalnderActivityScreenState();
 }
 
-class _VDOD2DCalnderActivityScreenState
-    extends State<VDOD2DCalnderActivityScreen>
-    with SingleTickerProviderStateMixin {
+class _VDOD2DCalnderActivityScreenState extends State<VDOD2DCalnderActivityScreen> with SingleTickerProviderStateMixin {
   DateTime _selectedDate = DateTime.now();
   List _activities = [];
   List _tripDetails = [];
@@ -86,7 +84,7 @@ class _VDOD2DCalnderActivityScreenState
   }
 
   Future<void> fetchQRDetails(String workerId) async {
-    if (_selectedDate == null || workerId.isEmpty) return;
+    if (workerId.isEmpty) return;
 
     final url = Uri.parse(
             'https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard')
@@ -128,121 +126,123 @@ class _VDOD2DCalnderActivityScreenState
   }
 
   @override
-  Widget build(BuildContext context) {
-    if (workerId == null) {
-      return Center(
-          child:
-              CircularProgressIndicator()); // Wait for workerId to be fetched
-    }
+Widget build(BuildContext context) {
+  if (workerId == null) {
+    return Center(child: CircularProgressIndicator()); // Wait for workerId to be fetched
+  }
 
-    final selectedActivities = getActivitiesForSelectedDate();
+  final selectedActivities = getActivitiesForSelectedDate();
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          '${widget.section}',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        backgroundColor: Color(0xFF5C964A),
-        bottom: TabBar(
-          controller: _tabController,
-          labelColor: Colors.white,
-          unselectedLabelColor: Colors.white,
-          indicatorColor: Color.fromRGBO(255, 210, 98, 1),
-          indicatorWeight: 3.0,
-          tabs: [
-            Tab(text: 'Before & After'),
-            Tab(text: 'QR Data'),
-          ],
+  return Scaffold(
+    appBar: AppBar(
+      title: Text(
+        '${widget.section}',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
         ),
       ),
-      body: Column(
-        children: [
-          Container(
-            height: MediaQuery.of(context).size.height * 0.4,
-            child: TableCalendar(
-              focusedDay: _selectedDate,
-              firstDay: DateTime(2000),
-              lastDay: DateTime(2100),
-              calendarFormat: CalendarFormat.month,
-              selectedDayPredicate: (day) => isSameDay(day, _selectedDate),
-              onDaySelected: (selectedDay, focusedDay) {
-                setState(() {
-                  _selectedDate = selectedDay;
-                  fetchQRDetails(workerId!); // Use workerId here
-                });
-              },
-              calendarStyle: CalendarStyle(
-                selectedDecoration: BoxDecoration(
-                  color: Color(0xFF5C964A),
-                  shape: BoxShape.circle,
-                ),
-                todayDecoration: BoxDecoration(
-                  color: Color(0xFFFFA726),
-                  shape: BoxShape.circle,
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Total activities done on ${_selectedDate.toLocal().toString().split(' ')[0]} = ${selectedActivities.length}',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-          ),
-          Expanded(
-            child: _isLoading
-                ? Center(child: CircularProgressIndicator())
-                : TabBarView(
-                    controller: _tabController,
-                    children: [
-                      // Navigate to BeforeAfterScreen
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => BeforeAfterScreen(
-                                selectedDate: _selectedDate,
-                                activities: selectedActivities,
-                              ),
-                            ),
-                          );
-                        },
-                        child: Text('Go to Before & After Screen'),
-                      ),
-                      // Navigate to QRDetailsScreen
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => QRDetailsScreen(
-                                selectedDate: _selectedDate,
-                                tripDetails: _tripDetails,
-                              ),
-                            ),
-                          );
-                        },
-                        child: Text('Go to QR Details Screen'),
-                      ),
-                    ],
-                  ),
-          ),
+      backgroundColor: Color(0xFF5C964A),
+      bottom: TabBar(
+        controller: _tabController,
+        labelColor: Colors.white,
+        unselectedLabelColor: Colors.white,
+        indicatorColor: Color.fromRGBO(255, 210, 98, 1),
+        indicatorWeight: 3.0,
+        tabs: [
+          Tab(text: 'Before & After'),
+          Tab(text: 'QR Data'),
         ],
       ),
-    );
-  }
+    ),
+    body: Column(
+      children: [
+        Container(
+          height: MediaQuery.of(context).size.height * 0.4,
+          child: TableCalendar(
+            focusedDay: _selectedDate,
+            firstDay: DateTime(2000),
+            lastDay: DateTime(2100),
+            calendarFormat: CalendarFormat.month,
+            selectedDayPredicate: (day) => isSameDay(day, _selectedDate),
+            onDaySelected: (selectedDay, focusedDay) {
+              setState(() {
+                _selectedDate = selectedDay;
+                fetchQRDetails(workerId!); // Use workerId here
+              });
+            },
+            calendarStyle: CalendarStyle(
+              selectedDecoration: BoxDecoration(
+                color: Color(0xFF5C964A),
+                shape: BoxShape.circle,
+              ),
+              todayDecoration: BoxDecoration(
+                color: Color(0xFFFFA726),
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+        ),
+        
+        Expanded(
+          child: _isLoading
+              ? Center(child: CircularProgressIndicator())
+              : TabBarView(
+                  controller: _tabController,
+                  children: [
+                    Expanded(
+                        child: Card(
+                          child: ListTile(
+                            title: Text('Total Activities'),
+                            subtitle: Text('${selectedActivities.length}'),
+                            trailing: ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => BeforeAfterScreen(
+                                      selectedDate: _selectedDate,
+                                      activities: selectedActivities,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Text('View All'),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Card(
+                          child: ListTile(
+                            title: Text('Total QR Scans'),
+                            subtitle: Text('${_tripDetails.length}'),
+                            trailing: ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => QRDetailsScreen(
+                                      selectedDate: _selectedDate,
+                                      tripDetails: _tripDetails,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Text('View All'),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+        ),
+      ],
+    ),
+  );
 }
+    }
 
 class BeforeAfterScreen extends StatelessWidget {
   final List activities;

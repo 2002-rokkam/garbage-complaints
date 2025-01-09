@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../WokersScreen/WorkerScreen.dart';
-import '../authority/VDOScreen.dart';
+import '../authority/VDO/VDOScreen.dart';
 import 'PhoneAuthScreen.dart';
 
 class AuthorityLoginScreen extends StatefulWidget {
@@ -47,6 +47,7 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
           await prefs.setString('position', user['Position']);
           await prefs.setString('gram_panchayat', user['gp']);
 
+          // Use the correct context for showing SnackBar
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Login successful!')),
           );
@@ -95,110 +96,107 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: Color(0xFFEFEFEF),
-        body: Center(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    Text(
-                      'Log in',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 32,
-                        fontFamily: 'Nunito Sans',
-                        fontWeight: FontWeight.w800,
-                      ),
+    return Scaffold(
+      backgroundColor: Color(0xFFEFEFEF),
+      body: Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  Text(
+                    'Log in',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 32,
+                      fontFamily: 'Nunito Sans',
+                      fontWeight: FontWeight.w800,
                     ),
-                    SizedBox(height: 20),
-                    Text.rich(
-                      TextSpan(
-                        children: [
-                          TextSpan(
-                            text: 'Enter ',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
-                              fontFamily: 'Nunito Sans',
-                              fontWeight: FontWeight.w600,
-                            ),
+                  ),
+                  SizedBox(height: 20),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Enter ',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontFamily: 'Nunito Sans',
+                            fontWeight: FontWeight.w600,
                           ),
-                          TextSpan(
-                            text: 'Email address',
-                            style: TextStyle(
-                              color: Color(0xFF5C964A),
-                              fontSize: 20,
-                              fontFamily: 'Nunito Sans',
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      'This information is not shared with anyone',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.black.withOpacity(0.6),
-                        fontSize: 14,
-                        fontFamily: 'Roboto',
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    _buildInputField('Email', _emailController, false),
-                    SizedBox(height: 20),
-                    _buildInputField('Password', _passwordController, true),
-                    SizedBox(height: 30),
-                    _isLoading
-                        ? CircularProgressIndicator()
-                        : ElevatedButton(
-                            onPressed: _submitLogin,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xFF5C964A),
-                              minimumSize: Size(370, 50),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(100),
-                              ),
-                            ),
-                            child: Text(
-                              'Submit',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                    SizedBox(height: 20),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                PhoneInputScreen(), // Replace with your CitizenLoginScreen
-                          ),
-                        );
-                      },
-                      child: Text(
-                        'Login as Citizen',
-                        style: TextStyle(
-                          color: Color(0xFF5C964A),
-                          fontSize: 16,
-                          fontFamily: 'Roboto',
-                          decoration: TextDecoration.underline,
                         ),
+                        TextSpan(
+                          text: 'Email address',
+                          style: TextStyle(
+                            color: Color(0xFF5C964A),
+                            fontSize: 20,
+                            fontFamily: 'Nunito Sans',
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    'This information is not shared with anyone',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black.withOpacity(0.6),
+                      fontSize: 14,
+                      fontFamily: 'Roboto',
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  _buildInputField('Email', _emailController, false),
+                  SizedBox(height: 20),
+                  _buildInputField('Password', _passwordController, true),
+                  SizedBox(height: 30),
+                  _isLoading
+                      ? CircularProgressIndicator()
+                      : ElevatedButton(
+                          onPressed: _submitLogin,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xFF5C964A),
+                            minimumSize: Size(370, 50),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                          ),
+                          child: Text(
+                            'Submit',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                  SizedBox(height: 20),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              PhoneInputScreen(), // Replace with your CitizenLoginScreen
+                        ),
+                      );
+                    },
+                    child: Text(
+                      'Login as Citizen',
+                      style: TextStyle(
+                        color: Color(0xFF5C964A),
+                        fontSize: 16,
+                        fontFamily: 'Roboto',
+                        decoration: TextDecoration.underline,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),

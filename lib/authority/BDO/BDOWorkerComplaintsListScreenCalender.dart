@@ -1,4 +1,4 @@
-// authority/VDOWorkerComplaintsListScreenCalender.dart
+// authority/BDO/BDOWorkerComplaintsListScreenCalender.dart
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:geocoding/geocoding.dart';
@@ -10,12 +10,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class VDOWorkerComplaintsListScreenCalender extends StatelessWidget {
+class BDOWorkerComplaintsListScreenCalender extends StatelessWidget {
   final DateTime date;
   final List<dynamic> complaints;
   final VoidCallback onUpdate; // Callback to refresh data
 
-  VDOWorkerComplaintsListScreenCalender(
+  BDOWorkerComplaintsListScreenCalender(
       {required this.date, required this.complaints, required this.onUpdate});
 
   @override
@@ -76,7 +76,6 @@ class _ComplaintCardState extends State<ComplaintCard> {
   double? _latitude;
   double? _longitude;
   late String workerId;
-  String _workerEmail = '';
 
   @override
   void initState() {
@@ -203,7 +202,6 @@ class _ComplaintCardState extends State<ComplaintCard> {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      _workerEmail = prefs.getString('email') ?? '';
     });
   }
 
