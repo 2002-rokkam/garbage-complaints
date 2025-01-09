@@ -1,17 +1,17 @@
-// authority/BDO/BDOCalendarActivityScreen.dart
+// authority/CEO/CEOCalendarActivityScreen.dart
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class BDOCalendarActivityScreen extends StatefulWidget {
+class CEOCalendarActivityScreen extends StatefulWidget {
   final String section;
   final String district;
   final String block;
   final String gramPanchayat;
 
-  const BDOCalendarActivityScreen({
+  const CEOCalendarActivityScreen({
     Key? key,
     required this.section,
     required this.district,
@@ -20,11 +20,11 @@ class BDOCalendarActivityScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _BDOCalendarActivityScreenState createState() =>
-      _BDOCalendarActivityScreenState();
+  _CEOCalendarActivityScreenState createState() =>
+      _CEOCalendarActivityScreenState();
 }
 
-class _BDOCalendarActivityScreenState extends State<BDOCalendarActivityScreen> {
+class _CEOCalendarActivityScreenState extends State<CEOCalendarActivityScreen> {
   DateTime _selectedDate = DateTime.now();
   List _activities = [];
 

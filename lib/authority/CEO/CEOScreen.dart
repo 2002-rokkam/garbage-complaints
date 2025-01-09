@@ -1,24 +1,20 @@
-// authority/BDO/BDOScreen.dart
+// authority/CEO/CEOScreen.dart
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
-import 'BDOCalendarActivityScreen.dart';
-import 'BDOD2DCalnderActivity.dart';
-import 'BDORCCCalendarActivityScreen.dart';
-import 'BDOWagesCalendarActivityScreen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'BDOWorkerComplaintsCalender.dart';
+import 'CEOWorkerComplaintsCalender.dart';
+import 'CEOselectRegion.dart';
 import 'contractorDetails.dart';
-import 'selectRegion.dart';
 
-class BDOScreen extends StatefulWidget {
+class CEOScreen extends StatefulWidget {
   @override
-  _BDOScreenState createState() => _BDOScreenState();
+  _CEOScreenState createState() => _CEOScreenState();
 }
 
-class _BDOScreenState extends State<BDOScreen> {
+class _CEOScreenState extends State<CEOScreen> {
   final PageController _pageController = PageController();
 
   int totalComplaints = 0;
@@ -218,7 +214,7 @@ class _BDOScreenState extends State<BDOScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => BDOWorkerComplaintsCalender(),
+                            builder: (context) => CEOWorkerComplaintsCalender(),
                           ),
                         );
                       },
@@ -576,17 +572,17 @@ class _BDOScreenState extends State<BDOScreen> {
   Widget _getPage(String routeName) {
     switch (routeName) {
       case 'DoorToDoorScreen':
-        return RegionSelector(section: 'Door to Door');
+        return CEOselectRegion(section: 'Door to Door');
       case 'RoadSweepingScreen':
-        return RegionSelector(section: 'Road Sweeping');
+        return CEOselectRegion(section: 'Road Sweeping');
       case 'DrainCleaningScreen':
-        return RegionSelector(section: 'Drainage Cleaning');
+        return CEOselectRegion(section: 'Drainage Cleaning');
       case 'CSCScreen':
-        return RegionSelector(section: 'CSC');
+        return CEOselectRegion(section: 'CSC');
       case 'RRCScreen':
-        return RegionSelector(section: 'RRC');
+        return CEOselectRegion(section: 'RRC');
       case 'WagesScreen':
-        return RegionSelector(section: 'Wages');
+        return CEOselectRegion(section: 'Wages');
       case 'ContractorDetailsScreen':
         return Contractordetails(); // Add this case
       default:

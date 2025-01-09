@@ -1,4 +1,4 @@
-// authority/BDO/BDOWagesCalendarActivityScreen.dart
+// authority/CEO/CEOWagesCalendarActivityScreen.dart
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
@@ -6,13 +6,13 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
-class BDOWagesCalendarActivityScreen extends StatefulWidget {
+class CEOWagesCalendarActivityScreen extends StatefulWidget {
     final String section;
   final String district;
   final String block;
   final String gramPanchayat;
 
-  const BDOWagesCalendarActivityScreen({
+  const CEOWagesCalendarActivityScreen({
     Key? key,
     required this.section,
     required this.district,
@@ -27,7 +27,7 @@ class BDOWagesCalendarActivityScreen extends StatefulWidget {
 }
 
 class _WagesCalendarActivityScreenState
-    extends State<BDOWagesCalendarActivityScreen> {
+    extends State<CEOWagesCalendarActivityScreen> {
   DateTime _selectedDate = DateTime.now();
   List _activities = [];
   bool _isLoading = false;

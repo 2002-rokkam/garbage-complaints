@@ -8,9 +8,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class BDORCCCalendarActivityScreen extends StatefulWidget {
   final String section;
+  final String district;
+  final String block;
+  final String gramPanchayat;
 
-  const BDORCCCalendarActivityScreen({Key? key, required this.section})
-      : super(key: key);
+  const BDORCCCalendarActivityScreen({
+    Key? key,
+    required this.section,
+    required this.district,
+    required this.block,
+    required this.gramPanchayat,
+  }) : super(key: key);
 
   @override
   _BDORCCCalendarActivityScreenState createState() =>
@@ -46,10 +54,12 @@ class _BDORCCCalendarActivityScreenState
     });
 
     final url = Uri.parse(
-            'https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard')
+            'https://cc33-122-172-85-145.ngrok-free.app/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': widget.section,
+      'district': widget.district,
+      'gram_panchayat': widget.gramPanchayat,
     });
 
     try {
@@ -76,10 +86,12 @@ class _BDORCCCalendarActivityScreenState
     String workerId = await getWorkerId();
 
     final url = Uri.parse(
-            'https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard')
+            'https://cc33-122-172-85-145.ngrok-free.app/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': 'Waste Details',
+      'district': widget.district,
+      'gram_panchayat': widget.gramPanchayat,
     });
 
     try {

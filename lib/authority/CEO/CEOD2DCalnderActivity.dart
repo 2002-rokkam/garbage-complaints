@@ -1,17 +1,17 @@
-// authority/BDO/BDOD2DCalnderActivity.dart
+// authority/CEO/CEOD2DCalnderActivity.dart
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class BDOD2DCalnderActivityScreen extends StatefulWidget {
+class CEOD2DCalnderActivityScreen extends StatefulWidget {
     final String section;
   final String district;
   final String block;
   final String gramPanchayat;
 
-  const BDOD2DCalnderActivityScreen({
+  const CEOD2DCalnderActivityScreen({
     Key? key,
     required this.section,
     required this.district,
@@ -21,12 +21,12 @@ class BDOD2DCalnderActivityScreen extends StatefulWidget {
 
 
   @override
-  _BDOD2DCalnderActivityScreenState createState() =>
-      _BDOD2DCalnderActivityScreenState();
+  _CEOD2DCalnderActivityScreenState createState() =>
+      _CEOD2DCalnderActivityScreenState();
 }
 
-class _BDOD2DCalnderActivityScreenState
-    extends State<BDOD2DCalnderActivityScreen>
+class _CEOD2DCalnderActivityScreenState
+    extends State<CEOD2DCalnderActivityScreen>
     with SingleTickerProviderStateMixin {
   DateTime _selectedDate = DateTime.now();
   List _activities = [];
