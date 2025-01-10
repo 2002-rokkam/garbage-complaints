@@ -40,7 +40,7 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
     });
 
     final url = Uri.parse(
-        'https://cc33-122-172-85-145.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+        'https://c035-122-172-86-134.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
 
     try {
       final response = await http.get(url);

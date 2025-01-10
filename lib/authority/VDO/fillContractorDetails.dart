@@ -1,4 +1,4 @@
-// authority/fillContractorDetails.dart
+// authority/VDO/fillContractorDetails.dart
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -44,7 +44,7 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
         }
 
         final url = Uri.parse(
-            'https://cc33-122-172-85-145.ngrok-free.app/api/contractor/create/$workerId');
+            'https://c035-122-172-86-134.ngrok-free.app/api/contractor/create/$workerId');
 
         // Prepare the payload
         final payload = {
@@ -92,161 +92,172 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
     }
   }
 
- void _showSuccessDialog() {
-  showDialog(
-    context: context,
-    builder: (context) => Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0),
-      ),
-      child: Container(
-        padding: const EdgeInsets.all(20.0),
-        decoration: BoxDecoration(
-          color: Colors.white,
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.0),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Success Icon
-            CircleAvatar(
-              radius: 40.0,
-              backgroundColor: Colors.green.shade100,
-              child: const Icon(
-                Icons.check_circle,
-                color: Colors.green,
-                size: 60.0,
-              ),
-            ),
-            const SizedBox(height: 20.0),
-            // Title
-            const Text(
-              'Success!',
-              style: TextStyle(
-                fontSize: 22.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.green,
-              ),
-            ),
-            const SizedBox(height: 10.0),
-            // Content
-            const Text(
-              'Contractor details have been submitted successfully.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16.0,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 20.0),
-            // OK Button
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context); // Close the dialog
-                Navigator.pop(context); // Go back to the previous page
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 30.0,
-                  vertical: 10.0,
+        child: Container(
+          padding: const EdgeInsets.all(20.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Success Icon
+              CircleAvatar(
+                radius: 40.0,
+                backgroundColor: Colors.green.shade100,
+                child: const Icon(
+                  Icons.check_circle,
+                  color: Colors.green,
+                  size: 60.0,
                 ),
               ),
-              child: const Text(
-                'OK',
-                style: TextStyle(fontSize: 16.0, color: Colors.white),
+              const SizedBox(height: 20.0),
+              // Title
+              const Text(
+                'Success!',
+                style: TextStyle(
+                  fontSize: 22.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green,
+                ),
               ),
-            ),
-          ],
+              const SizedBox(height: 10.0),
+              // Content
+              const Text(
+                'Contractor details have been submitted successfully.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 20.0),
+              // OK Button
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context); // Close the dialog
+                  Navigator.pop(context); // Go back to the previous page
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 30.0,
+                    vertical: 10.0,
+                  ),
+                ),
+                child: const Text(
+                  'OK',
+                  style: TextStyle(fontSize: 16.0, color: Colors.white),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
-void _showFailureDialog() {
-  showDialog(
-    context: context,
-    builder: (context) => Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0),
-      ),
-      child: Container(
-        padding: const EdgeInsets.all(20.0),
-        decoration: BoxDecoration(
-          color: Colors.white,
+  void _showFailureDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.0),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Failure Icon
-            CircleAvatar(
-              radius: 40.0,
-              backgroundColor: Colors.red.shade100,
-              child: const Icon(
-                Icons.error_outline,
-                color: Colors.red,
-                size: 60.0,
-              ),
-            ),
-            const SizedBox(height: 20.0),
-            // Title
-            const Text(
-              'Oops!',
-              style: TextStyle(
-                fontSize: 22.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.red,
-              ),
-            ),
-            const SizedBox(height: 10.0),
-            // Content
-            const Text(
-              'Failed to submit contractor details. Please try again later.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16.0,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 20.0),
-            // Retry Button
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context); // Close the dialog
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 30.0,
-                  vertical: 10.0,
+        child: Container(
+          padding: const EdgeInsets.all(20.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Failure Icon
+              CircleAvatar(
+                radius: 40.0,
+                backgroundColor: Colors.red.shade100,
+                child: const Icon(
+                  Icons.error_outline,
+                  color: Colors.red,
+                  size: 60.0,
                 ),
               ),
-              child: const Text(
-                'Try Again',
-                style: TextStyle(fontSize: 16.0, color: Colors.white),
+              const SizedBox(height: 20.0),
+              // Title
+              const Text(
+                'Oops!',
+                style: TextStyle(
+                  fontSize: 22.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red,
+                ),
               ),
-            ),
-          ],
+              const SizedBox(height: 10.0),
+              // Content
+              const Text(
+                'Failed to submit contractor details. Please try again later.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 20.0),
+              // Retry Button
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context); // Close the dialog
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 30.0,
+                    vertical: 10.0,
+                  ),
+                ),
+                child: const Text(
+                  'Try Again',
+                  style: TextStyle(fontSize: 16.0, color: Colors.white),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Contractor Details',style: TextStyle(color: Colors.white),),backgroundColor: Color(0xFF5C964A),
-      leading: IconButton(onPressed: (){Navigator.pop(context);}, icon: const Icon(Icons.arrow_back_ios),color: Colors.white,),),
+      appBar: AppBar(
+        title: const Text(
+          'Contractor Details',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Color(0xFF5C964A),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.arrow_back_ios),
+          color: Colors.white,
+        ),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -348,8 +359,12 @@ void _showFailureDialog() {
           controller: controller,
           keyboardType: keyboardType,
           decoration: InputDecoration(
-            hintText: hint,hintStyle: TextStyle(color: Colors.grey),
-            prefixIcon: Icon(icon,color: Colors.grey,),
+            hintText: hint,
+            hintStyle: TextStyle(color: Colors.grey),
+            prefixIcon: Icon(
+              icon,
+              color: Colors.grey,
+            ),
             filled: true,
             fillColor: Colors.white,
             border: OutlineInputBorder(

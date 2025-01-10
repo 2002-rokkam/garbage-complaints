@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
 class CEOWagesCalendarActivityScreen extends StatefulWidget {
-    final String section;
+  final String section;
   final String district;
   final String block;
   final String gramPanchayat;
@@ -19,7 +19,6 @@ class CEOWagesCalendarActivityScreen extends StatefulWidget {
     required this.block,
     required this.gramPanchayat,
   }) : super(key: key);
-
 
   @override
   _WagesCalendarActivityScreenState createState() =>
@@ -51,8 +50,8 @@ class _WagesCalendarActivityScreenState
       _isLoading = true;
     });
 
-        final url = Uri.parse(
-            'https://cc33-122-172-85-145.ngrok-free.app/api/bdo-section-dashboard')
+    final url = Uri.parse(
+            'https://c035-122-172-86-134.ngrok-free.app/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': widget.section,

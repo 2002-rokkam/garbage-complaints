@@ -201,8 +201,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
     workerId = await getWorkerId();
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-    });
+    setState(() {});
   }
 
   Future<void> _submitFormData() async {
@@ -226,7 +225,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
     print(formData);
     try {
       Response response = await dio.post(
-        'https://cc33-122-172-85-145.ngrok-free.app/api/update-complaint/${widget.complaint['complaint_id']}',
+        'https://c035-122-172-86-134.ngrok-free.app/api/update-complaint/${widget.complaint['complaint_id']}',
         data: formData,
       );
 

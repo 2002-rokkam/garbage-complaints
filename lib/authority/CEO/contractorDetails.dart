@@ -1,4 +1,4 @@
-// authority/BDO/contractorDetails.dart
+// authority/CEO/contractorDetails.dart
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -27,7 +27,7 @@ class _ContractordetailsState extends State<Contractordetails> {
     }
 
     final apiUrl =
-        'https://cc33-122-172-85-145.ngrok-free.app/api/contractors/?gp=$gp';
+        'https://c035-122-172-86-134.ngrok-free.app/api/contractors/?gp=$gp';
     final response = await http.get(Uri.parse(apiUrl));
 
     if (response.statusCode == 200) {

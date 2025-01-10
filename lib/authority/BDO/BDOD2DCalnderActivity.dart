@@ -6,7 +6,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BDOD2DCalnderActivityScreen extends StatefulWidget {
-    final String section;
+  final String section;
   final String district;
   final String block;
   final String gramPanchayat;
@@ -18,7 +18,6 @@ class BDOD2DCalnderActivityScreen extends StatefulWidget {
     required this.block,
     required this.gramPanchayat,
   }) : super(key: key);
-
 
   @override
   _BDOD2DCalnderActivityScreenState createState() =>
@@ -69,7 +68,7 @@ class _BDOD2DCalnderActivityScreenState
     });
 
     final url = Uri.parse(
-            'https://cc33-122-172-85-145.ngrok-free.app/api/bdo-section-dashboard')
+            'https://c035-122-172-86-134.ngrok-free.app/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': widget.section,
@@ -99,8 +98,8 @@ class _BDOD2DCalnderActivityScreenState
   Future<void> fetchQRDetails(String workerId) async {
     if (workerId.isEmpty) return;
 
-final url = Uri.parse(
-            'https://cc33-122-172-85-145.ngrok-free.app/api/bdo-section-dashboard')
+    final url = Uri.parse(
+            'https://c035-122-172-86-134.ngrok-free.app/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': 'D2D_QR',

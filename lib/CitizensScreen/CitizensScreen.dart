@@ -5,6 +5,9 @@ import '../WokersScreen/WorkerComplaints/workerComplaintsScreen.dart';
 import 'ComplaintsScreen/ComplaintScreen.dart';
 import 'package:intl/intl.dart';
 import 'ComplaintsScreen/complaintsBottomBar.dart';
+import 'package:flutter/material.dart';
+import 'dart:async'; // for Timer
+import 'package:intl/intl.dart'; // for DateFormat
 
 class CitizensScreen extends StatefulWidget {
   @override
@@ -57,7 +60,6 @@ class _CitizensScreenState extends State<CitizensScreen> {
   @override
   void initState() {
     super.initState();
-    // Auto-scroll images
     Timer.periodic(const Duration(seconds: 3), (Timer timer) {
       if (_pageController.hasClients) {
         int nextPage = _pageController.page!.toInt() + 1;
@@ -90,6 +92,9 @@ class _CitizensScreenState extends State<CitizensScreen> {
   }
 
   Widget _buildCitizenScreenContent() {
+    // Get screen width for responsive design
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Column(
       children: [
         // Fixed image slider
@@ -130,7 +135,6 @@ class _CitizensScreenState extends State<CitizensScreen> {
             ],
           ),
         ),
-        // Row with "Home" label, gap, and green camera icon with label
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
           child: Row(
@@ -139,7 +143,7 @@ class _CitizensScreenState extends State<CitizensScreen> {
               Text(
                 'Home',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: screenWidth < 600 ? 16 : 18,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
@@ -151,22 +155,24 @@ class _CitizensScreenState extends State<CitizensScreen> {
                       IconButton(
                         icon: Icon(Icons.camera_alt,
                             color: Color(0xFF5C964A)), // Green icon
-                        iconSize: 30.0, // Set the icon size
+                        iconSize: screenWidth < 600
+                            ? 25
+                            : 30.0, // Adjust icon size for small screens
                         onPressed: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => ComplaintScreen(),
                             ),
-                          );                        },
+                          );
+                        },
                       ),
                       Transform.translate(
-                        offset: Offset(0,
-                            -8), // Adjust this value to move the text upwards
+                        offset: Offset(0, -8),
                         child: Text(
                           'Click and Capture',
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: screenWidth < 600 ? 10 : 12,
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
                           ),
@@ -176,7 +182,6 @@ class _CitizensScreenState extends State<CitizensScreen> {
                   ),
                 ],
               )
-
             ],
           ),
         ),
@@ -211,7 +216,7 @@ class _CitizensScreenState extends State<CitizensScreen> {
                     child: Text(
                       'Complaints',
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: screenWidth < 600 ? 16 : 18,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
@@ -219,138 +224,132 @@ class _CitizensScreenState extends State<CitizensScreen> {
                   ),
                 ),
                 // Complaints Container
-               // Complaints and Help line side by side in a Row
-Row(
-  mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Adjusts the spacing
-  children: [
-    GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => workerComplaintsScreen(),
-          ),
-        );
-      },
-      child: Container(
-        width: 170, // Adjust width as needed
-        height: 139,
-        decoration: ShapeDecoration(
-          color: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          shadows: [
-            BoxShadow(
-              color: Color(0x14000000),
-              blurRadius: 16,
-              offset: Offset(0, 8),
-              spreadRadius: 0,
-            ),
-            BoxShadow(
-              color: Color(0x0A000000),
-              blurRadius: 4,
-              offset: Offset(0, 0),
-              spreadRadius: 0,
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              width: 64,
-              height: 64,
-              clipBehavior: Clip.antiAlias,
-              decoration: BoxDecoration(),
-              child: Image.asset(
-                'images/Actin.png',
-                fit: BoxFit.cover,
-              ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              ' Help line ',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 16,
-                fontFamily: 'Nunito Sans',
-                fontWeight: FontWeight.w400,
-                height: 1.25,
-                letterSpacing: 0.16,
-              ),
-            ),
-          ],
-        ),
-      ),
-    ),
-    GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ComplaintScreen(),
-          ),
-        );
-      },
-      child: Container(
-        width: 170, // Adjust width as needed
-        height: 139,
-        decoration: ShapeDecoration(
-          color: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          shadows: [
-            BoxShadow(
-              color: Color(0x14000000),
-              blurRadius: 16,
-              offset: Offset(0, 8),
-              spreadRadius: 0,
-            ),
-            BoxShadow(
-              color: Color(0x0A000000),
-              blurRadius: 4,
-              offset: Offset(0, 0),
-              spreadRadius: 0,
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              width: 64,
-              height: 64,
-              clipBehavior: Clip.antiAlias,
-              decoration: BoxDecoration(),
-              child: Image.asset(
-                'images/Complaints.png',
-                fit: BoxFit.cover,
-              ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              'Complaints',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 16,
-                fontFamily: 'Nunito Sans',
-                fontWeight: FontWeight.w400,
-                height: 1.25,
-                letterSpacing: 0.16,
-              ),
-            ),
-          ],
-        ),
-      ),
-    ),
-  ],
-),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        
+                      },
+                      child: Container(
+                        width: screenWidth < 600 ? 150 : 170,
+                        height: 139,
+                        decoration: ShapeDecoration(
+                          color: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          shadows: [
+                            BoxShadow(
+                              color: Color(0x14000000),
+                              blurRadius: 16,
+                              offset: Offset(0, 8),
+                              spreadRadius: 0,
+                            ),
+                            BoxShadow(
+                              color: Color(0x0A000000),
+                              blurRadius: 4,
+                              offset: Offset(0, 0),
+                              spreadRadius: 0,
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 64,
+                              height: 64,
+                              clipBehavior: Clip.antiAlias,
+                              decoration: BoxDecoration(),
+                              child: Image.asset(
+                                'images/Actin.png',
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              ' Help line ',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontFamily: 'Nunito Sans',
+                                fontWeight: FontWeight.w400,
+                                height: 1.25,
+                                letterSpacing: 0.16,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ComplaintScreen(),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        width: screenWidth < 600 ? 150 : 170,
+                        height: 139,
+                        decoration: ShapeDecoration(
+                          color: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          shadows: [
+                            BoxShadow(
+                              color: Color(0x14000000),
+                              blurRadius: 16,
+                              offset: Offset(0, 8),
+                              spreadRadius: 0,
+                            ),
+                            BoxShadow(
+                              color: Color(0x0A000000),
+                              blurRadius: 4,
+                              offset: Offset(0, 0),
+                              spreadRadius: 0,
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 64,
+                              height: 64,
+                              clipBehavior: Clip.antiAlias,
+                              decoration: BoxDecoration(),
+                              child: Image.asset(
+                                'images/Complaints.png',
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              'Complaints',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontFamily: 'Nunito Sans',
+                                fontWeight: FontWeight.w400,
+                                height: 1.25,
+                                letterSpacing: 0.16,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 SizedBox(height: 16),
               ],
             ),
@@ -364,7 +363,7 @@ Row(
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false, // This removes the back button
+        automaticallyImplyLeading: false,
         backgroundColor: const Color(0xFF5C964A),
         flexibleSpace: Container(
           height: 100,
@@ -397,12 +396,12 @@ Row(
           ),
         ),
       ),
-      backgroundColor:Color.fromRGBO(239, 239, 239, 1),
+      backgroundColor: Color.fromRGBO(239, 239, 239, 1),
       body: _getSelectedScreen(),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        selectedItemColor: Color(0xFF5C964A), // Green color for selected item
+        selectedItemColor: Color(0xFF5C964A),
         unselectedItemColor: Colors.grey,
         items: const [
           BottomNavigationBarItem(
@@ -438,11 +437,11 @@ Row(
   Widget _buildButton(String label, String imageUrl, String routeName,
       String number, BuildContext context) {
     return Container(
-      width: 165, // Fixed width for all buttons
-      height: 140, // Fixed height for all buttons
-      padding: const EdgeInsets.all(8), // Adjust padding
-      margin:
-          const EdgeInsets.symmetric(horizontal: 8), // Margin between buttons
+      width: MediaQuery.of(context).size.width *
+          0.42, // 42% of screen width for button
+      height: 150,
+      padding: const EdgeInsets.all(8),
+      margin: const EdgeInsets.symmetric(horizontal: 8),
       decoration: ShapeDecoration(
         color: Colors.white,
         shape: RoundedRectangleBorder(
@@ -464,14 +463,12 @@ Row(
         ],
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center, // Keep vertically centered
-        crossAxisAlignment:
-            CrossAxisAlignment.start, // Align children to the start (left)
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Image size adjusted to fit inside the fixed size
           Container(
-            width: 60, // Fixed image width
-            height: 60, // Fixed image height
+            width: 60,
+            height: 60,
             clipBehavior: Clip.antiAlias,
             decoration: BoxDecoration(),
             child: Image.asset(
@@ -479,23 +476,23 @@ Row(
               fit: BoxFit.cover,
             ),
           ),
-          SizedBox(height: 8), // Adjusted the gap
+          SizedBox(height: 8),
           Text(
-            number, // Dynamic number from buttonItems
+            number,
             style: const TextStyle(
               color: Color(0xFF6B6B6B),
-              fontSize: 16, // Adjust font size as needed
+              fontSize: 16,
               fontWeight: FontWeight.bold,
               letterSpacing: 0.16,
             ),
           ),
-          SizedBox(height: 8), // Gap between number and label
+          SizedBox(height: 8),
           Text(
             label,
-            textAlign: TextAlign.start, // Align text to the left
+            textAlign: TextAlign.start,
             style: const TextStyle(
               color: Color(0xFF6B6B6B),
-              fontSize: 12, // Adjust font size as needed
+              fontSize: 12,
               fontFamily: 'Nunito Sans',
               fontWeight: FontWeight.w600,
               letterSpacing: 0.16,
@@ -506,6 +503,7 @@ Row(
     );
   }
 }
+
 class SettingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

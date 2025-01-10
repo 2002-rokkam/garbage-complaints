@@ -60,7 +60,6 @@ class _BDOScreenState extends State<BDOScreen> {
     },
   ];
 
-
   @override
   void initState() {
     super.initState();
@@ -85,7 +84,7 @@ class _BDOScreenState extends State<BDOScreen> {
     print(District);
     if (District != null) {
       final response = await http.get(Uri.parse(
-              'https://cc33-122-172-85-145.ngrok-free.app/api/complaints-by-district/')
+              'https://c035-122-172-86-134.ngrok-free.app/api/complaints-by-district/')
           .replace(queryParameters: {
         'district': District,
       }));
@@ -304,9 +303,7 @@ class _BDOScreenState extends State<BDOScreen> {
                           MainAxisAlignment.spaceEvenly, // Adjusts the spacing
                       children: [
                         GestureDetector(
-                          onTap: () {
-                            
-                          },
+                          onTap: () {},
                           child: Container(
                             width: 170, // Adjust width as needed
                             height: 139,
@@ -375,9 +372,7 @@ class _BDOScreenState extends State<BDOScreen> {
                           ),
                         ),
                         GestureDetector(
-                          onTap: () {
-                           
-                          },
+                          onTap: () {},
                           child: Container(
                             width: 170, // Adjust width as needed
                             height: 139,
@@ -540,10 +535,8 @@ class _BDOScreenState extends State<BDOScreen> {
           ],
         ),
         child: Column(
-          mainAxisAlignment:
-              MainAxisAlignment.center, 
-          crossAxisAlignment:
-              CrossAxisAlignment.start, 
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               width: 60, // Fixed image width

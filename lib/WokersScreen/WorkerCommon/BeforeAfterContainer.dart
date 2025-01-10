@@ -119,7 +119,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
 
       Dio dio = Dio();
       Response response = await dio.post(
-        'https://cc33-122-172-85-145.ngrok-free.app/api/submit-activity',
+        'https://c035-122-172-86-134.ngrok-free.app/api/submit-activity',
         data: formData,
       );
 
@@ -186,7 +186,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
 
       Dio dio = Dio();
       Response response = await dio.put(
-          'https://cc33-122-172-85-145.ngrok-free.app/api/submit-activity',
+          'https://c035-122-172-86-134.ngrok-free.app/api/submit-activity',
           data: formData);
 
       if (response.statusCode == 200) {

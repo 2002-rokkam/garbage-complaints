@@ -42,10 +42,9 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
     }
   }
 
-
   Future<void> _fetchComplaints() async {
     final String apiUrl =
-        'https://cc33-122-172-85-145.ngrok-free.app/api/complaints';
+        'https://c035-122-172-86-134.ngrok-free.app/api/complaints';
 
     try {
       // Assuming _idToken contains your token
@@ -86,8 +85,8 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    final double cardWidth = screenSize.width * 0.9;
-    final double cardHeight = screenSize.height * 0.4;
+    final double cardWidth = screenSize.width * 0.98;
+    final double cardHeight = screenSize.height * 0.3;
 
     return DefaultTabController(
       length: 2,
@@ -105,6 +104,7 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
             ],
           ),
         ),
+        backgroundColor: Color.fromRGBO(239, 239, 239, 1),
         body: TabBarView(
           controller: _tabController,
           children: [
@@ -165,8 +165,7 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
               height: cardHeight * 0.65,
               decoration: ShapeDecoration(
                 image: DecorationImage(
-                  image: NetworkImage(
-                      '${complaint['photos'][0]['image']}'),
+                  image: NetworkImage('${complaint['photos'][0]['image']}'),
                   fit: BoxFit.cover,
                 ),
                 shape: RoundedRectangleBorder(
@@ -191,20 +190,34 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
             ),
           ),
           Positioned(
-            right: 10,
-            top: 10,
-            child: Text(
-              formattedDate,
-              style: TextStyle(
-                color: const Color(0xFF252525),
-                fontSize: cardHeight * 0.04,
-                fontWeight: FontWeight.w400,
+            right: 15,
+            top: 10, // Adjusted to make room for the date container
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 6,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Text(
+                formattedDate,
+                style: TextStyle(
+                  color: const Color(0xFF252525),
+                  fontSize: cardHeight * 0.04,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
             ),
           ),
           Positioned(
             left: 15,
-            top: cardHeight * 0.85,
+            top: cardHeight * 0.80,
             child: Text(
               complaint['caption'] ?? 'No description provided',
               style: TextStyle(
@@ -235,36 +248,66 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
   }
 
   // Show the resolved photo in a popup
-  void _showResolvedPopup(Map<String, dynamic> complaint) {
+void _showResolvedPopup(Map<String, dynamic> complaint) {
     final resolvedPhoto = complaint['resolved_photo'];
     if (resolvedPhoto != null) {
       showDialog(
         context: context,
         builder: (context) {
-          return AlertDialog(
+          return Dialog(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(16), // Rounded corners
             ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Image.network(
-                  '${resolvedPhoto['image']}',
-                  height: 200,
-                  width: 200,
-                  fit: BoxFit.cover,
-                ),
-                SizedBox(height: 16),
-                Text(
-                  'Complaint resolved successfully!',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text('Close'),
-                ),
-              ],
+            elevation: 10,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white, // White background for the card
+                borderRadius: BorderRadius.circular(16),
+              ),
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ClipRRect(
+                    borderRadius:
+                        BorderRadius.circular(16), // Rounded image corners
+                    child: Image.network(
+                      '${resolvedPhoto['image']}',
+                      height: 250,
+                      width: double.infinity, // Make the image responsive
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    'Complaint Resolved Successfully!',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      letterSpacing: 1.2,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.green, // Stylish button color
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      elevation: 5,
+                    ),
+                    child: Text(
+                      'Close',
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         },

@@ -45,7 +45,7 @@
 //     });
 
 //             final url = Uri.parse(
-//             'https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard')
+//             'https://c035-122-172-86-134.ngrok-free.app/api/vdo-section-dashboard')
 //         .replace(queryParameters: {
 //       'worker_id': workerId,
 //       'section': widget.section,
@@ -364,7 +364,7 @@
 
 //   Future<void> fetchTripDetails() async {
 //     final url = Uri.parse(
-//             'https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard')
+//             'https://c035-122-172-86-134.ngrok-free.app/api/vdo-section-dashboard')
 //         .replace(queryParameters: {
 //       'worker_id': workerId,
 //       'section': 'Waste Details',
@@ -523,7 +523,7 @@ class _VDORCCCalendarActivityScreenState
     });
 
     final url = Uri.parse(
-            'https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard')
+            'https://c035-122-172-86-134.ngrok-free.app/api/vdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': widget.section,
@@ -553,7 +553,7 @@ class _VDORCCCalendarActivityScreenState
     String workerId = await getWorkerId();
 
     final url = Uri.parse(
-            'https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard')
+            'https://c035-122-172-86-134.ngrok-free.app/api/vdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': 'Waste Details',
@@ -727,7 +727,6 @@ class _VDORCCCalendarActivityScreenState
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                     
                                       TextButton(
                                         onPressed: () {
                                           if (_tabController.index == 0) {
@@ -768,7 +767,6 @@ class _VDORCCCalendarActivityScreenState
       ),
     );
   }
-
 }
 
 class TripDetailsScreen extends StatelessWidget {
@@ -864,11 +862,11 @@ class TripDetailsScreen extends StatelessWidget {
   }
 }
 
-
 class BeforeAfterScreen extends StatelessWidget {
   final List activities;
 
-  const BeforeAfterScreen({Key? key, required this.activities}) : super(key: key);
+  const BeforeAfterScreen({Key? key, required this.activities})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -968,7 +966,8 @@ class BeforeAfterScreen extends StatelessWidget {
                             height: 99.52,
                             decoration: ShapeDecoration(
                               image: DecorationImage(
-                                image: NetworkImage('${activity['before_image']}'),
+                                image:
+                                    NetworkImage('${activity['before_image']}'),
                                 fit: BoxFit.cover,
                               ),
                               shape: RoundedRectangleBorder(
@@ -981,7 +980,8 @@ class BeforeAfterScreen extends StatelessWidget {
                             height: 99.52,
                             decoration: ShapeDecoration(
                               image: DecorationImage(
-                                image: NetworkImage('${activity['after_image']}'),
+                                image:
+                                    NetworkImage('${activity['after_image']}'),
                                 fit: BoxFit.cover,
                               ),
                               shape: RoundedRectangleBorder(
@@ -1037,7 +1037,7 @@ class BeforeAfterScreen extends StatelessWidget {
 //   }
 
 //   Future<void> fetchTripDetails() async {
-//     final url = Uri.parse('https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard')
+//     final url = Uri.parse('https://c035-122-172-86-134.ngrok-free.app/api/vdo-section-dashboard')
 //         .replace(queryParameters: {
 //       'worker_id': widget.workerId,
 //       'section': 'Waste Details',

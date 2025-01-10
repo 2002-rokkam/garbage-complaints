@@ -44,7 +44,7 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
     });
 
     final url = Uri.parse(
-        'https://cc33-122-172-85-145.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+        'https://c035-122-172-86-134.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
 
     try {
       final response = await http.get(url);
@@ -133,7 +133,7 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
                 ),
               ),
             ),
-          ),         
+          ),
           // TabBarView for Before & After and Trip Details
           Expanded(
             child: _isLoading
@@ -150,7 +150,6 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
                           TripDetailsTab(selectedDate: _selectedDate),
                         ],
                       ),
-
           ),
         ],
       ),
@@ -319,11 +318,11 @@ class RRCBeforeAfterTab extends StatelessWidget {
   }
 }
 
-
 class TripDetailsTab extends StatefulWidget {
   final DateTime selectedDate;
 
-  const TripDetailsTab({Key? key, required this.selectedDate}) : super(key: key);
+  const TripDetailsTab({Key? key, required this.selectedDate})
+      : super(key: key);
 
   @override
   _TripDetailsTabState createState() => _TripDetailsTabState();
@@ -354,7 +353,7 @@ class _TripDetailsTabState extends State<TripDetailsTab> {
 
   Future<void> fetchTripDetails() async {
     final url = Uri.parse(
-        'https://cc33-122-172-85-145.ngrok-free.app/api/worker/$workerId/section/Waste Details');
+        'https://c035-122-172-86-134.ngrok-free.app/api/worker/$workerId/section/Waste Details');
 
     try {
       final response = await http.get(url);

@@ -42,7 +42,7 @@
 
 //     // Construct the URL with the workerId parameter
 //     final url = Uri.parse(
-//             'https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard')
+//             'https://c035-122-172-86-134.ngrok-free.app/api/vdo-section-dashboard')
 //         .replace(queryParameters: {
 //       'worker_id': workerId,
 //       'section': widget.section,
@@ -69,7 +69,6 @@
 //       });
 //     }
 //   }
-
 
 //   List getActivitiesForSelectedDate() {
 //     return _activities
@@ -311,7 +310,6 @@
 //   }
 // }
 
-
 // authority/VDOCalendarActivityScreen.dart
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -347,11 +345,10 @@ class _VDOCalendarActivityScreenState extends State<VDOCalendarActivityScreen> {
 
   Future<void> fetchActivities() async {
     String workerId = await getWorkerId();
-    setState(() {
-    });
+    setState(() {});
 
     final url = Uri.parse(
-            'https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard')
+            'https://c035-122-172-86-134.ngrok-free.app/api/vdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': widget.section,
@@ -371,8 +368,7 @@ class _VDOCalendarActivityScreenState extends State<VDOCalendarActivityScreen> {
     } catch (e) {
       print(e);
     } finally {
-      setState(() {
-      });
+      setState(() {});
     }
   }
 
@@ -531,7 +527,8 @@ class SelectedDateActivitiesScreen extends StatelessWidget {
                                       decoration: ShapeDecoration(
                                         color: Color(0xFFFFF2C6),
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(59),
+                                          borderRadius:
+                                              BorderRadius.circular(59),
                                         ),
                                       ),
                                     ),
@@ -540,11 +537,14 @@ class SelectedDateActivitiesScreen extends StatelessWidget {
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 10, vertical: 5),
                                       decoration: ShapeDecoration(
-                                        color: (activity['status'] ?? 'Pending') == 'Completed'
-                                            ? Color(0xFF5C964A)
-                                            : Color(0xFFFFA726),
+                                        color:
+                                            (activity['status'] ?? 'Pending') ==
+                                                    'Completed'
+                                                ? Color(0xFF5C964A)
+                                                : Color(0xFFFFA726),
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(18),
+                                          borderRadius:
+                                              BorderRadius.circular(18),
                                         ),
                                       ),
                                       child: Center(

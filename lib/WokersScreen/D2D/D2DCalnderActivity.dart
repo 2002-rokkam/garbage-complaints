@@ -44,7 +44,7 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
     });
 
     final url = Uri.parse(
-        'https://cc33-122-172-85-145.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+        'https://c035-122-172-86-134.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
 
     try {
       final response = await http.get(url);
@@ -133,7 +133,7 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
                 ),
               ),
             ),
-          ),          
+          ),
           // TabBarView for Before & After and Trip Details
           Expanded(
             child: _isLoading
@@ -149,7 +149,6 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
                           D2DQRDetailsTab(selectedDate: _selectedDate),
                         ],
                       ),
-
           ),
         ],
       ),
@@ -341,7 +340,6 @@ class D2DBeforeAfterTab extends StatelessWidget {
   }
 }
 
-
 class D2DQRDetailsTab extends StatefulWidget {
   final DateTime selectedDate;
 
@@ -368,7 +366,7 @@ class _D2DQRDetailsTabState extends State<D2DQRDetailsTab> {
 
     if (workerId.isNotEmpty) {
       final url = Uri.parse(
-          'https://cc33-122-172-85-145.ngrok-free.app/api/worker/$workerId/section/D2D_QR');
+          'https://c035-122-172-86-134.ngrok-free.app/api/worker/$workerId/section/D2D_QR');
 
       try {
         final response = await http.get(url);

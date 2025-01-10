@@ -1,9 +1,14 @@
 // CitizensScreen/ComplaintsScreen/ComplaintRegisterScreen.dart
 import 'package:flutter/material.dart';
 import '../CitizensScreen.dart';
+
 class ComplaintRegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // Get screen size
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -13,12 +18,13 @@ class ComplaintRegisterScreen extends StatelessWidget {
         ),
         child: Stack(
           children: [
+            // Header section
             Positioned(
               left: 0,
               top: 0,
               child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: 142,
+                width: screenWidth,
+                height: screenHeight * 0.2, // 20% of screen height
                 decoration: BoxDecoration(
                   color: Color(0xFF5C964A),
                   borderRadius: BorderRadius.only(
@@ -31,9 +37,9 @@ class ComplaintRegisterScreen extends StatelessWidget {
             // Time and Status Row
             Positioned(
               left: 0,
-              top: 52,
+              top: screenHeight * 0.1, // Position adjusted with percentage
               child: Container(
-                width: MediaQuery.of(context).size.width,
+                width: screenWidth,
                 height: 64,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
@@ -63,24 +69,25 @@ class ComplaintRegisterScreen extends StatelessWidget {
                 ),
               ),
             ),
+            // Success image section
             Positioned(
               left: 0,
-              top: 150,
+              top: screenHeight * 0.2, // Adjusted to align below the header
               child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: 280,
+                width: screenWidth,
+                height: screenHeight * 0.35, // 35% of screen height
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage(
-                        'images/successScreen.png'), // Corrected here
+                    image: AssetImage('images/successScreen.png'),
                     fit: BoxFit.fill,
                   ),
                 ),
               ),
             ),
+            // Icon below the success image
             Positioned(
-              left: MediaQuery.of(context).size.width / 2 - 31,
-              top: 528,
+              left: screenWidth / 2 - 31,
+              top: screenHeight * 0.65, // Adjusted position
               child: Container(
                 width: 62,
                 height: 62,
@@ -94,9 +101,10 @@ class ComplaintRegisterScreen extends StatelessWidget {
                 ),
               ),
             ),
+            // Complaints filed message
             Positioned(
-              left: MediaQuery.of(context).size.width / 2 - 122,
-              top: 634,
+              left: screenWidth / 2 - 122,
+              top: screenHeight * 0.75, // Adjusted position
               child: SizedBox(
                 width: 244,
                 child: Text(
@@ -111,12 +119,12 @@ class ComplaintRegisterScreen extends StatelessWidget {
                 ),
               ),
             ),
-            // Bottom Sheet
+            // Bottom sheet
             Positioned(
               left: 0,
               bottom: 0,
               child: Container(
-                width: MediaQuery.of(context).size.width,
+                width: screenWidth,
                 height: 24,
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -133,18 +141,15 @@ class ComplaintRegisterScreen extends StatelessWidget {
                 ),
               ),
             ),
-            // Back Button
+            // Back button
             Positioned(
-              left: MediaQuery.of(context).size.width / 2 - 40,
-              bottom: 80,
+              left: screenWidth / 2 - 40,
+              bottom: screenHeight * 0.12, // Adjusted position
               child: GestureDetector(
                 onTap: () {
-                  // Navigate to the home screen
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            CitizensScreen()), 
+                    MaterialPageRoute(builder: (context) => CitizensScreen()),
                   );
                 },
                 child: Container(
@@ -152,8 +157,7 @@ class ComplaintRegisterScreen extends StatelessWidget {
                   height: 40,
                   decoration: BoxDecoration(
                     color: Color(0xFF5C964A),
-                    borderRadius:
-                        BorderRadius.circular(20), 
+                    borderRadius: BorderRadius.circular(20),
                     shape: BoxShape.rectangle,
                   ),
                   child: Center(
@@ -170,7 +174,7 @@ class ComplaintRegisterScreen extends StatelessWidget {
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

@@ -28,10 +28,10 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
   List<String> gramPanchayats = [];
 
   final String districtsUrl =
-      "https://cc33-122-172-85-145.ngrok-free.app/api/getDistricts";
+      "https://c035-122-172-86-134.ngrok-free.app/api/getDistricts";
   final String blocksUrl =
-      "https://cc33-122-172-85-145.ngrok-free.app/api/getBlocks/";
-  final String gpUrl = "https://cc33-122-172-85-145.ngrok-free.app/api/getGp/";
+      "https://c035-122-172-86-134.ngrok-free.app/api/getBlocks/";
+  final String gpUrl = "https://c035-122-172-86-134.ngrok-free.app/api/getGp/";
 
   Future<void> fetchDistricts() async {
     try {

@@ -54,7 +54,7 @@ class _BDORCCCalendarActivityScreenState
     });
 
     final url = Uri.parse(
-            'https://cc33-122-172-85-145.ngrok-free.app/api/bdo-section-dashboard')
+            'https://c035-122-172-86-134.ngrok-free.app/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': widget.section,
@@ -86,7 +86,7 @@ class _BDORCCCalendarActivityScreenState
     String workerId = await getWorkerId();
 
     final url = Uri.parse(
-            'https://cc33-122-172-85-145.ngrok-free.app/api/bdo-section-dashboard')
+            'https://c035-122-172-86-134.ngrok-free.app/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': 'Waste Details',

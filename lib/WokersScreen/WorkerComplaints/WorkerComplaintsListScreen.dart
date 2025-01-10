@@ -141,8 +141,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
       _latitude = position.latitude;
       _longitude = position.longitude;
       print(_latitude);
-            print(_longitude);
-
+      print(_longitude);
     });
   }
 
@@ -192,6 +191,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
       },
     );
   }
+
   Future<String> getWorkerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String workerId = prefs.getString('worker_id') ?? "";
@@ -199,7 +199,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
   }
 
   Future<void> _loadWorkerDetails() async {
-     workerId = await getWorkerId();
+    workerId = await getWorkerId();
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -225,13 +225,13 @@ class _ComplaintCardState extends State<ComplaintCard> {
       'solved_long': _longitude,
       'worker_id': workerId,
     });
-print(formData);
+    print(formData);
     try {
       Response response = await dio.post(
-        'https://cc33-122-172-85-145.ngrok-free.app/api/update-complaint/${widget.complaint['complaint_id']}',
+        'https://c035-122-172-86-134.ngrok-free.app/api/update-complaint/${widget.complaint['complaint_id']}',
         data: formData,
       );
-      
+
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Complaint updated successfully'),
@@ -252,8 +252,7 @@ print(formData);
 
   void _showResolvedPhoto(Map<String, dynamic>? resolvedPhoto) {
     if (resolvedPhoto != null && resolvedPhoto['image'] != null) {
-      final imageUrl =
-          '${resolvedPhoto['image']}';
+      final imageUrl = '${resolvedPhoto['image']}';
 
       showDialog(
         context: context,
