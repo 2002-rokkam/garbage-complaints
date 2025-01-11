@@ -158,99 +158,94 @@ Widget build(BuildContext context) {
     ),
     backgroundColor:  Color.fromRGBO(239, 239, 239, 1),
     body: Column(
-      children: [
-        Container(
-          height: MediaQuery.of(context).size.height * 0.4,
-          child: TableCalendar(
-            focusedDay: _selectedDate,
-            firstDay: DateTime(2000),
-            lastDay: DateTime(2100),
-            calendarFormat: CalendarFormat.month,
-            selectedDayPredicate: (day) => isSameDay(day, _selectedDate),
-            onDaySelected: (selectedDay, focusedDay) {
-              setState(() {
-                _selectedDate = selectedDay;
-                fetchQRDetails(workerId!); // Use workerId here
-              });
-            },
-            calendarStyle: CalendarStyle(
-              selectedDecoration: BoxDecoration(
-                color: Color(0xFF5C964A),
-                shape: BoxShape.circle,
-              ),
-              todayDecoration: BoxDecoration(
-                color: Color(0xFFFFA726),
-                shape: BoxShape.circle,
+        children: [
+          Container(
+            child: TableCalendar(
+              focusedDay: _selectedDate,
+              firstDay: DateTime(2000),
+              lastDay: DateTime(2100),
+              calendarFormat: CalendarFormat.month,
+              selectedDayPredicate: (day) => isSameDay(day, _selectedDate),
+              onDaySelected: (selectedDay, focusedDay) {
+                setState(() {
+                  _selectedDate = selectedDay;
+                  fetchQRDetails(workerId!); // Use workerId here
+                });
+              },
+              calendarStyle: CalendarStyle(
+                selectedDecoration: BoxDecoration(
+                  color: Color(0xFF5C964A),
+                  shape: BoxShape.circle,
+                ),
+                todayDecoration: BoxDecoration(
+                  color: Color(0xFFFFA726),
+                  shape: BoxShape.circle,
+                ),
               ),
             ),
           ),
-        ),
-        
-        Expanded(
-          child: _isLoading
-              ? Center(child: CircularProgressIndicator())
-              : TabBarView(
-                  controller: _tabController,
-                  children: [
-                    Expanded(
-                        child: Card(
-                           color: Color.fromRGBO(239, 239, 239, 1),
-                          child: ListTile(
-                            title: Text('Total Activities'),
-                            subtitle: Text('${selectedActivities.length}'),
-                            trailing: ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => BeforeAfterScreen(
-                                      selectedDate: _selectedDate,
-                                      activities: selectedActivities,
-                                    ),
+          Expanded(
+            child: _isLoading
+                ? Center(child: CircularProgressIndicator())
+                : TabBarView(
+                    controller: _tabController,
+                    children: [
+                      Card(
+                        color: Color.fromRGBO(239, 239, 239, 1),
+                        child: ListTile(
+                          title: Text('Total Activities'),
+                          subtitle: Text('${selectedActivities.length}'),
+                          trailing: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BeforeAfterScreen(
+                                    selectedDate: _selectedDate,
+                                    activities: selectedActivities,
                                   ),
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors
-                                    .green, // Set the background color to green
-                              ),
-                              child: Text('View All'),
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors
+                                  .green, // Set the background color to green
                             ),
+                            child: Text('View All'),
                           ),
                         ),
                       ),
-                      Expanded(
-                        child: Card(
-                           color: Color.fromRGBO(239, 239, 239, 1),
-                          child: ListTile(
-                            title: Text('Total QR Scans'),
-                            subtitle: Text('${_tripDetails.length}'),
-                            trailing: ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => QRDetailsScreen(
-                                      selectedDate: _selectedDate,
-                                      tripDetails: _tripDetails,
-                                    ),
+                      Card(
+                        color: Color.fromRGBO(239, 239, 239, 1),
+                        child: ListTile(
+                          title: Text('Total QR Scans'),
+                          subtitle: Text('${_tripDetails.length}'),
+                          trailing: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => QRDetailsScreen(
+                                    selectedDate: _selectedDate,
+                                    tripDetails: _tripDetails,
                                   ),
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors
-                                    .green, // Set the background color to green
-                              ),
-                              child: Text('View All'),
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors
+                                  .green, // Set the background color to green
                             ),
+                            child: Text('View All'),
                           ),
                         ),
                       ),
-                  ],
-                ),
-        ),
-      ],
-    ),
+                    ],
+                  ),
+          ),
+        ],
+      ),
+
   );
 }
     }
