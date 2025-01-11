@@ -441,7 +441,7 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
             ),
             Positioned(
               top: screenHeight * 0.65,
-              left: screenWidth / 2 - 100,
+              left: screenWidth / 2 - 80,
               child: GestureDetector(
                 onTap: () {
                   Navigator.push(
