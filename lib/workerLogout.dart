@@ -19,8 +19,20 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Worker Logout',style: TextStyle(color: Colors.white),),backgroundColor: Color(0xFF5C964A),
-      leading: IconButton(onPressed: (){Navigator.pop(context);}, icon: const Icon(Icons.arrow_back_ios),color: Colors.white,),),
+      appBar: AppBar(
+        title: const Text(
+          'Worker Logout',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Color(0xFF5C964A),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.arrow_back_ios),
+          color: Colors.white,
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -79,7 +91,6 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
           ),
           TextButton(
             onPressed: () async {
-              Navigator.pop(context); // Close the dialog
 
               // Start the logout process
               setState(() {
@@ -111,11 +122,12 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
       String? workerId = prefs.getString('worker_id');
 
       if (workerId == null) {
-       throw Exception("Worker ID not found in shared preferences.");
+        throw Exception("Worker ID not found in shared preferences.");
       }
 
       // API URL
-      String logoutUrl = 'https://c035-122-172-86-134.ngrok-free.app/api/worker-logout'; // Replace with your API endpoint
+      String logoutUrl =
+          'https://c035-122-172-86-134.ngrok-free.app/api/worker-logout'; // Replace with your API endpoint
 
       // Prepare body and headers
       Map<String, String> headers = {
@@ -135,9 +147,7 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
 
       // Check if the response is successful (200 OK)
       if (response.statusCode == 200) {
-        // Clear shared preferences after successful logout
         await prefs.clear();
-        // Show success message
         print("Logout successful!");
         //Add Navigation
       } else {
@@ -146,9 +156,6 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
       }
     } catch (e) {
       // Handle any errors during the logout process (network issues, etc.)
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Logout failed. Please try again.')),
-      );
     } finally {
       setState(() {
         isLoggingOut = false;
