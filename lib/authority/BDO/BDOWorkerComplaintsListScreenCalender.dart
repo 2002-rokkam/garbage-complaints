@@ -437,7 +437,6 @@ class _ComplaintCardState extends State<ComplaintCard> {
           ),
           SizedBox(height: 16),
           // Conditional Button
-          // Conditional Button
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 12.0),
             child: resolvedPhoto != null && resolvedPhoto['image'] != null

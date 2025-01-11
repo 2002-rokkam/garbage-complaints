@@ -2,10 +2,11 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
-import 'BDOCalendarActivityScreen.dart';
-import 'BDOD2DCalnderActivity.dart';
-import 'BDORCCCalendarActivityScreen.dart';
-import 'BDOWagesCalendarActivityScreen.dart';
+import '../../workerLogout.dart';
+import 'CalnderActivity/BDOCalendarActivityScreen.dart';
+import 'BDOD2D/BDOD2DCalnderActivity.dart';
+import 'BDORCC/BDORCCCalendarActivityScreen.dart';
+import 'BDOWages/BDOWagesCalendarActivityScreen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -55,7 +56,7 @@ class _BDOScreenState extends State<BDOScreen> {
     {
       'label': 'Contractor Details',
       'imageUrl':
-          'images/wages.png', // You can use a different image if you prefer
+          'images/Contractors.png', // You can use a different image if you prefer
       'route': 'ContractorDetailsScreen'
     },
   ];
@@ -140,7 +141,12 @@ class _BDOScreenState extends State<BDOScreen> {
                     IconButton(
                       icon: Icon(Icons.settings, color: Colors.white),
                       onPressed: () {
-                        // Navigate to settings or handle settings action here
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => WorkerSettingsPage(),
+                          ),
+                        );
                       },
                     ),
                   ],
@@ -483,7 +489,7 @@ class _BDOScreenState extends State<BDOScreen> {
     );
   }
 
-   Widget _buildImageContainer(String imageUrl) {
+  Widget _buildImageContainer(String imageUrl) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
@@ -571,6 +577,7 @@ class _BDOScreenState extends State<BDOScreen> {
       ),
     );
   }
+
   Widget _getPage(String routeName) {
     switch (routeName) {
       case 'DoorToDoorScreen':
@@ -586,7 +593,7 @@ class _BDOScreenState extends State<BDOScreen> {
       case 'WagesScreen':
         return RegionSelector(section: 'Wages');
       case 'ContractorDetailsScreen':
-        return RegionSelector(section:'Contractor'); // Add this case
+        return RegionSelector(section: 'Contractor'); // Add this case
       default:
         return Scaffold(body: Center(child: Text('Page not found')));
     }

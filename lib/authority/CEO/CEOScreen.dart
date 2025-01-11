@@ -51,7 +51,7 @@ class _CEOScreenState extends State<CEOScreen> {
     {
       'label': 'Contractor Details',
       'imageUrl':
-          'images/wages.png', // You can use a different image if you prefer
+          'images/Contractors.png', // You can use a different image if you prefer
       'route': 'ContractorDetailsScreen'
     },
   ];

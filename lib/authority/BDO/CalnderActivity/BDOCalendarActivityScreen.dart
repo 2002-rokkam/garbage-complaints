@@ -144,7 +144,7 @@ class _BDOCalendarActivityScreenState extends State<BDOCalendarActivityScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => SelectedDateActivitiesScreen(
+                          builder: (context) => BDOSelectedDateActivitiesScreen(
                             selectedDate: _selectedDate,
                             activities: selectedActivities,
                           ),
@@ -166,13 +166,12 @@ class _BDOCalendarActivityScreenState extends State<BDOCalendarActivityScreen> {
   }
 }
 
-// authority/SelectedDateActivitiesScreen.dart
-// authority/SelectedDateActivitiesScreen.dart
-class SelectedDateActivitiesScreen extends StatelessWidget {
+// authority/BDOSelectedDateActivitiesScreen.dart
+class BDOSelectedDateActivitiesScreen extends StatelessWidget {
   final DateTime selectedDate;
   final List activities;
 
-  const SelectedDateActivitiesScreen({
+  const BDOSelectedDateActivitiesScreen({
     Key? key,
     required this.selectedDate,
     required this.activities,

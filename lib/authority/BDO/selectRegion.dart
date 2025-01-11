@@ -3,11 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'BDOCalendarActivityScreen.dart';
-import 'BDOD2DCalnderActivity.dart';
-import 'BDORCCCalendarActivityScreen.dart';
-import 'BDOWagesCalendarActivityScreen.dart';
+import 'CalnderActivity/BDOCalendarActivityScreen.dart';
+import 'BDOD2D/BDOD2DCalnderActivity.dart';
+import 'BDORCC/BDORCCCalendarActivityScreen.dart';
+import 'BDOWages/BDOWagesCalendarActivityScreen.dart';
 import 'contractorDetails.dart';
 
 class RegionSelector extends StatefulWidget {
@@ -196,48 +195,60 @@ class _RegionSelectorState extends State<RegionSelector> {
     loadDistrictFromPrefs(); // Load district from SharedPreferences
   }
 
-  void showOptions(BuildContext context, List<String> options,
+ void showOptions(BuildContext context, List<String> options,
       ValueChanged<String> onSelected) {
     List<String> filteredOptions = List.from(options);
+    bool isLoading =
+        options.isEmpty; // Show loading if no options are available.
+
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Search',
-                  prefixIcon: Icon(Icons.search),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(50)),
-                ),
-                onChanged: (value) {
-                  setState(() {
-                    filteredOptions = options
-                        .where((option) =>
-                            option.toLowerCase().contains(value.toLowerCase()))
-                        .toList();
-                  });
-                },
-              ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: filteredOptions.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(filteredOptions[index]),
-                    onTap: () {
-                      onSelected(filteredOptions[index]);
-                      Navigator.pop(context);
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Search',
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50)),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        filteredOptions = options
+                            .where((option) => option
+                                .toLowerCase()
+                                .contains(value.toLowerCase()))
+                            .toList();
+                      });
                     },
-                  );
-                },
-              ),
-            ),
-          ],
+                  ),
+                ),
+                isLoading
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : Expanded(
+                        child: ListView.builder(
+                          itemCount: filteredOptions.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text(filteredOptions[index]),
+                              onTap: () {
+                                onSelected(filteredOptions[index]);
+                                Navigator.pop(context);
+                              },
+                            );
+                          },
+                        ),
+                      ),
+              ],
+            );
+          },
         );
       },
     );

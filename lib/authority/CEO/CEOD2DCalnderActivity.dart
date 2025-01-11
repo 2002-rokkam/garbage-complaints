@@ -139,6 +139,17 @@ class _CEOD2DCalnderActivityScreenState
         .toList();
   }
 
+  List getFilteredTripDetails() {
+    return _tripDetails
+        .where((trip) =>
+            DateTime.parse(trip['date_time']).toLocal().day ==
+                _selectedDate.day &&
+            DateTime.parse(trip['date_time']).toLocal().month ==
+                _selectedDate.month &&
+            DateTime.parse(trip['date_time']).toLocal().year ==
+                _selectedDate.year)
+        .toList();
+  }
   @override
   Widget build(BuildContext context) {
     if (workerId == null) {
@@ -235,7 +246,7 @@ class _CEOD2DCalnderActivityScreenState
                         color: Color.fromRGBO(239, 239, 239, 1),
                         child: ListTile(
                           title: Text('Total QR Scans'),
-                          subtitle: Text('${_tripDetails.length}'),
+                          subtitle: Text('${getFilteredTripDetails().length}'),
                           trailing: ElevatedButton(
                             onPressed: () {
                               Navigator.push(
@@ -243,7 +254,7 @@ class _CEOD2DCalnderActivityScreenState
                                 MaterialPageRoute(
                                   builder: (context) => QRDetailsScreen(
                                     selectedDate: _selectedDate,
-                                    tripDetails: _tripDetails,
+                                    tripDetails: getFilteredTripDetails(),
                                   ),
                                 ),
                               );
