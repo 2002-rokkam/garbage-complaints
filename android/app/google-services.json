@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "596960974239",
-    "project_id": "garbage-complaints",
-    "storage_bucket": "garbage-complaints.firebasestorage.app"
+    "project_number": "959280236765",
+    "project_id": "sbmg-504f0",
+    "storage_bucket": "sbmg-504f0.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:596960974239:android:b8a0633459b30f6158d9aa",
+        "mobilesdk_app_id": "1:959280236765:android:15014d6d73600d21a6b334",
         "android_client_info": {
           "package_name": "com.example.flutter_application_2"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyC0VXfSYxy1GkU9jmKgtn3xH_LLkCAJXwo"
+          "current_key": "AIzaSyBbOLk4H-WTAbNaoZKyKVOuuR93Y6H1L-s"
         }
       ],
       "services": {

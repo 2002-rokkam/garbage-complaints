@@ -1,0 +1,204 @@
+// WokersScreen/D2D/D2DSectionScreen.dart
+import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../WorkerCommon/BeforeAfterContainer.dart';
+import 'D2DCalnderActivity.dart';
+import 'QRTab.dart'; // Add this package
+
+class D2DSectionScreen extends StatefulWidget {
+  final String section;
+
+  const D2DSectionScreen({Key? key, required this.section}) : super(key: key);
+
+  @override
+  _D2DSectionScreenState createState() => _D2DSectionScreenState();
+}
+
+class _D2DSectionScreenState extends State<D2DSectionScreen> {
+  List<Widget> beforeAfterContainers = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchActivities();
+  }
+
+  Future<void> _fetchActivities() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    Future<String> getWorkerId() async {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      String workerId = prefs.getString('worker_id') ?? "";
+      return workerId;
+    }
+
+    try {
+      String workerId = await getWorkerId();
+      Dio dio = Dio();
+      final response = await dio.get(
+          'https://c035-122-172-86-134.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+        List activities = data['activities'];
+
+        setState(() {
+          beforeAfterContainers = activities
+              .where((activity) => activity['status'] == 'trip started')
+              .map((activity) => BeforeAfterContainer(
+                    section: widget.section,
+                    initialData: activity,
+                    onReload: _fetchActivities,
+                  ))
+              .toList();
+        });
+      } else {
+        print("Error fetching activities: ${response.data['message']}");
+      }
+    } catch (e) {
+      print("Error fetching activities: $e");
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  void addNewContainer() {
+    setState(() {
+      beforeAfterContainers.add(BeforeAfterContainer(
+        section: widget.section,
+        initialData: null,
+        onReload: _fetchActivities,
+      ));
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        backgroundColor: const Color.fromRGBO(239, 239, 239, 1),
+        appBar: AppBar(
+          backgroundColor: const Color(0xFF5C964A),
+          leading: IconButton(
+            icon:
+                const Icon(Icons.arrow_back, color: Colors.white), // Back Icon
+            onPressed: () {
+              Navigator.pop(context); // Go back to previous screen
+            },
+          ),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // The section title centered
+              Text(
+                '${widget.section}',
+                style: const TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.calendar_today,
+                  color: Colors.white), // Calendar Icon
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        D2DCalnderActivityScreen(section: widget.section),
+                  ),
+                );
+              },
+            ),
+          ],
+          bottom: const TabBar(
+            tabs: [
+              Tab(
+                text: "Before After",
+              ),
+              Tab(
+                text: "QR",
+              ),
+              Tab(
+                text: "GPS",
+              ),
+            ],
+            labelColor: Colors.white, // Set label color to white
+            unselectedLabelColor:
+                Colors.white, // Unselected tabs will also be white
+            indicatorColor: Color.fromRGBO(
+                255, 210, 98, 1), // The selected tab underline color
+            indicatorWeight: 3.0, // Thicker underline
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            _buildBeforeAfterTab(),
+            QRTab(), // Using the stateless QRTab widget here
+            _buildGPSTab(),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: addNewContainer,
+          backgroundColor: const Color(0xFFFFD262),
+          label: Row(
+            children: const [
+              Icon(
+                Icons.add,
+                size: 24,
+                color: Color(0xFF252525),
+              ),
+              SizedBox(width: 12),
+              Text(
+                'Add More',
+                style: TextStyle(
+                  color: Color(0xFF252525),
+                  fontSize: 14,
+                  fontFamily: 'Nunito Sans',
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBeforeAfterTab() {
+    return isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: beforeAfterContainers.isNotEmpty
+                  ? beforeAfterContainers
+                  : [
+                      BeforeAfterContainer(
+                        section: widget.section,
+                        onReload: _fetchActivities,
+                      ),
+                    ],
+            ),
+          );
+  }
+
+  Widget _buildGPSTab() {
+    return Center(
+      child: Text(
+        "GPS Tab Content",
+        style: TextStyle(fontSize: 16),
+      ),
+    );
+  }
+}
