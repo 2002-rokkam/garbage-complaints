@@ -1,4 +1,5 @@
 // WokersScreen/RRC/RCCCalendarActivityScreen.dart
+// WokersScreen/RRC/RCCCalendarActivityScreen.dart
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
@@ -20,6 +21,7 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
     with SingleTickerProviderStateMixin {
   DateTime _selectedDate = DateTime.now();
   List _activities = [];
+  List _tripDetails = [];
   bool _isLoading = false;
   late TabController _tabController;
 
@@ -32,8 +34,7 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
 
   Future<String> getWorkerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String workerId = prefs.getString('worker_id') ?? "";
-    return workerId;
+    return prefs.getString('worker_id') ?? "";
   }
 
   Future<void> fetchActivities() async {
@@ -50,8 +51,9 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
       final response = await http.get(url);
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
+        var sectionActivities = data['activities'];
         setState(() {
-          _activities = data['activities'];
+          _activities = sectionActivities;
         });
       } else {
         throw Exception('Failed to load activities');
@@ -62,6 +64,37 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
       setState(() {
         _isLoading = false;
       });
+    }
+  }
+
+  Future<void> fetchTripDetails() async {
+    String workerId = await getWorkerId();
+
+    final url = Uri.parse(
+        'https://c035-122-172-86-134.ngrok-free.app/api/worker/$workerId/section/Waste Details');
+
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+
+        // Filter trip details based on the selected date
+        var allTripDetails = data['activities'];
+        var filteredTripDetails = allTripDetails.where((trip) {
+          DateTime tripDate = DateTime.parse(trip['date_time']).toLocal();
+          return tripDate.day == _selectedDate.day &&
+              tripDate.month == _selectedDate.month &&
+              tripDate.year == _selectedDate.year;
+        }).toList();
+
+        setState(() {
+          _tripDetails = filteredTripDetails;
+        });
+      } else {
+        throw Exception('Failed to load trip details');
+      }
+    } catch (e) {
+      print('Error: $e');
     }
   }
 
@@ -86,19 +119,17 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
         title: Text(
           '${widget.section}',
           style: TextStyle(
-            color: Colors.white, // White text color
-            fontSize: 20, // Optional: Adjust font size
-            fontWeight: FontWeight.bold, // Optional: Bold text
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Color(0xFF5C964A), // Green background color
+        backgroundColor: Color(0xFF5C964A),
         bottom: TabBar(
           controller: _tabController,
-          labelColor: Colors.white, // Set label color to white
-          unselectedLabelColor:
-              Colors.white, // Unselected tabs will also be white
-          indicatorColor: Color.fromRGBO(
-              255, 210, 98, 1), // The selected tab underline color
+          labelColor: Colors.white,
+          unselectedLabelColor: Colors.white,
+          indicatorColor: Color.fromRGBO(255, 210, 98, 1),
           indicatorWeight: 3.0,
           tabs: [
             Tab(text: 'Before & After'),
@@ -108,9 +139,7 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
       ),
       body: Column(
         children: [
-          // Calendar Section
           Container(
-            height: MediaQuery.of(context).size.height * 0.4, // 1/4 of screen
             child: TableCalendar(
               focusedDay: _selectedDate,
               firstDay: DateTime(2000),
@@ -121,20 +150,20 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
                 setState(() {
                   _selectedDate = selectedDay;
                 });
+                fetchTripDetails();
               },
               calendarStyle: CalendarStyle(
                 selectedDecoration: BoxDecoration(
-                  color: Color(0xFF5C964A), // Green color for selected date
+                  color: Color(0xFF5C964A),
                   shape: BoxShape.circle,
                 ),
                 todayDecoration: BoxDecoration(
-                  color: Color(0xFFFFA726), // Optional: Orange for today
+                  color: Color(0xFFFFA726),
                   shape: BoxShape.circle,
                 ),
               ),
             ),
           ),
-          // TabBarView for Before & After and Trip Details
           Expanded(
             child: _isLoading
                 ? Center(child: CircularProgressIndicator())
@@ -143,11 +172,118 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
                     : TabBarView(
                         controller: _tabController,
                         children: [
-                          RRCBeforeAfterTab(
-                            activities: selectedActivities,
-                            totalActivities: selectedActivities.length,
+                          Card(
+                            // margin: const EdgeInsets.all(8.0),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Total Activities: ${selectedActivities.length}',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      TextButton(
+                                        onPressed: () {
+                                          if (_tabController.index == 0) {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    BeforeAfterScreen(
+                                                  activities:
+                                                      selectedActivities,
+                                                ),
+                                              ),
+                                            );
+                                          } else {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    TripDetailsScreen(
+                                                  tripDetails: _tripDetails,
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        child: Text(
+                                          'View All',
+                                          style: TextStyle(
+                                            color: Colors.green,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
-                          TripDetailsTab(selectedDate: _selectedDate),
+                          Card(
+                            margin: const EdgeInsets.all(8.0),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Total Trip Details: ${_tripDetails.length}',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      TextButton(
+                                        onPressed: () {
+                                          if (_tabController.index == 0) {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    BeforeAfterScreen(
+                                                  activities:
+                                                      selectedActivities,
+                                                ),
+                                              ),
+                                            );
+                                          } else {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    TripDetailsScreen(
+                                                  tripDetails: _tripDetails,
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        child: Text(
+                                          'View All',
+                                          style: TextStyle(
+                                            color: Colors.green,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                         ],
                       ),
           ),
@@ -157,35 +293,117 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
   }
 }
 
-class RRCBeforeAfterTab extends StatelessWidget {
-  final List activities;
-  final int totalActivities;
+class TripDetailsScreen extends StatelessWidget {
+  final List tripDetails;
 
-  const RRCBeforeAfterTab(
-      {Key? key, required this.activities, required this.totalActivities})
+  const TripDetailsScreen({Key? key, required this.tripDetails})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Total activities done on ${DateTime.now().toLocal().toString().split(' ')[0]} = $totalActivities',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Trip Details'),
+        backgroundColor: Color(0xFF5C964A),
+      ),
+      body: tripDetails.isEmpty
+          ? Center(
+              child: Text('No trip details available for the selected date.'))
+          : SingleChildScrollView(
+              child: Column(
+                children: tripDetails.map((trip) {
+                  return Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Worker Email: ${trip['worker_name']}',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            'Trips: ${trip['trips']}',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            'Quantity of Waste: ${trip['quantity_waste']} kg',
+                            style: TextStyle(
+                              color: Color(0xFF252525),
+                              fontSize: 14,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            'Segregated Degradable: ${trip['segregated_degradable']} kg',
+                            style: TextStyle(
+                              color: Color(0xFF252525),
+                              fontSize: 14,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            'Segregated Non-Degradable: ${trip['segregated_non_degradable']} kg',
+                            style: TextStyle(
+                              color: Color(0xFF252525),
+                              fontSize: 14,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            'Segregated Plastic: ${trip['segregated_plastic']} kg',
+                            style: TextStyle(
+                              color: Color(0xFF252525),
+                              fontSize: 14,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            'Date: ${trip['date_time']}',
+                            style: TextStyle(
+                              color: Color(0xFF252525),
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }).toList(),
               ),
             ),
-          ),
-          ...activities.map((activity) {
+    );
+  }
+}
+
+class BeforeAfterScreen extends StatelessWidget {
+  final List activities;
+
+  const BeforeAfterScreen({Key? key, required this.activities})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Before & After'),
+        backgroundColor: Color(0xFF5C964A),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: activities.map((activity) {
             return Card(
               child: Container(
-                width: 370,
-                height: 201.88,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8),
@@ -298,181 +516,14 @@ class RRCBeforeAfterTab extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: 8),
-                      Text(
-                        activity['address'] ?? 'No Address',
-                        style: TextStyle(
-                          color: Color(0xFF252525),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+                      
                     ],
                   ),
                 ),
               ),
             );
           }).toList(),
-        ],
-      ),
-    );
-  }
-}
-
-class TripDetailsTab extends StatefulWidget {
-  final DateTime selectedDate;
-
-  const TripDetailsTab({Key? key, required this.selectedDate})
-      : super(key: key);
-
-  @override
-  _TripDetailsTabState createState() => _TripDetailsTabState();
-}
-
-class _TripDetailsTabState extends State<TripDetailsTab> {
-  bool _isLoading = true;
-  List _tripDetails = [];
-  late String workerId;
-
-  @override
-  void initState() {
-    super.initState();
-    initializeWorkerIdAndFetchDetails();
-  }
-
-  Future<void> initializeWorkerIdAndFetchDetails() async {
-    workerId = await getWorkerId();
-    if (workerId.isNotEmpty) {
-      fetchTripDetails();
-    } else {
-      setState(() {
-        _isLoading = false;
-      });
-      print('Worker ID not found.');
-    }
-  }
-
-  Future<void> fetchTripDetails() async {
-    final url = Uri.parse(
-        'https://c035-122-172-86-134.ngrok-free.app/api/worker/$workerId/section/Waste Details');
-
-    try {
-      final response = await http.get(url);
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        setState(() {
-          _tripDetails = data['activities']; // Extracting activities
-          _isLoading = false;
-        });
-      } else {
-        throw Exception('Failed to load trip details');
-      }
-    } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
-      print('Error: $e');
-    }
-  }
-
-  Future<String> getWorkerId() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('worker_id') ?? "";
-  }
-
-  List getTripsForSelectedDate() {
-    return _tripDetails.where((trip) {
-      final tripDate = DateTime.parse(trip['date_time']).toLocal();
-      return tripDate.year == widget.selectedDate.year &&
-          tripDate.month == widget.selectedDate.month &&
-          tripDate.day == widget.selectedDate.day;
-    }).toList();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final selectedTrips = getTripsForSelectedDate();
-
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Total trips on ${widget.selectedDate.toLocal().toString().split(' ')[0]} = ${selectedTrips.length}',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-          ),
-          _isLoading
-              ? Center(child: CircularProgressIndicator())
-              : selectedTrips.isEmpty
-                  ? Center(child: Text('No trip details for selected date.'))
-                  : Column(
-                      children: selectedTrips.map((trip) {
-                        return Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Trips: ${trip['trips']}',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                SizedBox(height: 8),
-                                Text(
-                                  'Quantity of Waste: ${trip['quantity_waste']} kg',
-                                  style: TextStyle(
-                                    color: Color(0xFF252525),
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                SizedBox(height: 8),
-                                Text(
-                                  'Segregated Degradable: ${trip['segregated_degradable']} kg',
-                                  style: TextStyle(
-                                    color: Color(0xFF252525),
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                SizedBox(height: 8),
-                                Text(
-                                  'Segregated Non-Degradable: ${trip['segregated_non_degradable']} kg',
-                                  style: TextStyle(
-                                    color: Color(0xFF252525),
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                SizedBox(height: 8),
-                                Text(
-                                  'Segregated Plastic: ${trip['segregated_plastic']} kg',
-                                  style: TextStyle(
-                                    color: Color(0xFF252525),
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                SizedBox(height: 8),
-                                Text(
-                                  'Date: ${trip['date_time']}',
-                                  style: TextStyle(
-                                    color: Color(0xFF252525),
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-        ],
+        ),
       ),
     );
   }

@@ -459,10 +459,10 @@ class _VDOScreenState extends State<VDOScreen> {
                     ),
 
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 1.0),
                       child: Wrap(
                         spacing: 1, // Horizontal space between buttons
-                        runSpacing: 16, // Vertical space between rows
+                        runSpacing: 12, // Vertical space between rows
                         children: buttonItems.map((item) {
                           return _buildButton(
                             item['label']!,
@@ -493,6 +493,10 @@ class _VDOScreenState extends State<VDOScreen> {
         ),
         borderRadius: BorderRadius.circular(8),
       ),
+      height: MediaQuery.of(context).size.height *
+          0.3, // Adjust height based on screen size
+      width: MediaQuery.of(context).size.width *
+          0.8, // Adjust width based on screen size
     );
   }
 
@@ -508,11 +512,10 @@ class _VDOScreenState extends State<VDOScreen> {
         );
       },
       child: Container(
-        width: 165, // Fixed width for all buttons
-        height: 120, // Fixed height for all buttons
-        padding: const EdgeInsets.all(8), // Adjust padding
-        margin:
-            const EdgeInsets.symmetric(horizontal: 8), // Margin between buttons
+        width: MediaQuery.of(context).size.width * 0.4, // Responsive width
+        height: MediaQuery.of(context).size.height * 0.15, // Responsive height
+        padding: const EdgeInsets.all(8),
+        margin: const EdgeInsets.symmetric(horizontal: 8),
         decoration: ShapeDecoration(
           color: Colors.white,
           shape: RoundedRectangleBorder(
@@ -538,22 +541,26 @@ class _VDOScreenState extends State<VDOScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: 60, // Fixed image width
-              height: 60, // Fixed image height
+              width: MediaQuery.of(context).size.width *
+                  0.15, // Responsive image width
+              height: MediaQuery.of(context).size.width *
+                  0.15, // Responsive image height
               clipBehavior: Clip.antiAlias,
-              decoration: BoxDecoration(),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8), // Rounded corners
+              ),
               child: Image.asset(
                 imageUrl,
                 fit: BoxFit.cover,
               ),
             ),
-            SizedBox(height: 8), // Adjusted the gap
+            SizedBox(height: 8),
             Text(
               label,
-              textAlign: TextAlign.start, // Align text to the left
+              textAlign: TextAlign.start,
               style: const TextStyle(
                 color: Color(0xFF6B6B6B),
-                fontSize: 12, // Adjust font size as needed
+                fontSize: 12,
                 fontFamily: 'Nunito Sans',
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.16,

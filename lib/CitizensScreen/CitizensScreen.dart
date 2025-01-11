@@ -20,38 +20,38 @@ class _CitizensScreenState extends State<CitizensScreen> {
 
   final List<Map<String, String>> buttonItems = [
     {
-      'label': 'Door to Door',
-      'imageUrl': 'images/d2d.png',
+      'label': 'Villages Cleaned',
+      'imageUrl': 'images/villages_cleaned.png',
       'route': 'DoorToDoorScreen',
       'number': '345'
     },
     {
-      'label': 'Road Sweeping',
-      'imageUrl': 'images/road_sweeping.png',
+      'label': 'Swachhta Mitra',
+      'imageUrl': 'images/group-discussion 1.png',
       'route': 'RoadSweepingScreen',
       'number': '150'
     },
     {
-      'label': 'Drain Cleaning',
-      'imageUrl': 'images/drainage_collectin.png',
+      'label': 'Homes and Shops Cleaned',
+      'imageUrl': 'images/shop.png',
       'route': 'DrainCleaningScreen',
       'number': '200'
     },
     {
-      'label': 'Community Service Centre',
-      'imageUrl': 'images/CSC.png',
+      'label': 'Roads Cleaned',
+      'imageUrl': 'images/road_sweeping.png',
       'route': 'CSCScreen',
       'number': '120'
     },
     {
-      'label': 'Resource Recovery Centre',
-      'imageUrl': 'images/RRC.png',
+      'label': 'Dumping Yard',
+      'imageUrl': 'images/Dumping-Yard.png',
       'route': 'RRCScreen',
       'number': '95'
     },
     {
-      'label': 'Wages',
-      'imageUrl': 'images/wages.png',
+      'label': 'Garbage Dumped',
+      'imageUrl': 'images/Garbage_Dumped.png',
       'route': 'WagesScreen',
       'number': '75'
     },
@@ -228,9 +228,7 @@ class _CitizensScreenState extends State<CitizensScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     GestureDetector(
-                      onTap: () {
-                        
-                      },
+                      onTap: () {},
                       child: Container(
                         width: screenWidth < 600 ? 150 : 170,
                         height: 139,
@@ -467,8 +465,8 @@ class _CitizensScreenState extends State<CitizensScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 60,
-            height: 60,
+            width: 30,
+            height: 30,
             clipBehavior: Clip.antiAlias,
             decoration: BoxDecoration(),
             child: Image.asset(
@@ -481,7 +479,7 @@ class _CitizensScreenState extends State<CitizensScreen> {
             number,
             style: const TextStyle(
               color: Color(0xFF6B6B6B),
-              fontSize: 16,
+              fontSize: 34,
               fontWeight: FontWeight.bold,
               letterSpacing: 0.16,
             ),

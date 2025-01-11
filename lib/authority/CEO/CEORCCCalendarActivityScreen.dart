@@ -155,7 +155,6 @@ class _CEORCCCalendarActivityScreenState
       body: Column(
         children: [
           Container(
-            height: MediaQuery.of(context).size.height * 0.4,
             child: TableCalendar(
               focusedDay: _selectedDate,
               firstDay: DateTime(2000),

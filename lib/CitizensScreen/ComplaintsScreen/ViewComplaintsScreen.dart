@@ -42,23 +42,25 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
     }
   }
 
-  Future<void> _fetchComplaints() async {
+ Future<void> _fetchComplaints() async {
     final String apiUrl =
         'https://c035-122-172-86-134.ngrok-free.app/api/complaints';
 
     try {
-      // Assuming _idToken contains your token
       final response = await http.get(
         Uri.parse(apiUrl),
         headers: {
-          'Authorization': 'token $_idToken'
-        }, // Add the Authorization header
+          'Authorization': 'token $_idToken',
+        },
       );
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         setState(() {
           allComplaints = data['complaints'];
+          // Sort complaints by created_at in descending order
+          allComplaints.sort((a, b) => DateTime.parse(b['created_at'])
+              .compareTo(DateTime.parse(a['created_at'])));
           pendingComplaints = allComplaints
               .where((complaint) => complaint['status'] == 'Pending')
               .toList();

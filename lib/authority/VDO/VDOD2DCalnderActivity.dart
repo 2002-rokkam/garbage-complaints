@@ -16,9 +16,7 @@ class VDOD2DCalnderActivityScreen extends StatefulWidget {
       _VDOD2DCalnderActivityScreenState();
 }
 
-class _VDOD2DCalnderActivityScreenState
-    extends State<VDOD2DCalnderActivityScreen>
-    with SingleTickerProviderStateMixin {
+class _VDOD2DCalnderActivityScreenState extends State<VDOD2DCalnderActivityScreen> with SingleTickerProviderStateMixin {
   DateTime _selectedDate = DateTime.now();
   List _activities = [];
   List _tripDetails = [];
@@ -60,7 +58,7 @@ class _VDOD2DCalnderActivityScreenState
     });
 
     final url = Uri.parse(
-            'https://c035-122-172-86-134.ngrok-free.app/api/vdo-section-dashboard')
+            'https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId!,
       'section': widget.section,
@@ -89,7 +87,7 @@ class _VDOD2DCalnderActivityScreenState
     if (workerId.isEmpty) return;
 
     final url = Uri.parse(
-            'https://c035-122-172-86-134.ngrok-free.app/api/vdo-section-dashboard')
+            'https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': 'D2D_QR',
@@ -128,73 +126,72 @@ class _VDOD2DCalnderActivityScreenState
   }
 
   @override
-  Widget build(BuildContext context) {
-    if (workerId == null) {
-      return Center(
-          child:
-              CircularProgressIndicator()); // Wait for workerId to be fetched
-    }
+Widget build(BuildContext context) {
+  if (workerId == null) {
+    return Center(child: CircularProgressIndicator()); // Wait for workerId to be fetched
+  }
 
-    final selectedActivities = getActivitiesForSelectedDate();
+  final selectedActivities = getActivitiesForSelectedDate();
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          '${widget.section}',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        backgroundColor: Color(0xFF5C964A),
-        bottom: TabBar(
-          controller: _tabController,
-          labelColor: Colors.white,
-          unselectedLabelColor: Colors.white,
-          indicatorColor: Color.fromRGBO(255, 210, 98, 1),
-          indicatorWeight: 3.0,
-          tabs: [
-            Tab(text: 'Before & After'),
-            Tab(text: 'QR Data'),
-          ],
+  return Scaffold(
+    appBar: AppBar(
+      title: Text(
+        '${widget.section}',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
         ),
       ),
-      body: Column(
-        children: [
-          Container(
-            height: MediaQuery.of(context).size.height * 0.4,
-            child: TableCalendar(
-              focusedDay: _selectedDate,
-              firstDay: DateTime(2000),
-              lastDay: DateTime(2100),
-              calendarFormat: CalendarFormat.month,
-              selectedDayPredicate: (day) => isSameDay(day, _selectedDate),
-              onDaySelected: (selectedDay, focusedDay) {
-                setState(() {
-                  _selectedDate = selectedDay;
-                  fetchQRDetails(workerId!); // Use workerId here
-                });
-              },
-              calendarStyle: CalendarStyle(
-                selectedDecoration: BoxDecoration(
-                  color: Color(0xFF5C964A),
-                  shape: BoxShape.circle,
-                ),
-                todayDecoration: BoxDecoration(
-                  color: Color(0xFFFFA726),
-                  shape: BoxShape.circle,
-                ),
+      backgroundColor: Color(0xFF5C964A),
+      bottom: TabBar(
+        controller: _tabController,
+        labelColor: Colors.white,
+        unselectedLabelColor: Colors.white,
+        indicatorColor: Color.fromRGBO(255, 210, 98, 1),
+        indicatorWeight: 3.0,
+        tabs: [
+          Tab(text: 'Before & After'),
+          Tab(text: 'QR Data'),
+        ],
+      ),
+    ),
+    body: Column(
+      children: [
+        Container(
+          height: MediaQuery.of(context).size.height * 0.4,
+          child: TableCalendar(
+            focusedDay: _selectedDate,
+            firstDay: DateTime(2000),
+            lastDay: DateTime(2100),
+            calendarFormat: CalendarFormat.month,
+            selectedDayPredicate: (day) => isSameDay(day, _selectedDate),
+            onDaySelected: (selectedDay, focusedDay) {
+              setState(() {
+                _selectedDate = selectedDay;
+                fetchQRDetails(workerId!); // Use workerId here
+              });
+            },
+            calendarStyle: CalendarStyle(
+              selectedDecoration: BoxDecoration(
+                color: Color(0xFF5C964A),
+                shape: BoxShape.circle,
+              ),
+              todayDecoration: BoxDecoration(
+                color: Color(0xFFFFA726),
+                shape: BoxShape.circle,
               ),
             ),
           ),
-          Expanded(
-            child: _isLoading
-                ? Center(child: CircularProgressIndicator())
-                : TabBarView(
-                    controller: _tabController,
-                    children: [
-                      Expanded(
+        ),
+        
+        Expanded(
+          child: _isLoading
+              ? Center(child: CircularProgressIndicator())
+              : TabBarView(
+                  controller: _tabController,
+                  children: [
+                    Expanded(
                         child: Card(
                           child: ListTile(
                             title: Text('Total Activities'),
@@ -211,6 +208,10 @@ class _VDOD2DCalnderActivityScreenState
                                   ),
                                 );
                               },
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors
+                                    .green, // Set the background color to green
+                              ),
                               child: Text('View All'),
                             ),
                           ),
@@ -233,19 +234,23 @@ class _VDOD2DCalnderActivityScreenState
                                   ),
                                 );
                               },
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors
+                                    .green, // Set the background color to green
+                              ),
                               child: Text('View All'),
                             ),
                           ),
                         ),
                       ),
-                    ],
-                  ),
-          ),
-        ],
-      ),
-    );
-  }
+                  ],
+                ),
+        ),
+      ],
+    ),
+  );
 }
+    }
 
 class BeforeAfterScreen extends StatelessWidget {
   final List activities;
@@ -526,7 +531,7 @@ class QRDetailsScreen extends StatelessWidget {
 //     });
 
 //     final url = Uri.parse(
-//             'https://c035-122-172-86-134.ngrok-free.app/api/vdo-section-dashboard')
+//             'https://cc33-122-172-85-145.ngrok-free.app/api/vdo-section-dashboard')
 //         .replace(queryParameters: {
 //       'worker_id': workerId,
 //       'section': widget.section,
@@ -592,7 +597,6 @@ class QRDetailsScreen extends StatelessWidget {
 //       body: Column(
 //         children: [
 //           Container(
-//             height: MediaQuery.of(context).size.height * 0.4,
 //             child: TableCalendar(
 //               focusedDay: _selectedDate,
 //               firstDay: DateTime(2000),

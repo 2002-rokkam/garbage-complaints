@@ -167,11 +167,10 @@ class _WorkerScreenState extends State<WorkerScreen> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-
-                     Padding(
+                    Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12.0),
                       child: Wrap(
-                        spacing: 1, // Horizontal space between buttons
+                        spacing: 0, // Horizontal space between buttons
                         runSpacing: 16, // Vertical space between rows
                         children: buttonItems.map((item) {
                           return _buildButton(
@@ -183,8 +182,7 @@ class _WorkerScreenState extends State<WorkerScreen> {
                         }).toList(),
                       ),
                     ),
-                    // Complaints Container
-                    
+
                     SizedBox(height: 16),
                     // Scrollable "Home" label and buttons grid
                     Padding(
@@ -202,7 +200,7 @@ class _WorkerScreenState extends State<WorkerScreen> {
                         ),
                       ),
                     ),
-                   GestureDetector(
+                    GestureDetector(
                       onTap: () {
                         Navigator.push(
                           context,
@@ -291,6 +289,10 @@ class _WorkerScreenState extends State<WorkerScreen> {
         ),
         borderRadius: BorderRadius.circular(8),
       ),
+      height: MediaQuery.of(context).size.height *
+          0.3, // Adjust height based on screen size
+      width: MediaQuery.of(context).size.width *
+          0.8, // Adjust width based on screen size
     );
   }
 
@@ -306,11 +308,10 @@ class _WorkerScreenState extends State<WorkerScreen> {
         );
       },
       child: Container(
-        width: 165, // Fixed width for all buttons
-        height: 120, // Fixed height for all buttons
-        padding: const EdgeInsets.all(8), // Adjust padding
-        margin:
-            const EdgeInsets.symmetric(horizontal: 8), // Margin between buttons
+        width: MediaQuery.of(context).size.width * 0.4, // Responsive width
+        height: MediaQuery.of(context).size.height * 0.15, // Responsive height
+        padding: const EdgeInsets.all(8),
+        margin: const EdgeInsets.symmetric(horizontal: 8),
         decoration: ShapeDecoration(
           color: Colors.white,
           shape: RoundedRectangleBorder(
@@ -332,29 +333,30 @@ class _WorkerScreenState extends State<WorkerScreen> {
           ],
         ),
         child: Column(
-          mainAxisAlignment:
-              MainAxisAlignment.center, // Keep vertically centered
-          crossAxisAlignment:
-              CrossAxisAlignment.start, // Align children to the start (left)
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image size adjusted to fit inside the fixed size
             Container(
-              width: 60, // Fixed image width
-              height: 60, // Fixed image height
+              width: MediaQuery.of(context).size.width *
+                  0.15, // Responsive image width
+              height: MediaQuery.of(context).size.width *
+                  0.15, // Responsive image height
               clipBehavior: Clip.antiAlias,
-              decoration: BoxDecoration(),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8), // Rounded corners
+              ),
               child: Image.asset(
                 imageUrl,
                 fit: BoxFit.cover,
               ),
             ),
-            SizedBox(height: 8), // Adjusted the gap
+            SizedBox(height: 8),
             Text(
               label,
-              textAlign: TextAlign.start, // Align text to the left
+              textAlign: TextAlign.start,
               style: const TextStyle(
                 color: Color(0xFF6B6B6B),
-                fontSize: 12, // Adjust font size as needed
+                fontSize: 12,
                 fontFamily: 'Nunito Sans',
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.16,
@@ -362,7 +364,6 @@ class _WorkerScreenState extends State<WorkerScreen> {
             ),
           ],
         ),
-
       ),
     );
   }

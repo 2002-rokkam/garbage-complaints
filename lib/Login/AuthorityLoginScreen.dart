@@ -50,12 +50,10 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
           await prefs.setString('gram_panchayat', user['gp']);
           await prefs.setString('District', user['District']);
 
-          // Use the correct context for showing SnackBar
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Login successful!')),
           );
 
-          // Navigate to appropriate screen based on user position
           if (user['Position'] == 'Worker') {
             Navigator.push(
               context,
@@ -91,12 +89,12 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
           }
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Login failed: ${data['message']}')),
+            SnackBar(content: Text('Please try again')),
           );
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Login failed: ${response.body}')),
+          SnackBar(content: Text('Invalid credentials Please try again')),
         );
       }
     } catch (e) {

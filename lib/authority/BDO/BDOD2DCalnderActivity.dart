@@ -175,7 +175,6 @@ class _BDOD2DCalnderActivityScreenState
       body: Column(
         children: [
           Container(
-            height: MediaQuery.of(context).size.height * 0.4,
             child: TableCalendar(
               focusedDay: _selectedDate,
               firstDay: DateTime(2000),
@@ -223,6 +222,10 @@ class _BDOD2DCalnderActivityScreenState
                                   ),
                                 );
                               },
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors
+                                    .green, // Set the background color to green
+                              ),
                               child: Text('View All'),
                             ),
                           ),
@@ -245,6 +248,10 @@ class _BDOD2DCalnderActivityScreenState
                                   ),
                                 );
                               },
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors
+                                    .green, // Set the background color to green
+                              ),
                               child: Text('View All'),
                             ),
                           ),

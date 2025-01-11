@@ -27,11 +27,11 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
   @override
   void initState() {
     super.initState();
-   _loadTokenFromSharedPrefs();
+    _loadTokenFromSharedPrefs();
     fetchDistricts();
   }
 
-   Future<void> _loadTokenFromSharedPrefs() async {
+  Future<void> _loadTokenFromSharedPrefs() async {
     final prefs = await SharedPreferences.getInstance();
     String? idToken = prefs.getString('id_token');
     if (idToken != null) {
@@ -48,8 +48,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
     if (selectedDistrict != null &&
         selectedGP != null &&
         imageData.isNotEmpty) {
-
-          if (isLoading) return;
+      if (isLoading) return;
 
       setState(() {
         isLoading = true;
@@ -69,14 +68,18 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
           var latitude = imageData[i]['latitude'].toString();
           var longitude = imageData[i]['longitude'].toString();
 
+          // Generate a unique filename using the current timestamp
+          var timestamp = DateTime.now().millisecondsSinceEpoch;
+          var filename = 'photo${i + 1}_$timestamp.jpg';
+
           request.files.add(http.MultipartFile.fromBytes(
             'photos',
             image,
-            filename: 'photo${i + 1}.jpg',
+            filename: filename,
           ));
 
-          request.fields['latitude_photo${i + 1}.jpg'] = latitude;
-          request.fields['longitude_photo${i + 1}.jpg'] = longitude;
+          request.fields['latitude_$filename'] = latitude;
+          request.fields['longitude_$filename'] = longitude;
         }
 
         request.headers['Authorization'] = 'token $_idToken';
@@ -97,8 +100,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Error: ${e.toString()}")),
         );
-      }
-      finally {
+      } finally {
         setState(() {
           isLoading = false;
         });
@@ -109,7 +111,6 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
       );
     }
   }
-  
 
   String caption = '';
 
@@ -340,6 +341,9 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
     return LayoutBuilder(
       builder: (context, constraints) {
         return Scaffold(
+          resizeToAvoidBottomInset:
+              false, // This ensures the bottom sheet doesn't move when keyboard is shown
+
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(constraints.maxHeight * 0.18),
             child: Container(
@@ -368,14 +372,12 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                       },
                     ),
                     const Expanded(
-                      child: Center(
-                        child: Text(
-                          "File Complaint",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      child: Text(
+                        "      Click & Complaints",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
@@ -421,6 +423,12 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          Icon(
+                            Icons.location_on,
+                            color: const Color(0xFFA4A4A4),
+                            size: constraints.maxWidth * 0.05,
+                          ),
+                          const SizedBox(width: 8),
                           Expanded(
                             child: Text(
                               selectedDistrict ?? 'Select District',
@@ -451,6 +459,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                       fontFamily: 'Roboto',
                     ),
                   ),
+                  const SizedBox(height: 10),
                   GestureDetector(
                     onTap: () => _showSheet(
                       "Select Gram Panchayat",
@@ -469,6 +478,12 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          Icon(
+                            Icons.location_city,
+                            color: const Color(0xFFA4A4A4),
+                            size: constraints.maxWidth * 0.05,
+                          ),
+                          const SizedBox(width: 8),
                           Expanded(
                             child: Text(
                               selectedGP ?? 'Select Gram Panchayat',
@@ -542,6 +557,8 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                                 fontFamily: 'Roboto',
                                 fontWeight: FontWeight.w400,
                               ),
+                              prefixIcon: Icon(Icons.description,
+                                  color: Colors.grey), // Your icon here
                             ),
                           ),
                         ),
@@ -683,31 +700,37 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
               ),
             ),
           ),
-           bottomSheet: Padding(
+          bottomSheet: Padding(
             padding: EdgeInsets.only(bottom: constraints.maxHeight * 0.03),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 isLoading
-                    ? SweepingBroomLoader() // Show loader when isLoading is true
-                    : ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromRGBO(92, 150, 74, 1),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                    ? Center(
+                        child:
+                            SweepingBroomLoader()) // Show loader when isLoading is true
+                    : Center(
+                        // Centering the button
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromRGBO(92, 150, 74, 1),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 14, horizontal: 24),
                           ),
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 14, horizontal: 24),
-                        ),
-                        onPressed: submitComplaint,
-                        child: const Text(
-                          "Submit Complaint",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontFamily: 'Roboto',
-                            fontWeight: FontWeight.w500,
-                            letterSpacing: 0.10,
+                          onPressed: submitComplaint,
+                          child: const Text(
+                            "Submit Complaint",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontFamily: 'Roboto',
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: 0.10,
+                            ),
                           ),
                         ),
                       ),

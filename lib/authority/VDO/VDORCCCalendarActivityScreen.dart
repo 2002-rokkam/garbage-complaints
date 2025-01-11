@@ -620,7 +620,6 @@ class _VDORCCCalendarActivityScreenState
       body: Column(
         children: [
           Container(
-            height: MediaQuery.of(context).size.height * 0.4,
             child: TableCalendar(
               focusedDay: _selectedDate,
               firstDay: DateTime(2000),
@@ -645,17 +644,6 @@ class _VDORCCCalendarActivityScreenState
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Total activities done on ${_selectedDate.toLocal().toString().split(' ')[0]} = ${selectedActivities.length}',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-          ),
           Expanded(
             child: _isLoading
                 ? Center(child: CircularProgressIndicator())
@@ -669,6 +657,8 @@ class _VDORCCCalendarActivityScreenState
                             child: Padding(
                               padding: const EdgeInsets.all(16.0),
                               child: Row(
+                                 crossAxisAlignment: CrossAxisAlignment.start,
+
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
@@ -717,6 +707,8 @@ class _VDORCCCalendarActivityScreenState
                             child: Padding(
                               padding: const EdgeInsets.all(16.0),
                               child: Row(
+                                 crossAxisAlignment: CrossAxisAlignment.start,
+
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
