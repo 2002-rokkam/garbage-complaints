@@ -8,6 +8,7 @@ import 'BDOCalendarActivityScreen.dart';
 import 'BDOD2DCalnderActivity.dart';
 import 'BDORCCCalendarActivityScreen.dart';
 import 'BDOWagesCalendarActivityScreen.dart';
+import 'contractorDetails.dart';
 
 class RegionSelector extends StatefulWidget {
   final String section;
@@ -152,6 +153,11 @@ class _RegionSelectorState extends State<RegionSelector> {
             section: 'Wages',
             district: selectedDistrict!,
             block: selectedBlock!,
+            gramPanchayat: selectedGramPanchayat!,
+          );
+          break;
+          case 'Contractor':
+          targetScreen = Contractordetails(
             gramPanchayat: selectedGramPanchayat!,
           );
           break;

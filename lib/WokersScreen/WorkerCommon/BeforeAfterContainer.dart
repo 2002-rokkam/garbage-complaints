@@ -448,6 +448,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                                     } else {
                                       return Center(
                                         child: CircularProgressIndicator(
+                                          
                                           value: loadingProgress
                                                       .expectedTotalBytes !=
                                                   null

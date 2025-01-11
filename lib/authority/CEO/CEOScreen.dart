@@ -584,7 +584,7 @@ class _CEOScreenState extends State<CEOScreen> {
       case 'WagesScreen':
         return CEOselectRegion(section: 'Wages');
       case 'ContractorDetailsScreen':
-        return Contractordetails(); // Add this case
+        return CEOselectRegion(section: 'Contractor'); // Add this case
       default:
         return Scaffold(body: Center(child: Text('Page not found')));
     }

@@ -8,6 +8,7 @@ import 'CEOCalendarActivityScreen.dart';
 import 'CEOD2DCalnderActivity.dart';
 import 'CEORCCCalendarActivityScreen.dart';
 import 'CEOWagesCalendarActivityScreen.dart';
+import 'contractorDetails.dart';
 
 class CEOselectRegion extends StatefulWidget {
   final String section;
@@ -138,6 +139,11 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
             gramPanchayat: selectedGramPanchayat!,
           );
           break;
+         case 'Contractor':
+          targetScreen = Contractordetails(
+            gramPanchayat: selectedGramPanchayat!,
+          );
+          break;
         default:
           return;
       }
@@ -224,6 +230,7 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Select Your Region'),
+        backgroundColor: Color(0xFF5C964A),
       ),
       backgroundColor: Colors.grey.shade200,
       body: Padding(
@@ -332,8 +339,8 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
               child: ElevatedButton(
                 onPressed: submitSelection,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.grey[800],
+                  backgroundColor: Color(0xFF5C964A),
+                  foregroundColor: Colors.white,
                   side: BorderSide(color: Colors.grey.shade300),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(40),

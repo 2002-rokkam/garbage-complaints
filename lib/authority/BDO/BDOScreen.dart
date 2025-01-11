@@ -206,7 +206,6 @@ class _BDOScreenState extends State<BDOScreen> {
                 ),
               ),
             ),
-
             // Scrollable content
             Expanded(
               child: SingleChildScrollView(
@@ -587,7 +586,7 @@ class _BDOScreenState extends State<BDOScreen> {
       case 'WagesScreen':
         return RegionSelector(section: 'Wages');
       case 'ContractorDetailsScreen':
-        return Contractordetails(); // Add this case
+        return RegionSelector(section:'Contractor'); // Add this case
       default:
         return Scaffold(body: Center(child: Text('Page not found')));
     }
