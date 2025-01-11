@@ -242,8 +242,9 @@ class _RegionSelectorState extends State<RegionSelector> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Select Your Region'),
+         backgroundColor: const Color(0xFF5C964A),
       ),
-      backgroundColor: Colors.grey.shade200,
+      backgroundColor: Color.fromRGBO(239, 239, 239, 1),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -353,7 +354,7 @@ class _RegionSelectorState extends State<RegionSelector> {
               child: ElevatedButton(
                 onPressed: submitSelection,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
+                  backgroundColor: Color(0xFF5C964A),
                   foregroundColor: Colors.grey[800],
                   side: BorderSide(color: Colors.grey.shade300),
                   shape: RoundedRectangleBorder(

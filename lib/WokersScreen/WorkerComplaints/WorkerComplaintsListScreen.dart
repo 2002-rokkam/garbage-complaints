@@ -207,7 +207,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
     });
   }
 
-  Future<void> _submitFormData() async {
+ Future<void> _submitFormData() async {
     if (_imageFile == null || _latitude == null || _longitude == null) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Please select an image and allow location access'),
@@ -216,16 +216,23 @@ class _ComplaintCardState extends State<ComplaintCard> {
     }
 
     Dio dio = Dio();
+
+    // Generate a unique timestamp
+    String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+
+    // Create a unique filename with timestamp
+    String uniqueFilename = 'solved_complaint_image_$timestamp.jpg';
+
     FormData formData = FormData.fromMap({
       'solved_image': await MultipartFile.fromFile(
         _imageFile!.path,
-        filename: 'solved_complaint_image11111.jpg',
+        filename: uniqueFilename,
       ),
       'solved_lat': _latitude,
       'solved_long': _longitude,
       'worker_id': workerId,
     });
-    print(formData);
+
     try {
       Response response = await dio.post(
         'https://c035-122-172-86-134.ngrok-free.app/api/update-complaint/${widget.complaint['complaint_id']}',
@@ -249,6 +256,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
       ));
     }
   }
+
 
   void _showResolvedPhoto(Map<String, dynamic>? resolvedPhoto) {
     if (resolvedPhoto != null && resolvedPhoto['image'] != null) {

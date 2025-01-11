@@ -1,4 +1,6 @@
 // WokersScreen/WorkerCommon/BeforeAfterContainer.dart
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:image_picker/image_picker.dart';
@@ -434,20 +436,20 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                                 ),
                               ],
                             )
-                          : Image.network(
-                              '${_beforeImage!['imagePath']}',
-                              // Replace with your network image URL
-                              fit: BoxFit.cover,
-                              loadingBuilder: (BuildContext context,
-                                  Widget child,
-                                  ImageChunkEvent? loadingProgress) {
-                                if (loadingProgress == null) {
-                                  return child;
-                                } else {
-                                  return Center(
-                                    child: CircularProgressIndicator(
-                                      value:
-                                          loadingProgress.expectedTotalBytes !=
+                          : _beforeImage!['imagePath']!.startsWith('https')
+                              ? Image.network(
+                                  '${_beforeImage!['imagePath']}',
+                                  fit: BoxFit.cover,
+                                  loadingBuilder: (BuildContext context,
+                                      Widget child,
+                                      ImageChunkEvent? loadingProgress) {
+                                    if (loadingProgress == null) {
+                                      return child;
+                                    } else {
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          value: loadingProgress
+                                                      .expectedTotalBytes !=
                                                   null
                                               ? loadingProgress
                                                       .cumulativeBytesLoaded /
@@ -455,16 +457,25 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                                                           .expectedTotalBytes ??
                                                       1)
                                               : null,
-                                    ),
-                                  );
-                                }
-                              },
-                              errorBuilder: (BuildContext context, Object error,
-                                  StackTrace? stackTrace) {
-                                return Center(
-                                    child: Text('Failed to load image'));
-                              },
-                            ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  errorBuilder: (BuildContext context,
+                                      Object error, StackTrace? stackTrace) {
+                                    return Center(
+                                        child: Text('Failed to load image'));
+                                  },
+                                )
+                              : Image.file(
+                                  File(_beforeImage!['imagePath']!),
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (BuildContext context,
+                                      Object error, StackTrace? stackTrace) {
+                                    return Center(
+                                        child: Text('Failed to load image'));
+                                  },
+                                ),
                     ),
                     if (_beforeImage != null && !_isAfterSliderEnabled)
                       Positioned(
@@ -511,31 +522,10 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                                 ),
                               ],
                             )
-                          : Image.network(
-                              '${_afterImage!['imagePath']}',
-                              // Replace with your network image URL
+                          : Image.file(
+                              File(_afterImage!['imagePath']!),
                               fit: BoxFit.cover,
-                              loadingBuilder: (BuildContext context,
-                                  Widget child,
-                                  ImageChunkEvent? loadingProgress) {
-                                if (loadingProgress == null) {
-                                  return child;
-                                } else {
-                                  return Center(
-                                    child: CircularProgressIndicator(
-                                      value:
-                                          loadingProgress.expectedTotalBytes !=
-                                                  null
-                                              ? loadingProgress
-                                                      .cumulativeBytesLoaded /
-                                                  (loadingProgress
-                                                          .expectedTotalBytes ??
-                                                      1)
-                                              : null,
-                                    ),
-                                  );
-                                }
-                              },
+                              
                               errorBuilder: (BuildContext context, Object error,
                                   StackTrace? stackTrace) {
                                 return Center(

@@ -152,6 +152,7 @@ class _BDORCCCalendarActivityScreenState
           ],
         ),
       ),
+      backgroundColor:Color.fromRGBO(239, 239, 239, 1),
       body: Column(
         children: [
           Container(
@@ -199,6 +200,7 @@ class _BDORCCCalendarActivityScreenState
                         controller: _tabController,
                         children: [
                           Card(
+                             color: Color.fromRGBO(239, 239, 239, 1),
                             margin: const EdgeInsets.all(8.0),
                             child: Padding(
                               padding: const EdgeInsets.all(16.0),
@@ -247,6 +249,7 @@ class _BDORCCCalendarActivityScreenState
                             ),
                           ),
                           Card(
+                             color: Color.fromRGBO(239, 239, 239, 1),
                             margin: const EdgeInsets.all(8.0),
                             child: Padding(
                               padding: const EdgeInsets.all(16.0),

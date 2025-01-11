@@ -156,6 +156,7 @@ Widget build(BuildContext context) {
         ],
       ),
     ),
+    backgroundColor:  Color.fromRGBO(239, 239, 239, 1),
     body: Column(
       children: [
         Container(
@@ -193,6 +194,7 @@ Widget build(BuildContext context) {
                   children: [
                     Expanded(
                         child: Card(
+                           color: Color.fromRGBO(239, 239, 239, 1),
                           child: ListTile(
                             title: Text('Total Activities'),
                             subtitle: Text('${selectedActivities.length}'),
@@ -219,6 +221,7 @@ Widget build(BuildContext context) {
                       ),
                       Expanded(
                         child: Card(
+                           color: Color.fromRGBO(239, 239, 239, 1),
                           child: ListTile(
                             title: Text('Total QR Scans'),
                             subtitle: Text('${_tripDetails.length}'),

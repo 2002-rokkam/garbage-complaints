@@ -172,6 +172,7 @@ class _CEOD2DCalnderActivityScreenState
           ],
         ),
       ),
+       backgroundColor: Color.fromRGBO(239, 239, 239, 1),
       body: Column(
         children: [
           Container(
@@ -207,6 +208,7 @@ class _CEOD2DCalnderActivityScreenState
                     children: [
                       Expanded(
                         child: Card(
+                           color: Color.fromRGBO(239, 239, 239, 1),
                           child: ListTile(
                             title: Text('Total Activities'),
                             subtitle: Text('${selectedActivities.length}'),
@@ -233,6 +235,7 @@ class _CEOD2DCalnderActivityScreenState
                       ),
                       Expanded(
                         child: Card(
+                           color: Color.fromRGBO(239, 239, 239, 1),
                           child: ListTile(
                             title: Text('Total QR Scans'),
                             subtitle: Text('${_tripDetails.length}'),

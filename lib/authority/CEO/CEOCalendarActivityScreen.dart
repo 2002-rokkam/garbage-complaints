@@ -154,7 +154,7 @@ class _CEOCalendarActivityScreenState extends State<CEOCalendarActivityScreen> {
                     style: ElevatedButton.styleFrom(
                       primary: Color(0xFF5C964A), // Button color
                     ),
-                    child: Text('View Complaints'),
+                    child: Text('View All'),
                   ),
                 ],
               ),

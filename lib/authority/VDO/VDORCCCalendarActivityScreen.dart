@@ -617,9 +617,11 @@ class _VDORCCCalendarActivityScreenState
           ],
         ),
       ),
+      backgroundColor: Color.fromRGBO(239, 239, 239, 1),
       body: Column(
         children: [
           Container(
+            
             child: TableCalendar(
               focusedDay: _selectedDate,
               firstDay: DateTime(2000),
@@ -650,9 +652,12 @@ class _VDORCCCalendarActivityScreenState
                 : selectedActivities.isEmpty
                     ? Center(child: Text('No activities for selected date.'))
                     : TabBarView(
+                      
                         controller: _tabController,
                         children: [
                           Card(
+                            color: Color.fromRGBO(239, 239, 239, 1),
+
                             margin: const EdgeInsets.all(8.0),
                             child: Padding(
                               padding: const EdgeInsets.all(16.0),
@@ -703,6 +708,8 @@ class _VDORCCCalendarActivityScreenState
                             ),
                           ),
                           Card(
+                                                            color: Color.fromRGBO(239, 239, 239, 1),
+
                             margin: const EdgeInsets.all(8.0),
                             child: Padding(
                               padding: const EdgeInsets.all(16.0),

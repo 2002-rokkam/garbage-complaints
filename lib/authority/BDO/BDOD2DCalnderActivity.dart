@@ -205,55 +205,53 @@ class _BDOD2DCalnderActivityScreenState
                 : TabBarView(
                     controller: _tabController,
                     children: [
-                      Expanded(
-                        child: Card(
-                          child: ListTile(
-                            title: Text('Total Activities'),
-                            subtitle: Text('${selectedActivities.length}'),
-                            trailing: ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => BeforeAfterScreen(
-                                      selectedDate: _selectedDate,
-                                      activities: selectedActivities,
-                                    ),
+                      Card(
+                        color: Color.fromRGBO(239, 239, 239, 1),
+                        child: ListTile(
+                          title: Text('Total Activities'),
+                          subtitle: Text('${selectedActivities.length}'),
+                          trailing: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BeforeAfterScreen(
+                                    selectedDate: _selectedDate,
+                                    activities: selectedActivities,
                                   ),
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors
-                                    .green, // Set the background color to green
-                              ),
-                              child: Text('View All'),
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors
+                                  .green, // Set the background color to green
                             ),
+                            child: Text('View All'),
                           ),
                         ),
                       ),
-                      Expanded(
-                        child: Card(
-                          child: ListTile(
-                            title: Text('Total QR Scans'),
-                            subtitle: Text('${_tripDetails.length}'),
-                            trailing: ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => QRDetailsScreen(
-                                      selectedDate: _selectedDate,
-                                      tripDetails: _tripDetails,
-                                    ),
+                      Card(
+                        color: Color.fromRGBO(239, 239, 239, 1),
+                        child: ListTile(
+                          title: Text('Total QR Scans'),
+                          subtitle: Text('${_tripDetails.length}'),
+                          trailing: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => QRDetailsScreen(
+                                    selectedDate: _selectedDate,
+                                    tripDetails: _tripDetails,
                                   ),
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors
-                                    .green, // Set the background color to green
-                              ),
-                              child: Text('View All'),
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors
+                                  .green, // Set the background color to green
                             ),
+                            child: Text('View All'),
                           ),
                         ),
                       ),
@@ -262,6 +260,7 @@ class _BDOD2DCalnderActivityScreenState
           ),
         ],
       ),
+
     );
   }
 }
@@ -435,6 +434,7 @@ class QRDetailsScreen extends StatelessWidget {
         title: Text('QR Details'),
         backgroundColor: Color(0xFF5C964A),
       ),
+       backgroundColor: Color.fromRGBO(239, 239, 239, 1),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: tripDetails.isEmpty
