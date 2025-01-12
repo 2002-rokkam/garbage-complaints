@@ -1,7 +1,7 @@
 // customerLogout.dart
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-//import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 import 'onBoardingPage1.dart';
@@ -80,9 +80,6 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           TextButton(
             onPressed: () async {
-              Navigator.pop(context); // Close the dialog
-
-              // Start the logout process
               setState(() {
                 isLoggingOut = true;
               });
@@ -90,7 +87,6 @@ class _SettingsPageState extends State<SettingsPage> {
               // Call the logout function
               await logout(context);
 
-              // After successful logout, navigate to language selection screen
               Navigator.pushAndRemoveUntil(   //Modify this to the page we are going
                 context,
                 MaterialPageRoute(builder: (context) => OnboardingScreen()),
@@ -117,30 +113,27 @@ class _SettingsPageState extends State<SettingsPage> {
 
     try {
       // API call to logout the user
-      String logoutUrl = 'https://ca0e-2402-e280-3e9d-3e8-7d5a-db80-102c-1252.ngrok-free.app/api/logout'; // Replace with your API endpoint
+      String logoutUrl = 'https://c035-122-172-86-134.ngrok-free.app/api/logout'; // Replace with your API endpoint
 
       // Fetch token from shared preferences
-      //SharedPreferences prefs = await SharedPreferences.getInstance();
-      //String? token = prefs.getString('auth_token'); // Assume you have saved an auth token
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('auth_token'); // Assume you have saved an auth token
 
       // Prepare headers for the API request (assuming you need a token for authentication)
       Map<String, String> headers = {
-        'Authorization': 'Token b20a5790949fabd11c672fd1fc3ff9fdba3ca52e', // Add authorization token if required
+        'Authorization': 'Token ${token}', // Add authorization token if required
         'Content-Type': 'application/json', // Set content type if needed
       };
 
       // Make the API call to log the user out
       final response = await http.post(Uri.parse(logoutUrl), headers: headers);
 
-      // Check if the response is successful (200 OK)
       if (response.statusCode == 200) {
-        // Clear shared preferences after successful logout
-       //wait prefs.clear();
+       await prefs.clear();
        print("Logout successful");
         // Simulate some delay for the API call to finish (you can adjust or remove this if needed)
         await Future.delayed(Duration(seconds: 1));
 
-        // If the widget is still mounted, navigate to the language selection screen
         if (context.mounted) {
           Navigator.pushAndRemoveUntil(
             context,
@@ -149,7 +142,6 @@ class _SettingsPageState extends State<SettingsPage> {
           );
         }
       } else {
-        // Handle unsuccessful logout (e.g., invalid token or server error)
         throw Exception('Failed to log out');
       }
     } catch (e) {

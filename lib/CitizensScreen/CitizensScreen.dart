@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import '../WokersScreen/WorkerComplaints/workerComplaintsScreen.dart';
+import '../customerLogout.dart';
 import 'ComplaintsScreen/ComplaintScreen.dart';
 import 'package:intl/intl.dart';
 import 'ComplaintsScreen/complaintsBottomBar.dart';
@@ -85,7 +86,7 @@ class _CitizensScreenState extends State<CitizensScreen> {
       case 1:
         return complaintsBottomBar();
       case 2:
-        return SettingScreen();
+        return SettingsPage();
       default:
         return _buildCitizenScreenContent();
     }
@@ -502,13 +503,4 @@ class _CitizensScreenState extends State<CitizensScreen> {
   }
 }
 
-class SettingScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text('Settings Screen'),
-      ),
-    );
-  }
-}
+

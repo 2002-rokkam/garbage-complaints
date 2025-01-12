@@ -149,13 +149,10 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
       if (response.statusCode == 200) {
         await prefs.clear();
         print("Logout successful!");
-        //Add Navigation
       } else {
-        // Handle unsuccessful logout (e.g., server error)
         throw Exception('Failed to log out');
       }
     } catch (e) {
-      // Handle any errors during the logout process (network issues, etc.)
     } finally {
       setState(() {
         isLoggingOut = false;

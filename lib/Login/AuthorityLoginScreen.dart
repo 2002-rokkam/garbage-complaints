@@ -82,6 +82,13 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
                 builder: (context) => CEOScreen(), // Navigate to BDO screen
               ),
             );
+          } else if (user['Position'] == 'Aceo') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CEOScreen(), // Navigate to BDO screen
+              ),
+            );
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('Unknown position: ${user['Position']}')),
