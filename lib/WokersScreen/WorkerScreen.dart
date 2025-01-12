@@ -1,6 +1,7 @@
 // WokersScreen/WorkerScreen.dart
 import 'package:flutter/material.dart';
 import 'dart:async';
+import '../workerLogout.dart';
 import 'WorkerCommon/ActionScreen.dart';
 import 'D2D/D2DSectionScreen.dart';
 import 'RRC/RRCSectionScreen.dart';
@@ -96,7 +97,12 @@ class _WorkerScreenState extends State<WorkerScreen> {
                     IconButton(
                       icon: Icon(Icons.settings, color: Colors.white),
                       onPressed: () {
-                        // Navigate to settings or handle settings action here
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => WorkerSettingsPage(),
+                          ),
+                        );
                       },
                     ),
                   ],

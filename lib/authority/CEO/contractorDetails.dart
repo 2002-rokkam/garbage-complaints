@@ -31,7 +31,7 @@ class _ContractordetailsState extends State<Contractordetails> {
       final data = json.decode(response.body);
       return List<Map<String, dynamic>>.from(data['contractors']);
     } else {
-      throw Exception('No contractor details');
+      throw ('No contractor details');
     }
   }
 
@@ -57,7 +57,7 @@ class _ContractordetailsState extends State<Contractordetails> {
             return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
-            return Center(child: Text("${snapshot.error}"));
+            return Center(child: Text("No contractor details found!"));
           }
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(child: Text("No contractor details found!"));

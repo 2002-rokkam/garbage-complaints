@@ -598,7 +598,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                               ),
                               const SizedBox(height: 18),
                               const Text(
-                                'Click and Capture',
+                                'Click and Complaints',
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 16,

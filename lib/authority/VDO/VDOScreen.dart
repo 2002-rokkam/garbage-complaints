@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
+import '../../workerLogout.dart';
 import 'VDOCalendarActivityScreen.dart';
 import 'VDOD2DCalnderActivity.dart';
 import 'VDORCCCalendarActivityScreen.dart';
@@ -139,8 +140,12 @@ class _VDOScreenState extends State<VDOScreen> {
                     IconButton(
                       icon: Icon(Icons.settings, color: Colors.white),
                       onPressed: () {
-                        // Navigate to settings or handle settings action here
-                      },
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => WorkerSettingsPage(),
+                          ),
+                        );                      },
                     ),
                   ],
                 ),

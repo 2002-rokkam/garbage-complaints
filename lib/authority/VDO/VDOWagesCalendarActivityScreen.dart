@@ -114,16 +114,6 @@ class _WagesCalendarActivityScreenState
                 setState(() {
                   _selectedDate = selectedDay;
                 });
-
-                 Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ActivityDetailsScreen(
-                      selectedDate: selectedDay,
-                      section: widget.section,
-                    ),
-                  ),
-                );
               },
               calendarStyle: CalendarStyle(
                 selectedDecoration: BoxDecoration(
@@ -133,6 +123,46 @@ class _WagesCalendarActivityScreenState
                 todayDecoration: BoxDecoration(
                   color: Color(0xFFFFA726),
                   shape: BoxShape.circle,
+                ),
+              ),
+            ),
+          ),
+           GestureDetector(
+            onTap: () {
+              // When the card is tapped, navigate to the next screen for that date
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ActivityDetailsScreen(
+                    selectedDate: _selectedDate,
+                    section: widget.section,
+                  ),
+                ),
+              );
+            },
+            child: Card(
+              margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              elevation: 5,
+              child: Padding(
+                padding: EdgeInsets.all(15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Wages Count:${getActivitiesForSelectedDate().length}',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      'View',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Color(0xFF5C964A),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

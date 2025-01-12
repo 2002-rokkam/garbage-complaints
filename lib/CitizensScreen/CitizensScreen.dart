@@ -170,7 +170,7 @@ class _CitizensScreenState extends State<CitizensScreen> {
                       Transform.translate(
                         offset: Offset(0, -8),
                         child: Text(
-                          'Click and Capture',
+                          'Click and Complaints',
                           style: TextStyle(
                             fontSize: screenWidth < 600 ? 10 : 12,
                             fontWeight: FontWeight.bold,

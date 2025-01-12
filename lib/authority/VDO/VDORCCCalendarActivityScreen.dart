@@ -621,7 +621,6 @@ class _VDORCCCalendarActivityScreenState
       body: Column(
         children: [
           Container(
-            
             child: TableCalendar(
               focusedDay: _selectedDate,
               firstDay: DateTime(2000),
@@ -646,117 +645,131 @@ class _VDORCCCalendarActivityScreenState
               ),
             ),
           ),
-          Expanded(
+          Container(
+            height:80,
             child: _isLoading
                 ? Center(child: CircularProgressIndicator())
                 : selectedActivities.isEmpty
                     ? Center(child: Text('No activities for selected date.'))
                     : TabBarView(
-                      
                         controller: _tabController,
                         children: [
                           Card(
                             color: Color.fromRGBO(239, 239, 239, 1),
-
-                            margin: const EdgeInsets.all(8.0),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Row(
-                                 crossAxisAlignment: CrossAxisAlignment.start,
-
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Total Activities: ${selectedActivities.length}',
-                                    style: TextStyle(fontSize: 16),
+                            child: Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.center, // Center vertically
+                              children: [
+                                Expanded(
+                                  child: Align(
+                                    alignment: Alignment
+                                        .centerLeft, // Align text to the left
+                                    child: Text(
+                                      'Total Activities: ${selectedActivities.length}',
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    ),
                                   ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      TextButton(
-                                        onPressed: () {
-                                          if (_tabController.index == 0) {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    BeforeAfterScreen(
-                                                  activities:
-                                                      selectedActivities,
-                                                ),
-                                              ),
-                                            );
-                                          } else {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    TripDetailsScreen(
-                                                  tripDetails: _tripDetails,
-                                                ),
-                                              ),
-                                            );
-                                          }
-                                        },
-                                        child: Text('View All'),
-                                      ),
-                                    ],
+                                ),
+                                Align(
+                                  alignment: Alignment
+                                      .centerRight, // Align button to the right
+                                  child: TextButton(
+                                    onPressed: () {
+                                      if (_tabController.index == 0) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                BeforeAfterScreen(
+                                              activities: selectedActivities,
+                                            ),
+                                          ),
+                                        );
+                                      } else {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                TripDetailsScreen(
+                                              tripDetails: _tripDetails,
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      primary: Colors
+                                          .green, // Set the background color to green
+                                    ),
+                                    child: Text(
+                                      'View All',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 16),
+                                    ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
                           Card(
-                                                            color: Color.fromRGBO(239, 239, 239, 1),
-
-                            margin: const EdgeInsets.all(8.0),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Row(
-                                 crossAxisAlignment: CrossAxisAlignment.start,
-
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Total Trip Details: ${_tripDetails.length}',
-                                    style: TextStyle(fontSize: 16),
+                            color: Color.fromRGBO(239, 239, 239, 1),
+                            child: Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.center, // Center vertically
+                              children: [
+                                Expanded(
+                                  child: Align(
+                                    alignment: Alignment
+                                        .centerLeft, // Align text to the left
+                                    child: Text(
+                                      'Total Trip Details: ${_tripDetails.length}',
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    ),
                                   ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      TextButton(
-                                        onPressed: () {
-                                          if (_tabController.index == 0) {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    BeforeAfterScreen(
-                                                  activities:
-                                                      selectedActivities,
-                                                ),
-                                              ),
-                                            );
-                                          } else {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    TripDetailsScreen(
-                                                  tripDetails: _tripDetails,
-                                                ),
-                                              ),
-                                            );
-                                          }
-                                        },
-                                        child: Text('View All'),
-                                      ),
-                                    ],
+                                ),
+                                Align(
+                                  alignment: Alignment
+                                      .centerRight, // Align button to the right
+                                  child: TextButton(
+                                    onPressed: () {
+                                      if (_tabController.index == 0) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                BeforeAfterScreen(
+                                              activities: selectedActivities,
+                                            ),
+                                          ),
+                                        );
+                                      } else {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                TripDetailsScreen(
+                                              tripDetails: _tripDetails,
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      primary: Colors
+                                          .green, // Set the background color to green
+                                    ),
+                                    child: Text(
+                                      'View All',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 16),
+                                    ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
                         ],

@@ -4,10 +4,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'CEOCalendarActivityScreen.dart';
-import 'CEOD2DCalnderActivity.dart';
-import 'CEORCCCalendarActivityScreen.dart';
-import 'CEOWagesCalendarActivityScreen.dart';
+import '../BDO/BDOWages/BDOWagesCalendarActivityScreen.dart';
+import 'CEOCalender/CEOCalendarActivityScreen.dart';
+import 'CEOD2D/CEOD2DCalnderActivity.dart';
+import 'CEORCC/CEORCCCalendarActivityScreen.dart';
+import 'CEOWages/CEOWagesCalendarActivityScreen.dart';
 import 'contractorDetails.dart';
 
 class CEOselectRegion extends StatefulWidget {
@@ -132,7 +133,7 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
           );
           break;
         case 'Wages':
-          targetScreen = CEOWagesCalendarActivityScreen(
+          targetScreen = BDOWagesCalendarActivityScreen(
             section: 'Wages',
             district: selectedDistrict!,
             block: selectedBlock!,

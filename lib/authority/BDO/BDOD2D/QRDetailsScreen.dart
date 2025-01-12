@@ -1,13 +1,12 @@
-// authority/BDO/QRDetailsScreen.dart
+// authority/BDO/BDOD2D/QRDetailsScreen.dart
 
 import 'package:flutter/material.dart';
 
 class QRDetailsScreen extends StatelessWidget {
   final List tripDetails;
-  final DateTime selectedDate;
 
   const QRDetailsScreen(
-      {Key? key, required this.tripDetails, required this.selectedDate})
+      {Key? key, required this.tripDetails})
       : super(key: key);
 
   @override

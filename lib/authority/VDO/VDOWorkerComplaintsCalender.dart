@@ -29,8 +29,8 @@ class _VDOWorkerComplaintsCalenderState
   // Fetch gram_panchayat from SharedPreferences and use it in the API call
   Future<void> _fetchComplaintData() async {
     final prefs = await SharedPreferences.getInstance();
-    final gramPanchayat =
-        prefs.getString('gram_panchayat') ?? ''; // Default to 'Gp1' if not set
+    final gramPanchayat = prefs.getString('gram_panchayat') ??
+        ''; // Default to  widget.gramPanchayat if not set
 
     final url =
         'https://c035-122-172-86-134.ngrok-free.app/api/complaintdetails-by-gram-panchayat/?gram_panchayat=$gramPanchayat';

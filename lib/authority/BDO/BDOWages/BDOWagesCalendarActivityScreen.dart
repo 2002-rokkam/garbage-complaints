@@ -56,7 +56,7 @@ class _WagesCalendarActivityScreenState
       'worker_id': workerId,
       'section': widget.section,
       'district': widget.district,
-      'gram_panchayat': 'Gp1',
+      'gram_panchayat': widget.gramPanchayat,
     });
 
     try {
@@ -119,7 +119,7 @@ class _WagesCalendarActivityScreenState
               onDaySelected: (selectedDay, focusedDay) {
                 setState(() {
                   _selectedDate = selectedDay;
-                });                
+                });
               },
               calendarStyle: CalendarStyle(
                 selectedDecoration: BoxDecoration(
@@ -179,7 +179,6 @@ class _WagesCalendarActivityScreenState
     );
   }
 }
-
 
 class ActivitiesForDateScreen extends StatelessWidget {
   final DateTime selectedDate;

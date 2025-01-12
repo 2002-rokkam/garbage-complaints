@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../workerLogout.dart';
 import 'CEOWorkerComplaintsCalender.dart';
 import 'CEOselectRegion.dart';
 import 'contractorDetails.dart';
@@ -136,7 +137,12 @@ class _CEOScreenState extends State<CEOScreen> {
                     IconButton(
                       icon: Icon(Icons.settings, color: Colors.white),
                       onPressed: () {
-                        // Navigate to settings or handle settings action here
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => WorkerSettingsPage(),
+                          ),
+                        );
                       },
                     ),
                   ],

@@ -76,7 +76,7 @@ class _BDOD2DCalnderActivityScreenState
       'worker_id': workerId,
       'section': widget.section,
       'district': widget.district,
-      'gram_panchayat': 'Gp1',
+      'gram_panchayat': widget.gramPanchayat,
     });
 
     try {
@@ -107,7 +107,7 @@ class _BDOD2DCalnderActivityScreenState
       'worker_id': workerId,
       'section': 'D2D_QR',
       'district': widget.district,
-      'gram_panchayat': 'Gp1',
+      'gram_panchayat': widget.gramPanchayat,
     });
 
     try {
@@ -222,7 +222,8 @@ class _BDOD2DCalnderActivityScreenState
                     children: [
                       Card(
                         child: ListTile(
-                          title: Text('Total Activities : ${selectedActivities.length}'),
+                          title: Text(
+                              'Total Activities : ${selectedActivities.length}'),
                           trailing: ElevatedButton(
                             onPressed: () {
                               Navigator.push(
@@ -245,14 +246,14 @@ class _BDOD2DCalnderActivityScreenState
                       ),
                       Card(
                         child: ListTile(
-                          title: Text('Total QR Scans:${getFilteredTripDetails().length}'),
+                          title: Text(
+                              'Total QR Scans:${getFilteredTripDetails().length}'),
                           trailing: ElevatedButton(
                             onPressed: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => QRDetailsScreen(
-                                    selectedDate: _selectedDate,
                                     tripDetails: getFilteredTripDetails(),
                                   ),
                                 ),

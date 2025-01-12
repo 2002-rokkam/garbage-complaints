@@ -384,6 +384,7 @@ class _RegionSelectorState extends State<RegionSelector> {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
+                    color: Colors.white,
                   ),
                 ),
               ),
