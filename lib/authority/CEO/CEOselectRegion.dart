@@ -8,7 +8,6 @@ import '../BDO/BDOWages/BDOWagesCalendarActivityScreen.dart';
 import 'CEOCalender/CEOCalendarActivityScreen.dart';
 import 'CEOD2D/CEOD2DCalnderActivity.dart';
 import 'CEORCC/CEORCCCalendarActivityScreen.dart';
-import 'CEOWages/CEOWagesCalendarActivityScreen.dart';
 import 'contractorDetails.dart';
 
 class CEOselectRegion extends StatefulWidget {

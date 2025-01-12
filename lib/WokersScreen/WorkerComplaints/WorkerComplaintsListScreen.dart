@@ -172,6 +172,10 @@ class _ComplaintCardState extends State<ComplaintCard> {
                       Navigator.of(context).pop(); // Close the dialog
                       _submitFormData(); // Submit the image
                     },
+                     style: ElevatedButton.styleFrom(
+                      primary:
+                          Colors.green, // Set the background color to green
+                    ),
                     child: Text('Submit'),
                   ),
                   ElevatedButton(
@@ -180,7 +184,12 @@ class _ComplaintCardState extends State<ComplaintCard> {
                       setState(() {
                         _imageFile = null; // Clear the image
                       });
+                      
                     },
+                     style: ElevatedButton.styleFrom(
+                      primary:
+                          Colors.green, // Set the background color to green
+                    ),
                     child: Text('Cancel'),
                   ),
                 ],

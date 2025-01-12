@@ -1,6 +1,7 @@
 // onBoardingPage2.dart
 import 'package:flutter/material.dart';
 import 'Login/AuthorityLoginScreen.dart';
+import 'Login/PhoneAuthScreen.dart';
 
 class OnboardingScreen2 extends StatefulWidget {
   const OnboardingScreen2({super.key});
@@ -19,7 +20,7 @@ class _OnboadingScreen2State extends State<OnboardingScreen2> {
           context,
           PageRouteBuilder(
               transitionDuration: Duration(milliseconds: 300),
-              pageBuilder: (_, __, ___) => AuthorityLoginScreen(),
+              pageBuilder: (_, __, ___) => PhoneInputScreen(),
               transitionsBuilder: (_, animation, __, child) {
                 return FadeTransition(
                   opacity: animation,

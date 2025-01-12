@@ -1,10 +1,5 @@
 // authority/CEO/CEOCalender/CEOSelectedDateActivitiesScreen.dart
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:table_calendar/table_calendar.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-
 
 // authority/SelectedDateActivitiesScreen.dart
 class CEOSelectedDateActivitiesScreen extends StatelessWidget {

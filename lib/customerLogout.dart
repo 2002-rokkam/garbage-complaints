@@ -19,8 +19,6 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Customer Logout',style: TextStyle(color: Colors.white),),backgroundColor: Color(0xFF5C964A),
-      leading: IconButton(onPressed: (){Navigator.pop(context);}, icon: const Icon(Icons.arrow_back_ios),color: Colors.white,),),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -117,7 +115,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
       // Fetch token from shared preferences
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('auth_token'); // Assume you have saved an auth token
+      String? token = prefs.getString('id_token'); // Assume you have saved an auth token
 
       // Prepare headers for the API request (assuming you need a token for authentication)
       Map<String, String> headers = {
