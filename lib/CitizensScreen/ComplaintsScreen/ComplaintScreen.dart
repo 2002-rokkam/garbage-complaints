@@ -389,7 +389,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                         "      Click & Complaints",
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 20,
+                          fontSize: 12,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
