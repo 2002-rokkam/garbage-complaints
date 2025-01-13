@@ -54,12 +54,28 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
         isLoading = true;
       });
 
+      String formattedDistrict = selectedDistrict!.replaceAll(' ', '_');
+      String formattedGramPanchayat = selectedGP!.replaceAll(' ', '_');
+
+      // Change letter after underscore to lowercase
+      formattedDistrict =
+          formattedDistrict.replaceAllMapped(RegExp(r'_(.)'), (match) {
+        return '_${match.group(1)?.toLowerCase()}';
+      });
+
+      formattedGramPanchayat =
+          formattedGramPanchayat.replaceAllMapped(RegExp(r'_(.)'), (match) {
+        return '_${match.group(1)?.toLowerCase()}';
+      });
+      print(formattedDistrict);
+
+      print(formattedGramPanchayat);
       try {
         var uri = Uri.parse('http://167.71.230.247/api/complaints-register');
 
         var request = http.MultipartRequest('POST', uri)
-          ..fields['district'] = selectedDistrict!
-          ..fields['gram_panchayat'] = selectedGP!
+          ..fields['district'] = formattedDistrict
+          ..fields['gram_panchayat'] = formattedGramPanchayat
           ..fields['caption'] = caption;
 
         for (int i = 0; i < imageData.length; i++) {
