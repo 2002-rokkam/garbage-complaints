@@ -70,13 +70,12 @@ class _CEOD2DCalnderActivityScreenState
       _isLoading = true;
     });
 
-    final url = Uri.parse(
-            'https://c035-122-172-86-134.ngrok-free.app/api/bdo-section-dashboard')
+    final url = Uri.parse('http://167.71.230.247/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': widget.section,
       'district': widget.district,
-      'gram_panchayat':  widget.gramPanchayat,
+      'gram_panchayat': widget.gramPanchayat,
     });
 
     try {
@@ -101,14 +100,13 @@ class _CEOD2DCalnderActivityScreenState
   Future<void> fetchQRDetails(String workerId) async {
     if (workerId.isEmpty) return;
 
-    final url = Uri.parse(
-            'https://c035-122-172-86-134.ngrok-free.app/api/bdo-section-dashboard')
+    final url = Uri.parse('http://167.71.230.247/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': 'D2D_QR',
       'date': _selectedDate.toIso8601String(),
       'district': widget.district,
-      'gram_panchayat':  widget.gramPanchayat,
+      'gram_panchayat': widget.gramPanchayat,
     });
 
     try {
@@ -187,7 +185,7 @@ class _CEOD2DCalnderActivityScreenState
           ],
         ),
       ),
-       backgroundColor: Color.fromRGBO(239, 239, 239, 1),
+      backgroundColor: Color.fromRGBO(239, 239, 239, 1),
       body: Column(
         children: [
           Container(

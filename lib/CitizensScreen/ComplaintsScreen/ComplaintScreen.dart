@@ -55,8 +55,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
       });
 
       try {
-        var uri = Uri.parse(
-            'https://c035-122-172-86-134.ngrok-free.app/api/complaints-register');
+        var uri = Uri.parse('http://167.71.230.247/api/complaints-register');
 
         var request = http.MultipartRequest('POST', uri)
           ..fields['district'] = selectedDistrict!
@@ -284,10 +283,8 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
 
   List<String> gramPanchayats = [];
 
-  final String districtsUrl =
-      "https://c035-122-172-86-134.ngrok-free.app/api/getDistricts";
-  final String gpUrl =
-      "https://c035-122-172-86-134.ngrok-free.app/api/getGpComplaints";
+  final String districtsUrl = "http://167.71.230.247/api/getDistricts";
+  final String gpUrl = "http://167.71.230.247/api/getGpComplaints";
 
   Future<void> fetchDistricts() async {
     try {

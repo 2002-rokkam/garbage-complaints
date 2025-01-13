@@ -32,7 +32,7 @@ class _CEOWorkerComplaintsCalenderState
     final District = prefs.getString('District') ?? '';
 
     final url =
-        'https://c035-122-172-86-134.ngrok-free.app/api/complaintdetails-by-district/?district=$District';
+        'http://167.71.230.247/api/complaintdetails-by-district/?district=$District';
 
     try {
       final response = await http.get(Uri.parse(url));

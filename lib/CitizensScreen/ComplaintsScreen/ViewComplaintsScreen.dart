@@ -43,8 +43,7 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
   }
 
   Future<void> _fetchComplaints() async {
-    final String apiUrl =
-        'https://c035-122-172-86-134.ngrok-free.app/api/complaints';
+    final String apiUrl = 'http://167.71.230.247/api/complaints';
 
     try {
       final response = await http.get(
@@ -103,14 +102,13 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
         ),
         backgroundColor: Color.fromRGBO(239, 239, 239, 1),
         body: isLoading
-           ? Center(
+            ? Center(
                 child: Image.asset(
                   'images/Loder.gif', // Your GIF path in assets
                   width: 200, // Adjust the size as needed
                   height: 200,
                 ),
               )
-            
             : TabBarView(
                 controller: _tabController,
                 children: [
@@ -148,7 +146,8 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
           ClipRRect(
             borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
             child: FadeInImage.assetNetwork(
-              placeholder: 'images/setting-loder.gif', // Add a loader image in assets
+              placeholder:
+                  'images/setting-loder.gif', // Add a loader image in assets
               image: '${complaint['photos'][0]['image']}',
               fit: BoxFit.cover,
               height: 150,
@@ -168,11 +167,13 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
           if (complaint['status'] == 'Resolved')
             TextButton(
               onPressed: () => _showResolvedPopup(complaint),
-              child: Text('View Reply', style: TextStyle(
-                                     color: Color(0xFF5C964A),
-                     fontWeight: FontWeight.bold,
-               ),
+              child: Text(
+                'View Reply',
+                style: TextStyle(
+                  color: Color(0xFF5C964A),
+                  fontWeight: FontWeight.bold,
                 ),
+              ),
             ),
         ],
       ),
@@ -221,7 +222,7 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
                       primary:
                           Colors.green, // Set the background color to green
                     ),
-                  ),                 
+                  ),
                 ],
               ),
             ),

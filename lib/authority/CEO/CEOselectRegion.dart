@@ -28,11 +28,9 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
   List<String> blocks = [];
   List<String> gramPanchayats = [];
 
-  final String districtsUrl =
-      "https://c035-122-172-86-134.ngrok-free.app/api/getDistricts";
-  final String blocksUrl =
-      "https://c035-122-172-86-134.ngrok-free.app/api/getBlocks/";
-  final String gpUrl = "https://c035-122-172-86-134.ngrok-free.app/api/getGp/";
+  final String districtsUrl = "http://167.71.230.247/api/getDistricts";
+  final String blocksUrl = "http://167.71.230.247/api/getBlocks/";
+  final String gpUrl = "http://167.71.230.247/api/getGp/";
 
   Future<void> fetchDistricts() async {
     try {
@@ -139,7 +137,7 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
             gramPanchayat: selectedGramPanchayat!,
           );
           break;
-         case 'Contractor':
+        case 'Contractor':
           targetScreen = Contractordetails(
             gramPanchayat: selectedGramPanchayat!,
           );

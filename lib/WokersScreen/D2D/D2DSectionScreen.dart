@@ -40,7 +40,7 @@ class _D2DSectionScreenState extends State<D2DSectionScreen> {
       String workerId = await getWorkerId();
       Dio dio = Dio();
       final response = await dio.get(
-          'https://c035-122-172-86-134.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+          'http://167.71.230.247/api/worker/$workerId/section/${widget.section}');
 
       if (response.statusCode == 200) {
         final data = response.data;

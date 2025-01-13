@@ -45,7 +45,7 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
     });
 
     final url = Uri.parse(
-        'https://c035-122-172-86-134.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+        'http://167.71.230.247/api/worker/$workerId/section/${widget.section}');
 
     try {
       final response = await http.get(url);
@@ -71,7 +71,7 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
     String workerId = await getWorkerId();
 
     final url = Uri.parse(
-        'https://c035-122-172-86-134.ngrok-free.app/api/worker/$workerId/section/Waste Details');
+        'http://167.71.230.247/api/worker/$workerId/section/Waste Details');
 
     try {
       final response = await http.get(url);

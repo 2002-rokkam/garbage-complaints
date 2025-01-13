@@ -35,8 +35,7 @@ class _VDOCalendarActivityScreenState extends State<VDOCalendarActivityScreen> {
     String workerId = await getWorkerId();
     setState(() {});
 
-    final url = Uri.parse(
-            'https://c035-122-172-86-134.ngrok-free.app/api/vdo-section-dashboard')
+    final url = Uri.parse('http://167.71.230.247/api/vdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': widget.section,

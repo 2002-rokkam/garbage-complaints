@@ -56,7 +56,7 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
     });
 
     final url = Uri.parse(
-        'https://c035-122-172-86-134.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+        'http://167.71.230.247/api/worker/$workerId/section/${widget.section}');
 
     try {
       final response = await http.get(url);
@@ -78,8 +78,8 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
   Future<void> fetchQRDetails(String workerId) async {
     if (workerId.isEmpty) return;
 
-    final url = Uri.parse(
-        'https://c035-122-172-86-134.ngrok-free.app/api/worker/$workerId/section/D2D_QR');
+    final url =
+        Uri.parse('http://167.71.230.247/api/worker/$workerId/section/D2D_QR');
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {

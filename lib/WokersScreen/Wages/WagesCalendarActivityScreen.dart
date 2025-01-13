@@ -42,7 +42,7 @@ class _WagesCalendarActivityScreenState
     });
 
     final url = Uri.parse(
-        'https://c035-122-172-86-134.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+        'http://167.71.230.247/api/worker/$workerId/section/${widget.section}');
 
     try {
       final response = await http.get(url);
@@ -136,12 +136,12 @@ class _WagesCalendarActivityScreenState
 }
 // ActivityDetailsScreen.dart
 
-
 class ActivityDetailsScreen extends StatefulWidget {
   final DateTime selectedDate;
   final String section;
 
-  const ActivityDetailsScreen({Key? key, required this.selectedDate, required this.section})
+  const ActivityDetailsScreen(
+      {Key? key, required this.selectedDate, required this.section})
       : super(key: key);
 
   @override
@@ -172,7 +172,7 @@ class _ActivityDetailsScreenState extends State<ActivityDetailsScreen> {
     });
 
     final url = Uri.parse(
-        'https://c035-122-172-86-134.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+        'http://167.71.230.247/api/worker/$workerId/section/${widget.section}');
 
     try {
       final response = await http.get(url);

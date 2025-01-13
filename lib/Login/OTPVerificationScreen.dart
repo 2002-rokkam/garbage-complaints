@@ -69,8 +69,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
   // Send token to backend API and save the received token to SharedPreferences
   Future<http.Response> _sendTokenToBackend(String idToken) async {
     print(idToken);
-    final url = Uri.parse(
-        "https://c035-122-172-86-134.ngrok-free.app/api/customer-login");
+    final url = Uri.parse("http://167.71.230.247/api/customer-login");
     final response = await http.post(
       url,
       headers: {

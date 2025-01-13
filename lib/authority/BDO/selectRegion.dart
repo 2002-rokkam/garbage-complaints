@@ -27,11 +27,9 @@ class _RegionSelectorState extends State<RegionSelector> {
   List<String> blocks = [];
   List<String> gramPanchayats = [];
 
-  final String districtsUrl =
-      "https://c035-122-172-86-134.ngrok-free.app/api/getDistricts";
-  final String blocksUrl =
-      "https://c035-122-172-86-134.ngrok-free.app/api/getBlocks/";
-  final String gpUrl = "https://c035-122-172-86-134.ngrok-free.app/api/getGp/";
+  final String districtsUrl = "http://167.71.230.247/api/getDistricts";
+  final String blocksUrl = "http://167.71.230.247/api/getBlocks/";
+  final String gpUrl = "http://167.71.230.247/api/getGp/";
 
   // Load district from SharedPreferences
   Future<void> loadDistrictFromPrefs() async {
@@ -155,7 +153,7 @@ class _RegionSelectorState extends State<RegionSelector> {
             gramPanchayat: selectedGramPanchayat!,
           );
           break;
-          case 'Contractor':
+        case 'Contractor':
           targetScreen = Contractordetails(
             gramPanchayat: selectedGramPanchayat!,
           );
@@ -195,7 +193,7 @@ class _RegionSelectorState extends State<RegionSelector> {
     loadDistrictFromPrefs(); // Load district from SharedPreferences
   }
 
- void showOptions(BuildContext context, List<String> options,
+  void showOptions(BuildContext context, List<String> options,
       ValueChanged<String> onSelected) {
     List<String> filteredOptions = List.from(options);
     bool isLoading =
@@ -259,7 +257,7 @@ class _RegionSelectorState extends State<RegionSelector> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Select Your Region'),
-         backgroundColor: const Color(0xFF5C964A),
+        backgroundColor: const Color(0xFF5C964A),
       ),
       backgroundColor: Color.fromRGBO(239, 239, 239, 1),
       body: Padding(

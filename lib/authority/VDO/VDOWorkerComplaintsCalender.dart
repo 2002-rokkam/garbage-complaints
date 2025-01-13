@@ -33,7 +33,7 @@ class _VDOWorkerComplaintsCalenderState
         ''; // Default to  widget.gramPanchayat if not set
 
     final url =
-        'https://c035-122-172-86-134.ngrok-free.app/api/complaintdetails-by-gram-panchayat/?gram_panchayat=$gramPanchayat';
+        'http://167.71.230.247/api/complaintdetails-by-gram-panchayat/?gram_panchayat=$gramPanchayat';
 
     try {
       final response = await http.get(Uri.parse(url));

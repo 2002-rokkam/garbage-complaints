@@ -84,9 +84,9 @@ class _BDOScreenState extends State<BDOScreen> {
     String? District = prefs.getString('District');
     print(District);
     if (District != null) {
-      final response = await http.get(Uri.parse(
-              'https://c035-122-172-86-134.ngrok-free.app/api/complaints-by-district/')
-          .replace(queryParameters: {
+      final response = await http.get(
+          Uri.parse('http://167.71.230.247/api/complaints-by-district/')
+              .replace(queryParameters: {
         'district': District,
       }));
 
@@ -183,7 +183,7 @@ class _BDOScreenState extends State<BDOScreen> {
                       child: PageView(
                         controller: _pageController,
                         children: [
-                         _buildImageContainer('images/test.jpg'),
+                          _buildImageContainer('images/test.jpg'),
                           _buildImageContainer('images/garbage_cleaing2.jpeg'),
                           _buildImageContainer('images/garbage_cleaing3.jpeg'),
                         ],

@@ -83,9 +83,9 @@ class _VDOScreenState extends State<VDOScreen> {
     String? gramPanchayat = prefs.getString('gram_panchayat');
     print(gramPanchayat);
     if (gramPanchayat != null) {
-      final response = await http.get(Uri.parse(
-              'https://c035-122-172-86-134.ngrok-free.app/api/complaints-by-gram-panchayat/')
-          .replace(queryParameters: {
+      final response = await http.get(
+          Uri.parse('http://167.71.230.247/api/complaints-by-gram-panchayat/')
+              .replace(queryParameters: {
         'gram_panchayat': gramPanchayat,
       }));
 
@@ -145,7 +145,8 @@ class _VDOScreenState extends State<VDOScreen> {
                           MaterialPageRoute(
                             builder: (context) => WorkerSettingsPage(),
                           ),
-                        );                      },
+                        );
+                      },
                     ),
                   ],
                 ),

@@ -121,7 +121,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
 
       Dio dio = Dio();
       Response response = await dio.post(
-        'https://c035-122-172-86-134.ngrok-free.app/api/submit-activity',
+        'http://167.71.230.247/api/submit-activity',
         data: formData,
       );
 
@@ -187,9 +187,8 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
       });
 
       Dio dio = Dio();
-      Response response = await dio.put(
-          'https://c035-122-172-86-134.ngrok-free.app/api/submit-activity',
-          data: formData);
+      Response response = await dio
+          .put('http://167.71.230.247/api/submit-activity', data: formData);
 
       if (response.statusCode == 200) {
         print("After image submitted successfully!");
@@ -448,7 +447,6 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                                     } else {
                                       return Center(
                                         child: CircularProgressIndicator(
-                                          
                                           value: loadingProgress
                                                       .expectedTotalBytes !=
                                                   null
@@ -526,7 +524,6 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                           : Image.file(
                               File(_afterImage!['imagePath']!),
                               fit: BoxFit.cover,
-                              
                               errorBuilder: (BuildContext context, Object error,
                                   StackTrace? stackTrace) {
                                 return Center(

@@ -79,9 +79,9 @@ class _CEOScreenState extends State<CEOScreen> {
     String? District = prefs.getString('District');
     print(District);
     if (District != null) {
-      final response = await http.get(Uri.parse(
-              'https://c035-122-172-86-134.ngrok-free.app/api/complaints-by-district/')
-          .replace(queryParameters: {
+      final response = await http.get(
+          Uri.parse('http://167.71.230.247/api/complaints-by-district/')
+              .replace(queryParameters: {
         'district': District,
       }));
 
@@ -482,7 +482,7 @@ class _CEOScreenState extends State<CEOScreen> {
     );
   }
 
-   Widget _buildImageContainer(String imageUrl) {
+  Widget _buildImageContainer(String imageUrl) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       child: Image.asset(

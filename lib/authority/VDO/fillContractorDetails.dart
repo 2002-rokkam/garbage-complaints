@@ -41,8 +41,8 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
           return;
         }
 
-        final url = Uri.parse(
-            'https://c035-122-172-86-134.ngrok-free.app/api/contractor/create/$workerId');
+        final url =
+            Uri.parse('http://167.71.230.247/api/contractor/create/$workerId');
 
         final payload = {
           'company_name': _companyNameController.text,

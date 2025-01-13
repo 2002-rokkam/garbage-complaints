@@ -42,8 +42,7 @@ class _WagesCalendarActivityScreenState
       _isLoading = true;
     });
 
-    final url = Uri.parse(
-            'https://c035-122-172-86-134.ngrok-free.app/api/vdo-section-dashboard')
+    final url = Uri.parse('http://167.71.230.247/api/vdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': widget.section,
@@ -127,7 +126,7 @@ class _WagesCalendarActivityScreenState
               ),
             ),
           ),
-           GestureDetector(
+          GestureDetector(
             onTap: () {
               // When the card is tapped, navigate to the next screen for that date
               Navigator.push(
@@ -173,12 +172,12 @@ class _WagesCalendarActivityScreenState
   }
 }
 
-
 class ActivityDetailsScreen extends StatefulWidget {
   final DateTime selectedDate;
   final String section;
 
-  const ActivityDetailsScreen({Key? key, required this.selectedDate, required this.section})
+  const ActivityDetailsScreen(
+      {Key? key, required this.selectedDate, required this.section})
       : super(key: key);
 
   @override
@@ -208,8 +207,7 @@ class _ActivityDetailsScreenState extends State<ActivityDetailsScreen> {
       _isLoading = true;
     });
 
-    final url = Uri.parse(
-            'https://c035-122-172-86-134.ngrok-free.app/api/vdo-section-dashboard')
+    final url = Uri.parse('http://167.71.230.247/api/vdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': widget.section,

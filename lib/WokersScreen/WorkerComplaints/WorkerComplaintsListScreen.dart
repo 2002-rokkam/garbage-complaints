@@ -172,7 +172,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                       Navigator.of(context).pop(); // Close the dialog
                       _submitFormData(); // Submit the image
                     },
-                     style: ElevatedButton.styleFrom(
+                    style: ElevatedButton.styleFrom(
                       primary:
                           Colors.green, // Set the background color to green
                     ),
@@ -184,9 +184,8 @@ class _ComplaintCardState extends State<ComplaintCard> {
                       setState(() {
                         _imageFile = null; // Clear the image
                       });
-                      
                     },
-                     style: ElevatedButton.styleFrom(
+                    style: ElevatedButton.styleFrom(
                       primary:
                           Colors.green, // Set the background color to green
                     ),
@@ -216,7 +215,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
     });
   }
 
- Future<void> _submitFormData() async {
+  Future<void> _submitFormData() async {
     if (_imageFile == null || _latitude == null || _longitude == null) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Please select an image and allow location access'),
@@ -244,7 +243,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
 
     try {
       Response response = await dio.post(
-        'https://c035-122-172-86-134.ngrok-free.app/api/update-complaint/${widget.complaint['complaint_id']}',
+        'http://167.71.230.247/api/update-complaint/${widget.complaint['complaint_id']}',
         data: formData,
       );
 
@@ -266,7 +265,6 @@ class _ComplaintCardState extends State<ComplaintCard> {
     }
   }
 
-
   void _showResolvedPhoto(Map<String, dynamic>? resolvedPhoto) {
     if (resolvedPhoto != null && resolvedPhoto['image'] != null) {
       final imageUrl = '${resolvedPhoto['image']}';
@@ -285,7 +283,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                 SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () => Navigator.of(context).pop(),
-                   style: ElevatedButton.styleFrom(
+                  style: ElevatedButton.styleFrom(
                     primary: Colors.green, // Set the background color to green
                   ),
                   child: Text('Close'),

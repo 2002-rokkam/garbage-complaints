@@ -91,7 +91,6 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
           ),
           TextButton(
             onPressed: () async {
-
               // Start the logout process
               setState(() {
                 isLoggingOut = true;
@@ -127,7 +126,7 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
 
       // API URL
       String logoutUrl =
-          'https://c035-122-172-86-134.ngrok-free.app/api/worker-logout'; // Replace with your API endpoint
+          'http://167.71.230.247/api/worker-logout'; // Replace with your API endpoint
 
       // Prepare body and headers
       Map<String, String> headers = {
