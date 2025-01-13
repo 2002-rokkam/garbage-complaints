@@ -1,6 +1,5 @@
 // authority/VDO/fillContractorDetails.dart
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,7 +26,6 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
       });
 
       try {
-        // Retrieve worker_id from shared preferences
         final SharedPreferences prefs = await SharedPreferences.getInstance();
         final String? workerId = prefs.getString('worker_id');
 
@@ -43,10 +41,9 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
           return;
         }
 
-        final url = Uri.parse(
-            'https://c035-122-172-86-134.ngrok-free.app/api/contractor/create/$workerId');
+        final url =
+            Uri.parse('http://167.71.230.247/api/contractor/create/$workerId');
 
-        // Prepare the payload
         final payload = {
           'company_name': _companyNameController.text,
           'gst_no': _gstNoController.text,
@@ -54,7 +51,6 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
           'contact_no': _contactNoController.text,
         };
 
-        // Send POST request
         final response = await http.post(
           url,
           headers: {'Content-Type': 'application/json'},
@@ -66,11 +62,9 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
         });
 
         if (response.statusCode == 200) {
-          // Success
           _showSuccessDialog();
         } else {
           _showFailureDialog();
-          // Handle non-200 status codes
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Failed to submit details: ${response.statusCode}'),
@@ -82,7 +76,6 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
           _isSubmitting = false;
         });
 
-        // Handle exceptions
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('An error occurred: $error'),
@@ -108,7 +101,6 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Success Icon
               CircleAvatar(
                 radius: 40.0,
                 backgroundColor: Colors.green.shade100,
@@ -119,7 +111,6 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
                 ),
               ),
               const SizedBox(height: 20.0),
-              // Title
               const Text(
                 'Success!',
                 style: TextStyle(
@@ -129,7 +120,6 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
                 ),
               ),
               const SizedBox(height: 10.0),
-              // Content
               const Text(
                 'Contractor details have been submitted successfully.',
                 textAlign: TextAlign.center,
@@ -139,11 +129,10 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
                 ),
               ),
               const SizedBox(height: 20.0),
-              // OK Button
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pop(context); // Close the dialog
-                  Navigator.pop(context); // Go back to the previous page
+                  Navigator.pop(context);
+                  Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
@@ -183,7 +172,6 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Failure Icon
               CircleAvatar(
                 radius: 40.0,
                 backgroundColor: Colors.red.shade100,
@@ -194,7 +182,6 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
                 ),
               ),
               const SizedBox(height: 20.0),
-              // Title
               const Text(
                 'Oops!',
                 style: TextStyle(
@@ -204,7 +191,6 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
                 ),
               ),
               const SizedBox(height: 10.0),
-              // Content
               const Text(
                 'Failed to submit contractor details. Please try again later.',
                 textAlign: TextAlign.center,
@@ -214,10 +200,9 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
                 ),
               ),
               const SizedBox(height: 20.0),
-              // Retry Button
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pop(context); // Close the dialog
+                  Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
@@ -280,8 +265,15 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
                   label: 'GST No',
                   hint: 'GST Info',
                   icon: Icons.info_outline,
-                  validator: (value) =>
-                      value!.isEmpty ? 'Please enter GST number' : null,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter GST number';
+                    }
+                    if (value.length != 15) {
+                      return 'GST number must be 15 digits';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 16.0),
                 _buildTextField(
@@ -307,8 +299,15 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
                   hint: 'Number',
                   icon: Icons.phone,
                   keyboardType: TextInputType.phone,
-                  validator: (value) =>
-                      value!.isEmpty ? 'Please enter contact number' : null,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter contact number';
+                    }
+                    if (value.length != 10) {
+                      return 'Contact number must be 10 digits';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 32.0),
                 ElevatedButton(

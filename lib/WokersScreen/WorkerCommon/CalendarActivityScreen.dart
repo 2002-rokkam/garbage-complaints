@@ -40,7 +40,7 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
     });
 
     final url = Uri.parse(
-        'https://c035-122-172-86-134.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+        'http://167.71.230.247/api/worker/$workerId/section/${widget.section}');
 
     try {
       final response = await http.get(url);
@@ -164,7 +164,6 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
   }
 }
 
-
 class SelectedDateActivitiesScreen extends StatelessWidget {
   final DateTime selectedDate;
   final List activities;
@@ -232,11 +231,11 @@ class SelectedDateActivitiesScreen extends StatelessWidget {
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 10, vertical: 5),
                                       decoration: ShapeDecoration(
-                                        color: (activity['status'] ??
-                                                    'Pending') ==
-                                                'Completed'
-                                            ? Color(0xFF5C964A)
-                                            : Color(0xFFFFA726),
+                                        color:
+                                            (activity['status'] ?? 'Pending') ==
+                                                    'Completed'
+                                                ? Color(0xFF5C964A)
+                                                : Color(0xFFFFA726),
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(18),

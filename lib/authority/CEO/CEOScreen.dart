@@ -5,9 +5,9 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../workerLogout.dart';
 import 'CEOWorkerComplaintsCalender.dart';
 import 'CEOselectRegion.dart';
-import 'contractorDetails.dart';
 
 class CEOScreen extends StatefulWidget {
   @override
@@ -51,7 +51,7 @@ class _CEOScreenState extends State<CEOScreen> {
     {
       'label': 'Contractor Details',
       'imageUrl':
-          'images/wages.png', // You can use a different image if you prefer
+          'images/Contractors.png', // You can use a different image if you prefer
       'route': 'ContractorDetailsScreen'
     },
   ];
@@ -79,9 +79,9 @@ class _CEOScreenState extends State<CEOScreen> {
     String? District = prefs.getString('District');
     print(District);
     if (District != null) {
-      final response = await http.get(Uri.parse(
-              'https://c035-122-172-86-134.ngrok-free.app/api/complaints-by-district/')
-          .replace(queryParameters: {
+      final response = await http.get(
+          Uri.parse('http://167.71.230.247/api/complaints-by-district/')
+              .replace(queryParameters: {
         'district': District,
       }));
 
@@ -136,7 +136,12 @@ class _CEOScreenState extends State<CEOScreen> {
                     IconButton(
                       icon: Icon(Icons.settings, color: Colors.white),
                       onPressed: () {
-                        // Navigate to settings or handle settings action here
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => WorkerSettingsPage(),
+                          ),
+                        );
                       },
                     ),
                   ],
@@ -173,12 +178,9 @@ class _CEOScreenState extends State<CEOScreen> {
                       child: PageView(
                         controller: _pageController,
                         children: [
-                          _buildImageContainer(
-                              'https://docs.flutter.dev/assets/images/dash/dash-fainting.gif'),
-                          _buildImageContainer(
-                              'https://europe1.discourse-cdn.com/figma/original/3X/7/1/7105e9c010b3d1f0ea893ed5ca3bd58e6cec090e.gif'),
-                          _buildImageContainer(
-                              'https://gifyard.com/wp-content/uploads/2023/01/girl-laughs.gif'),
+                          _buildImageContainer('images/test.jpg'),
+                          _buildImageContainer('images/garbage_cleaing2.jpeg'),
+                          _buildImageContainer('images/garbage_cleaing3.jpeg'),
                         ],
                       ),
                     ),
@@ -480,15 +482,12 @@ class _CEOScreenState extends State<CEOScreen> {
     );
   }
 
-   Widget _buildImageContainer(String imageUrl) {
+  Widget _buildImageContainer(String imageUrl) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: NetworkImage(imageUrl),
-          fit: BoxFit.cover,
-        ),
-        borderRadius: BorderRadius.circular(8),
+      child: Image.asset(
+        imageUrl,
+        fit: BoxFit.cover,
       ),
       height: MediaQuery.of(context).size.height *
           0.3, // Adjust height based on screen size
@@ -584,7 +583,7 @@ class _CEOScreenState extends State<CEOScreen> {
       case 'WagesScreen':
         return CEOselectRegion(section: 'Wages');
       case 'ContractorDetailsScreen':
-        return Contractordetails(); // Add this case
+        return CEOselectRegion(section: 'Contractor'); // Add this case
       default:
         return Scaffold(body: Center(child: Text('Page not found')));
     }

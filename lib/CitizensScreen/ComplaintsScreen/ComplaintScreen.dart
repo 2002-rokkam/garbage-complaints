@@ -54,13 +54,28 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
         isLoading = true;
       });
 
+      String formattedDistrict = selectedDistrict!.replaceAll(' ', '_');
+      String formattedGramPanchayat = selectedGP!.replaceAll(' ', '_');
+
+      // Change letter after underscore to lowercase
+      formattedDistrict =
+          formattedDistrict.replaceAllMapped(RegExp(r'_(.)'), (match) {
+        return '_${match.group(1)?.toLowerCase()}';
+      });
+
+      formattedGramPanchayat =
+          formattedGramPanchayat.replaceAllMapped(RegExp(r'_(.)'), (match) {
+        return '_${match.group(1)?.toLowerCase()}';
+      });
+      print(formattedDistrict);
+
+      print(formattedGramPanchayat);
       try {
-        var uri = Uri.parse(
-            'https://c035-122-172-86-134.ngrok-free.app/api/complaints-register');
+        var uri = Uri.parse('http://167.71.230.247/api/complaints-register');
 
         var request = http.MultipartRequest('POST', uri)
-          ..fields['district'] = selectedDistrict!
-          ..fields['gram_panchayat'] = selectedGP!
+          ..fields['district'] = formattedDistrict
+          ..fields['gram_panchayat'] = formattedGramPanchayat
           ..fields['caption'] = caption;
 
         for (int i = 0; i < imageData.length; i++) {
@@ -284,10 +299,8 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
 
   List<String> gramPanchayats = [];
 
-  final String districtsUrl =
-      "https://c035-122-172-86-134.ngrok-free.app/api/getDistricts";
-  final String gpUrl =
-      "https://c035-122-172-86-134.ngrok-free.app/api/getGpComplaints";
+  final String districtsUrl = "http://167.71.230.247/api/getDistricts";
+  final String gpUrl = "http://167.71.230.247/api/getGpComplaints";
 
   Future<void> fetchDistricts() async {
     try {
@@ -598,7 +611,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                               ),
                               const SizedBox(height: 18),
                               const Text(
-                                'Click and Capture',
+                                'Click and Complaints',
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 16,

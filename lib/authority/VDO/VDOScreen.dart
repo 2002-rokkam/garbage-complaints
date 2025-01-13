@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
+import '../../workerLogout.dart';
 import 'VDOCalendarActivityScreen.dart';
 import 'VDOD2DCalnderActivity.dart';
 import 'VDORCCCalendarActivityScreen.dart';
@@ -54,7 +55,7 @@ class _VDOScreenState extends State<VDOScreen> {
     {
       'label': 'Contractor Details',
       'imageUrl':
-          'images/wages.png', // You can use a different image if you prefer
+          'images/Contractors.png', // You can use a different image if you prefer
       'route': 'ContractorDetailsScreen'
     },
   ];
@@ -82,9 +83,9 @@ class _VDOScreenState extends State<VDOScreen> {
     String? gramPanchayat = prefs.getString('gram_panchayat');
     print(gramPanchayat);
     if (gramPanchayat != null) {
-      final response = await http.get(Uri.parse(
-              'https://c035-122-172-86-134.ngrok-free.app/api/complaints-by-gram-panchayat/')
-          .replace(queryParameters: {
+      final response = await http.get(
+          Uri.parse('http://167.71.230.247/api/complaints-by-gram-panchayat/')
+              .replace(queryParameters: {
         'gram_panchayat': gramPanchayat,
       }));
 
@@ -139,7 +140,12 @@ class _VDOScreenState extends State<VDOScreen> {
                     IconButton(
                       icon: Icon(Icons.settings, color: Colors.white),
                       onPressed: () {
-                        // Navigate to settings or handle settings action here
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => WorkerSettingsPage(),
+                          ),
+                        );
                       },
                     ),
                   ],
@@ -176,12 +182,9 @@ class _VDOScreenState extends State<VDOScreen> {
                       child: PageView(
                         controller: _pageController,
                         children: [
-                          _buildImageContainer(
-                              'https://docs.flutter.dev/assets/images/dash/dash-fainting.gif'),
-                          _buildImageContainer(
-                              'https://europe1.discourse-cdn.com/figma/original/3X/7/1/7105e9c010b3d1f0ea893ed5ca3bd58e6cec090e.gif'),
-                          _buildImageContainer(
-                              'https://gifyard.com/wp-content/uploads/2023/01/girl-laughs.gif'),
+                          _buildImageContainer('images/test.jpg'),
+                          _buildImageContainer('images/garbage_cleaing2.jpeg'),
+                          _buildImageContainer('images/garbage_cleaing3.jpeg'),
                         ],
                       ),
                     ),
@@ -486,13 +489,11 @@ class _VDOScreenState extends State<VDOScreen> {
   Widget _buildImageContainer(String imageUrl) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: NetworkImage(imageUrl),
-          fit: BoxFit.cover,
-        ),
-        borderRadius: BorderRadius.circular(8),
+      child: Image.asset(
+        imageUrl,
+        fit: BoxFit.cover,
       ),
+
       height: MediaQuery.of(context).size.height *
           0.3, // Adjust height based on screen size
       width: MediaQuery.of(context).size.width *

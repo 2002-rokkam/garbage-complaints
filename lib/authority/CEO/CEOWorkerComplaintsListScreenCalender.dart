@@ -225,7 +225,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
     print(formData);
     try {
       Response response = await dio.post(
-        'https://c035-122-172-86-134.ngrok-free.app/api/update-complaint/${widget.complaint['complaint_id']}',
+        'http://167.71.230.247/api/update-complaint/${widget.complaint['complaint_id']}',
         data: formData,
       );
 
@@ -265,6 +265,9 @@ class _ComplaintCardState extends State<ComplaintCard> {
                 SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () => Navigator.of(context).pop(),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.green, // Set the background color to green
+                  ),
                   child: Text('Close'),
                 ),
               ],

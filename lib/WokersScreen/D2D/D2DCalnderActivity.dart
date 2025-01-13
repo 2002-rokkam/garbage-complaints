@@ -1,239 +1,4 @@
 // WokersScreen/D2D/D2DCalnderActivity.dart
-// import 'package:flutter/material.dart';
-// import 'package:table_calendar/table_calendar.dart';
-// import 'package:http/http.dart' as http;
-// import 'dart:convert';
-// import 'package:shared_preferences/shared_preferences.dart';
-
-// class D2DCalnderActivityScreen extends StatefulWidget {
-//   final String section;
-
-//   const D2DCalnderActivityScreen({Key? key, required this.section})
-//       : super(key: key);
-
-//   @override
-//   _D2DCalnderActivityScreenState createState() =>
-//       _D2DCalnderActivityScreenState();
-// }
-
-// class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
-//     with SingleTickerProviderStateMixin {
-//   DateTime _selectedDate = DateTime.now();
-//   List _activities = [];
-//   List _tripDetails = [];
-//   bool _isLoading = false;
-//   late TabController _tabController;
-//   String? workerId;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _tabController = TabController(length: 2, vsync: this);
-//     _fetchWorkerId();
-//   }
-
-//   Future<void> _fetchWorkerId() async {
-//     workerId = await getWorkerId();
-//     if (workerId != null && workerId!.isNotEmpty) {
-//       fetchActivities();
-//     } else {
-//       setState(() {
-//         _isLoading = false;
-//       });
-//     }
-//   }
-
-//   Future<String?> getWorkerId() async {
-//     final SharedPreferences prefs = await SharedPreferences.getInstance();
-//     return prefs.getString('worker_id');
-//   }
-
-//   Future<void> fetchActivities() async {
-//     if (workerId == null || workerId!.isEmpty) return;
-
-//     setState(() {
-//       _isLoading = true;
-//     });
-
-//     final url = Uri.parse(
-//         'https://c035-122-172-86-134.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
-
-//     try {
-//       final response = await http.get(url);
-//       if (response.statusCode == 200) {
-//         final data = json.decode(response.body);
-//         var sectionActivities = data['activities'];
-//         setState(() {
-//           _activities = sectionActivities;
-//           fetchQRDetails(workerId!);
-//         });
-//       } else {
-//         throw Exception('Failed to load activities');
-//       }
-//     } catch (e) {
-//       print(e);
-//     }
-//   }
-
-//   Future<void> fetchQRDetails(String workerId) async {
-//     if (workerId.isEmpty) return;
-
-//     final url = Uri.parse(
-//         'https://c035-122-172-86-134.ngrok-free.app/api/worker/$workerId/section/D2D_QR');
-//     try {
-//       final response = await http.get(url);
-//       if (response.statusCode == 200) {
-//         final data = json.decode(response.body);
-
-//         var qrDetails = data['activities'];
-//         var filteredQRDetails = qrDetails.where((qr) {
-//           DateTime qrDate = DateTime.parse(qr['date_time']).toLocal();
-//           return qrDate.day == _selectedDate.day &&
-//               qrDate.month == _selectedDate.month &&
-//               qrDate.year == _selectedDate.year;
-//         }).toList();
-
-//         setState(() {
-//           _tripDetails = filteredQRDetails;
-//           _isLoading = false;
-//         });
-//       } else {
-//         throw Exception('Failed to load QR details');
-//       }
-//     } catch (e) {
-//       print('Error: $e');
-//       setState(() {
-//         _isLoading = false;
-//       });
-//     }
-//   }
-
-//   List getActivitiesForSelectedDate() {
-//     return _activities
-//         .where((activity) =>
-//             DateTime.parse(activity['date_time']).toLocal().day ==
-//                 _selectedDate.day &&
-//             DateTime.parse(activity['date_time']).toLocal().month ==
-//                 _selectedDate.month &&
-//             DateTime.parse(activity['date_time']).toLocal().year ==
-//                 _selectedDate.year)
-//         .toList();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     if (workerId == null) {
-//       return Center(child: CircularProgressIndicator());
-//     }
-
-//     final selectedActivities = getActivitiesForSelectedDate();
-
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text(
-//           '${widget.section}',
-//           style: TextStyle(
-//             color: Colors.white,
-//             fontSize: 20,
-//             fontWeight: FontWeight.bold,
-//           ),
-//         ),
-//         backgroundColor: Color(0xFF5C964A),
-//         bottom: TabBar(
-//           controller: _tabController,
-//           labelColor: Colors.white,
-//           unselectedLabelColor: Colors.white,
-//           indicatorColor: Color.fromRGBO(255, 210, 98, 1),
-//           indicatorWeight: 3.0,
-//           tabs: [
-//             Tab(text: 'Before & After'),
-//             Tab(text: 'QR Data'),
-//           ],
-//         ),
-//       ),
-//       body: Column(
-//         children: [
-//           Container(
-//             child: TableCalendar(
-//               focusedDay: _selectedDate,
-//               firstDay: DateTime(2000),
-//               lastDay: DateTime(2100),
-//               calendarFormat: CalendarFormat.month,
-//               selectedDayPredicate: (day) => isSameDay(day, _selectedDate),
-//               onDaySelected: (selectedDay, focusedDay) {
-//                 setState(() {
-//                   _selectedDate = selectedDay;
-//                   _isLoading = true; // Show loading when a new date is selected
-//                 });
-//                 fetchActivities(); // Fetch activities for the new selected date
-//               },
-//               calendarStyle: CalendarStyle(
-//                 selectedDecoration: BoxDecoration(
-//                   color: Color(0xFF5C964A),
-//                   shape: BoxShape.circle,
-//                 ),
-//                 todayDecoration: BoxDecoration(
-//                   color: Color(0xFFFFA726),
-//                   shape: BoxShape.circle,
-//                 ),
-//               ),
-//             ),
-//           ),
-//           Expanded(
-//             child: _isLoading
-//                 ? Center(child: CircularProgressIndicator())
-//                 : TabBarView(
-//                     controller: _tabController,
-//                     children: [
-//                       Card(
-//                         child: ListTile(
-//                           title: Text('Total Activities'),
-//                           subtitle: Text('${selectedActivities.length}'),
-//                           trailing: ElevatedButton(
-//                             onPressed: () {
-//                               Navigator.push(
-//                                 context,
-//                                 MaterialPageRoute(
-//                                   builder: (context) => BeforeAfterScreen(
-//                                     selectedDate: _selectedDate,
-//                                     activities: selectedActivities,
-//                                   ),
-//                                 ),
-//                               );
-//                             },
-//                             child: Text('View All'),
-//                           ),
-//                         ),
-//                       ),
-//                       Card(
-//                         child: ListTile(
-//                           title: Text('Total QR Scans'),
-//                           subtitle: Text('${_tripDetails.length}'),
-//                           trailing: ElevatedButton(
-//                             onPressed: () {
-//                               Navigator.push(
-//                                 context,
-//                                 MaterialPageRoute(
-//                                   builder: (context) => QRDetailsScreen(
-//                                     selectedDate: _selectedDate,
-//                                     tripDetails: _tripDetails,
-//                                   ),
-//                                 ),
-//                               );
-//                             },
-//                             child: Text('View All'),
-//                           ),
-//                         ),
-//                       ),
-//                     ],
-//                   ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
@@ -291,7 +56,7 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
     });
 
     final url = Uri.parse(
-        'https://c035-122-172-86-134.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+        'http://167.71.230.247/api/worker/$workerId/section/${widget.section}');
 
     try {
       final response = await http.get(url);
@@ -313,8 +78,8 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
   Future<void> fetchQRDetails(String workerId) async {
     if (workerId.isEmpty) return;
 
-    final url = Uri.parse(
-        'https://c035-122-172-86-134.ngrok-free.app/api/worker/$workerId/section/D2D_QR');
+    final url =
+        Uri.parse('http://167.71.230.247/api/worker/$workerId/section/D2D_QR');
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
@@ -415,8 +180,9 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
             ),
           ),
           // Cleaning image below the calendar
-         
-          Expanded(
+
+          Container(
+            height: 100,
             child: _isLoading
                 ? Center(child: CircularProgressIndicator())
                 : TabBarView(
@@ -450,9 +216,7 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
                                     .green, // Set the background color to green
                               ),
                               child: Text('View All'),
-                              
                             ),
-                            
                           ),
                         ),
                       ),
@@ -478,7 +242,6 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
                                     ),
                                   ),
                                 );
-                                
                               },
                               style: ElevatedButton.styleFrom(
                                 primary: Colors
@@ -628,7 +391,6 @@ class BeforeAfterScreen extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: 8),
-                     
                     ],
                   ),
                 ),

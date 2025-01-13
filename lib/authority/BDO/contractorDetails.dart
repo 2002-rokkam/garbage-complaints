@@ -2,9 +2,13 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Contractordetails extends StatefulWidget {
+  final String gramPanchayat;
+
+  const Contractordetails({Key? key, required this.gramPanchayat})
+      : super(key: key);
+
   @override
   State<Contractordetails> createState() => _ContractordetailsState();
 }
@@ -19,25 +23,19 @@ class _ContractordetailsState extends State<Contractordetails> {
   }
 
   Future<List<Map<String, dynamic>>> fetchContractorDetails() async {
-    // Retrieve the 'gp' value from shared preferences
-    final prefs = await SharedPreferences.getInstance();
-    String? gp = prefs.getString('gram_panchayat');
-    if (gp == null) {
-      throw Exception('Gram Panchayat not set in SharedPreferences');
-    }
-
     final apiUrl =
-        'https://c035-122-172-86-134.ngrok-free.app/api/contractors/?gp=$gp';
+        'http://167.71.230.247/api/contractors/?gp=${widget.gramPanchayat}';
     final response = await http.get(Uri.parse(apiUrl));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       return List<Map<String, dynamic>>.from(data['contractors']);
     } else {
-      throw Exception('Failed to load contractor details');
+      throw Exception('No contractor details');
     }
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -59,7 +57,7 @@ class _ContractordetailsState extends State<Contractordetails> {
             return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
-            return Center(child: Text("Error: ${snapshot.error}"));
+            return Center(child: Text("${snapshot.error}"));
           }
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(child: Text("No contractor details found!"));

@@ -45,7 +45,7 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
     });
 
     final url = Uri.parse(
-        'https://c035-122-172-86-134.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+        'http://167.71.230.247/api/worker/$workerId/section/${widget.section}');
 
     try {
       final response = await http.get(url);
@@ -71,7 +71,7 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
     String workerId = await getWorkerId();
 
     final url = Uri.parse(
-        'https://c035-122-172-86-134.ngrok-free.app/api/worker/$workerId/section/Waste Details');
+        'http://167.71.230.247/api/worker/$workerId/section/Waste Details');
 
     try {
       final response = await http.get(url);
@@ -164,7 +164,8 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
               ),
             ),
           ),
-          Expanded(
+          Container(
+            height: 80,
             child: _isLoading
                 ? Center(child: CircularProgressIndicator())
                 : selectedActivities.isEmpty
@@ -173,56 +174,38 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
                         controller: _tabController,
                         children: [
                           Card(
-                            // margin: const EdgeInsets.all(8.0),
+                            margin: const EdgeInsets.all(8.0),
                             child: Padding(
                               padding: const EdgeInsets.all(16.0),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
                                     'Total Activities: ${selectedActivities.length}',
                                     style: TextStyle(fontSize: 16),
                                   ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      TextButton(
-                                        onPressed: () {
-                                          if (_tabController.index == 0) {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    BeforeAfterScreen(
-                                                  activities:
-                                                      selectedActivities,
-                                                ),
-                                              ),
-                                            );
-                                          } else {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    TripDetailsScreen(
-                                                  tripDetails: _tripDetails,
-                                                ),
-                                              ),
-                                            );
-                                          }
-                                        },
-                                        child: Text(
-                                          'View All',
-                                          style: TextStyle(
-                                            color: Colors.green,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              BeforeAfterScreen(
+                                            activities: selectedActivities,
                                           ),
                                         ),
+                                      );
+                                    },
+                                    child: Text(
+                                      'View All',
+                                      style: TextStyle(
+                                        color: Colors.green,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
                                       ),
-                                    ],
+                                    ),
                                   ),
                                 ],
                               ),
@@ -233,52 +216,34 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
                             child: Padding(
                               padding: const EdgeInsets.all(16.0),
                               child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
                                     'Total Trip Details: ${_tripDetails.length}',
                                     style: TextStyle(fontSize: 16),
                                   ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      TextButton(
-                                        onPressed: () {
-                                          if (_tabController.index == 0) {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    BeforeAfterScreen(
-                                                  activities:
-                                                      selectedActivities,
-                                                ),
-                                              ),
-                                            );
-                                          } else {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    TripDetailsScreen(
-                                                  tripDetails: _tripDetails,
-                                                ),
-                                              ),
-                                            );
-                                          }
-                                        },
-                                        child: Text(
-                                          'View All',
-                                          style: TextStyle(
-                                            color: Colors.green,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              TripDetailsScreen(
+                                            tripDetails: _tripDetails,
                                           ),
                                         ),
+                                      );
+                                    },
+                                    child: Text(
+                                      'View All',
+                                      style: TextStyle(
+                                        color: Colors.green,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
                                       ),
-                                    ],
+                                    ),
                                   ),
                                 ],
                               ),
@@ -286,7 +251,7 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
                           ),
                         ],
                       ),
-          ),
+          )
         ],
       ),
     );
@@ -301,6 +266,8 @@ class TripDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Trip Details'),
@@ -308,80 +275,78 @@ class TripDetailsScreen extends StatelessWidget {
       ),
       body: tripDetails.isEmpty
           ? Center(
-              child: Text('No trip details available for the selected date.'))
-          : SingleChildScrollView(
-              child: Column(
-                children: tripDetails.map((trip) {
-                  return Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Worker Email: ${trip['worker_name']}',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
+              child: Text(
+                'No trip details available for the selected date.',
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+            )
+          : ListView.builder(
+              padding: EdgeInsets.all(16),
+              itemCount: tripDetails.length,
+              itemBuilder: (context, index) {
+                final trip = tripDetails[index];
+                return Card(
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  margin: EdgeInsets.symmetric(vertical: 8),
+                  child: Padding(
+                    padding: EdgeInsets.all(screenWidth * 0.04),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Trips: ${trip['trips']}',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
                           ),
-                          SizedBox(height: 8),
-                          Text(
-                            'Trips: ${trip['trips']}',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            'Quantity of Waste: ${trip['quantity_waste']} kg',
-                            style: TextStyle(
-                              color: Color(0xFF252525),
-                              fontSize: 14,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            'Segregated Degradable: ${trip['segregated_degradable']} kg',
-                            style: TextStyle(
-                              color: Color(0xFF252525),
-                              fontSize: 14,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            'Segregated Non-Degradable: ${trip['segregated_non_degradable']} kg',
-                            style: TextStyle(
-                              color: Color(0xFF252525),
-                              fontSize: 14,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            'Segregated Plastic: ${trip['segregated_plastic']} kg',
-                            style: TextStyle(
-                              color: Color(0xFF252525),
-                              fontSize: 14,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            'Date: ${trip['date_time']}',
-                            style: TextStyle(
-                              color: Color(0xFF252525),
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                        SizedBox(height: 8),
+                        _buildDetailRow('Quantity of Waste',
+                            '${trip['quantity_waste']} kg'),
+                        _buildDetailRow('Segregated Degradable',
+                            '${trip['segregated_degradable']} kg'),
+                        _buildDetailRow('Segregated Non-Degradable',
+                            '${trip['segregated_non_degradable']} kg'),
+                        _buildDetailRow('Segregated Plastic',
+                            '${trip['segregated_plastic']} kg'),
+                        _buildDetailRow('Date', trip['date_time']),
+                      ],
                     ),
-                  );
-                }).toList(),
+                  ),
+                );
+              },
+            ),
+    );
+  }
+
+  Widget _buildDetailRow(String title, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              '$title:',
+              style: TextStyle(
+                color: Colors.grey[600],
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
               ),
             ),
+          ),
+          Text(
+            value,
+            style: TextStyle(
+              color: Colors.grey[800],
+              fontSize: 14,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -516,7 +481,6 @@ class BeforeAfterScreen extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: 8),
-                      
                     ],
                   ),
                 ),
