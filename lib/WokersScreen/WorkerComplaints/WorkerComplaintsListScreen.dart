@@ -77,13 +77,48 @@ class _ComplaintCardState extends State<ComplaintCard> {
   double? _longitude;
   late String workerId;
   String _workerEmail = '';
-  bool _isLoading = false; // Variable to track loading state
 
   @override
   void initState() {
     super.initState();
+    _fetchAddress();
     _loadWorkerDetails();
-    _submitFormData();
+  }
+
+  Future<void> _fetchAddress() async {
+    try {
+      final photos = widget.complaint['photos'];
+      if (photos.isNotEmpty) {
+        final firstPhoto = photos[0];
+        final latitude = firstPhoto['latitude'];
+        final longitude = firstPhoto['longitude'];
+
+        if (latitude != null && longitude != null) {
+          List<Placemark> placemarks =
+              await placemarkFromCoordinates(latitude, longitude);
+          if (placemarks.isNotEmpty) {
+            Placemark place = placemarks.first;
+            String address =
+                '${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
+            setState(() {
+              _address = address;
+            });
+          } else {
+            setState(() {
+              _address = "No address found";
+            });
+          }
+        }
+      } else {
+        setState(() {
+          _address = "No coordinates available";
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _address = "Error: ${e.toString()}";
+      });
+    }
   }
 
   Future<void> _pickImage() async {
@@ -188,10 +223,6 @@ class _ComplaintCardState extends State<ComplaintCard> {
       return;
     }
 
-    setState(() {
-      _isLoading = true; // Start loading
-    });
-
     Dio dio = Dio();
 
     // Generate a unique timestamp
@@ -216,10 +247,6 @@ class _ComplaintCardState extends State<ComplaintCard> {
         data: formData,
       );
 
-      setState(() {
-        _isLoading = false; // Stop loading
-      });
-
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Complaint updated successfully'),
@@ -232,55 +259,46 @@ class _ComplaintCardState extends State<ComplaintCard> {
         ));
       }
     } catch (e) {
-      setState(() {
-        _isLoading = false; // Stop loading in case of error
-      });
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Error: ${e.toString()}'),
       ));
     }
   }
 
-  void _showResolvedPhoto(String resolvedPhoto) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Image.network(
-                resolvedPhoto, // Display the resolved photo
-                height: 200,
-                width: 200,
-                fit: BoxFit.cover,
-              ),
-              SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop(); // Close the dialog
-                    },
-                    style: ElevatedButton.styleFrom(
-                      primary:
-                          Colors.green, // Set the background color to green
-                    ),
-                    child: Text('Close'),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
+  void _showResolvedPhoto(Map<String, dynamic>? resolvedPhoto) {
+    if (resolvedPhoto != null && resolvedPhoto['image'] != null) {
+      final imageUrl = '${resolvedPhoto['image']}';
 
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.network(imageUrl),
+                SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.green, // Set the background color to green
+                  ),
+                  child: Text('Close'),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('No resolved photo available'),
+      ));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -449,25 +467,17 @@ class _ComplaintCardState extends State<ComplaintCard> {
                 ),
               ),
               child: TextButton(
-                onPressed: _isLoading
-                    ? null // Disable button while loading
-                    : status == "Resolved"
-                        ? () => _showResolvedPhoto(resolvedPhoto)
-                        : _pickImage,
-                child: _isLoading
-                    ? CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      )
-                    : Text(
-                        status == "Resolved"
-                            ? 'View Reply'
-                            : 'Reply with Image',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+                onPressed: status == "Resolved"
+                    ? () => _showResolvedPhoto(resolvedPhoto)
+                    : _pickImage,
+                child: Text(
+                  status == "Resolved" ? 'View Reply' : 'Reply with Image',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
               ),
             ),
           ),
