@@ -37,7 +37,6 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
       });
       _fetchComplaints();
     } else {
-      // Handle missing token (e.g., redirect to login screen)
       throw 'Token not found. Please log in again.';
     }
   }
@@ -94,6 +93,8 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
             controller: _tabController,
             labelColor: Colors.white,
             unselectedLabelColor: Colors.white,
+            indicatorColor: Color.fromRGBO(255, 210, 98, 1),
+            indicatorWeight: 3.0,
             tabs: const [
               Tab(text: 'Pending'),
               Tab(text: 'Resolved'),
@@ -134,9 +135,10 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
     );
   }
 
-  Widget complaintCard(Map<String, dynamic> complaint) {
+ Widget complaintCard(Map<String, dynamic> complaint) {
     String formattedDate = DateFormat('dd-MM-yyyy')
         .format(DateTime.parse(complaint['created_at']));
+    List<dynamic> images = complaint['photos'];
 
     return Card(
       margin: EdgeInsets.all(10),
@@ -145,13 +147,49 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
         children: [
           ClipRRect(
             borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-            child: FadeInImage.assetNetwork(
-              placeholder:
-                  'images/setting-loder.gif', // Add a loader image in assets
-              image: '${complaint['photos'][0]['image']}',
-              fit: BoxFit.cover,
+            child: Container(
               height: 150,
-              width: double.infinity,
+              child: Stack(
+                children: [
+                  PageView.builder(
+                    itemCount: images.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          _showFullScreenImage(images[index]['image']);
+                        },
+                        child: FadeInImage.assetNetwork(
+                          placeholder: 'images/setting-loder.gif',
+                          image: images[index]['image'],
+                          fit: BoxFit.cover,
+                          height: 150,
+                          width: double.infinity,
+                        ),
+                      );
+                    },
+                  ),
+                  if (images.length > 1) ...[
+                    Positioned(
+                      left: 10,
+                      top: 50,
+                      child: Icon(
+                        Icons.arrow_back_ios,
+                        color: Colors.white.withOpacity(0.7),
+                        size: 30,
+                      ),
+                    ),
+                    Positioned(
+                      right: 10,
+                      top: 50,
+                      child: Icon(
+                        Icons.arrow_forward_ios,
+                        color: Colors.white.withOpacity(0.7),
+                        size: 30,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
             ),
           ),
           ListTile(
@@ -177,6 +215,41 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
             ),
         ],
       ),
+    );
+  }
+
+  void _showFullScreenImage(String imageUrl) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: InteractiveViewer(
+            panEnabled: true,
+            minScale: 0.5,
+            maxScale: 4.0,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 10,
+                    offset: Offset(0, 10),
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Image.network(
+                  imageUrl,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 

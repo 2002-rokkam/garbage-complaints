@@ -681,7 +681,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                                     ),
                                   );
                                 }).toList(),
-                                if (imageData.length < 3)
+                                if (imageData.length < 2)
                                   Padding(
                                     padding: const EdgeInsets.only(right: 16),
                                     child: GestureDetector(
