@@ -27,25 +27,18 @@
 //   List<String> blocks = [];
 //   List<String> gramPanchayats = [];
 
-//   final String districtsUrl = "https://167.71.230.247/api/getDistricts";
-//   final String blocksUrl = "https://167.71.230.247/api/getBlocks/";
-//   final String gpUrl = "https://167.71.230.247/api/getGp/";
+//   final String districtsUrl = "http://167.71.230.247/api/getDistricts";
+//   final String blocksUrl = "http://167.71.230.247/api/getBlocks/";
+//   final String gpUrl = "http://167.71.230.247/api/getGp/";
 
-//   // Load district from SharedPreferences
 //   Future<void> loadDistrictFromPrefs() async {
 //     SharedPreferences prefs = await SharedPreferences.getInstance();
 //     setState(() {
 //       selectedDistrict = prefs.getString('District');
 //     });
 //     if (selectedDistrict != null) {
-//       fetchBlocks(selectedDistrict!); // Load blocks if district is found
+//       fetchBlocks(selectedDistrict!);
 //     }
-//   }
-
-//   // Save district to SharedPreferences
-//   Future<void> saveDistrictToPrefs(String district) async {
-//     SharedPreferences prefs = await SharedPreferences.getInstance();
-//     await prefs.setString('District', district);
 //   }
 
 //   Future<void> fetchDistricts() async {
@@ -68,10 +61,8 @@
 //     try {
 //       final response =
 //           await http.get(Uri.parse('$blocksUrl?district=$selectedDistrict'));
-
 //       if (response.statusCode == 200) {
 //         final Map<String, dynamic> data = json.decode(response.body);
-
 //         if (data['district'] == selectedDistrict) {
 //           setState(() {
 //             blocks = List<String>.from(data['blocks']);
@@ -95,9 +86,7 @@
 
 //       if (response.statusCode == 200) {
 //         final Map<String, dynamic> data = json.decode(response.body);
-
-//         if (data['district'] == selectedDistrict &&
-//             data['block'] == selectedBlock) {
+//         if (data['district'] == selectedDistrict) {
 //           setState(() {
 //             gramPanchayats = List<String>.from(data['gram panchayat']);
 //           });
@@ -116,15 +105,36 @@
 //     if (selectedDistrict != null &&
 //         selectedBlock != null &&
 //         selectedGramPanchayat != null) {
+//       String formattedDistrict = selectedDistrict!.replaceAll(' ', '_');
+//       String formattedBlock = selectedBlock!.replaceAll(' ', '_');
+//       String formattedGramPanchayat =
+//           selectedGramPanchayat!.replaceAll(' ', '_');
+
+//       // Change letter after underscore to lowercase
+//       formattedDistrict =
+//           formattedDistrict.replaceAllMapped(RegExp(r'_(.)'), (match) {
+//         return '_${match.group(1)?.toLowerCase()}';
+//       });
+
+//       formattedBlock =
+//           formattedBlock.replaceAllMapped(RegExp(r'_(.)'), (match) {
+//         return '_${match.group(1)?.toLowerCase()}';
+//       });
+
+//       formattedGramPanchayat =
+//           formattedGramPanchayat.replaceAllMapped(RegExp(r'_(.)'), (match) {
+//         return '_${match.group(1)?.toLowerCase()}';
+//       });
+
 //       Widget targetScreen;
 
 //       switch (widget.section) {
 //         case 'Door to Door':
 //           targetScreen = BDOD2DCalnderActivityScreen(
 //             section: 'Door to Door',
-//             district: selectedDistrict!,
-//             block: selectedBlock!,
-//             gramPanchayat: selectedGramPanchayat!,
+//             district: formattedDistrict,
+//             block: formattedBlock,
+//             gramPanchayat: formattedGramPanchayat,
 //           );
 //           break;
 //         case 'Road Sweeping':
@@ -132,30 +142,30 @@
 //         case 'CSC':
 //           targetScreen = BDOCalendarActivityScreen(
 //             section: widget.section,
-//             district: selectedDistrict!,
-//             block: selectedBlock!,
-//             gramPanchayat: selectedGramPanchayat!,
+//             district: formattedDistrict,
+//             block: formattedBlock,
+//             gramPanchayat: formattedGramPanchayat,
 //           );
 //           break;
 //         case 'RRC':
 //           targetScreen = BDORCCCalendarActivityScreen(
 //             section: 'RRC',
-//             district: selectedDistrict!,
-//             block: selectedBlock!,
-//             gramPanchayat: selectedGramPanchayat!,
+//             district: formattedDistrict,
+//             block: formattedBlock,
+//             gramPanchayat: formattedGramPanchayat,
 //           );
 //           break;
 //         case 'Wages':
 //           targetScreen = BDOWagesCalendarActivityScreen(
 //             section: 'Wages',
-//             district: selectedDistrict!,
-//             block: selectedBlock!,
-//             gramPanchayat: selectedGramPanchayat!,
+//             district: formattedDistrict,
+//             block: formattedBlock,
+//             gramPanchayat: formattedGramPanchayat,
 //           );
 //           break;
 //         case 'Contractor':
 //           targetScreen = Contractordetails(
-//             gramPanchayat: selectedGramPanchayat!,
+//             gramPanchayat: formattedGramPanchayat,
 //           );
 //           break;
 //         default:
@@ -189,15 +199,14 @@
 //   @override
 //   void initState() {
 //     super.initState();
-//     fetchDistricts(); // Fetch districts when the page loads
-//     loadDistrictFromPrefs(); // Load district from SharedPreferences
+//     fetchDistricts();
+//     loadDistrictFromPrefs();
 //   }
 
 //   void showOptions(BuildContext context, List<String> options,
 //       ValueChanged<String> onSelected) {
 //     List<String> filteredOptions = List.from(options);
-//     bool isLoading =
-//         options.isEmpty; // Show loading if no options are available.
+//     bool isLoading = options.isEmpty;
 
 //     showModalBottomSheet(
 //       context: context,
@@ -272,8 +281,7 @@
 //                   showOptions(context, districts, (value) {
 //                     setState(() {
 //                       selectedDistrict = value;
-//                       saveDistrictToPrefs(value); // Save the district
-//                       selectedBlock = null; // Reset dependent fields
+//                       selectedBlock = null;
 //                       selectedGramPanchayat = null;
 //                     });
 //                     fetchBlocks(value);
@@ -307,7 +315,7 @@
 //                   showOptions(context, blocks, (value) {
 //                     setState(() {
 //                       selectedBlock = value;
-//                       selectedGramPanchayat = null; // Reset dependent fields
+//                       selectedGramPanchayat = null;
 //                     });
 //                     fetchGramPanchayats(selectedDistrict!, value);
 //                   });
@@ -394,6 +402,8 @@
 //   }
 // }
 
+
+// authority/BDO/selectRegion.dart
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -431,8 +441,18 @@ class _RegionSelectorState extends State<RegionSelector> {
     setState(() {
       selectedDistrict = prefs.getString('District');
     });
-    if (selectedDistrict != null) {
-      fetchBlocks(selectedDistrict!);
+    // if (selectedDistrict != null) {
+    //   fetchBlocks(selectedDistrict!);
+    // }
+  }
+
+  Future<void> loadBDOFromPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? bdo = prefs.getString('Bdo');
+    if (bdo != null) {
+      // Replace underscores with spaces
+      selectedBlock = bdo.replaceAll('_', ' ');
+      print("BDO: $bdo"); // Log the BDO for debugging or usage
     }
   }
 
@@ -452,33 +472,33 @@ class _RegionSelectorState extends State<RegionSelector> {
     }
   }
 
-  Future<void> fetchBlocks(String selectedDistrict) async {
-    try {
-      final response =
-          await http.get(Uri.parse('$blocksUrl?district=$selectedDistrict'));
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = json.decode(response.body);
-        if (data['district'] == selectedDistrict) {
-          setState(() {
-            blocks = List<String>.from(data['blocks']);
-          });
-        } else {
-          throw Exception('Unexpected district returned from API');
-        }
-      } else {
-        throw Exception('Failed to load blocks');
-      }
-    } catch (e) {
-      print('Error fetching blocks: $e');
-    }
-  }
+  // Future<void> fetchBlocks(String selectedDistrict) async {
+  //   try {
+  //     final response =
+  //         await http.get(Uri.parse('$blocksUrl?district=$selectedDistrict'));
+  //     if (response.statusCode == 200) {
+  //       final Map<String, dynamic> data = json.decode(response.body);
+  //       if (data['district'] == selectedDistrict) {
+  //         setState(() {
+  //           blocks = List<String>.from(data['blocks']);
+  //         });
+  //       } else {
+  //         throw Exception('Unexpected district returned from API');
+  //       }
+  //     } else {
+  //       throw Exception('Failed to load blocks');
+  //     }
+  //   } catch (e) {
+  //     print('Error fetching blocks: $e');
+  //   }
+  // }
 
   Future<void> fetchGramPanchayats(
       String selectedDistrict, String selectedBlock) async {
     try {
       final response = await http.get(
           Uri.parse('$gpUrl?district=$selectedDistrict&block=$selectedBlock'));
-
+      print(response.statusCode);
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
         if (data['district'] == selectedDistrict) {
@@ -596,6 +616,7 @@ class _RegionSelectorState extends State<RegionSelector> {
     super.initState();
     fetchDistricts();
     loadDistrictFromPrefs();
+    loadBDOFromPrefs(); // Load BDO on init
   }
 
   void showOptions(BuildContext context, List<String> options,
@@ -679,7 +700,7 @@ class _RegionSelectorState extends State<RegionSelector> {
                       selectedBlock = null;
                       selectedGramPanchayat = null;
                     });
-                    fetchBlocks(value);
+                    // fetchBlocks(value);
                   });
                 }
               },
@@ -705,17 +726,17 @@ class _RegionSelectorState extends State<RegionSelector> {
             SizedBox(height: 16),
             Text('Block', style: TextStyle(fontSize: 16)),
             GestureDetector(
-              onTap: () {
-                if (selectedDistrict != null) {
-                  showOptions(context, blocks, (value) {
-                    setState(() {
-                      selectedBlock = value;
-                      selectedGramPanchayat = null;
-                    });
-                    fetchGramPanchayats(selectedDistrict!, value);
-                  });
-                }
-              },
+              // onTap: () {
+              //   if (selectedDistrict != null) {
+              //     showOptions(context, blocks, (value) {
+              //       setState(() {
+              //         selectedBlock = value;
+              //         selectedGramPanchayat = null;
+              //       });
+              //       fetchGramPanchayats(selectedDistrict!, selectedBlock!);
+              //     });
+              //   }
+              // },
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                 decoration: BoxDecoration(
@@ -740,6 +761,7 @@ class _RegionSelectorState extends State<RegionSelector> {
             GestureDetector(
               onTap: () {
                 if (selectedBlock != null) {
+                  fetchGramPanchayats(selectedDistrict!, selectedBlock!);
                   showOptions(context, gramPanchayats, (value) {
                     setState(() {
                       selectedGramPanchayat = value;
