@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../PoweredByBikaji.dart';
 import '../../workerLogout.dart';
 import 'CEOWorkerComplaintsCalender.dart';
 import 'CEOselectRegion.dart';
@@ -472,6 +473,8 @@ class _CEOScreenState extends State<CEOScreen> {
                         }).toList(),
                       ),
                     ),
+                    SizedBox(height: 26),
+                    PoweredByBikaji(),
                   ],
                 ),
               ),

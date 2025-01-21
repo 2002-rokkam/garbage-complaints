@@ -1,6 +1,7 @@
 // WokersScreen/WorkerScreen.dart
 import 'package:flutter/material.dart';
 import 'dart:async';
+import '../PoweredByBikaji.dart';
 import '../workerLogout.dart';
 import 'WorkerCommon/ActionScreen.dart';
 import 'D2D/D2DSectionScreen.dart';
@@ -273,71 +274,7 @@ class _WorkerScreenState extends State<WorkerScreen> {
                       ),
                     ),
                     SizedBox(height: 26),
-
-                    Container(
-                      width: 402,
-                      height: 127,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 88, vertical: 11),
-                      decoration: BoxDecoration(color: Colors.white),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            height: 102,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  width: 111,
-                                  height: 63,
-                                  decoration: BoxDecoration(),
-                                  child: Image.asset(
-                                    'images/bikaji.png',
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                const SizedBox(height: 7),
-                                Container(
-                                  width: double.infinity,
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'Powered By',
-                                        style: TextStyle(
-                                          color: Color(0xFF3B4A5C),
-                                          fontSize: 14,
-                                          fontFamily: 'Nunito Sans',
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 4),
-                                      Text(
-                                        'Bikaji International',
-                                        style: TextStyle(
-                                          color: Color(0xFF3B4A5C),
-                                          fontSize: 16,
-                                          fontFamily: 'Nunito Sans',
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    PoweredByBikaji(),
                   ],
                 ),
               ),

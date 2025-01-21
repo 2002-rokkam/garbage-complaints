@@ -303,7 +303,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Auto-Scrolling Carousel Slider with Overlayed Date and Status
-          Container(
+            Container(
             width: 370,
             height: 188.59,
             child: Stack(
@@ -312,7 +312,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                 CarouselSlider(
                   options: CarouselOptions(
                     height: 188.59,
-                    autoPlay: true,
+                    autoPlay: false,
                     autoPlayInterval: Duration(seconds: 3),
                     autoPlayAnimationDuration: Duration(milliseconds: 800),
                     viewportFraction: 1.0,
@@ -320,21 +320,44 @@ class _ComplaintCardState extends State<ComplaintCard> {
                   ),
                   items: images.map<Widget>((image) {
                     return ClipRRect(
-                      borderRadius:
-                          BorderRadius.circular(16), // Rounded corners
+                      borderRadius: BorderRadius.circular(16),
                       child: Container(
                         width: 370,
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: NetworkImage(
-                              '${image['image']}',
-                            ),
+                            image: NetworkImage('${image['image']}'),
                             fit: BoxFit.cover,
                           ),
                         ),
                       ),
                     );
                   }).toList(),
+                ),
+                // Left Indicator
+                Positioned(
+                  top: 0,
+                  bottom: 0,
+                  left: 0,
+                  child: IconButton(
+                    icon: Icon(Icons.arrow_back_ios),
+                    color: Colors.white,
+                    onPressed: () {
+                      // Add logic to go to the previous image
+                    },
+                  ),
+                ),
+                // Right Indicator
+                Positioned(
+                  top: 0,
+                  bottom: 0,
+                  right: 0,
+                  child: IconButton(
+                    icon: Icon(Icons.arrow_forward_ios),
+                    color: Colors.white,
+                    onPressed: () {
+                      // Add logic to go to the next image
+                    },
+                  ),
                 ),
                 // Date and Status Overlay
                 Positioned(
@@ -343,7 +366,6 @@ class _ComplaintCardState extends State<ComplaintCard> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // Status
                       Container(
                         width: 110,
                         height: 26,
@@ -352,8 +374,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                         decoration: ShapeDecoration(
                           color: status == "Resolved"
                               ? Color(0xFF5C964A)
-                              : Colors
-                                  .orange, // Green for Resolved, Orange for Pending/Other
+                              : Colors.orange,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(18),
                           ),
@@ -362,16 +383,14 @@ class _ComplaintCardState extends State<ComplaintCard> {
                           child: Text(
                             status,
                             style: TextStyle(
-                              color: Colors
-                                  .white, // White text for better readability
+                              color: Colors.white,
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),
                       ),
-                      SizedBox(width: 8), // Space between status and date
-                      // Date
+                      SizedBox(width: 8),
                       Container(
                         width: 78,
                         height: 26,
@@ -399,7 +418,6 @@ class _ComplaintCardState extends State<ComplaintCard> {
               ],
             ),
           ),
-
           SizedBox(height: 8),
           // Location and Caption
           Padding(
