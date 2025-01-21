@@ -60,6 +60,7 @@ dependencies:
   google_fonts: ^6.2.0
   flutter_screenutil: ^5.9.3
   file_picker: ^7.0.2  
+  url_launcher: ^6.1.14
 
 dev_dependencies:
   flutter_test:
