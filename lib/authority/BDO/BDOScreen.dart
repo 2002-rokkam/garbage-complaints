@@ -2,7 +2,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
-import '../../workerLogout.dart';
+import '../../PoweredByBikaji.dart';
+import '../../Login/workerLogout.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -471,6 +472,8 @@ class _BDOScreenState extends State<BDOScreen> {
                         }).toList(),
                       ),
                     ),
+                     SizedBox(height: 26),
+                    PoweredByBikaji(),
                   ],
                 ),
               ),

@@ -418,7 +418,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
 
   Future<void> _launchURL(Uri url) async {
     if (await canLaunchUrl(url)) {
-      await launchUrl(url);
+      await launchUrl(url, mode: LaunchMode.externalApplication);
     } else {
       throw 'Could not launch $url';
     }
@@ -433,8 +433,8 @@ class _ComplaintCardState extends State<ComplaintCard> {
     final caption = widget.complaint['caption'];
     final resolvedPhoto = widget.complaint['resolved_photo'];
     final dirlatitude = widget.complaint['photos'][0]['latitude'];
-
     final dirlongitude = widget.complaint['photos'][0]['longitude'];
+    
     String time = '${createdAt.hour}:${createdAt.minute}:${createdAt.second}';
     return Container(
       margin: EdgeInsets.only(bottom: 16.0),
@@ -600,7 +600,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                       onPressed: () {
                         if (dirlatitude != null && dirlongitude != null) {
                           final url = Uri.parse(
-                              'https://www.google.com/maps?q=$_latitude,$_longitude');
+                              'https://www.google.com/maps/search/?api=1&query=$dirlatitude,$dirlongitude');
                           _launchURL(url);
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(

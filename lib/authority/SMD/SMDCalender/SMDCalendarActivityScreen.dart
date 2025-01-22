@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'SMDSelectedDateActivitiesScreen.dart';
+import '../../BDO/CalnderActivity/BDOSelectedDateActivitiesScreen.dart';
 
 class SMDCalendarActivityScreen extends StatefulWidget {
   final String section;
@@ -132,7 +132,7 @@ class _SMDCalendarActivityScreenState extends State<SMDCalendarActivityScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Total Complaints: ${selectedActivities.length}',
+                    'Total Activities: ${selectedActivities.length}',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -144,7 +144,7 @@ class _SMDCalendarActivityScreenState extends State<SMDCalendarActivityScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => SMDSelectedDateActivitiesScreen(
+                          builder: (context) => BDOSelectedDateActivitiesScreen(
                             selectedDate: _selectedDate,
                             activities: selectedActivities,
                           ),

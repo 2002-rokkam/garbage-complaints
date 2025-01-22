@@ -9,7 +9,8 @@ import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:url_launcher/url_launcher.dart';
+ 
 class BDOWorkerComplaintsListScreenCalender extends StatelessWidget {
   final DateTime date;
   final List<dynamic> complaints;
@@ -282,6 +283,132 @@ class _ComplaintCardState extends State<ComplaintCard> {
     }
   }
 
+ void _showFullScreenImage(
+      String imageUrl, double dirlatitude, double dirlongitude) async {
+    // Get the time from the complaint (you can format it as needed)
+    final createdAt = DateTime.parse(widget.complaint['created_at']).toLocal();
+    String time = '${createdAt.hour}:${createdAt.minute}:${createdAt.second}';
+
+    // Format the latitude and longitude with 6 decimal places
+    String location =
+        'Lat: ${dirlatitude.toStringAsFixed(6)}, Long: ${dirlongitude.toStringAsFixed(6)}';
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Stack(
+            children: [
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Image with interactive zoom
+                  InteractiveViewer(
+                    panEnabled: true,
+                    minScale: 0.5,
+                    maxScale: 4.0,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 10,
+                            offset: Offset(0, 10),
+                          ),
+                        ],
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: Image.network(
+                          imageUrl,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  // Time overlay below the image
+                  Container(
+                    width: 370,
+                    height: 45,
+                    padding: const EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.86),
+                                              borderRadius: BorderRadius.circular(16),
+
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.23),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          time,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                            fontFamily: 'Nunito Sans',
+                            fontWeight: FontWeight.w700,
+                            height: 1.43,
+                            letterSpacing: 0.14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Location (Latitude & Longitude) below the time
+                  Container(
+                    width: 370,
+                    height: 45,
+                    padding: const EdgeInsets.all(2),
+                    
+                    decoration: BoxDecoration(
+                     color: Colors.white.withOpacity(0.86),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.23),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          location,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                            fontFamily: 'Nunito Sans',
+                            fontWeight: FontWeight.w600,
+                            height: 1.43,
+                            letterSpacing: 0.14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _launchURL(Uri url) async {
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
   @override
   Widget build(BuildContext context) {
     final images = widget.complaint['photos'];
@@ -289,6 +416,9 @@ class _ComplaintCardState extends State<ComplaintCard> {
     final createdAt = DateTime.parse(widget.complaint['created_at']).toLocal();
     final caption = widget.complaint['caption'];
     final resolvedPhoto = widget.complaint['resolved_photo'];
+    final dirlatitude = widget.complaint['photos'][0]['latitude'];
+    final dirlongitude = widget.complaint['photos'][0]['longitude'];
+        String time = '${createdAt.hour}:${createdAt.minute}:${createdAt.second}';
 
     return Container(
       margin: EdgeInsets.only(bottom: 16.0),
@@ -319,7 +449,14 @@ class _ComplaintCardState extends State<ComplaintCard> {
                     enlargeCenterPage: false,
                   ),
                   items: images.map<Widget>((image) {
-                    return ClipRRect(
+                     return GestureDetector(
+                      onTap: () {
+                        // Open image in full-screen view when tapped
+                        _showFullScreenImage(
+                            image['image'], dirlatitude, dirlongitude);
+                      },
+                    
+                    child: ClipRRect(
                       borderRadius: BorderRadius.circular(16),
                       child: Container(
                         width: 370,
@@ -330,7 +467,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                           ),
                         ),
                       ),
-                    );
+                    ),);
                   }).toList(),
                 ),
                 // Left Indicator
@@ -392,7 +529,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                       ),
                       SizedBox(width: 8),
                       Container(
-                        width: 78,
+                        width: 128,
                         height: 26,
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 5),
@@ -404,7 +541,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                         ),
                         child: Center(
                           child: Text(
-                            '${createdAt.day}/${createdAt.month}/${createdAt.year}',
+                            '$time,${createdAt.day}/${createdAt.month}/${createdAt.year}',
                             style: TextStyle(
                               color: Color(0xFF252525),
                               fontSize: 12,
@@ -420,7 +557,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
           ),
           SizedBox(height: 8),
           // Location and Caption
-          Padding(
+           Padding(
             padding: EdgeInsets.symmetric(horizontal: 12.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -439,6 +576,21 @@ class _ComplaintCardState extends State<ComplaintCard> {
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
+                    ),
+                    // Location Redirect Icon
+                    IconButton(
+                      icon: Icon(Icons.directions, color: Colors.blue),
+                      onPressed: () {
+                        if (dirlatitude != null && dirlongitude != null) {
+                          final url = Uri.parse(
+                              'https://www.google.com/maps?q=$_latitude,$_longitude');
+                          _launchURL(url);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('Location not available'),
+                          ));
+                        }
+                      },
                     ),
                   ],
                 ),

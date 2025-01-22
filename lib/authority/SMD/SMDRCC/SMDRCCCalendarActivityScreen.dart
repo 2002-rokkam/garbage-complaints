@@ -7,7 +7,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../BDO/BDORCC/BDOTripDetailsScreen.dart';
-import '../../BDO/BDORCC/RCCBeforeAfterScreen.dart';
+import '../../VDO/VDObefreAfter.dart';
 
 class SMDRCCCalendarActivityScreen extends StatefulWidget {
   final String section;
@@ -218,7 +218,7 @@ class _SMDRCCCalendarActivityScreenState
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                                  RCCBeforeAfterScreen(
+                                                  VDOBeforeAfterScreen(
                                                 activities: selectedActivities,
                                               ),
                                             ),
@@ -277,7 +277,7 @@ class _SMDRCCCalendarActivityScreenState
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                                  RCCBeforeAfterScreen(
+                                                  VDOBeforeAfterScreen(
                                                 activities: selectedActivities,
                                               ),
                                             ),

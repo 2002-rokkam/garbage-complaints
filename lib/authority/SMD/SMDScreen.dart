@@ -5,7 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../workerLogout.dart';
+import '../../PoweredByBikaji.dart';
+import '../../Login/workerLogout.dart';
 import 'SMDWorkerComplaintsCalender.dart';
 import 'SMDselectRegion.dart';
 
@@ -80,7 +81,7 @@ class _SMDScreenState extends State<SMDScreen> {
     print(District);
     if (District != null) {
       final response = await http.get(
-          Uri.parse('http://167.71.230.247/api/complaints-by-district/')
+          Uri.parse('http://167.71.230.247/api/complaints-by-state/')
               .replace(queryParameters: {
         'district': District,
       }));
@@ -472,6 +473,8 @@ class _SMDScreenState extends State<SMDScreen> {
                         }).toList(),
                       ),
                     ),
+                     SizedBox(height: 26),
+                    PoweredByBikaji(),
                   ],
                 ),
               ),

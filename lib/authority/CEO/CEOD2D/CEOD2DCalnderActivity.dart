@@ -4,9 +4,8 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../BDO/BDOD2D/BDOBeforeAfterScreen.dart';
 import '../../BDO/BDOD2D/QRDetailsScreen.dart';
+import '../../BDO/CalnderActivity/BDOSelectedDateActivitiesScreen.dart';
 
 class CEOD2DCalnderActivityScreen extends StatefulWidget {
   final String section;
@@ -229,7 +228,7 @@ class _CEOD2DCalnderActivityScreenState
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => BDOBeforeAfterScreen(
+                                  builder: (context) => BDOSelectedDateActivitiesScreen(
                                     selectedDate: _selectedDate,
                                     activities: selectedActivities,
                                   ),

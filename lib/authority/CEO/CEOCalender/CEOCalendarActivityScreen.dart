@@ -5,7 +5,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'CEOSelectedDateActivitiesScreen.dart';
+import '../../BDO/CalnderActivity/BDOSelectedDateActivitiesScreen.dart';
 
 class CEOCalendarActivityScreen extends StatefulWidget {
   final String section;
@@ -133,7 +133,7 @@ class _CEOCalendarActivityScreenState extends State<CEOCalendarActivityScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Total Complaints: ${selectedActivities.length}',
+                    'Total Activities: ${selectedActivities.length}',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -145,7 +145,7 @@ class _CEOCalendarActivityScreenState extends State<CEOCalendarActivityScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => CEOSelectedDateActivitiesScreen(
+                          builder: (context) => BDOSelectedDateActivitiesScreen(
                             selectedDate: _selectedDate,
                             activities: selectedActivities,
                           ),

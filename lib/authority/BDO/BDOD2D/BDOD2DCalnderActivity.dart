@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'BDOBeforeAfterScreen.dart';
+import '../CalnderActivity/BDOSelectedDateActivitiesScreen.dart';
 import 'QRDetailsScreen.dart';
 
 class BDOD2DCalnderActivityScreen extends StatefulWidget {
@@ -227,7 +227,7 @@ class _BDOD2DCalnderActivityScreenState
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => BDOBeforeAfterScreen(
+                                  builder: (context) => BDOSelectedDateActivitiesScreen(
                                     selectedDate: _selectedDate,
                                     activities: selectedActivities,
                                   ),

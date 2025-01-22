@@ -133,7 +133,7 @@ class _BDOCalendarActivityScreenState extends State<BDOCalendarActivityScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Total Complaints: ${selectedActivities.length}',
+                    'Total Activities: ${selectedActivities.length}',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,

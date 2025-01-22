@@ -6,7 +6,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'SMDWorkerComplaintsListScreenCalender.dart'; // Import SharedPreferences
+import '../BDO/BDOWorkerComplaintsListScreenCalender.dart';
+
 
 class SMDWorkerComplaintsCalender extends StatefulWidget {
   @override
@@ -32,7 +33,7 @@ class _SMDWorkerComplaintsCalenderState
     final District = prefs.getString('District') ?? '';
 
     final url =
-        'http://167.71.230.247/api/complaintdetails-by-district/?district=$District';
+        'http://167.71.230.247/api/complaintdetails-by-state';
 
     try {
       final response = await http.get(Uri.parse(url));
@@ -64,7 +65,7 @@ class _SMDWorkerComplaintsCalenderState
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => SMDWorkerComplaintsListScreenCalender(
+        builder: (context) => BDOWorkerComplaintsListScreenCalender(
           date: selectedDay,
           complaints: complaints,
           onUpdate: _fetchComplaintData, // Pass the refresh method

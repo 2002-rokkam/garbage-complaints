@@ -60,7 +60,7 @@ dependencies:
   google_fonts: ^6.2.0
   flutter_screenutil: ^5.9.3
   file_picker: ^7.0.2  
-  url_launcher: ^6.1.14
+  url_launcher: ^6.1.12
 
 dev_dependencies:
   flutter_test:
@@ -81,7 +81,7 @@ dev_dependencies:
 flutter_icons:
   android: true
   ios: true
-  image_path: "images/Icon.png"  # Replace with your icon path
+  image_path: "images/hdpi.png"  # Replace with your icon path
 
 # The following section is specific to Flutter packages.
 flutter:
