@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../WorkerCommon/BeforeAfterContainer.dart';
 import 'D2DCalnderActivity.dart';
-import 'QRTab.dart'; // Add this package
+import 'QRTab.dart';
 
 class D2DSectionScreen extends StatefulWidget {
   final String section;
@@ -15,14 +15,31 @@ class D2DSectionScreen extends StatefulWidget {
   _D2DSectionScreenState createState() => _D2DSectionScreenState();
 }
 
-class _D2DSectionScreenState extends State<D2DSectionScreen> {
+class _D2DSectionScreenState extends State<D2DSectionScreen>
+    with SingleTickerProviderStateMixin {
   List<Widget> beforeAfterContainers = [];
   bool isLoading = true;
+  late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+    _tabController.addListener(_handleTabChange);
     _fetchActivities();
+  }
+
+  @override
+  void dispose() {
+    _tabController.removeListener(_handleTabChange);
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  void _handleTabChange() {
+    setState(() {
+      // Trigger UI update when tab changes
+    });
   }
 
   Future<void> _fetchActivities() async {
@@ -87,16 +104,14 @@ class _D2DSectionScreenState extends State<D2DSectionScreen> {
         appBar: AppBar(
           backgroundColor: const Color(0xFF5C964A),
           leading: IconButton(
-            icon:
-                const Icon(Icons.arrow_back, color: Colors.white), // Back Icon
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () {
-              Navigator.pop(context); // Go back to previous screen
+              Navigator.pop(context);
             },
           ),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // The section title centered
               Text(
                 '${widget.section}',
                 style: const TextStyle(
@@ -108,8 +123,7 @@ class _D2DSectionScreenState extends State<D2DSectionScreen> {
           ),
           actions: [
             IconButton(
-              icon: const Icon(Icons.calendar_today,
-                  color: Colors.white), // Calendar Icon
+              icon: const Icon(Icons.calendar_today, color: Colors.white),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -121,56 +135,48 @@ class _D2DSectionScreenState extends State<D2DSectionScreen> {
               },
             ),
           ],
-          bottom: const TabBar(
-            tabs: [
-              Tab(
-                text: "Before After",
-              ),
-              Tab(
-                text: "QR",
-              ),
-              Tab(
-                text: "GPS",
-              ),
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: const [
+              Tab(text: "Before After"),
+              Tab(text: "QR"),
+              Tab(text: "GPS"),
             ],
-            labelColor: Colors.white, // Set label color to white
-            unselectedLabelColor:
-                Colors.white, // Unselected tabs will also be white
-            indicatorColor: Color.fromRGBO(
-                255, 210, 98, 1), // The selected tab underline color
-            indicatorWeight: 3.0, // Thicker underline
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.white,
+            indicatorColor: const Color.fromRGBO(255, 210, 98, 1),
+            indicatorWeight: 3.0,
           ),
         ),
         body: TabBarView(
+          controller: _tabController,
           children: [
             _buildBeforeAfterTab(),
-            QRTab(), // Using the stateless QRTab widget here
+            QRTab(),
             _buildGPSTab(),
           ],
         ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: addNewContainer,
-          backgroundColor: const Color(0xFFFFD262),
-          label: Row(
-            children: const [
-              Icon(
-                Icons.add,
-                size: 24,
-                color: Color(0xFF252525),
-              ),
-              SizedBox(width: 12),
-              Text(
-                'Add More',
-                style: TextStyle(
-                  color: Color(0xFF252525),
-                  fontSize: 14,
-                  fontFamily: 'Nunito Sans',
-                  fontWeight: FontWeight.w500,
+        floatingActionButton: _tabController.index == 0
+            ? FloatingActionButton.extended(
+                onPressed: addNewContainer,
+                backgroundColor: const Color(0xFFFFD262),
+                label: Row(
+                  children: const [
+                    Icon(Icons.add, size: 24, color: Color(0xFF252525)),
+                    SizedBox(width: 12),
+                    Text(
+                      'Add More',
+                      style: TextStyle(
+                        color: Color(0xFF252525),
+                        fontSize: 14,
+                        fontFamily: 'Nunito Sans',
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-        ),
+              )
+            : null,
       ),
     );
   }
@@ -194,7 +200,7 @@ class _D2DSectionScreenState extends State<D2DSectionScreen> {
   }
 
   Widget _buildGPSTab() {
-    return Center(
+    return const Center(
       child: Text(
         "GPS Tab Content",
         style: TextStyle(fontSize: 16),

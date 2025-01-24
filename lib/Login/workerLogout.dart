@@ -1,9 +1,9 @@
-// workerLogout.dart
+// Login/workerLogout.dart
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'onBoardingPage1.dart';
+import '../onBoardingPage1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class WorkerSettingsPage extends StatefulWidget {

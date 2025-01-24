@@ -1,7 +1,8 @@
 // WokersScreen/WorkerScreen.dart
 import 'package:flutter/material.dart';
 import 'dart:async';
-import '../workerLogout.dart';
+import '../PoweredByBikaji.dart';
+import '../Login/workerLogout.dart';
 import 'WorkerCommon/ActionScreen.dart';
 import 'D2D/D2DSectionScreen.dart';
 import 'RRC/RRCSectionScreen.dart';
@@ -139,7 +140,7 @@ class _WorkerScreenState extends State<WorkerScreen> {
                       child: PageView(
                         controller: _pageController,
                         children: [
-                           _buildImageContainer('images/test.jpg'),
+                          _buildImageContainer('images/test.jpg'),
                           _buildImageContainer('images/garbage_cleaing2.jpeg'),
                           _buildImageContainer('images/garbage_cleaing3.jpeg'),
                         ],
@@ -272,6 +273,8 @@ class _WorkerScreenState extends State<WorkerScreen> {
                         ),
                       ),
                     ),
+                    SizedBox(height: 26),
+                    PoweredByBikaji(),
                   ],
                 ),
               ),

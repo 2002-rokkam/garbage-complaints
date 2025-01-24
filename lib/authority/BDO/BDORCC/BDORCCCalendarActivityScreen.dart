@@ -5,9 +5,8 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import '../../VDO/VDObefreAfter.dart';
 import 'BDOTripDetailsScreen.dart';
-import 'RCCBeforeAfterScreen.dart';
 
 class BDORCCCalendarActivityScreen extends StatefulWidget {
   final String section;
@@ -218,7 +217,7 @@ class _BDORCCCalendarActivityScreenState
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                                  RCCBeforeAfterScreen(
+                                                  VDOBeforeAfterScreen(
                                                 activities: selectedActivities,
                                               ),
                                             ),
@@ -277,7 +276,7 @@ class _BDORCCCalendarActivityScreenState
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                                  RCCBeforeAfterScreen(
+                                                  VDOBeforeAfterScreen(
                                                 activities: selectedActivities,
                                               ),
                                             ),

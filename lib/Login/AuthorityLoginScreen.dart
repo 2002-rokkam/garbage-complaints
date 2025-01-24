@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../WokersScreen/WorkerScreen.dart';
 import '../authority/BDO/BDOScreen.dart';
 import '../authority/CEO/CEOScreen.dart';
+import '../authority/SMD/SMDScreen.dart';
 import '../authority/VDO/VDOScreen.dart';
 import 'PhoneAuthScreen.dart';
 
@@ -49,6 +50,8 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
           await prefs.setString('position', user['Position']);
           await prefs.setString('gram_panchayat', user['gp']);
           await prefs.setString('District', user['District']);
+          await prefs.setString('Bdo', user['gp']);
+
 
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Login successful!')),
@@ -87,6 +90,13 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
               context,
               MaterialPageRoute(
                 builder: (context) => CEOScreen(), // Navigate to BDO screen
+              ),
+            );
+          } else if (user['Position'] == 'Smd') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SMDScreen(), // Navigate to BDO screen
               ),
             );
           } else {

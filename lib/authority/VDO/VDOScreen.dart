@@ -2,7 +2,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
-import '../../workerLogout.dart';
+import '../../PoweredByBikaji.dart';
+import '../../Login/workerLogout.dart';
 import 'VDOCalendarActivityScreen.dart';
 import 'VDOD2DCalnderActivity.dart';
 import 'VDORCCCalendarActivityScreen.dart';
@@ -476,6 +477,8 @@ class _VDOScreenState extends State<VDOScreen> {
                         }).toList(),
                       ),
                     ),
+                     SizedBox(height: 26),
+                    PoweredByBikaji(),
                   ],
                 ),
               ),

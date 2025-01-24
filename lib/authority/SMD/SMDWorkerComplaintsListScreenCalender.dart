@@ -1,4 +1,4 @@
-// authority/CEO/CEOWorkerComplaintsListScreenCalender.dart
+// authority/SMD/SMDWorkerComplaintsListScreenCalender.dart
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:geocoding/geocoding.dart';
@@ -10,12 +10,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class CEOWorkerComplaintsListScreenCalender extends StatelessWidget {
+class SMDWorkerComplaintsListScreenCalender extends StatelessWidget {
   final DateTime date;
   final List<dynamic> complaints;
   final VoidCallback onUpdate; // Callback to refresh data
 
-  CEOWorkerComplaintsListScreenCalender(
+  SMDWorkerComplaintsListScreenCalender(
       {required this.date, required this.complaints, required this.onUpdate});
 
   @override
