@@ -8,10 +8,14 @@ import 'authority/BDO/BDOScreen.dart';
 import 'authority/CEO/CEOScreen.dart';
 import 'authority/VDO/VDOScreen.dart';
 import 'onBoardingPage1.dart';
-
+import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+    await Firebase.initializeApp();
+
+  // await Firebase.initializeApp(
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );  
   final prefs = await SharedPreferences.getInstance();
 
   String? token = prefs.getString('id_token');

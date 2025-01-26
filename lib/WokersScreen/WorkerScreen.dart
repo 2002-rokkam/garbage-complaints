@@ -16,7 +16,6 @@ class WorkerScreen extends StatefulWidget {
 }
 
 class _WorkerScreenState extends State<WorkerScreen> {
-  final PageController _pageController = PageController();
 
   final List<Map<String, String>> buttonItems = [
     {
@@ -49,20 +48,7 @@ class _WorkerScreenState extends State<WorkerScreen> {
 
   @override
   void initState() {
-    super.initState();
-    // Auto-scroll images
-    Future.delayed(Duration.zero, () {
-      Timer.periodic(const Duration(seconds: 3), (Timer timer) {
-        if (_pageController.hasClients) {
-          int nextPage = _pageController.page!.toInt() + 1;
-          _pageController.animateToPage(
-            nextPage % 3,
-            duration: const Duration(milliseconds: 500),
-            curve: Curves.easeInOut,
-          );
-        }
-      });
-    });
+    super.initState();   
   }
 
   @override
@@ -138,11 +124,8 @@ class _WorkerScreenState extends State<WorkerScreen> {
                     child: Container(
                       height: 150,
                       child: PageView(
-                        controller: _pageController,
                         children: [
-                          _buildImageContainer('images/test.jpg'),
-                          _buildImageContainer('images/garbage_cleaing2.jpeg'),
-                          _buildImageContainer('images/garbage_cleaing3.jpeg'),
+                          _buildImageContainer('images/mainimage.png'),
                         ],
                       ),
                     ),
@@ -343,9 +326,9 @@ class _WorkerScreenState extends State<WorkerScreen> {
           children: [
             Container(
               width: MediaQuery.of(context).size.width *
-                  0.15, // Responsive image width
+                  0.12, // Responsive image width
               height: MediaQuery.of(context).size.width *
-                  0.15, // Responsive image height
+                  0.12, // Responsive image height
               clipBehavior: Clip.antiAlias,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8), // Rounded corners

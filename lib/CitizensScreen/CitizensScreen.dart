@@ -16,7 +16,6 @@ class CitizensScreen extends StatefulWidget {
 }
 
 class _CitizensScreenState extends State<CitizensScreen> {
-  final PageController _pageController = PageController();
   int _selectedIndex = 0;
 
   final List<Map<String, String>> buttonItems = [
@@ -61,16 +60,6 @@ class _CitizensScreenState extends State<CitizensScreen> {
   @override
   void initState() {
     super.initState();
-    Timer.periodic(const Duration(seconds: 3), (Timer timer) {
-      if (_pageController.hasClients) {
-        int nextPage = _pageController.page!.toInt() + 1;
-        _pageController.animateToPage(
-          nextPage % 3,
-          duration: const Duration(milliseconds: 500),
-          curve: Curves.easeInOut,
-        );
-      }
-    });
   }
 
   void _onItemTapped(int index) {
@@ -121,11 +110,8 @@ class _CitizensScreenState extends State<CitizensScreen> {
                 child: Container(
                   height: 150,
                   child: PageView(
-                    controller: _pageController,
                     children: [
-                      _buildImageContainer('images/test.jpg'),
-                      _buildImageContainer('images/garbage_cleaing2.jpeg'),
-                      _buildImageContainer('images/garbage_cleaing3.jpeg'),
+                      _buildImageContainer('images/mainimage.png'),
                     ],
                   ),
                 ),

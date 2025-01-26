@@ -16,8 +16,6 @@ class SMDScreen extends StatefulWidget {
 }
 
 class _SMDScreenState extends State<SMDScreen> {
-  final PageController _pageController = PageController();
-
   int totalComplaints = 0;
   int pendingComplaints = 0;
   int resolvedComplaints = 0;
@@ -61,18 +59,7 @@ class _SMDScreenState extends State<SMDScreen> {
   void initState() {
     super.initState();
     fetchData();
-    Future.delayed(Duration.zero, () {
-      Timer.periodic(const Duration(seconds: 3), (Timer timer) {
-        if (_pageController.hasClients) {
-          int nextPage = _pageController.page!.toInt() + 1;
-          _pageController.animateToPage(
-            nextPage % 3,
-            duration: const Duration(milliseconds: 500),
-            curve: Curves.easeInOut,
-          );
-        }
-      });
-    });
+    
   }
 
   Future<void> fetchData() async {
@@ -177,11 +164,8 @@ class _SMDScreenState extends State<SMDScreen> {
                     child: Container(
                       height: 150,
                       child: PageView(
-                        controller: _pageController,
                         children: [
-                          _buildImageContainer('images/test.jpg'),
-                          _buildImageContainer('images/garbage_cleaing2.jpeg'),
-                          _buildImageContainer('images/garbage_cleaing3.jpeg'),
+                          _buildImageContainer('images/mainimage.png'),
                         ],
                       ),
                     ),
@@ -541,9 +525,9 @@ class _SMDScreenState extends State<SMDScreen> {
           children: [
             Container(
               width: MediaQuery.of(context).size.width *
-                  0.15, // Responsive image width
+                  0.12, // Responsive image width
               height: MediaQuery.of(context).size.width *
-                  0.15, // Responsive image height
+                  0.12, // Responsive image height
               clipBehavior: Clip.antiAlias,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8), // Rounded corners
