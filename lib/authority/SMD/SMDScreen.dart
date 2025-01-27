@@ -23,34 +23,34 @@ class _SMDScreenState extends State<SMDScreen> {
   final List<Map<String, String>> buttonItems = [
     {
       'label': 'Door to Door',
-      'imageUrl': 'images/d2d.png',
+      'imageUrl': 'assets/images/d2d.png',
       'route': 'DoorToDoorScreen'
     },
     {
       'label': 'Road Sweeping',
-      'imageUrl': 'images/road_sweeping.png',
+      'imageUrl': 'assets/images/road_sweeping.png',
       'route': 'RoadSweepingScreen'
     },
     {
       'label': 'Drain Cleaning',
-      'imageUrl': 'images/drainage_collectin.png',
+      'imageUrl': 'assets/images/drainage_collectin.png',
       'route': 'DrainCleaningScreen'
     },
     {
       'label': 'Community Service Centre',
-      'imageUrl': 'images/CSC.png',
+      'imageUrl': 'assets/images/CSC.png',
       'route': 'CSCScreen'
     },
     {
       'label': 'Resource Recovery Centre',
-      'imageUrl': 'images/RRC.png',
+      'imageUrl': 'assets/images/RRC.png',
       'route': 'RRCScreen'
     },
-    {'label': 'Wages', 'imageUrl': 'images/wages.png', 'route': 'WagesScreen'},
+    {'label': 'Wages', 'imageUrl': 'assets/images/wages.png', 'route': 'WagesScreen'},
     {
       'label': 'Contractor Details',
       'imageUrl':
-          'images/Contractors.png', // You can use a different image if you prefer
+          'assets/images/Contractors.png', // You can use a different image if you prefer
       'route': 'ContractorDetailsScreen'
     },
   ];
@@ -164,7 +164,7 @@ class _SMDScreenState extends State<SMDScreen> {
                       height: 150,
                       child: PageView(
                         children: [
-                          _buildImageContainer('images/mainimage.png'),
+                          _buildImageContainer('assets/images/mainimage.png'),
                         ],
                       ),
                     ),
@@ -269,7 +269,7 @@ class _SMDScreenState extends State<SMDScreen> {
                                 clipBehavior: Clip.antiAlias,
                                 decoration: BoxDecoration(),
                                 child: Image.asset(
-                                  'images/Complaints.png',
+                                  'assets/images/Complaints.png',
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -322,7 +322,7 @@ class _SMDScreenState extends State<SMDScreen> {
                                     clipBehavior: Clip.antiAlias,
                                     decoration: BoxDecoration(),
                                     child: Image.asset(
-                                      'images/pending.png',
+                                      'assets/images/pending.png',
                                       fit: BoxFit.cover,
                                     ),
                                   ),
@@ -391,7 +391,7 @@ class _SMDScreenState extends State<SMDScreen> {
                                     clipBehavior: Clip.antiAlias,
                                     decoration: BoxDecoration(),
                                     child: Image.asset(
-                                      'images/resved.png',
+                                      'assets/images/resved.png',
                                       fit: BoxFit.cover,
                                     ),
                                   ),

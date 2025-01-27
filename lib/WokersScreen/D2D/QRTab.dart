@@ -164,7 +164,7 @@ class _QRTabState extends State<QRTab> {
             ),
           ),
           child: Center(
-            child: Image.asset('images/QR.png'),
+            child: Image.asset('assets/images/QR.png'),
           ),
         ),
       ),

@@ -21,37 +21,37 @@ class _CitizensScreenState extends State<CitizensScreen> {
   final List<Map<String, String>> buttonItems = [
     {
       'label': 'Villages Cleaned',
-      'imageUrl': 'images/villages_cleaned.png',
+      'imageUrl': 'assets/images/villages_cleaned.png',
       'route': 'DoorToDoorScreen',
       'number': '345'
     },
     {
       'label': 'Swachhta Mitra',
-      'imageUrl': 'images/group-discussion 1.png',
+      'imageUrl': 'assets/images/group-discussion 1.png',
       'route': 'RoadSweepingScreen',
       'number': '150'
     },
     {
       'label': 'Homes and Shops Cleaned',
-      'imageUrl': 'images/shop.png',
+      'imageUrl': 'assets/images/shop.png',
       'route': 'DrainCleaningScreen',
       'number': '200'
     },
     {
       'label': 'Roads Cleaned',
-      'imageUrl': 'images/road_sweeping.png',
+      'imageUrl': 'assets/images/road_sweeping.png',
       'route': 'CSCScreen',
       'number': '120'
     },
     {
       'label': 'Dumping Yard',
-      'imageUrl': 'images/Dumping-Yard.png',
+      'imageUrl': 'assets/images/Dumping-Yard.png',
       'route': 'RRCScreen',
       'number': '95'
     },
     {
       'label': 'Garbage Dumped',
-      'imageUrl': 'images/Garbage_Dumped.png',
+      'imageUrl': 'assets/images/Garbage_Dumped.png',
       'route': 'WagesScreen',
       'number': '75'
     },
@@ -111,7 +111,7 @@ class _CitizensScreenState extends State<CitizensScreen> {
                   height: 150,
                   child: PageView(
                     children: [
-                      _buildImageContainer('images/mainimage.png'),
+                      _buildImageContainer('assets/images/mainimage.png'),
                     ],
                   ),
                 ),
@@ -248,7 +248,7 @@ class _CitizensScreenState extends State<CitizensScreen> {
                               clipBehavior: Clip.antiAlias,
                               decoration: BoxDecoration(),
                               child: Image.asset(
-                                'images/Actin.png',
+                                'assets/images/Actin.png',
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -311,7 +311,7 @@ class _CitizensScreenState extends State<CitizensScreen> {
                               clipBehavior: Clip.antiAlias,
                               decoration: BoxDecoration(),
                               child: Image.asset(
-                                'images/Complaints.png',
+                                'assets/images/Complaints.png',
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -359,7 +359,7 @@ class _CitizensScreenState extends State<CitizensScreen> {
                               height: 63,
                               decoration: BoxDecoration(),
                               child: Image.asset(
-                                'images/bikaji.png',
+                                'assets/images/bikaji.png',
                                 fit: BoxFit.cover,
                               ),
                             ),

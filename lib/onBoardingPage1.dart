@@ -52,7 +52,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Image.asset(
-                  'images/LocationLogo.png', // Replace with your asset
+                  'assets/images/LocationLogo.png', // Replace with your asset
                   height: 150, // Adjust as needed
                 ),
               ),

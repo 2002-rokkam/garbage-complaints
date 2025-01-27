@@ -25,7 +25,7 @@ class PoweredByBikaji extends StatelessWidget {
                   width: 111,
                   height: 63,
                   child: Image.asset(
-                    'images/bikaji.png',
+                    'assets/images/bikaji.png',
                     fit: BoxFit.cover,
                   ),
                 ),

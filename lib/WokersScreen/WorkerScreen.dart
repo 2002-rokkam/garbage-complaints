@@ -20,30 +20,30 @@ class _WorkerScreenState extends State<WorkerScreen> {
   final List<Map<String, String>> buttonItems = [
     {
       'label': 'Door to Door',
-      'imageUrl': 'images/d2d.png',
+      'imageUrl': 'assets/images/d2d.png',
       'route': 'DoorToDoorScreen'
     },
     {
       'label': 'Road Sweeping',
-      'imageUrl': 'images/road_sweeping.png',
+      'imageUrl': 'assets/images/road_sweeping.png',
       'route': 'RoadSweepingScreen'
     },
     {
       'label': 'Drain Cleaning',
-      'imageUrl': 'images/drainage_collectin.png',
+      'imageUrl': 'assets/images/drainage_collectin.png',
       'route': 'DrainCleaningScreen'
     },
     {
       'label': 'Community Service Centre',
-      'imageUrl': 'images/CSC.png',
+      'imageUrl': 'assets/images/CSC.png',
       'route': 'CSCScreen'
     },
     {
       'label': 'Resource Recovery Centre',
-      'imageUrl': 'images/RRC.png',
+      'imageUrl': 'assets/images/RRC.png',
       'route': 'RRCScreen'
     },
-    {'label': 'Wages', 'imageUrl': 'images/wages.png', 'route': 'WagesScreen'},
+    {'label': 'Wages', 'imageUrl': 'assets/images/wages.png', 'route': 'WagesScreen'},
   ];
 
   @override
@@ -125,7 +125,7 @@ class _WorkerScreenState extends State<WorkerScreen> {
                       height: 150,
                       child: PageView(
                         children: [
-                          _buildImageContainer('images/mainimage.png'),
+                          _buildImageContainer('assets/images/mainimage.png'),
                         ],
                       ),
                     ),
@@ -234,7 +234,7 @@ class _WorkerScreenState extends State<WorkerScreen> {
                                   clipBehavior: Clip.antiAlias,
                                   decoration: BoxDecoration(),
                                   child: Image.asset(
-                                    'images/Complaints.png',
+                                    'assets/images/Complaints.png',
                                     fit: BoxFit.cover,
                                   ),
                                 ),

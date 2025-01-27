@@ -230,7 +230,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                       clipBehavior: Clip.antiAlias,
                       decoration: BoxDecoration(),
                       child: Image.asset(
-                        'images/done.png',
+                        'assets/images/done.png',
                         width: 24,
                         height: 24,
                       ),
@@ -391,7 +391,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Image.asset(
-                'images/d2d.png',
+                'assets/images/d2d.png',
                 width: 24,
                 height: 24,
               ),
@@ -419,7 +419,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Image.asset(
-                                  'images/Camera.png',
+                                  'assets/images/Camera.png',
                                   width: 24,
                                   height: 24,
                                 ),
@@ -505,7 +505,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Image.asset(
-                                  'images/Camera.png',
+                                  'assets/images/Camera.png',
                                   width: 24,
                                   height: 24,
                                 ),

@@ -228,7 +228,7 @@ class _BDOWagesCalendarActivityScreenState
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Image.asset(
-                                'images/wages.png',
+                                'assets/images/wages.png',
                                 width: 50,
                                 height: 50,
                               ),

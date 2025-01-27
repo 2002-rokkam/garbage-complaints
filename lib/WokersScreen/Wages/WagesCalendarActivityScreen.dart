@@ -226,7 +226,7 @@ class _WagesCalendarActivityScreenState
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Image.asset(
-                                'images/wages.png', // Replace with your logo asset
+                                'assets/images/wages.png', // Replace with your logo asset
                                 width: 50,
                                 height: 50,
                               ),

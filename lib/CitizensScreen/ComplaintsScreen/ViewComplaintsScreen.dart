@@ -105,7 +105,7 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
         body: isLoading
             ? Center(
                 child: Image.asset(
-                  'images/Loder.gif', // Your GIF path in assets
+                  'assets/images/Loder.gif', // Your GIF path in assets
                   width: 200, // Adjust the size as needed
                   height: 200,
                 ),
@@ -159,7 +159,7 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
                           _showFullScreenImage(images[index]['image']);
                         },
                         child: FadeInImage.assetNetwork(
-                          placeholder: 'images/setting-loder.gif',
+                          placeholder: 'assets/images/setting-loder.gif',
                           image: images[index]['image'],
                           fit: BoxFit.cover,
                           height: 150,

@@ -40,7 +40,7 @@ class complaintsBottomBar extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Image.asset(
-                      'images/camera-icn.png', // Replace with the correct path of your image
+                      'assets/images/camera-icn.png', // Replace with the correct path of your image
                       width: 16, // Adjust size as needed
                       height: 16, // Adjust size as needed
                     ),
@@ -83,7 +83,7 @@ class complaintsBottomBar extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Image.asset(
-                    'images/document.png', // Replace with the correct path of your image
+                    'assets/images/document.png', // Replace with the correct path of your image
                     width: 16, // Adjust size as needed
                     height: 16, // Adjust size as needed
                   ),

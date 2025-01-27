@@ -78,7 +78,7 @@ class ComplaintRegisterScreen extends StatelessWidget {
                 height: screenHeight * 0.35, // 35% of screen height
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('images/successScreen.png'),
+                    image: AssetImage('assets/images/successScreen.png'),
                     fit: BoxFit.fill,
                   ),
                 ),

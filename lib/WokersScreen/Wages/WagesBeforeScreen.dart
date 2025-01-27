@@ -206,7 +206,7 @@ class _WagesBeforeScreenState extends State<WagesBeforeScreen> {
                   clipBehavior: Clip.antiAlias,
                   decoration: BoxDecoration(),
                   child: Image.asset(
-                    'images/done.png',
+                    'assets/images/done.png',
                     width: 24,
                     height: 24,
                   ),
@@ -301,7 +301,7 @@ class _WagesBeforeScreenState extends State<WagesBeforeScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Image.asset(
-                              'images/Camera.png',
+                              'assets/images/Camera.png',
                               width: 24,
                               height: 24,
                             ),

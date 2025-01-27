@@ -50,7 +50,7 @@ class _OnboadingScreen2State extends State<OnboardingScreen2> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Image.asset(
-                  'images/TruckLogo.png', // Replace with your asset
+                  'assets/images/TruckLogo.png', // Replace with your asset
                   height: 130, // Adjust as needed
                 ),
               ),

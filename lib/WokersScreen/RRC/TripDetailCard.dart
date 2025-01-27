@@ -136,7 +136,7 @@ class _TripDetailCardState extends State<TripDetailCard> {
                   width: screenWidth * 0.3,
                   height: screenWidth * 0.3,
                   child: Image.asset(
-                    'images/done.png',
+                    'assets/images/done.png',
                     width: 24,
                     height: 24,
                   ),
