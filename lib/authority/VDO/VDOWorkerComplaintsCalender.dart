@@ -32,7 +32,7 @@ class _VDOWorkerComplaintsCalenderState
         ''; // Default to  widget.gramPanchayat if not set
 
     final url =
-        'http://167.71.230.247/api/complaintdetails-by-gram-panchayat/?gram_panchayat=$gramPanchayat';
+        'https://sbmgrajasthan.com/api/complaintdetails-by-gram-panchayat/?gram_panchayat=$gramPanchayat';
 
     try {
       final response = await http.get(Uri.parse(url));

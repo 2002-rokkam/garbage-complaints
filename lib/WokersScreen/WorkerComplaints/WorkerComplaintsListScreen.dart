@@ -240,7 +240,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
 
     try {
       Response response = await dio.post(
-        'http://167.71.230.247/api/update-complaint/${widget.complaint['complaint_id']}',
+        'https://sbmgrajasthan.com/api/update-complaint/${widget.complaint['complaint_id']}',
         data: formData,
       );
 
@@ -350,8 +350,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                     padding: const EdgeInsets.all(2),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.86),
-                                              borderRadius: BorderRadius.circular(16),
-
+                      borderRadius: BorderRadius.circular(16),
                       border: Border.all(
                         color: Colors.white.withOpacity(0.23),
                       ),
@@ -380,9 +379,8 @@ class _ComplaintCardState extends State<ComplaintCard> {
                     width: 370,
                     height: 45,
                     padding: const EdgeInsets.all(2),
-                    
                     decoration: BoxDecoration(
-                     color: Colors.white.withOpacity(0.86),
+                      color: Colors.white.withOpacity(0.86),
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
                         color: Colors.white.withOpacity(0.23),
@@ -434,7 +432,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
     final resolvedPhoto = widget.complaint['resolved_photo'];
     final dirlatitude = widget.complaint['photos'][0]['latitude'];
     final dirlongitude = widget.complaint['photos'][0]['longitude'];
-    
+
     String time = '${createdAt.hour}:${createdAt.minute}:${createdAt.second}';
     return Container(
       margin: EdgeInsets.only(bottom: 16.0),

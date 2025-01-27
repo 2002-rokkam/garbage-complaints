@@ -43,7 +43,7 @@ class _WagesCalendarActivityScreenState
     });
 
     final url = Uri.parse(
-        'http://167.71.230.247/api/worker/$workerId/section/${widget.section}');
+        'https://sbmgrajasthan.com/api/worker/$workerId/section/${widget.section}');
 
     try {
       final response = await http.get(url);
@@ -199,8 +199,7 @@ class _WagesCalendarActivityScreenState
           ),
         ],
       ),
-              backgroundColor: Color.fromRGBO(239, 239, 239, 1),
-
+      backgroundColor: Color.fromRGBO(239, 239, 239, 1),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
           : _activities.isEmpty
@@ -209,60 +208,62 @@ class _WagesCalendarActivityScreenState
                   itemCount: _activities.length,
                   itemBuilder: (context, index) {
                     final activity = _activities[index];
-                   return Padding(
-  padding: const EdgeInsets.symmetric(vertical: 8.0), // Adds vertical space between containers
-  child: Container(
-    width: 370,
-    height: 74.67,
-    decoration: ShapeDecoration(
-      color: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
-    ),
-    child: Row(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Image.asset(
-            'images/wages.png', // Replace with your logo asset
-            width: 50,
-            height: 50,
-          ),
-        ),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                formatDateTime(activity['date_time']),
-                style: TextStyle(
-                  color: Color(0xFF252525),
-                  fontSize: 12,
-                ),
-              ),
-            ],
-          ),
-        ),
-        // Replace IconButton with TextButton
-        TextButton(
-          onPressed: () {
-            _showImageFullscreen(activity['before_image']);
-          },
-          child: Text(
-            'View',
-            style: TextStyle(
-              color: Color(0xFF5C964A), // Change to your preferred color
-              fontSize: 14,
-            ),
-          ),
-        ),
-      ],
-    ),
-  ),
-);
-
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical:
+                              8.0), // Adds vertical space between containers
+                      child: Container(
+                        width: 370,
+                        height: 74.67,
+                        decoration: ShapeDecoration(
+                          color: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Image.asset(
+                                'images/wages.png', // Replace with your logo asset
+                                width: 50,
+                                height: 50,
+                              ),
+                            ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    formatDateTime(activity['date_time']),
+                                    style: TextStyle(
+                                      color: Color(0xFF252525),
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            // Replace IconButton with TextButton
+                            TextButton(
+                              onPressed: () {
+                                _showImageFullscreen(activity['before_image']);
+                              },
+                              child: Text(
+                                'View',
+                                style: TextStyle(
+                                  color: Color(
+                                      0xFF5C964A), // Change to your preferred color
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
                   },
                 ),
     );

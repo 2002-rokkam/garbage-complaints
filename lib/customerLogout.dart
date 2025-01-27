@@ -114,7 +114,7 @@ class _SettingsPageState extends State<SettingsPage> {
     try {
       // API call to logout the user
       String logoutUrl =
-          'http://167.71.230.247/api/logout'; // Replace with your API endpoint
+          'https://sbmgrajasthan.com/api/logout'; // Replace with your API endpoint
 
       // Fetch token from shared preferences
       SharedPreferences prefs = await SharedPreferences.getInstance();

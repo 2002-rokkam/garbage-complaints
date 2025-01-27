@@ -71,7 +71,8 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
 
       print(formattedGramPanchayat);
       try {
-        var uri = Uri.parse('http://167.71.230.247/api/complaints-register');
+        var uri =
+            Uri.parse('https://sbmgrajasthan.com/api/complaints-register');
 
         var request = http.MultipartRequest('POST', uri)
           ..fields['district'] = formattedDistrict
@@ -299,8 +300,8 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
 
   List<String> gramPanchayats = [];
 
-  final String districtsUrl = "http://167.71.230.247/api/getDistricts";
-  final String gpUrl = "http://167.71.230.247/api/getGpComplaints";
+  final String districtsUrl = "https://sbmgrajasthan.com/api/getDistricts";
+  final String gpUrl = "https://sbmgrajasthan.com/api/getGpComplaints";
 
   Future<void> fetchDistricts() async {
     try {

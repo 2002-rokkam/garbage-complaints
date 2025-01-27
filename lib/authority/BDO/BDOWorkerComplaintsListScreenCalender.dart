@@ -10,7 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
- 
+
 class BDOWorkerComplaintsListScreenCalender extends StatelessWidget {
   final DateTime date;
   final List<dynamic> complaints;
@@ -226,7 +226,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
     print(formData);
     try {
       Response response = await dio.post(
-        'http://167.71.230.247/api/update-complaint/${widget.complaint['complaint_id']}',
+        'https://sbmgrajasthan.com/api/update-complaint/${widget.complaint['complaint_id']}',
         data: formData,
       );
 
@@ -283,7 +283,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
     }
   }
 
- void _showFullScreenImage(
+  void _showFullScreenImage(
       String imageUrl, double dirlatitude, double dirlongitude) async {
     // Get the time from the complaint (you can format it as needed)
     final createdAt = DateTime.parse(widget.complaint['created_at']).toLocal();
@@ -336,8 +336,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                     padding: const EdgeInsets.all(2),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.86),
-                                              borderRadius: BorderRadius.circular(16),
-
+                      borderRadius: BorderRadius.circular(16),
                       border: Border.all(
                         color: Colors.white.withOpacity(0.23),
                       ),
@@ -366,9 +365,8 @@ class _ComplaintCardState extends State<ComplaintCard> {
                     width: 370,
                     height: 45,
                     padding: const EdgeInsets.all(2),
-                    
                     decoration: BoxDecoration(
-                     color: Colors.white.withOpacity(0.86),
+                      color: Colors.white.withOpacity(0.86),
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
                         color: Colors.white.withOpacity(0.23),
@@ -409,6 +407,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
       throw 'Could not launch $url';
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final images = widget.complaint['photos'];
@@ -418,7 +417,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
     final resolvedPhoto = widget.complaint['resolved_photo'];
     final dirlatitude = widget.complaint['photos'][0]['latitude'];
     final dirlongitude = widget.complaint['photos'][0]['longitude'];
-        String time = '${createdAt.hour}:${createdAt.minute}:${createdAt.second}';
+    String time = '${createdAt.hour}:${createdAt.minute}:${createdAt.second}';
 
     return Container(
       margin: EdgeInsets.only(bottom: 16.0),
@@ -433,7 +432,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Auto-Scrolling Carousel Slider with Overlayed Date and Status
-            Container(
+          Container(
             width: 370,
             height: 188.59,
             child: Stack(
@@ -449,25 +448,25 @@ class _ComplaintCardState extends State<ComplaintCard> {
                     enlargeCenterPage: false,
                   ),
                   items: images.map<Widget>((image) {
-                     return GestureDetector(
+                    return GestureDetector(
                       onTap: () {
                         // Open image in full-screen view when tapped
                         _showFullScreenImage(
                             image['image'], dirlatitude, dirlongitude);
                       },
-                    
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: Container(
-                        width: 370,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: NetworkImage('${image['image']}'),
-                            fit: BoxFit.cover,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: Container(
+                          width: 370,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: NetworkImage('${image['image']}'),
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ),
-                    ),);
+                    );
                   }).toList(),
                 ),
                 // Left Indicator
@@ -557,7 +556,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
           ),
           SizedBox(height: 8),
           // Location and Caption
-           Padding(
+          Padding(
             padding: EdgeInsets.symmetric(horizontal: 12.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

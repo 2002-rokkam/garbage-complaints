@@ -8,7 +8,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../BDO/BDOWorkerComplaintsListScreenCalender.dart';
 
-
 class SMDWorkerComplaintsCalender extends StatefulWidget {
   @override
   _SMDWorkerComplaintsCalenderState createState() =>
@@ -32,8 +31,7 @@ class _SMDWorkerComplaintsCalenderState
     final prefs = await SharedPreferences.getInstance();
     final District = prefs.getString('District') ?? '';
 
-    final url =
-        'http://167.71.230.247/api/complaintdetails-by-state';
+    final url = 'https://sbmgrajasthan.com/api/complaintdetails-by-state';
 
     try {
       final response = await http.get(Uri.parse(url));

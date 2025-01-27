@@ -1,4 +1,4 @@
-// authority/CEO/contractorDetails.dart
+// authority/SMD/SMDcontractorDetails.dart
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -24,7 +24,7 @@ class _ContractordetailsState extends State<Contractordetails> {
 
   Future<List<Map<String, dynamic>>> fetchContractorDetails() async {
     final apiUrl =
-        'http://167.71.230.247/api/contractors/?gp=${widget.gramPanchayat}';
+        'https://sbmgrajasthan.com/api/contractors/?gp=${widget.gramPanchayat}';
     final response = await http.get(Uri.parse(apiUrl));
 
     if (response.statusCode == 200) {

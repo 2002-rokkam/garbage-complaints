@@ -59,7 +59,6 @@ class _CEOScreenState extends State<CEOScreen> {
   void initState() {
     super.initState();
     fetchData();
-   
   }
 
   Future<void> fetchData() async {
@@ -68,7 +67,7 @@ class _CEOScreenState extends State<CEOScreen> {
     print(District);
     if (District != null) {
       final response = await http.get(
-          Uri.parse('http://167.71.230.247/api/complaints-by-district/')
+          Uri.parse('https://sbmgrajasthan.com/api/complaints-by-district/')
               .replace(queryParameters: {
         'district': District,
       }));

@@ -40,7 +40,7 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
     });
 
     final url = Uri.parse(
-        'http://167.71.230.247/api/worker/$workerId/section/${widget.section}');
+        'https://sbmgrajasthan.com/api/worker/$workerId/section/${widget.section}');
 
     try {
       final response = await http.get(url);
@@ -280,11 +280,13 @@ class SelectedDateActivitiesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-        final createdAt = DateTime.parse(activities[0]['created_at']).toLocal();
-    String createdAttime = '${createdAt.hour}:${createdAt.minute}:${createdAt.second}';
+    final createdAt = DateTime.parse(activities[0]['created_at']).toLocal();
+    String createdAttime =
+        '${createdAt.hour}:${createdAt.minute}:${createdAt.second}';
 
-        final updated_at = DateTime.parse(activities[0]['updated_at']).toLocal();
-    String updated_attime = '${updated_at.hour}:${updated_at.minute}:${updated_at.second}';
+    final updated_at = DateTime.parse(activities[0]['updated_at']).toLocal();
+    String updated_attime =
+        '${updated_at.hour}:${updated_at.minute}:${updated_at.second}';
 
     return Scaffold(
       appBar: AppBar(
@@ -369,7 +371,7 @@ class SelectedDateActivitiesScreen extends StatelessWidget {
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(26),
                                     ),
-                                  ),                       
+                                  ),
                                 ),
                               ],
                             ),

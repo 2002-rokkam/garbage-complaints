@@ -121,7 +121,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
 
       Dio dio = Dio();
       Response response = await dio.post(
-        'http://167.71.230.247/api/submit-activity',
+        'https://sbmgrajasthan.com/api/submit-activity',
         data: formData,
       );
 
@@ -188,7 +188,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
 
       Dio dio = Dio();
       Response response = await dio
-          .put('http://167.71.230.247/api/submit-activity', data: formData);
+          .put('https://sbmgrajasthan.com/api/submit-activity', data: formData);
 
       if (response.statusCode == 200) {
         print("After image submitted successfully!");

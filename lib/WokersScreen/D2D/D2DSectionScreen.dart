@@ -57,7 +57,7 @@ class _D2DSectionScreenState extends State<D2DSectionScreen>
       String workerId = await getWorkerId();
       Dio dio = Dio();
       final response = await dio.get(
-          'http://167.71.230.247/api/worker/$workerId/section/${widget.section}');
+          'https://sbmgrajasthan.com/api/worker/$workerId/section/${widget.section}');
 
       if (response.statusCode == 200) {
         final data = response.data;

@@ -126,7 +126,7 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
 
       // API URL
       String logoutUrl =
-          'http://167.71.230.247/api/worker-logout'; // Replace with your API endpoint
+          'https://sbmgrajasthan.com/api/worker-logout'; // Replace with your API endpoint
 
       // Prepare body and headers
       Map<String, String> headers = {

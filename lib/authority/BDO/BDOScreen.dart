@@ -16,7 +16,6 @@ class BDOScreen extends StatefulWidget {
 }
 
 class _BDOScreenState extends State<BDOScreen> {
-
   int totalComplaints = 0;
   int pendingComplaints = 0;
   int resolvedComplaints = 0;
@@ -60,7 +59,6 @@ class _BDOScreenState extends State<BDOScreen> {
   void initState() {
     super.initState();
     fetchData();
-    
   }
 
   Future<void> fetchData() async {
@@ -69,7 +67,7 @@ class _BDOScreenState extends State<BDOScreen> {
     print(District);
     if (District != null) {
       final response = await http.get(
-          Uri.parse('http://167.71.230.247/api/complaints-by-district/')
+          Uri.parse('https://sbmgrajasthan.com/api/complaints-by-district/')
               .replace(queryParameters: {
         'district': District,
       }));
@@ -457,7 +455,7 @@ class _BDOScreenState extends State<BDOScreen> {
                         }).toList(),
                       ),
                     ),
-                     SizedBox(height: 26),
+                    SizedBox(height: 26),
                     PoweredByBikaji(),
                   ],
                 ),

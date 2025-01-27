@@ -80,7 +80,7 @@ class _TripDetailCardState extends State<TripDetailCard> {
 
         final dio = Dio();
         final response = await dio.post(
-          'http://167.71.230.247/api/submit-activity',
+          'https://sbmgrajasthan.com/api/submit-activity',
           data: formData,
         );
 

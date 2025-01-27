@@ -56,7 +56,7 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
     });
 
     final url = Uri.parse(
-        'http://167.71.230.247/api/worker/$workerId/section/${widget.section}');
+        'https://sbmgrajasthan.com/api/worker/$workerId/section/${widget.section}');
 
     try {
       final response = await http.get(url);
@@ -78,8 +78,8 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
   Future<void> fetchQRDetails(String workerId) async {
     if (workerId.isEmpty) return;
 
-    final url =
-        Uri.parse('http://167.71.230.247/api/worker/$workerId/section/D2D_QR');
+    final url = Uri.parse(
+        'https://sbmgrajasthan.com/api/worker/$workerId/section/D2D_QR');
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
@@ -269,8 +269,8 @@ class BeforeAfterScreen extends StatelessWidget {
       {Key? key, required this.activities, required this.selectedDate})
       : super(key: key);
 
-void _showFullScreenImage(BuildContext context, String imageUrl,
-      double dirlatitude, double dirlongitude,String time) async {
+  void _showFullScreenImage(BuildContext context, String imageUrl,
+      double dirlatitude, double dirlongitude, String time) async {
     String location =
         'Lat: ${dirlatitude.toStringAsFixed(6)}, Long: ${dirlongitude.toStringAsFixed(6)}';
 
@@ -375,7 +375,7 @@ void _showFullScreenImage(BuildContext context, String imageUrl,
 
   @override
   Widget build(BuildContext context) {
-      final createdAt = DateTime.parse(activities[0]['created_at']).toLocal();
+    final createdAt = DateTime.parse(activities[0]['created_at']).toLocal();
     String createdAttime =
         '${createdAt.hour}:${createdAt.minute}:${createdAt.second}';
 

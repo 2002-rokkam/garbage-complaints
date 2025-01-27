@@ -59,7 +59,6 @@ class _SMDScreenState extends State<SMDScreen> {
   void initState() {
     super.initState();
     fetchData();
-    
   }
 
   Future<void> fetchData() async {
@@ -68,7 +67,7 @@ class _SMDScreenState extends State<SMDScreen> {
     print(District);
     if (District != null) {
       final response = await http.get(
-          Uri.parse('http://167.71.230.247/api/complaints-by-state/')
+          Uri.parse('https://sbmgrajasthan.com/api/complaints-by-state/')
               .replace(queryParameters: {
         'district': District,
       }));
@@ -457,7 +456,7 @@ class _SMDScreenState extends State<SMDScreen> {
                         }).toList(),
                       ),
                     ),
-                     SizedBox(height: 26),
+                    SizedBox(height: 26),
                     PoweredByBikaji(),
                   ],
                 ),

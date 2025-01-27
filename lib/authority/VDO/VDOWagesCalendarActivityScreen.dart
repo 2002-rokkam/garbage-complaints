@@ -8,13 +8,16 @@ import 'package:intl/intl.dart';
 class VDOWagesCalendarActivityScreen extends StatefulWidget {
   final String section;
 
-  const VDOWagesCalendarActivityScreen({Key? key, required this.section}) : super(key: key);
+  const VDOWagesCalendarActivityScreen({Key? key, required this.section})
+      : super(key: key);
 
   @override
-  _VDOWagesCalendarActivityScreenState createState() => _VDOWagesCalendarActivityScreenState();
+  _VDOWagesCalendarActivityScreenState createState() =>
+      _VDOWagesCalendarActivityScreenState();
 }
 
-class _VDOWagesCalendarActivityScreenState extends State<VDOWagesCalendarActivityScreen> {
+class _VDOWagesCalendarActivityScreenState
+    extends State<VDOWagesCalendarActivityScreen> {
   List _activities = [];
   bool _isLoading = false;
   int _selectedMonth = DateTime.now().month;
@@ -38,7 +41,7 @@ class _VDOWagesCalendarActivityScreenState extends State<VDOWagesCalendarActivit
       _isLoading = true;
     });
 
-    final url = Uri.parse('http://167.71.230.247/api/vdo-section-dashboard')
+    final url = Uri.parse('https://sbmgrajasthan.com/api/vdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': widget.section,
@@ -51,7 +54,8 @@ class _VDOWagesCalendarActivityScreenState extends State<VDOWagesCalendarActivit
         var sectionActivities = data['section_data'][widget.section] ?? [];
         setState(() {
           _activities = sectionActivities.where((activity) {
-            DateTime activityDate = DateTime.parse(activity['date_time']).toLocal();
+            DateTime activityDate =
+                DateTime.parse(activity['date_time']).toLocal();
             return activityDate.month == month && activityDate.year == year;
           }).toList();
         });
@@ -69,8 +73,18 @@ class _VDOWagesCalendarActivityScreenState extends State<VDOWagesCalendarActivit
 
   void _showMonthPicker() async {
     final months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
     ];
     final selectedMonthIndex = await showDialog<int>(
       context: context,
@@ -217,7 +231,7 @@ class _VDOWagesCalendarActivityScreenState extends State<VDOWagesCalendarActivit
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                     DateFormat('HH:mm:ss, d/M/yyyy').format(
+                                    DateFormat('HH:mm:ss, d/M/yyyy').format(
                                         DateTime.parse(activity['date_time'])),
                                     style: TextStyle(
                                       color: Color(0xFF252525),

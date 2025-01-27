@@ -45,7 +45,7 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
     });
 
     final url = Uri.parse(
-        'http://167.71.230.247/api/worker/$workerId/section/${widget.section}');
+        'https://sbmgrajasthan.com/api/worker/$workerId/section/${widget.section}');
 
     try {
       final response = await http.get(url);
@@ -71,7 +71,7 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
     String workerId = await getWorkerId();
 
     final url = Uri.parse(
-        'http://167.71.230.247/api/worker/$workerId/section/Waste Details');
+        'https://sbmgrajasthan.com/api/worker/$workerId/section/Waste Details');
 
     try {
       final response = await http.get(url);
@@ -357,9 +357,8 @@ class BeforeAfterScreen extends StatelessWidget {
   const BeforeAfterScreen({Key? key, required this.activities})
       : super(key: key);
 
-       void _showFullScreenImage(BuildContext context, String imageUrl,
-      double dirlatitude, double dirlongitude,String time) async {
-    
+  void _showFullScreenImage(BuildContext context, String imageUrl,
+      double dirlatitude, double dirlongitude, String time) async {
     String location =
         'Lat: ${dirlatitude.toStringAsFixed(6)}, Long: ${dirlongitude.toStringAsFixed(6)}';
 
@@ -462,7 +461,6 @@ class BeforeAfterScreen extends StatelessWidget {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     final createdAt = DateTime.parse(activities[0]['created_at']).toLocal();
@@ -547,7 +545,7 @@ class BeforeAfterScreen extends StatelessWidget {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(26),
                               ),
-                            ),                            
+                            ),
                           ),
                         ],
                       ),

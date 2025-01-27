@@ -34,7 +34,7 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://167.71.230.247/api/login'),
+        Uri.parse('https://sbmgrajasthan.com/api/login'),
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: {'email': email, 'password': password},
       );
@@ -51,7 +51,6 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
           await prefs.setString('gram_panchayat', user['gp']);
           await prefs.setString('District', user['District']);
           await prefs.setString('Bdo', user['gp']);
-
 
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Login successful!')),

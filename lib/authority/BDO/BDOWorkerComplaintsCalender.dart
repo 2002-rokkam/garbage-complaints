@@ -31,7 +31,7 @@ class _BDOWorkerComplaintsCalenderState
     final District = prefs.getString('District') ?? '';
 
     final url =
-        'http://167.71.230.247/api/complaintdetails-by-district/?district=$District';
+        'https://sbmgrajasthan.com/api/complaintdetails-by-district/?district=$District';
 
     try {
       final response = await http.get(Uri.parse(url));

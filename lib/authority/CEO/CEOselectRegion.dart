@@ -28,9 +28,9 @@
 //   List<String> blocks = [];
 //   List<String> gramPanchayats = [];
 
-//   final String districtsUrl = "http://167.71.230.247/api/getDistricts";
-//   final String blocksUrl = "http://167.71.230.247/api/getBlocks/";
-//   final String gpUrl = "http://167.71.230.247/api/getGp/";
+//   final String districtsUrl = "https://sbmgrajasthan.com/api/getDistricts";
+//   final String blocksUrl = "https://sbmgrajasthan.com/api/getBlocks/";
+//   final String gpUrl = "https://sbmgrajasthan.com/api/getGp/";
 
 //   Future<void> fetchDistricts() async {
 //     try {
@@ -389,9 +389,9 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
   List<String> blocks = [];
   List<String> gramPanchayats = [];
 
-  final String districtsUrl = "http://167.71.230.247/api/getDistricts";
-  final String blocksUrl = "http://167.71.230.247/api/getBlocks/";
-  final String gpUrl = "http://167.71.230.247/api/getGp/";
+  final String districtsUrl = "https://sbmgrajasthan.com/api/getDistricts";
+  final String blocksUrl = "https://sbmgrajasthan.com/api/getBlocks/";
+  final String gpUrl = "https://sbmgrajasthan.com/api/getGp/";
 
   Future<void> loadDistrictFromPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -463,7 +463,7 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
     }
   }
 
-   void submitSelection() {
+  void submitSelection() {
     if (selectedDistrict != null &&
         selectedBlock != null &&
         selectedGramPanchayat != null) {
@@ -775,9 +775,9 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
 //   List<String> blocks = [];
 //   List<String> gramPanchayats = [];
 
-//   final String districtsUrl = "http://167.71.230.247/api/getDistricts";
-//   final String blocksUrl = "http://167.71.230.247/api/getBlocks/";
-//   final String gpUrl = "http://167.71.230.247/api/getGp/";
+//   final String districtsUrl = "https://sbmgrajasthan.com/api/getDistricts";
+//   final String blocksUrl = "https://sbmgrajasthan.com/api/getBlocks/";
+//   final String gpUrl = "https://sbmgrajasthan.com/api/getGp/";
 
 //   Future<void> fetchDistricts() async {
 //     try {

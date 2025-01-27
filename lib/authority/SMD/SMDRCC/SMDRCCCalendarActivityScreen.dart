@@ -56,7 +56,7 @@ class _SMDRCCCalendarActivityScreenState
       _isLoading = true;
     });
 
-    final url = Uri.parse('http://167.71.230.247/api/bdo-section-dashboard')
+    final url = Uri.parse('https://sbmgrajasthan.com/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': widget.section,
@@ -87,7 +87,7 @@ class _SMDRCCCalendarActivityScreenState
   Future<void> fetchTripDetails() async {
     String workerId = await getWorkerId();
 
-    final url = Uri.parse('http://167.71.230.247/api/bdo-section-dashboard')
+    final url = Uri.parse('https://sbmgrajasthan.com/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': 'Waste Details',

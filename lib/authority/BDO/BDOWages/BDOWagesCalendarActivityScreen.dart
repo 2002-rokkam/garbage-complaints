@@ -49,7 +49,7 @@ class _BDOWagesCalendarActivityScreenState
       _isLoading = true;
     });
 
-    final url = Uri.parse('http://167.71.230.247/api/bdo-section-dashboard')
+    final url = Uri.parse('https://sbmgrajasthan.com/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': widget.section,
@@ -251,7 +251,7 @@ class _BDOWagesCalendarActivityScreenState
                             ),
                             TextButton(
                               onPressed: () {
-                               _showImageFullscreen(activity['before_image']);
+                                _showImageFullscreen(activity['before_image']);
                               },
                               child: Text(
                                 'View',

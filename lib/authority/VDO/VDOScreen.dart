@@ -70,9 +70,9 @@ class _VDOScreenState extends State<VDOScreen> {
     String? gramPanchayat = prefs.getString('gram_panchayat');
     print(gramPanchayat);
     if (gramPanchayat != null) {
-      final response = await http.get(
-          Uri.parse('http://167.71.230.247/api/complaints-by-gram-panchayat/')
-              .replace(queryParameters: {
+      final response = await http.get(Uri.parse(
+              'https://sbmgrajasthan.com/api/complaints-by-gram-panchayat/')
+          .replace(queryParameters: {
         'gram_panchayat': gramPanchayat,
       }));
 
@@ -460,7 +460,7 @@ class _VDOScreenState extends State<VDOScreen> {
                         }).toList(),
                       ),
                     ),
-                     SizedBox(height: 26),
+                    SizedBox(height: 26),
                     PoweredByBikaji(),
                   ],
                 ),

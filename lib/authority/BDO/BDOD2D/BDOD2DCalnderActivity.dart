@@ -70,7 +70,7 @@ class _BDOD2DCalnderActivityScreenState
       _isLoading = true;
     });
 
-    final url = Uri.parse('http://167.71.230.247/api/bdo-section-dashboard')
+    final url = Uri.parse('https://sbmgrajasthan.com/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': widget.section,
@@ -100,7 +100,7 @@ class _BDOD2DCalnderActivityScreenState
   Future<void> fetchQRDetails(String workerId) async {
     if (workerId.isEmpty) return;
 
-    final url = Uri.parse('http://167.71.230.247/api/bdo-section-dashboard')
+    final url = Uri.parse('https://sbmgrajasthan.com/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': 'D2D_QR',
@@ -227,7 +227,8 @@ class _BDOD2DCalnderActivityScreenState
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => BDOSelectedDateActivitiesScreen(
+                                  builder: (context) =>
+                                      BDOSelectedDateActivitiesScreen(
                                     selectedDate: _selectedDate,
                                     activities: selectedActivities,
                                   ),

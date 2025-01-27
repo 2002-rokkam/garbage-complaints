@@ -18,279 +18,282 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
   final TextEditingController _contactNoController = TextEditingController();
 
   bool _isSubmitting = false;
-  bool _isEditing = false; 
-  bool _isEditable = false; 
+  bool _isEditing = false;
+  bool _isEditable = false;
 
-  Future<String> _getWorkerIdFromPrefs() async{
+  Future<String> _getWorkerIdFromPrefs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? workerId = prefs.getString('worker_id');
     return workerId ?? '';
   }
 
   Future<void> _loadContractorDetails() async {
-  final String workerId = await _getWorkerIdFromPrefs(); 
+    final String workerId = await _getWorkerIdFromPrefs();
 
-  try {
-    final url = Uri.parse(
-        'http://167.71.230.247/api/contractor/detail/$workerId');
-    final response = await http.get(url);
+    try {
+      final url = Uri.parse(
+          'https://sbmgrajasthan.com/api/contractor/detail/$workerId');
+      final response = await http.get(url);
 
-    if (response.statusCode == 200) {
-      // Populate the fields with existing contractor details
-      final data = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        // Populate the fields with existing contractor details
+        final data = jsonDecode(response.body);
+        setState(() {
+          _isEditing = true;
+          _companyNameController.text = data['company_name'];
+          _gstNoController.text = data['gst_no'];
+          _emailController.text = data['email'];
+          _contactNoController.text = data['contact_no'];
+        });
+      } else if (response.statusCode == 404) {
+        setState(() {
+          _isEditing = false;
+          _isEditable =
+              true; // Allow the user to enter values manually when no data is found
+          // Clear the fields to allow input
+          _companyNameController.clear();
+          _gstNoController.clear();
+          _emailController.clear();
+          _contactNoController.clear();
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text('Failed to load data: ${response.statusCode}')),
+        );
+      }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error loading data: $error')),
+      );
       setState(() {
-        _isEditing = true;
-        _companyNameController.text = data['company_name'];
-        _gstNoController.text = data['gst_no'];
-        _emailController.text = data['email'];
-        _contactNoController.text = data['contact_no'];
-      });
-    } else if (response.statusCode == 404) {
-      setState(() {
+        // If there is an error, allow the user to fill the form manually
         _isEditing = false;
-        _isEditable = true;  // Allow the user to enter values manually when no data is found
-        // Clear the fields to allow input
+        _isEditable =
+            true; // Allow the user to enter data manually in case of error
         _companyNameController.clear();
         _gstNoController.clear();
         _emailController.clear();
         _contactNoController.clear();
       });
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to load data: ${response.statusCode}')),
-      );
     }
-  } catch (error) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Error loading data: $error')),
-    );
-    setState(() {
-      // If there is an error, allow the user to fill the form manually
-      _isEditing = false;
-      _isEditable = true;  // Allow the user to enter data manually in case of error
-      _companyNameController.clear();
-      _gstNoController.clear();
-      _emailController.clear();
-      _contactNoController.clear();
-    });
   }
-}
 
- Future<void> _submitDetails() async {
-  if (_formKey.currentState!.validate()) {
-    setState(() {
-      _isSubmitting = true;
-    });
-
-    final String workerId = await _getWorkerIdFromPrefs(); // Sample worker ID
-
-    final url = Uri.parse(
-        _isEditing // Decide between update and create endpoints
-            ? 'http://167.71.230.247/api/contractor/update/$workerId'
-            : 'http://167.71.230.247/api/contractor/create/$workerId');
-    final payload = {
-      'company_name': _companyNameController.text,
-      'gst_no': _gstNoController.text,
-      'email': _emailController.text,
-      'contact_no': _contactNoController.text,
-    };
-
-    try {
-      final response = await (_isEditing
-          ? http.put(
-              url,
-              headers: {'Content-Type': 'application/json'},
-              body: jsonEncode(payload),
-            )
-          : http.post(
-              url,
-              headers: {'Content-Type': 'application/json'},
-              body: jsonEncode(payload),
-            ));
-
+  Future<void> _submitDetails() async {
+    if (_formKey.currentState!.validate()) {
       setState(() {
-        _isSubmitting = false;
+        _isSubmitting = true;
       });
 
-      if (response.statusCode == 200) {
-        // Show success dialog
-        _showSuccessDialog();
+      final String workerId = await _getWorkerIdFromPrefs(); // Sample worker ID
+
+      final url =
+          Uri.parse(_isEditing // Decide between update and create endpoints
+              ? 'https://sbmgrajasthan.com/api/contractor/update/$workerId'
+              : 'https://sbmgrajasthan.com/api/contractor/create/$workerId');
+      final payload = {
+        'company_name': _companyNameController.text,
+        'gst_no': _gstNoController.text,
+        'email': _emailController.text,
+        'contact_no': _contactNoController.text,
+      };
+
+      try {
+        final response = await (_isEditing
+            ? http.put(
+                url,
+                headers: {'Content-Type': 'application/json'},
+                body: jsonEncode(payload),
+              )
+            : http.post(
+                url,
+                headers: {'Content-Type': 'application/json'},
+                body: jsonEncode(payload),
+              ));
+
         setState(() {
-          _companyNameController.text = _companyNameController.text;
-          _gstNoController.text = _gstNoController.text;
-          _emailController.text = _emailController.text;
-          _contactNoController.text = _contactNoController.text;
+          _isSubmitting = false;
         });
-      } else {
+
+        if (response.statusCode == 200) {
+          // Show success dialog
+          _showSuccessDialog();
+          setState(() {
+            _companyNameController.text = _companyNameController.text;
+            _gstNoController.text = _gstNoController.text;
+            _emailController.text = _emailController.text;
+            _contactNoController.text = _contactNoController.text;
+          });
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content:
+                    Text('Failed to save details: ${response.statusCode}')),
+          );
+        }
+      } catch (error) {
+        setState(() {
+          _isSubmitting = false;
+        });
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to save details: ${response.statusCode}')),
+          SnackBar(content: Text('Error saving data: $error')),
         );
+        // Show failure dialog
+        _showFailureDialog();
       }
-    } catch (error) {
-      setState(() {
-        _isSubmitting = false;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error saving data: $error')),
-      );
-      // Show failure dialog
-      _showFailureDialog();
     }
   }
-}
-void _showSuccessDialog() {
-  showDialog(
-    context: context,
-    builder: (context) => Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0),
-      ),
-      child: Container(  
-        padding: const EdgeInsets.all(20.0),
-        decoration: BoxDecoration(
-          color: Colors.white,
+
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.0),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Success Icon
-            CircleAvatar(
-              radius: 40.0,
-              backgroundColor: Colors.green.shade100,
-              child: const Icon(
-                Icons.check_circle,
-                color: Colors.green,
-                size: 60.0,
-              ),
-            ),
-            const SizedBox(height: 20.0),
-            // Title
-            const Text(
-              'Success!',
-              style: TextStyle(
-                fontSize: 22.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.green,
-              ),
-            ),
-            const SizedBox(height: 10.0),
-            // Content
-            const Text(
-              'Contractor details have been submitted successfully.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16.0,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 20.0),
-            // OK Button
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  _isEditable=false;
-                });
-                Navigator.pop(context); // Close the dialog
-                
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 30.0,
-                  vertical: 10.0,
+        child: Container(
+          padding: const EdgeInsets.all(20.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Success Icon
+              CircleAvatar(
+                radius: 40.0,
+                backgroundColor: Colors.green.shade100,
+                child: const Icon(
+                  Icons.check_circle,
+                  color: Colors.green,
+                  size: 60.0,
                 ),
               ),
-              child: const Text(
-                'OK',
-                style: TextStyle(fontSize: 16.0, color: Colors.white),
+              const SizedBox(height: 20.0),
+              // Title
+              const Text(
+                'Success!',
+                style: TextStyle(
+                  fontSize: 22.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green,
+                ),
               ),
-            ),
-          ],
+              const SizedBox(height: 10.0),
+              // Content
+              const Text(
+                'Contractor details have been submitted successfully.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 20.0),
+              // OK Button
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    _isEditable = false;
+                  });
+                  Navigator.pop(context); // Close the dialog
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 30.0,
+                    vertical: 10.0,
+                  ),
+                ),
+                child: const Text(
+                  'OK',
+                  style: TextStyle(fontSize: 16.0, color: Colors.white),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
-void _showFailureDialog() {
-  showDialog(
-    context: context,
-    builder: (context) => Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0),
-      ),
-      child: Container(
-        padding: const EdgeInsets.all(20.0),
-        decoration: BoxDecoration(
-          color: Colors.white,
+  void _showFailureDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.0),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Failure Icon
-            CircleAvatar(
-              radius: 40.0,
-              backgroundColor: Colors.red.shade100,
-              child: const Icon(
-                Icons.error_outline,
-                color: Colors.red,
-                size: 60.0,
-              ),
-            ),
-            const SizedBox(height: 20.0),
-            // Title
-            const Text(
-              'Oops!',
-              style: TextStyle(
-                fontSize: 22.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.red,
-              ),
-            ),
-            const SizedBox(height: 10.0),
-            // Content
-            const Text(
-              'Failed to submit contractor details. Please try again later.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16.0,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 20.0),
-            // Retry Button
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context); // Close the dialog
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 30.0,
-                  vertical: 10.0,
+        child: Container(
+          padding: const EdgeInsets.all(20.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Failure Icon
+              CircleAvatar(
+                radius: 40.0,
+                backgroundColor: Colors.red.shade100,
+                child: const Icon(
+                  Icons.error_outline,
+                  color: Colors.red,
+                  size: 60.0,
                 ),
               ),
-              child: const Text(
-                'Try Again',
-                style: TextStyle(fontSize: 16.0, color: Colors.white),
+              const SizedBox(height: 20.0),
+              // Title
+              const Text(
+                'Oops!',
+                style: TextStyle(
+                  fontSize: 22.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red,
+                ),
               ),
-            ),
-          ],
+              const SizedBox(height: 10.0),
+              // Content
+              const Text(
+                'Failed to submit contractor details. Please try again later.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 20.0),
+              // Retry Button
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context); // Close the dialog
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 30.0,
+                    vertical: 10.0,
+                  ),
+                ),
+                child: const Text(
+                  'Try Again',
+                  style: TextStyle(fontSize: 16.0, color: Colors.white),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
-
-
+    );
+  }
 
   @override
   void initState() {
@@ -302,7 +305,8 @@ void _showFailureDialog() {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Contractor Details', style: TextStyle(color: Colors.white)),
+        title: const Text('Contractor Details',
+            style: TextStyle(color: Colors.white)),
         backgroundColor: Color(0xFF5C964A),
         leading: IconButton(
           onPressed: () {
@@ -449,7 +453,10 @@ void _showFailureDialog() {
           controller: controller,
           keyboardType: keyboardType,
           enabled: enabled, // Toggle editable state here
-          style: TextStyle(color: enabled ? Color.fromARGB(255, 50, 50, 50) : Color.fromARGB(255, 106, 105, 105)),
+          style: TextStyle(
+              color: enabled
+                  ? Color.fromARGB(255, 50, 50, 50)
+                  : Color.fromARGB(255, 106, 105, 105)),
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: TextStyle(color: Colors.grey),

@@ -42,7 +42,7 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
   }
 
   Future<void> _fetchComplaints() async {
-    final String apiUrl = 'http://167.71.230.247/api/complaints';
+    final String apiUrl = 'https://sbmgrajasthan.com/api/complaints';
 
     try {
       final response = await http.get(
@@ -135,7 +135,7 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
     );
   }
 
- Widget complaintCard(Map<String, dynamic> complaint) {
+  Widget complaintCard(Map<String, dynamic> complaint) {
     String formattedDate = DateFormat('dd-MM-yyyy')
         .format(DateTime.parse(complaint['created_at']));
     List<dynamic> images = complaint['photos'];

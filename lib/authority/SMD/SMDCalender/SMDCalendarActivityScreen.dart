@@ -44,7 +44,7 @@ class _SMDCalendarActivityScreenState extends State<SMDCalendarActivityScreen> {
     String workerId = await getWorkerId();
     setState(() {});
 
-    final url = Uri.parse('http://167.71.230.247/api/bdo-section-dashboard')
+    final url = Uri.parse('https://sbmgrajasthan.com/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': widget.section,
