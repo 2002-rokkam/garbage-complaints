@@ -1,14 +1,10 @@
 // CitizensScreen/CitizensScreen.dart
 import 'package:flutter/material.dart';
-import 'dart:async';
-import '../WokersScreen/WorkerComplaints/workerComplaintsScreen.dart';
+import '../ContactUsPage.dart';
 import '../customerLogout.dart';
 import 'ComplaintsScreen/ComplaintScreen.dart';
 import 'package:intl/intl.dart';
 import 'ComplaintsScreen/complaintsBottomBar.dart';
-import 'package:flutter/material.dart';
-import 'dart:async'; // for Timer
-import 'package:intl/intl.dart'; // for DateFormat
 
 class CitizensScreen extends StatefulWidget {
   @override
@@ -213,7 +209,14 @@ class _CitizensScreenState extends State<CitizensScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ContactUsPage(),
+                          ),
+                        );
+                      },
                       child: Container(
                         width: screenWidth < 600 ? 150 : 170,
                         height: 139,
