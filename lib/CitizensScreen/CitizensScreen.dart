@@ -78,7 +78,6 @@ class _CitizensScreenState extends State<CitizensScreen> {
   }
 
   Widget _buildCitizenScreenContent() {
-    // Get screen width for responsive design
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Column(
@@ -188,7 +187,6 @@ class _CitizensScreenState extends State<CitizensScreen> {
                   ),
                 ),
 
-                // Complaints label
                 Padding(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 16.0, vertical: 8.0),

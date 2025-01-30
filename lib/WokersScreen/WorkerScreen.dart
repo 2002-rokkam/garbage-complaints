@@ -9,6 +9,7 @@ import 'RRC/RRCSectionScreen.dart';
 import 'Wages/WagesActionScreen.dart';
 import 'WorkerComplaints/workerComplaintsScreen.dart';
 import 'package:intl/intl.dart';
+import  '../../button_items.dart';
 
 class WorkerScreen extends StatefulWidget {
   @override
@@ -16,35 +17,6 @@ class WorkerScreen extends StatefulWidget {
 }
 
 class _WorkerScreenState extends State<WorkerScreen> {
-
-  final List<Map<String, String>> buttonItems = [
-    {
-      'label': 'Door to Door',
-      'imageUrl': 'assets/images/d2d.png',
-      'route': 'DoorToDoorScreen'
-    },
-    {
-      'label': 'Road Sweeping',
-      'imageUrl': 'assets/images/road_sweeping.png',
-      'route': 'RoadSweepingScreen'
-    },
-    {
-      'label': 'Drain Cleaning',
-      'imageUrl': 'assets/images/drainage_collectin.png',
-      'route': 'DrainCleaningScreen'
-    },
-    {
-      'label': 'Community Service Centre',
-      'imageUrl': 'assets/images/CSC.png',
-      'route': 'CSCScreen'
-    },
-    {
-      'label': 'Resource Recovery Centre',
-      'imageUrl': 'assets/images/RRC.png',
-      'route': 'RRCScreen'
-    },
-    {'label': 'Wages', 'imageUrl': 'assets/images/wages.png', 'route': 'WagesScreen'},
-  ];
 
   @override
   void initState() {

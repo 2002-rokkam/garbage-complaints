@@ -1,4 +1,5 @@
 // WokersScreen/WorkerCommon/BeforeAfterContainer.dart
+// WokersScreen/WorkerCommon/BeforeAfterContainer
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -193,10 +194,9 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
       if (response.statusCode == 200) {
         print("After image submitted successfully!");
 
-        // Show custom popup
         showDialog(
           context: context,
-          barrierDismissible: false, // Prevent dismissal by tapping outside
+          barrierDismissible: false, 
           builder: (BuildContext context) {
             final screenWidth = MediaQuery.of(context).size.width;
             final screenHeight = MediaQuery.of(context).size.height;
@@ -206,12 +206,10 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Container(
-                width: screenWidth * 0.9, // 90% of screen width
+                width: screenWidth * 0.9, 
                 padding: EdgeInsets.symmetric(
-                  vertical: screenHeight *
-                      0.05, // Adjust vertical padding based on height
-                  horizontal: screenWidth *
-                      0.05, // Adjust horizontal padding based on width
+                  vertical: screenHeight * 0.05, 
+                  horizontal: screenWidth * 0.05, 
                 ),
                 decoration: ShapeDecoration(
                   color: Colors.white,
@@ -221,12 +219,12 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                 ),
                 child: Column(
                   mainAxisSize:
-                      MainAxisSize.min, // Adjust height based on children
+                      MainAxisSize.min, 
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      width: screenWidth * 0.3, // 30% of screen width
-                      height: screenWidth * 0.3, // Maintain square aspect ratio
+                      width: screenWidth * 0.3, 
+                      height: screenWidth * 0.3,
                       clipBehavior: Clip.antiAlias,
                       decoration: BoxDecoration(),
                       child: Image.asset(
@@ -236,16 +234,16 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                       ),
                     ),
                     SizedBox(
-                        height: screenHeight * 0.03), // Spacing based on height
+                        height: screenHeight * 0.03), 
                     SizedBox(
-                      width: screenWidth * 0.8, // 80% of screen width
+                      width: screenWidth * 0.8, 
                       child: Text(
                         'Successfully Submited!',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Color(0xFF1D1B20),
                           fontSize: screenWidth *
-                              0.06, // Font size relative to screen width
+                              0.06, 
                           fontFamily: 'Roboto',
                           fontWeight: FontWeight.w400,
                           height: 1.33,
@@ -343,12 +341,10 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
     double afterLatitude = _afterImage!['latitude'];
     double afterLongitude = _afterImage!['longitude'];
 
-    // Calculate the distance using Geolocator (or any other method you prefer)
     double distance = await Geolocator.distanceBetween(
         beforeLatitude, beforeLongitude, afterLatitude, afterLongitude);
 
-    // Check if the distance is within the 50 meters radius
-    return distance <= 50.0; // Return true if within 50 meters, otherwise false
+    return distance <= 50.0; 
   }
 
   void _showPopup(String message) {

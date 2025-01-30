@@ -9,6 +9,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'BDOWorkerComplaintsCalender.dart';
 import 'selectRegion.dart';
+import  '../../button_items.dart';
 
 class BDOScreen extends StatefulWidget {
   @override
@@ -19,41 +20,6 @@ class _BDOScreenState extends State<BDOScreen> {
   int totalComplaints = 0;
   int pendingComplaints = 0;
   int resolvedComplaints = 0;
-
-  final List<Map<String, String>> buttonItems = [
-    {
-      'label': 'Door to Door',
-      'imageUrl': 'assets/images/d2d.png',
-      'route': 'DoorToDoorScreen'
-    },
-    {
-      'label': 'Road Sweeping',
-      'imageUrl': 'assets/images/road_sweeping.png',
-      'route': 'RoadSweepingScreen'
-    },
-    {
-      'label': 'Drain Cleaning',
-      'imageUrl': 'assets/images/drainage_collectin.png',
-      'route': 'DrainCleaningScreen'
-    },
-    {
-      'label': 'Community Service Centre',
-      'imageUrl': 'assets/images/CSC.png',
-      'route': 'CSCScreen'
-    },
-    {
-      'label': 'Resource Recovery Centre',
-      'imageUrl': 'assets/images/RRC.png',
-      'route': 'RRCScreen'
-    },
-    {'label': 'Wages', 'imageUrl': 'assets/images/wages.png', 'route': 'WagesScreen'},
-    {
-      'label': 'Contractor Details',
-      'imageUrl':
-          'assets/images/Contractors.png', // You can use a different image if you prefer
-      'route': 'ContractorDetailsScreen'
-    },
-  ];
 
   @override
   void initState() {
