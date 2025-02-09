@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../CitizensScreen/CitizensScreen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+import 'package:flutter/services.dart';
 class OTPVerificationScreen extends StatefulWidget {
   final String verificationId;
   final String phoneNumber;
@@ -24,20 +24,35 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final List<TextEditingController> _controllers =
       List.generate(6, (index) => TextEditingController());
-  final List<Color> _borderColors = List.generate(6, (index) => Colors.grey);
+  final List<FocusNode> _focusNodes =
+      List.generate(6, (index) => FocusNode());
+  final List<Color> _borderColors =
+      List.generate(6, (index) => Colors.grey);
   bool _isLoading = false;
 
-  // Verify OTP and sign in user
+  @override
+  void dispose() {
+    for (var controller in _controllers) {
+      controller.dispose();
+    }
+    for (var node in _focusNodes) {
+      node.dispose();
+    }
+    super.dispose();
+  }
+
+  // Function to verify OTP
   Future<void> _verifyOTP() async {
     String otp = _controllers.map((controller) => controller.text).join();
-    if (otp.length != 6) {
-      _setBorderColor(const Color.fromARGB(255, 201, 15, 2));
+
+    // Check if OTP has 6 digits
+    if (otp.length != 6 || otp.contains(RegExp(r'[^0-9]'))) {
+      _setBorderColor(Colors.red);
       return;
     }
 
     setState(() => _isLoading = true);
     try {
-      // Use Firebase PhoneAuthProvider for OTP verification
       PhoneAuthCredential credential = PhoneAuthProvider.credential(
         verificationId: widget.verificationId,
         smsCode: otp,
@@ -55,19 +70,32 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
             MaterialPageRoute(builder: (context) => CitizensScreen()),
           );
         } else {
-          _setBorderColor(const Color.fromARGB(255, 229, 17, 2));
+          _setBorderColor(Colors.red);
         }
       }
     } catch (e) {
       print("Error during verification: $e");
-      _setBorderColor(const Color.fromARGB(255, 229, 17, 2));
+      _setBorderColor(Colors.red);
     } finally {
       setState(() => _isLoading = false);
     }
   }
 
+ void _setBorderColor(Color color) {
+    setState(() {
+      for (int i = 0; i < 6; i++) {
+        if (_controllers[i].text.isEmpty ||
+            _controllers[i].text.contains(RegExp(r'[^0-9]'))) {
+          _borderColors[i] = color;
+        } else {
+          _borderColors[i] = Colors.grey;
+        }
+      }
+    });
+  }
+
+  // Send token to backend
   Future<http.Response> _sendTokenToBackend(String idToken) async {
-    print(idToken);
     final url = Uri.parse("https://sbmgrajasthan.com/api/customer-login");
     final response = await http.post(
       url,
@@ -81,24 +109,12 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
       final responseData = jsonDecode(response.body);
       final token = responseData['data']['token'];
 
-      // Save the token in SharedPreferences
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('id_token', token);
-
-      print('Token saved to SharedPreferences: $token');
     } else {
       throw 'Failed to login. Status code: ${response.statusCode}';
     }
     return response;
-  }
-
-  // Update border color for OTP fields
-  void _setBorderColor(Color color) {
-    setState(() {
-      for (int i = 0; i < 6; i++) {
-        _borderColors[i] = color;
-      }
-    });
   }
 
   @override
@@ -122,7 +138,6 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
               right: 0,
               child: Column(
                 children: [
-                  // Heading
                   Text(
                     'Enter OTP',
                     style: const TextStyle(
@@ -132,7 +147,6 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  // Instruction
                   Text(
                     'A 6-digit OTP has been sent to ${widget.phoneNumber}',
                     style: TextStyle(
@@ -143,43 +157,70 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                   ),
                   const SizedBox(height: 40),
 
-                  // OTP Boxes
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: List.generate(6, (index) {
-                        return Container(
-                          width: 50,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                                color: _borderColors[index], width: 2),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: TextField(
-                            controller: _controllers[index],
-                            keyboardType: TextInputType.number,
-                            textAlign: TextAlign.center,
-                            maxLength: 1,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                  // OTP Input Fields with Auto-Backspace Handling
+                  RawKeyboardListener(
+                    focusNode: FocusNode(),
+                    onKey: (RawKeyEvent event) {
+                      if (event is RawKeyDownEvent &&
+                          event.logicalKey == LogicalKeyboardKey.backspace) {
+                        for (int i = 1; i < 6; i++) {
+                          if (_controllers[i].text.isEmpty &&
+                              _controllers[i - 1].text.isNotEmpty) {
+                            _focusNodes[i - 1].requestFocus();
+                            break;
+                          }
+                        }
+                      }
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: List.generate(6, (index) {
+                          return SizedBox(
+                            width: 50,
+                            height: 50,
+                            child: TextField(
+                              controller: _controllers[index],
+                              focusNode: _focusNodes[index],
+                              keyboardType: TextInputType.number,
+                              textAlign: TextAlign.center,
+                              maxLength: 1,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              decoration: InputDecoration(
+                                counterText: "",
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    color: _borderColors[index], 
+                                    width: 2,
+                                  ),
+                                ),
+                              ),
+                              onChanged: (value) {
+                                if (value.isNotEmpty) {
+                                  _controllers[index].text =
+                                      value.substring(value.length - 1);
+                                  if (index < 5) {
+                                    _focusNodes[index + 1].requestFocus();
+                                  } else {
+                                    FocusScope.of(context).unfocus();
+                                  }
+                                }
+                              },
+                              onTap: () {
+                                _controllers[index].selection =
+                                    TextSelection.fromPosition(
+                                  TextPosition(offset: _controllers[index].text.length),
+                                );
+                              },
                             ),
-                            decoration: const InputDecoration(
-                              counterText: "",
-                              border: InputBorder.none,
-                            ),
-                            onChanged: (value) {
-                              if (value.isNotEmpty && index < 5) {
-                                FocusScope.of(context).nextFocus();
-                              } else if (value.isEmpty && index > 0) {
-                                FocusScope.of(context).previousFocus();
-                              }
-                            },
-                          ),
-                        );
-                      }),
+                          );
+                        }),
+                      ),
                     ),
                   ),
                 ],
@@ -192,7 +233,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   primary: const Color.fromARGB(255, 92, 150, 74),
-                  onPrimary: Color.fromARGB(255, 92, 150, 74),
+                  onPrimary: Colors.white,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
                   shape: RoundedRectangleBorder(

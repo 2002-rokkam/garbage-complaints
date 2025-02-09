@@ -79,37 +79,44 @@ class _CitizensScreenState extends State<CitizensScreen> {
 
   Widget _buildCitizenScreenContent() {
     double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
 
     return Column(
       children: [
         // Fixed image slider
         Container(
           height: 180,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xFF5C964A), // Green
-                Color.fromRGBO(239, 239, 239, 1),
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              stops: [0.3, 0.5],
-            ),
-          ),
           child: Stack(
             children: [
-              Positioned(
-                bottom: 10,
-                left: 16,
-                right: 16,
-                child: Container(
-                  height: 150,
-                  child: PageView(
-                    children: [
-                      _buildImageContainer('assets/images/mainimage.png'),
-                    ],
+              Container(
+                height: screenHeight * 0.14, // Adjust the height as needed
+                decoration: BoxDecoration(
+                  color: Color(
+                      0xFF5C964A), // Change this to your app's primary color
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(24),
+                    bottomRight: Radius.circular(24),
                   ),
                 ),
+              ),
+              Column(
+                children: [
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 16.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                            16), // Rounded corners for the image
+                        child: Image.asset(
+                          'assets/images/mainimage.png', // Path to your asset image
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          height: 150,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -164,7 +171,6 @@ class _CitizensScreenState extends State<CitizensScreen> {
             ],
           ),
         ),
-        // Scrollable content
         Expanded(
           child: SingleChildScrollView(
             child: Column(
@@ -412,35 +418,18 @@ class _CitizensScreenState extends State<CitizensScreen> {
       ],
     );
   }
-
+   String appBarTitle = 'SBMG Rajasthan';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: const Color(0xFF5C964A),
-        flexibleSpace: Container(
-          height: 100,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      DateFormat('dd/MM/yyyy').format(DateTime.now()),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+        backgroundColor: Color(0xFF5C964A),
+        title: Text(
+          appBarTitle,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),

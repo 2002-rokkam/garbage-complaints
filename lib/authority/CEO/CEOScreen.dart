@@ -58,6 +58,7 @@ class _CEOScreenState extends State<CEOScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
     return WillPopScope(
       onWillPop: () async {
         return false;
@@ -121,18 +122,35 @@ class _CEOScreenState extends State<CEOScreen> {
               ),
               child: Stack(
                 children: [
-                  Positioned(
-                    bottom: 10,
-                    left: 16,
-                    right: 16,
-                    child: Container(
-                      height: 150,
-                      child: PageView(
-                        children: [
-                          _buildImageContainer('assets/images/mainimage.png'),
-                        ],
+                  Container(
+                    height: screenHeight * 0.14, // Adjust the height as needed
+                    decoration: BoxDecoration(
+                      color: Color(
+                          0xFF5C964A), // Change this to your app's primary color
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(24),
+                        bottomRight: Radius.circular(24),
                       ),
                     ),
+                  ),
+                  Column(
+                    children: [
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 16.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(
+                                16), // Rounded corners for the image
+                            child: Image.asset(
+                              'assets/images/mainimage.png', // Path to your asset image
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              height: 150,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
