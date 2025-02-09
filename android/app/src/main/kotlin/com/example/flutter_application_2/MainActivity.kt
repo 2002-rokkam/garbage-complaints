@@ -1,4 +1,4 @@
-package com.vysion.sbmgrajasthan
+package com.vysion.sbmgrajasthanworker
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,5 +1,4 @@
 // authority/BDO/BDOD2D/QRDetailsScreen.dart
-
 import 'package:flutter/material.dart';
 
 class QRDetailsScreen extends StatelessWidget {

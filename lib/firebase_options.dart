@@ -1,7 +1,7 @@
 // firebase_options.dart
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
-    show defaultTargetPlatform, kIsWeb, TargetPlatform;
+    show kIsWeb;
 
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
@@ -22,5 +22,4 @@ class DefaultFirebaseOptions {
       messagingSenderId: "959280236765",
       appId: "1:959280236765:web:bb1f274a8cb58ad5a6b334"
   );
-  
 }

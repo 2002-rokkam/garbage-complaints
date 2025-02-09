@@ -1,14 +1,16 @@
 // WokersScreen/WorkerCommon/BeforeAfterContainer.dart
-// WokersScreen/WorkerCommon/BeforeAfterContainer
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:dio/dio.dart';
-import 'package:slider_button/slider_button.dart';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:slider_button/slider_button.dart';
+import 'package:flutter/foundation.dart' show kIsWeb; // Import kIsWeb
 
 class BeforeAfterContainer extends StatefulWidget {
   final String section;
@@ -99,7 +101,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
       if (_beforeImage == null) return;
 
       String workerId = await getWorkerId();
-      if (workerId == "") {
+      if (workerId.isEmpty) {
         print("Error: worker_id not found in SharedPreferences.");
         return;
       }
@@ -109,36 +111,52 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
 
       String address = await _getAddressFromLatLong(latitude, longitude);
 
-      FormData formData = FormData.fromMap({
-        'worker_id': workerId,
-        'section': widget.section,
-        'before_image':
-            await MultipartFile.fromFile(_beforeImage!['imagePath']),
-        'latitude_before': latitude,
-        'longitude_before': longitude,
-        'status': 'trip started',
-        'address': address,
-      });
+      var uri = Uri.parse('https://sbmgrajasthan.com/api/submit-activity');
+      var request = http.MultipartRequest('POST', uri)
+        ..fields['worker_id'] = workerId
+        ..fields['section'] = widget.section
+        ..fields['latitude_before'] = latitude.toString()
+        ..fields['longitude_before'] = longitude.toString()
+        ..fields['status'] = 'trip started'
+        ..fields['address'] = address;
 
-      Dio dio = Dio();
-      Response response = await dio.post(
-        'https://sbmgrajasthan.com/api/submit-activity',
-        data: formData,
-      );
+      if (kIsWeb) {
+        XFile image = XFile(_beforeImage!['imagePath']);
+        Uint8List imageBytes = await image.readAsBytes();
+        String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
 
+        request.files.add(http.MultipartFile.fromBytes(
+          'before_image',
+          imageBytes,
+          filename: 'before_image_$timestamp.jpg',
+        ));
+      } else {
+        request.files.add(await http.MultipartFile.fromPath(
+          'before_image',
+          _beforeImage!['imagePath'],
+        ));
+      }
+
+      var response = await request.send();
       if (response.statusCode == 201) {
-        print(response);
+        final responseData = await response.stream.bytesToString();
+        final jsonResponse = jsonDecode(responseData);
+
         setState(() {
-          activityId = response.data['data']['record_id'].toString();
+          activityId = jsonResponse['data']['record_id'].toString();
         });
         widget.onReload();
 
         print("Activity created successfully!");
       } else {
-        print("Error: ${response.data['message']}");
+        final errorData = await response.stream.bytesToString();
+        print("Error response: $errorData");
       }
     } catch (e) {
       print("Error submitting before image: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: $e")),
+      );
     }
   }
 
@@ -151,8 +169,18 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
     String address =
         await _getAddressFromLatLong(position.latitude, position.longitude);
 
+    // For PWAs, we need to convert the image to Base64.
+    String imagePath;
+    if (kIsWeb) {
+      // Convert image to Base64 for PWA
+      final bytes = await image.readAsBytes();
+      imagePath = 'data:image/jpeg;base64,' + base64Encode(bytes);
+    } else {
+      imagePath = image.path;
+    }
+
     Map<String, dynamic> imageData = {
-      'imagePath': image.path,
+      'imagePath': imagePath,
       'latitude': position.latitude,
       'longitude': position.longitude,
       'address': address,
@@ -169,34 +197,44 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
   }
 
   Future<void> _submitAfterImage() async {
-    try {
-      print("Submitting After Image...");
-      print("Activity ID: $activityId");
-      print("After Image Data: $_afterImage");
+    if (_afterImage == null || activityId.isEmpty) {
+      print("Error: After image data or activity ID is missing.");
+      return;
+    }
 
-      if (_afterImage == null || activityId.isEmpty) {
-        print("Error: After image data or activity ID is missing.");
-        return;
+    try {
+      var uri = Uri.parse('https://sbmgrajasthan.com/api/submit-activity');
+      var request = http.MultipartRequest('PUT', uri)
+        ..fields['activity_id'] = activityId
+        ..fields['latitude_after'] = _afterImage!['latitude'].toString()
+        ..fields['longitude_after'] = _afterImage!['longitude'].toString()
+        ..fields['status'] = 'Completed';
+      if (kIsWeb) {
+        XFile image = XFile(_afterImage!['imagePath']);
+        Uint8List imageBytes = await image.readAsBytes();
+        String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+
+        request.files.add(http.MultipartFile.fromBytes(
+          'after_image',
+          imageBytes,
+          filename: 'after_image_$timestamp.jpg',
+        ));
+      } else {
+        request.files.add(await http.MultipartFile.fromPath(
+          'after_image',
+          _afterImage!['imagePath'],
+        ));
       }
 
-      FormData formData = FormData.fromMap({
-        'activity_id': activityId,
-        'after_image': await MultipartFile.fromFile(_afterImage!['imagePath']),
-        'latitude_after': _afterImage!['latitude'],
-        'longitude_after': _afterImage!['longitude'],
-        'status': 'Completed',
-      });
-
-      Dio dio = Dio();
-      Response response = await dio
-          .put('https://sbmgrajasthan.com/api/submit-activity', data: formData);
+      var response = await request.send();
 
       if (response.statusCode == 200) {
+        final responseData = await response.stream.bytesToString();
+        final jsonResponse = jsonDecode(responseData);
         print("After image submitted successfully!");
-
         showDialog(
           context: context,
-          barrierDismissible: false, 
+          barrierDismissible: false,
           builder: (BuildContext context) {
             final screenWidth = MediaQuery.of(context).size.width;
             final screenHeight = MediaQuery.of(context).size.height;
@@ -206,62 +244,53 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Container(
-                width: screenWidth * 0.9, 
+                width: screenWidth * 0.9,
                 padding: EdgeInsets.symmetric(
-                  vertical: screenHeight * 0.05, 
-                  horizontal: screenWidth * 0.05, 
-                ),
-                decoration: ShapeDecoration(
-                  color: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  vertical: screenHeight * 0.05,
+                  horizontal: screenWidth * 0.05,
                 ),
                 child: Column(
-                  mainAxisSize:
-                      MainAxisSize.min, 
+                  mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      width: screenWidth * 0.3, 
+                      width: screenWidth * 0.3,
                       height: screenWidth * 0.3,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.transparent,
+                      ),
                       clipBehavior: Clip.antiAlias,
-                      decoration: BoxDecoration(),
                       child: Image.asset(
                         'assets/images/done.png',
                         width: 24,
                         height: 24,
                       ),
                     ),
+                    SizedBox(height: screenHeight * 0.03),
                     SizedBox(
-                        height: screenHeight * 0.03), 
-                    SizedBox(
-                      width: screenWidth * 0.8, 
+                      width: screenWidth * 0.8,
                       child: Text(
-                        'Successfully Submited!',
+                        'Successfully Submitted!',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Color(0xFF1D1B20),
-                          fontSize: screenWidth *
-                              0.06, 
+                          fontSize: screenWidth * 0.06,
                           fontFamily: 'Roboto',
                           fontWeight: FontWeight.w400,
                           height: 1.33,
                         ),
                       ),
                     ),
-                    SizedBox(
-                        height: screenHeight * 0.04), // Spacing based on height
+                    SizedBox(height: screenHeight * 0.04),
                     GestureDetector(
                       onTap: () {
-                        Navigator.of(context).pop(); // Close the popup
-                        widget.onReload(); // Reload the screen
+                        Navigator.of(context).pop();
+                        widget.onReload();
                       },
                       child: Container(
-                        width: screenWidth *
-                            0.25, // Button width relative to screen
-                        height: screenHeight *
-                            0.05, // Button height relative to screen
+                        width: screenWidth * 0.25,
+                        height: screenHeight * 0.05,
                         padding: EdgeInsets.symmetric(
                           horizontal: screenWidth * 0.05,
                           vertical: screenHeight * 0.01,
@@ -277,8 +306,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                             'Close',
                             style: TextStyle(
                               color: Color(0xFF3E6632),
-                              fontSize: screenWidth *
-                                  0.035, // Font size relative to screen width
+                              fontSize: screenWidth * 0.035,
                               fontFamily: 'Nunito Sans',
                               fontWeight: FontWeight.w600,
                             ),
@@ -293,29 +321,41 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
           },
         );
       } else {
-        print("Error: ${response.data['message']}");
+        final errorData = await response.stream.bytesToString();
+        print("Error response: $errorData");
+        throw 'Failed to submit activity. Try again later.';
       }
     } catch (e) {
       print("Error submitting after image: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: $e")),
+      );
     }
   }
 
   Future<Position> _getCurrentLocation() async {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      throw Exception('Location services are disabled');
-    }
-
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        throw Exception('Location permissions are denied');
+    if (kIsWeb) {
+      return Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+    } else if (Platform.isAndroid || Platform.isIOS) {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        throw 'Location services are disabled.';
       }
-    }
 
-    return await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          throw 'Location permissions are denied.';
+        }
+      }
+
+      return await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+    } else {
+      throw 'Platform not supported for geolocation.';
+    }
   }
 
   void _deleteImage(String type) {
@@ -344,7 +384,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
     double distance = await Geolocator.distanceBetween(
         beforeLatitude, beforeLongitude, afterLatitude, afterLongitude);
 
-    return distance <= 50.0; 
+    return distance <= 20.0;
   }
 
   void _showPopup(String message) {
@@ -462,13 +502,33 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                                         child: Text('Failed to load image'));
                                   },
                                 )
-                              : Image.file(
-                                  File(_beforeImage!['imagePath']!),
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (BuildContext context,
-                                      Object error, StackTrace? stackTrace) {
-                                    return Center(
-                                        child: Text('Failed to load image'));
+                              : // PWA platform check
+                              FutureBuilder<Uint8List>(
+                                  future: _loadImageBytes(
+                                      _beforeImage!['imagePath']!),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return Center(
+                                          child: CircularProgressIndicator());
+                                    } else if (snapshot.hasError) {
+                                      return Center(
+                                          child: Text('Failed to load image'));
+                                    } else if (snapshot.hasData) {
+                                      return Image.memory(
+                                        snapshot.data!,
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          return Center(
+                                              child:
+                                                  Text('Failed to load image'));
+                                        },
+                                      );
+                                    } else {
+                                      return Center(
+                                          child: Text('No image data'));
+                                    }
                                   },
                                 ),
                     ),
@@ -517,13 +577,30 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                                 ),
                               ],
                             )
-                          : Image.file(
-                              File(_afterImage!['imagePath']!),
-                              fit: BoxFit.cover,
-                              errorBuilder: (BuildContext context, Object error,
-                                  StackTrace? stackTrace) {
-                                return Center(
-                                    child: Text('Failed to load image'));
+                          : // PWA platform check
+                          FutureBuilder<Uint8List>(
+                              future:
+                                  _loadImageBytes(_afterImage!['imagePath']!),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Center(
+                                      child: CircularProgressIndicator());
+                                } else if (snapshot.hasError) {
+                                  return Center(
+                                      child: Text('Failed to load image'));
+                                } else if (snapshot.hasData) {
+                                  return Image.memory(
+                                    snapshot.data!,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Center(
+                                          child: Text('Failed to load image'));
+                                    },
+                                  );
+                                } else {
+                                  return Center(child: Text('No image data'));
+                                }
                               },
                             ),
                     ),
@@ -582,49 +659,59 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
             ),
           if (_afterImage != null && !_isSubmitting)
             Container(
-                height: 50.0,
-                child: _isLoading
-                    ? Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : SliderButton(
-                        action: () async {
-                          setState(() {
-                            _isLoading = true;
-                          });
+              height: 50.0,
+              child: _isLoading
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : SliderButton(
+                      action: () async {
+                        setState(() {
+                          _isLoading = true;
+                        });
 
-                          try {
-                            // Check distance only after the slider is moved
-                            bool isWithinRadius =
-                                await _isAfterImageWithinRadius();
+                        try {
+                          bool isWithinRadius =
+                              await _isAfterImageWithinRadius();
 
-                            if (isWithinRadius) {
-                              await _submitAfterImage();
-                            } else {
-                              // Show popup if the after image is not within the 50-meter radius
-                              _showPopup(
-                                  'Error: After image is too far from the before image.');
-                            }
-                          } catch (e) {
-                            print("Error in slider action: $e");
-                          } finally {
-                            setState(() {
-                              _isLoading = false;
-                            });
+                          if (isWithinRadius) {
+                            await _submitAfterImage();
+                          } else {
+                            _showPopup(
+                                'Error: After image is too far from the before image.');
                           }
-                        },
-                        label: Text(
-                          "Slide to confirm 'After'",
-                          style: TextStyle(color: Colors.white, fontSize: 18),
-                        ),
-                        icon: Icon(Icons.check, color: Colors.white),
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        backgroundColor: Color(0xFF5C964A),
-                        buttonColor: Colors.white,
-                        radius: 30,
-                      )),
+                        } catch (e) {
+                          print("Error in slider action: $e");
+                        } finally {
+                          setState(() {
+                            _isLoading = false;
+                          });
+                        }
+                      },
+                      label: Text(
+                        "Slide to confirm 'After'",
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                      icon: Icon(Icons.check, color: Colors.white),
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      backgroundColor: Color(0xFF5C964A),
+                      buttonColor: Colors.white,
+                      radius: 30,
+                    ),
+            ),
         ],
       ),
     );
+  }
+
+  Future<Uint8List> _loadImageBytes(String imagePath) async {
+    if (imagePath.startsWith('data:image')) {
+      return base64Decode(imagePath
+          .split(',')
+          .last); // Extract the Base64 part after 'data:image/...'
+    } else {
+      final file = File(imagePath);
+      return await file.readAsBytes();
+    }
   }
 }
