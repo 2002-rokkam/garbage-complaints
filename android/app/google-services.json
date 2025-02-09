@@ -70,6 +70,35 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:959280236765:android:a4078b589d8573cea6b334",
+        "android_client_info": {
+          "package_name": "com.vysion.sbmgrajasthanworker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "959280236765-dof6sp8fpbj9golqv3eqqui9iufb874i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbOLk4H-WTAbNaoZKyKVOuuR93Y6H1L-s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "959280236765-dof6sp8fpbj9golqv3eqqui9iufb874i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

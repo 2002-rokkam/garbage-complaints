@@ -22,7 +22,6 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
     setState(() => _isLoading = true);
     String phoneNumber = _phoneController.text.trim();
 
-    // Validate phone number
     if (phoneNumber.isEmpty || !RegExp(r'^[0-9]{10}$').hasMatch(phoneNumber)) {
       setState(() => _isLoading = false);
       _showError("Please enter a valid 10-digit phone number.");

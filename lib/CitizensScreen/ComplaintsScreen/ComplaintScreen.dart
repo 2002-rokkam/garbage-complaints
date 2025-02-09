@@ -39,7 +39,6 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
         _idToken = idToken;
       });
     } else {
-      // Handle missing token (e.g., redirect to login screen)
       throw 'Token not found. Please log in again.';
     }
   }
@@ -56,8 +55,6 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
 
       String formattedDistrict = selectedDistrict!.replaceAll(' ', '_');
       String formattedGramPanchayat = selectedGP!.replaceAll(' ', '_');
-
-      // Change letter after underscore to lowercase
       formattedDistrict =
           formattedDistrict.replaceAllMapped(RegExp(r'_(.)'), (match) {
         return '_${match.group(1)?.toLowerCase()}';
@@ -67,9 +64,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
           formattedGramPanchayat.replaceAllMapped(RegExp(r'_(.)'), (match) {
         return '_${match.group(1)?.toLowerCase()}';
       });
-      print(formattedDistrict);
 
-      print(formattedGramPanchayat);
       try {
         var uri =
             Uri.parse('https://sbmgrajasthan.com/api/complaints-register');
@@ -84,7 +79,6 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
           var latitude = imageData[i]['latitude'].toString();
           var longitude = imageData[i]['longitude'].toString();
 
-          // Generate a unique filename using the current timestamp
           var timestamp = DateTime.now().millisecondsSinceEpoch;
           var filename = 'photo${i + 1}_$timestamp.jpg';
 
@@ -321,21 +315,16 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
 
   Future<void> fetchGramPanchayats(String selectedDistrict) async {
     try {
-      // Send selected district as a query parameter to fetch the gram panchayats
       final response =
           await http.get(Uri.parse('$gpUrl/?district=$selectedDistrict'));
 
       if (response.statusCode == 200) {
-        // Parse the response to extract gram panchayats
         final Map<String, dynamic> data = json.decode(response.body);
-
-        // Check if the district matches the selected one
         if (data['district'] == selectedDistrict) {
           setState(() {
             gramPanchayats = List<String>.from(data['gram panchayat']);
           });
         } else {
-          // Handle unexpected district response
           throw Exception('Unexpected district returned from API');
         }
       } else {
@@ -343,7 +332,6 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
       }
     } catch (e) {
       print('Error fetching gram panchayats: $e');
-      // Handle error (e.g., show an error message or retry)
     }
   }
 
@@ -356,7 +344,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
       builder: (context, constraints) {
         return Scaffold(
           resizeToAvoidBottomInset:
-              false, // This ensures the bottom sheet doesn't move when keyboard is shown
+              false, 
 
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(constraints.maxHeight * 0.18),

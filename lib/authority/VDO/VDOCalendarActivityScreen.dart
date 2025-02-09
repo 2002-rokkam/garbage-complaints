@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+import '../../commonActvityCalnder.dart';
 import '../BDO/CalnderActivity/BDOSelectedDateActivitiesScreen.dart';
 
 class VDOCalendarActivityScreen extends StatefulWidget {
@@ -75,8 +75,6 @@ class _VDOCalendarActivityScreenState extends State<VDOCalendarActivityScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final selectedActivities = getActivitiesForSelectedDate();
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -89,69 +87,26 @@ class _VDOCalendarActivityScreenState extends State<VDOCalendarActivityScreen> {
         ),
         backgroundColor: Color(0xFF5C964A),
       ),
-      body: Column(
-        children: [
-          Container(
-            child: TableCalendar(
-              focusedDay: _selectedDate,
-              firstDay: DateTime(2000),
-              lastDay: DateTime(2100),
-              calendarFormat: CalendarFormat.month,
-              selectedDayPredicate: (day) => isSameDay(day, _selectedDate),
-              onDaySelected: (selectedDay, focusedDay) {
-                setState(() {
-                  _selectedDate = selectedDay;
-                });
-              },
-              calendarStyle: CalendarStyle(
-                selectedDecoration: BoxDecoration(
-                  color: Color(0xFF5C964A),
-                  shape: BoxShape.circle,
-                ),
-                todayDecoration: BoxDecoration(
-                  color: Color(0xFFFFA726),
-                  shape: BoxShape.circle,
-                ),
+      body: ActivityCalendar(
+        section: widget.section,
+        initialDate: _selectedDate,
+        activities: _activities,
+        onDateSelected: (selectedDate) {
+          setState(() {
+            _selectedDate = selectedDate;
+          });
+        },
+        onViewAll: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BDOSelectedDateActivitiesScreen(
+                selectedDate: _selectedDate,
+                activities: getActivitiesForSelectedDate(),
               ),
             ),
-          ),
-          Card(
-            margin: const EdgeInsets.all(8.0),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Total Activities: ${selectedActivities.length}',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => BDOSelectedDateActivitiesScreen(
-                            selectedDate: _selectedDate,
-                            activities: selectedActivities,
-                          ),
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      primary: Color(0xFF5C964A), // Button color
-                    ),
-                    child: Text('View All'),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }

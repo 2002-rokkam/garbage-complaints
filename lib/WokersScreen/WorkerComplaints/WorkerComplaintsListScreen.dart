@@ -299,11 +299,8 @@ class _ComplaintCardState extends State<ComplaintCard> {
 
   void _showFullScreenImage(
       String imageUrl, double dirlatitude, double dirlongitude) async {
-    // Get the time from the complaint (you can format it as needed)
     final createdAt = DateTime.parse(widget.complaint['created_at']).toLocal();
     String time = '${createdAt.hour}:${createdAt.minute}:${createdAt.second}';
-
-    // Format the latitude and longitude with 6 decimal places
     String location =
         'Lat: ${dirlatitude.toStringAsFixed(6)}, Long: ${dirlongitude.toStringAsFixed(6)}';
 
@@ -374,7 +371,6 @@ class _ComplaintCardState extends State<ComplaintCard> {
                       ],
                     ),
                   ),
-                  // Location (Latitude & Longitude) below the time
                   Container(
                     width: 370,
                     height: 45,
@@ -446,7 +442,6 @@ class _ComplaintCardState extends State<ComplaintCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Auto-Scrolling Carousel Slider with Overlayed Date and Status
           Container(
             width: 370,
             height: 188.59,
@@ -570,7 +565,6 @@ class _ComplaintCardState extends State<ComplaintCard> {
             ),
           ),
           SizedBox(height: 8),
-
           // Location and Caption
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 12.0),

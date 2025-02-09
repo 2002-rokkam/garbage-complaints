@@ -9,13 +9,20 @@ import 'authority/CEO/CEOScreen.dart';
 import 'authority/VDO/VDOScreen.dart';
 import 'onBoardingPage1.dart';
 import 'firebase_options.dart';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
 
-  // await Firebase.initializeApp(
-  //   options: DefaultFirebaseOptions.currentPlatform,
-  // );  
+  if (kIsWeb) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } else {
+    await Firebase.initializeApp();
+  }
+
   final prefs = await SharedPreferences.getInstance();
 
   String? token = prefs.getString('id_token');
@@ -37,12 +44,12 @@ class MyApp extends StatelessWidget {
     Widget home;
 
     if (token != null) {
-      home = CitizensScreen(); // Navigate to customer home
+      home = CitizensScreen(); 
     } else if (userId != null && position != null) {
       home =
-          determinePageBasedOnPosition(position); // Navigate based on position
+          determinePageBasedOnPosition(position); 
     } else {
-      home = OnboardingScreen(); // Default to login
+      home = OnboardingScreen(); 
     }
 
     return MaterialApp(
@@ -51,7 +58,6 @@ class MyApp extends StatelessWidget {
   }
 
   Widget determinePageBasedOnPosition(String? position) {
-    // Map position to the respective screen
     switch (position) {
       case 'Worker':
         return WorkerScreen();
