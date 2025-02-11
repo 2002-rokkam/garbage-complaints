@@ -22,7 +22,7 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Worker Logout',
+          'Logout',
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Color(0xFF5C964A),

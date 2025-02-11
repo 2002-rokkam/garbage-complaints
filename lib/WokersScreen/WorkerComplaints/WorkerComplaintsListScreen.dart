@@ -33,12 +33,12 @@ class WorkerComplaintsListScreen extends StatelessWidget {
         title: Text(
           'Complaints on ${date.toLocal()}'.split(' ')[0],
           style: TextStyle(
-            color: Colors.white, // White text color
-            fontSize: 20, // Optional: Adjust font size
-            fontWeight: FontWeight.bold, // Optional: Bold text
+            color: Colors.white, 
+            fontSize: 20,
+            fontWeight: FontWeight.bold, 
           ),
         ),
-        backgroundColor: Color(0xFF5C964A), // Set green color for the app bar
+        backgroundColor: Color(0xFF5C964A), 
         toolbarHeight: 80.0,
       ),
       backgroundColor: Color.fromRGBO(239, 239, 239, 1),
@@ -134,6 +134,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
       _showImagePopup();
     }
   }
+
 
   Future<void> _getLocation() async {
     Position position = await Geolocator.getCurrentPosition(

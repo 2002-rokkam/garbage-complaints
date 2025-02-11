@@ -182,24 +182,23 @@ class _CEORCCCalendarActivityScreenState
             ),
           ),
           Container(
-              height: 80,
-              child: _isLoading
-                  ? Center(child: CircularProgressIndicator())
-                  : selectedActivities.isEmpty
-                      ? Center(child: Text('No activities for selected date.'))
-                      : TabBarView(
-                          controller: _tabController,
-                          children: [
-                            Card(
+            height: 80,
+            child: _isLoading
+                ? Center(child: CircularProgressIndicator())
+                : TabBarView(
+                    controller: _tabController,
+                    children: [
+                      selectedActivities.isEmpty
+                          ? Center(
+                              child: Text('No activities for selected date.'))
+                          : Card(
                               color: Color.fromRGBO(239, 239, 239, 1),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment
-                                    .center, // Center vertically
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Expanded(
                                     child: Align(
-                                      alignment: Alignment
-                                          .centerLeft, // Align text to the left
+                                      alignment: Alignment.centerLeft,
                                       child: Text(
                                         'Total Activities: ${selectedActivities.length}',
                                         style: TextStyle(
@@ -209,35 +208,21 @@ class _CEORCCCalendarActivityScreenState
                                     ),
                                   ),
                                   Align(
-                                    alignment: Alignment
-                                        .centerRight, // Align button to the right
+                                    alignment: Alignment.centerRight,
                                     child: TextButton(
                                       onPressed: () {
-                                        if (_tabController.index == 0) {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  VDOBeforeAfterScreen(
-                                                activities: selectedActivities,
-                                              ),
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                VDOBeforeAfterScreen(
+                                              activities: selectedActivities,
                                             ),
-                                          );
-                                        } else {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  BDOTripDetailsScreen(
-                                                tripDetails: _tripDetails,
-                                              ),
-                                            ),
-                                          );
-                                        }
+                                          ),
+                                        );
                                       },
                                       style: ElevatedButton.styleFrom(
-                                        primary: Colors
-                                            .green, // Set the background color to green
+                                        primary: Colors.green,
                                       ),
                                       child: Text(
                                         'View All',
@@ -249,16 +234,16 @@ class _CEORCCCalendarActivityScreenState
                                 ],
                               ),
                             ),
-                            Card(
+                      _tripDetails.isEmpty
+                          ? Center(child: Text('No trips for selected date.'))
+                          : Card(
                               color: Color.fromRGBO(239, 239, 239, 1),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment
-                                    .center, // Center vertically
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Expanded(
                                     child: Align(
-                                      alignment: Alignment
-                                          .centerLeft, // Align text to the left
+                                      alignment: Alignment.centerLeft,
                                       child: Text(
                                         'Total Trip Details: ${_tripDetails.length}',
                                         style: TextStyle(
@@ -268,35 +253,21 @@ class _CEORCCCalendarActivityScreenState
                                     ),
                                   ),
                                   Align(
-                                    alignment: Alignment
-                                        .centerRight, // Align button to the right
+                                    alignment: Alignment.centerRight,
                                     child: TextButton(
                                       onPressed: () {
-                                        if (_tabController.index == 0) {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  VDOBeforeAfterScreen(
-                                                activities: selectedActivities,
-                                              ),
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                BDOTripDetailsScreen(
+                                              tripDetails: _tripDetails,
                                             ),
-                                          );
-                                        } else {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  BDOTripDetailsScreen(
-                                                tripDetails: _tripDetails,
-                                              ),
-                                            ),
-                                          );
-                                        }
+                                          ),
+                                        );
                                       },
                                       style: ElevatedButton.styleFrom(
-                                        primary: Colors
-                                            .green, // Set the background color to green
+                                        primary: Colors.green,
                                       ),
                                       child: Text(
                                         'View All',
@@ -308,8 +279,10 @@ class _CEORCCCalendarActivityScreenState
                                 ],
                               ),
                             ),
-                          ],
-                        )),
+                    ],
+                  ),
+          )
+
         ],
       ),
     );

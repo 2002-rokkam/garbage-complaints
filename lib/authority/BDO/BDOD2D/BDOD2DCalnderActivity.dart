@@ -4,7 +4,6 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../CalnderActivity/BDOSelectedDateActivitiesScreen.dart';
 import 'QRDetailsScreen.dart';
 
@@ -35,32 +34,40 @@ class _BDOD2DCalnderActivityScreenState
   List _tripDetails = [];
   bool _isLoading = false;
   late TabController _tabController;
-  String? workerId;
+  String? workerId; // Make workerId nullable
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    _fetchWorkerId();
+    _fetchWorkerId(); // Fetch the workerId and update the state
   }
 
+  // Fetch the workerId and then call fetchActivities
   Future<void> _fetchWorkerId() async {
-    workerId = await getWorkerId();
+    workerId = await getWorkerId(); // Assign workerId here
     if (workerId != null && workerId!.isNotEmpty) {
-      fetchActivities();
+      fetchActivities(); // Now call fetchActivities after workerId is available
     } else {
-      setState(() => _isLoading = false);
+      setState(() {
+        _isLoading = false; // Handle the case if workerId is not available
+      });
+      print('Worker ID not found.');
     }
   }
 
   Future<String?> getWorkerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('worker_id');
+    return prefs.getString('worker_id'); // Return nullable workerId
   }
 
   Future<void> fetchActivities() async {
-    if (workerId == null || workerId!.isEmpty) return;
-    setState(() => _isLoading = true);
+    if (workerId == null || workerId!.isEmpty)
+      return; // Avoid calling if workerId is null
+
+    setState(() {
+      _isLoading = true;
+    });
 
     final url = Uri.parse('https://sbmgrajasthan.com/api/bdo-section-dashboard')
         .replace(queryParameters: {
@@ -74,10 +81,15 @@ class _BDOD2DCalnderActivityScreenState
       final response = await http.get(url);
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
+
+        // Extracting activities for the specific section
+        var sectionActivities = data['section_data'][widget.section] ?? [];
         setState(() {
-          _activities = data['section_data'][widget.section] ?? [];
-          fetchQRDetails(workerId!);
+          _activities = sectionActivities;
+          fetchQRDetails(workerId!); // Pass workerId here
         });
+      } else {
+        throw Exception('Failed to load activities');
       }
     } catch (e) {
       print(e);
@@ -86,6 +98,7 @@ class _BDOD2DCalnderActivityScreenState
 
   Future<void> fetchQRDetails(String workerId) async {
     if (workerId.isEmpty) return;
+
     final url = Uri.parse('https://sbmgrajasthan.com/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
@@ -102,111 +115,177 @@ class _BDOD2DCalnderActivityScreenState
           _tripDetails = data['section_data']['D2D_QR'] ?? [];
           _isLoading = false;
         });
+      } else {
+        throw Exception('Failed to load QR details');
       }
     } catch (e) {
-      setState(() => _isLoading = false);
+      print('Error: $e');
+      setState(() {
+        _isLoading = false;
+      });
     }
+  }
+
+  List getActivitiesForSelectedDate() {
+    return _activities
+        .where((activity) =>
+            DateTime.parse(activity['date_time']).toLocal().day ==
+                _selectedDate.day &&
+            DateTime.parse(activity['date_time']).toLocal().month ==
+                _selectedDate.month &&
+            DateTime.parse(activity['date_time']).toLocal().year ==
+                _selectedDate.year)
+        .toList();
+  }
+
+  List getFilteredTripDetails() {
+    return _tripDetails
+        .where((trip) =>
+            DateTime.parse(trip['date_time']).toLocal().day ==
+                _selectedDate.day &&
+            DateTime.parse(trip['date_time']).toLocal().month ==
+                _selectedDate.month &&
+            DateTime.parse(trip['date_time']).toLocal().year ==
+                _selectedDate.year)
+        .toList();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (workerId == null) {
+      return Center(
+          child:
+              CircularProgressIndicator()); // Wait for workerId to be fetched
+    }
+
+    final selectedActivities = getActivitiesForSelectedDate();
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.section),
+        title: Text(
+          '${widget.section}',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         backgroundColor: Color(0xFF5C964A),
         bottom: TabBar(
           controller: _tabController,
+          labelColor: Colors.white,
+          unselectedLabelColor: Colors.white,
+          indicatorColor: Color.fromRGBO(255, 210, 98, 1),
+          indicatorWeight: 3.0,
           tabs: [
             Tab(text: 'Before & After'),
             Tab(text: 'QR Data'),
           ],
         ),
       ),
-      body: workerId == null
-          ? Center(child: CircularProgressIndicator())
-          : D2DCalendarActivityBody(
-              selectedDate: _selectedDate,
-              activities: _activities,
-              tripDetails: _tripDetails,
-              isLoading: _isLoading,
-              tabController: _tabController,
-              onDateSelected: (date) {
+      body: Column(
+        children: [
+          Container(
+            child: TableCalendar(
+              focusedDay: _selectedDate,
+              firstDay: DateTime(2000),
+              lastDay: DateTime(2100),
+              calendarFormat: CalendarFormat.month,
+              selectedDayPredicate: (day) => isSameDay(day, _selectedDate),
+              onDaySelected: (selectedDay, focusedDay) {
                 setState(() {
-                  _selectedDate = date;
-                  fetchQRDetails(workerId!);
+                  _selectedDate = selectedDay;
+                  fetchQRDetails(workerId!); // Use workerId here
                 });
               },
-            ),
-    );
-  }
-}
-
-class D2DCalendarActivityBody extends StatelessWidget {
-  final DateTime selectedDate;
-  final List activities;
-  final List tripDetails;
-  final bool isLoading;
-  final TabController tabController;
-  final Function(DateTime) onDateSelected;
-
-  const D2DCalendarActivityBody({
-    Key? key,
-    required this.selectedDate,
-    required this.activities,
-    required this.tripDetails,
-    required this.isLoading,
-    required this.tabController,
-    required this.onDateSelected,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TableCalendar(
-          focusedDay: selectedDate,
-          firstDay: DateTime(2000),
-          lastDay: DateTime(2100),
-          calendarFormat: CalendarFormat.month,
-          selectedDayPredicate: (day) => isSameDay(day, selectedDate),
-          onDaySelected: (selectedDay, focusedDay) =>
-              onDateSelected(selectedDay),
-        ),
-        Expanded(
-          child: isLoading
-              ? Center(child: CircularProgressIndicator())
-              : TabBarView(
-                  controller: tabController,
-                  children: [
-                    _buildActivityCard(
-                        context,
-                        'Total Activities',
-                        activities.length,
-                        BDOSelectedDateActivitiesScreen(
-                            selectedDate: selectedDate,
-                            activities: activities)),
-                    _buildActivityCard(
-                        context,
-                        'Total QR Scans',
-                        tripDetails.length,
-                        QRDetailsScreen(tripDetails: tripDetails)),
-                  ],
+              calendarStyle: CalendarStyle(
+                selectedDecoration: BoxDecoration(
+                  color: Color(0xFF5C964A),
+                  shape: BoxShape.circle,
                 ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildActivityCard(
-      BuildContext context, String title, int count, Widget screen) {
-    return Card(
-      child: ListTile(
-        title: Text('$title: $count'),
-        trailing: ElevatedButton(
-          onPressed: () => Navigator.push(
-              context, MaterialPageRoute(builder: (context) => screen)),
-          child: Text('View All'),
-        ),
+                todayDecoration: BoxDecoration(
+                  color: Color(0xFFFFA726),
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+          ),
+          Container(
+            height: 80, // Set a fixed height for the entire TabBarView
+            child: _isLoading
+                ? Center(child: CircularProgressIndicator())
+                : TabBarView(
+                    controller: _tabController,
+                    children: [
+                      selectedActivities.isNotEmpty
+                          ?
+                      Card(
+                        child: ListTile(
+                          title: Text(
+                              'Total Activities : ${selectedActivities.length}'),
+                          trailing: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      BDOSelectedDateActivitiesScreen(
+                                    selectedDate: _selectedDate,
+                                    activities: selectedActivities,
+                                  ),
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors
+                                  .green, // Set the background color to green
+                            ),
+                            child: Text('View All'),
+                          ),
+                        ),
+                      ) : Center(
+                              child: Text(
+                                'No activities for selected date.',
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.black54),
+                              ),
+                            ),
+                      getFilteredTripDetails().isNotEmpty
+                          ?
+                      Card(
+                        child: ListTile(
+                          title: Text(
+                              'Total QR Scans:${getFilteredTripDetails().length}'),
+                          trailing: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => QRDetailsScreen(
+                                    tripDetails: getFilteredTripDetails(),
+                                  ),
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors
+                                  .green, // Set the background color to green
+                            ),
+                            child: Text('View All'),
+                          ),
+                        ),
+                      )
+                          : Center(
+                              child: Text(
+                                'No QR scans for selected date.',
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.black54),
+                              ),
+                            ),
+                    ],
+                  ),
+          ),
+        ],
       ),
     );
   }

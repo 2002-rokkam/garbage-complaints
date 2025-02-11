@@ -44,61 +44,73 @@ class _ActivityCalendarState extends State<ActivityCalendar> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final selectedActivities = getActivitiesForSelectedDate();
+Widget build(BuildContext context) {
+  final selectedActivities = getActivitiesForSelectedDate();
 
-    return Column(
-      children: [
-        TableCalendar(
-          focusedDay: _selectedDate,
-          firstDay: DateTime(2000),
-          lastDay: DateTime(2100),
-          calendarFormat: CalendarFormat.month,
-          selectedDayPredicate: (day) => isSameDay(day, _selectedDate),
-          onDaySelected: (selectedDay, focusedDay) {
-            setState(() {
-              _selectedDate = selectedDay;
-            });
-            widget.onDateSelected(selectedDay);
-          },
-          calendarStyle: CalendarStyle(
-            selectedDecoration: BoxDecoration(
-              color: Color(0xFF5C964A),
-              shape: BoxShape.circle,
-            ),
-            todayDecoration: BoxDecoration(
-              color: Color(0xFFFFA726),
-              shape: BoxShape.circle,
-            ),
+  return Column(
+    children: [
+      TableCalendar(
+        focusedDay: _selectedDate,
+        firstDay: DateTime(2000),
+        lastDay: DateTime(2100),
+        calendarFormat: CalendarFormat.month,
+        selectedDayPredicate: (day) => isSameDay(day, _selectedDate),
+        onDaySelected: (selectedDay, focusedDay) {
+          setState(() {
+            _selectedDate = selectedDay;
+          });
+          widget.onDateSelected(selectedDay);
+        },
+        calendarStyle: CalendarStyle(
+          selectedDecoration: BoxDecoration(
+            color: Color(0xFF5C964A),
+            shape: BoxShape.circle,
+          ),
+          todayDecoration: BoxDecoration(
+            color: Color(0xFFFFA726),
+            shape: BoxShape.circle,
           ),
         ),
-        Card(
-          margin: const EdgeInsets.all(8.0),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Total Activities: ${selectedActivities.length}',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
+      ),
+      selectedActivities.isNotEmpty
+          ? Card(
+              margin: const EdgeInsets.all(8.0),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Total Activities: ${selectedActivities.length}',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: widget.onViewAll,
+                      style: ElevatedButton.styleFrom(
+                        primary: Color(0xFF5C964A),
+                      ),
+                      child: Text('View All'),
+                    ),
+                  ],
                 ),
-                ElevatedButton(
-                  onPressed: widget.onViewAll,
-                  style: ElevatedButton.styleFrom(
-                    primary: Color(0xFF5C964A),
-                  ),
-                  child: Text('View All'),
+              ),
+            )
+          : Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                'No activities for selected date.',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black54,
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ],
-    );
-  }
+    ],
+  );
+}
 }

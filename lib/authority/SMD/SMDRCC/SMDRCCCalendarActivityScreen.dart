@@ -249,7 +249,9 @@ class _SMDRCCCalendarActivityScreenState
                                 ],
                               ),
                             ),
-                            Card(
+                             _tripDetails.isEmpty
+                          ? Center(child: Text('No trips for selected date.'))
+                          : Card(
                               color: Color.fromRGBO(239, 239, 239, 1),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment

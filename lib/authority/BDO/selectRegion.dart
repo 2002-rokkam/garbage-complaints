@@ -99,7 +99,6 @@ class _RegionSelectorState extends State<RegionSelector> {
       String formattedGramPanchayat =
           selectedGramPanchayat!.replaceAll(' ', '_');
 
-      // Change letter after underscore to lowercase
       formattedDistrict =
           formattedDistrict.replaceAllMapped(RegExp(r'_(.)'), (match) {
         return '_${match.group(1)?.toLowerCase()}';
@@ -274,7 +273,6 @@ class _RegionSelectorState extends State<RegionSelector> {
                       selectedBlock = null;
                       selectedGramPanchayat = null;
                     });
-                    // fetchBlocks(value);
                   });
                 }
               },

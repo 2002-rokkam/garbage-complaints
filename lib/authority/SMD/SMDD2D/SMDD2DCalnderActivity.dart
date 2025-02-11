@@ -219,6 +219,8 @@ class _SMDD2DCalnderActivityScreenState
                 : TabBarView(
                     controller: _tabController,
                     children: [
+                      selectedActivities.isNotEmpty
+                          ?
                       Card(
                         child: ListTile(
                           title: Text(
@@ -243,7 +245,15 @@ class _SMDD2DCalnderActivityScreenState
                             child: Text('View All'),
                           ),
                         ),
-                      ),
+                      ) : Center(
+                              child: Text(
+                                'No activities for selected date.',
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.black54),
+                              ),
+                            ),
+                      getFilteredTripDetails().isNotEmpty
+                          ?
                       Card(
                         child: ListTile(
                           title: Text(
@@ -266,7 +276,14 @@ class _SMDD2DCalnderActivityScreenState
                             child: Text('View All'),
                           ),
                         ),
-                      ),
+                      )
+                          : Center(
+                              child: Text(
+                                'No QR scans for selected date.',
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.black54),
+                              ),
+                            ),
                     ],
                   ),
           ),

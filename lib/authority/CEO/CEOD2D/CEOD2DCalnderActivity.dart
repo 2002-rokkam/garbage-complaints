@@ -219,54 +219,68 @@ class _CEOD2DCalnderActivityScreenState
                 : TabBarView(
                     controller: _tabController,
                     children: [
-                      Card(
-                        child: ListTile(
-                          title: Text(
-                              'Total Activities : ${selectedActivities.length}'),
-                          trailing: ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      BDOSelectedDateActivitiesScreen(
-                                    selectedDate: _selectedDate,
-                                    activities: selectedActivities,
+                      selectedActivities.isNotEmpty
+                          ? Card(
+                              child: ListTile(
+                                title: Text(
+                                    'Total Activities : ${selectedActivities.length}'),
+                                trailing: ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            BDOSelectedDateActivitiesScreen(
+                                          selectedDate: _selectedDate,
+                                          activities: selectedActivities,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Colors.green,
                                   ),
+                                  child: Text('View All'),
                                 ),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              primary: Colors
-                                  .green, // Set the background color to green
+                              ),
+                            )
+                          : Center(
+                              child: Text(
+                                'No activities for selected date.',
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.black54),
+                              ),
                             ),
-                            child: Text('View All'),
-                          ),
-                        ),
-                      ),
-                      Card(
-                        child: ListTile(
-                          title: Text(
-                              'Total QR Scans:${getFilteredTripDetails().length}'),
-                          trailing: ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => QRDetailsScreen(
-                                    tripDetails: getFilteredTripDetails(),
+                      getFilteredTripDetails().isNotEmpty
+                          ? Card(
+                              child: ListTile(
+                                title: Text(
+                                    'Total QR Scans: ${getFilteredTripDetails().length}'),
+                                trailing: ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => QRDetailsScreen(
+                                          tripDetails: getFilteredTripDetails(),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Colors.green,
                                   ),
+                                  child: Text('View All'),
                                 ),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              primary: Colors
-                                  .green, // Set the background color to green
+                              ),
+                            )
+                          : Center(
+                              child: Text(
+                                'No QR scans for selected date.',
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.black54),
+                              ),
                             ),
-                            child: Text('View All'),
-                          ),
-                        ),
-                      ),
                     ],
                   ),
           ),
