@@ -1,15 +1,18 @@
 // WokersScreen/WorkerScreen.dart
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import '../PoweredByBikaji.dart';
 import '../Login/workerLogout.dart';
+import '../authority/CEO/contractorDetails.dart';
 import 'WorkerCommon/ActionScreen.dart';
 import 'D2D/D2DSectionScreen.dart';
 import 'RRC/RRCSectionScreen.dart';
 import 'Wages/WagesActionScreen.dart';
 import 'WorkerComplaints/workerComplaintsScreen.dart';
 import 'package:intl/intl.dart';
- 
+import '../../button_items.dart';
+
 class WorkerScreen extends StatefulWidget {
   @override
   _WorkerScreenState createState() => _WorkerScreenState();
@@ -21,39 +24,6 @@ class _WorkerScreenState extends State<WorkerScreen> {
   void initState() {
     super.initState();   
   }
-
-  final List<Map<String, String>> buttonItems = [
-    {
-      'label': 'Door to Door',
-      'imageUrl': 'assets/images/d2d.png',
-      'route': 'DoorToDoorScreen'
-    },
-    {
-      'label': 'Road Sweeping',
-      'imageUrl': 'assets/images/road_sweeping.png',
-      'route': 'RoadSweepingScreen'
-    },
-    {
-      'label': 'Drain Cleaning',
-      'imageUrl': 'assets/images/drainage_collectin.png',
-      'route': 'DrainCleaningScreen'
-    },
-    {
-      'label': 'Community Service Centre',
-      'imageUrl': 'assets/images/CSC.png',
-      'route': 'CSCScreen'
-    },
-    {
-      'label': 'Resource Recovery Centre',
-      'imageUrl': 'assets/images/RRC.png',
-      'route': 'RRCScreen'
-    },
-    {
-      'label': 'Wages',
-      'imageUrl': 'assets/images/wages.png',
-      'route': 'WagesScreen'
-    },
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -392,8 +362,26 @@ class _WorkerScreenState extends State<WorkerScreen> {
         return RRCScreen(section: 'RRC');
       case 'WagesScreen':
         return WagesActionScreen(section: 'Wages');
+      case 'ContractorDetailsScreen':
+        return FutureBuilder<String>(
+          future: _getGramPanchayat(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Scaffold(body: Center(child: CircularProgressIndicator()));
+            }
+            if (snapshot.hasError) {
+              return Scaffold(body: Center(child: Text("Error loading data")));
+            }
+            return Contractordetails(gramPanchayat: snapshot.data ?? '');
+          },
+        );
       default:
         return Scaffold(body: Center(child: Text('Page not found')));
     }
+  }
+
+  Future<String> _getGramPanchayat() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('gram_panchayat') ?? '';
   }
 }

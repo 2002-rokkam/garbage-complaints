@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../WorkerCommon/BeforeAfterContainer.dart';
+import '../WorkerCommon/D2DBeforeAfterContainer.dart';
 import 'D2DCalnderActivity.dart';
 import 'QRTab.dart';
 
@@ -66,7 +66,7 @@ class _D2DSectionScreenState extends State<D2DSectionScreen>
         setState(() {
           beforeAfterContainers = activities
               .where((activity) => activity['status'] == 'trip started')
-              .map((activity) => BeforeAfterContainer(
+              .map((activity) => D2DBeforeAfterContainer(
                     section: widget.section,
                     initialData: activity,
                     onReload: _fetchActivities,
@@ -87,7 +87,7 @@ class _D2DSectionScreenState extends State<D2DSectionScreen>
 
   void addNewContainer() {
     setState(() {
-      beforeAfterContainers.add(BeforeAfterContainer(
+      beforeAfterContainers.add(D2DBeforeAfterContainer(
         section: widget.section,
         initialData: null,
         onReload: _fetchActivities,
@@ -190,7 +190,7 @@ class _D2DSectionScreenState extends State<D2DSectionScreen>
               children: beforeAfterContainers.isNotEmpty
                   ? beforeAfterContainers
                   : [
-                      BeforeAfterContainer(
+                      D2DBeforeAfterContainer(
                         section: widget.section,
                         onReload: _fetchActivities,
                       ),
