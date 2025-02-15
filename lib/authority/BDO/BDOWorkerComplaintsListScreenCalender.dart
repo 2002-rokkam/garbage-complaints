@@ -10,11 +10,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 class BDOWorkerComplaintsListScreenCalender extends StatelessWidget {
   final DateTime date;
   final List<dynamic> complaints;
-  final VoidCallback onUpdate; // Callback to refresh data
+  final VoidCallback onUpdate; 
 
   BDOWorkerComplaintsListScreenCalender(
       {required this.date, required this.complaints, required this.onUpdate});
@@ -38,7 +38,7 @@ class BDOWorkerComplaintsListScreenCalender extends StatelessWidget {
             fontWeight: FontWeight.bold, // Optional: Bold text
           ),
         ),
-        backgroundColor: Color(0xFF5C964A), // Set green color for the app bar
+        backgroundColor: Color(0xFF5C964A), 
         toolbarHeight: 80.0,
       ),
       backgroundColor: Color.fromRGBO(239, 239, 239, 1),
@@ -285,13 +285,9 @@ class _ComplaintCardState extends State<ComplaintCard> {
 
   void _showFullScreenImage(
       String imageUrl, double dirlatitude, double dirlongitude) async {
-    // Get the time from the complaint (you can format it as needed)
     final createdAt = DateTime.parse(widget.complaint['created_at']).toLocal();
     String time = '${createdAt.hour}:${createdAt.minute}:${createdAt.second}';
-
-    // Format the latitude and longitude with 6 decimal places
-    String location =
-        'Lat: ${dirlatitude.toStringAsFixed(6)}, Long: ${dirlongitude.toStringAsFixed(6)}';
+    String location ='Lat: ${dirlatitude.toStringAsFixed(6)}, Long: ${dirlongitude.toStringAsFixed(6)}';
 
     showDialog(
       context: context,
@@ -407,6 +403,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
       throw 'Could not launch $url';
     }
   }
+  int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -417,8 +414,11 @@ class _ComplaintCardState extends State<ComplaintCard> {
     final resolvedPhoto = widget.complaint['resolved_photo'];
     final dirlatitude = widget.complaint['photos'][0]['latitude'];
     final dirlongitude = widget.complaint['photos'][0]['longitude'];
-    String time = '${createdAt.hour}:${createdAt.minute}:${createdAt.second}';
 
+    String time = '${createdAt.hour}:${createdAt.minute}:${createdAt.second}';
+    int activeIndex = 0;
+    final PageController _pageController = PageController();
+    
     return Container(
       margin: EdgeInsets.only(bottom: 16.0),
       width: 370,
@@ -431,28 +431,25 @@ class _ComplaintCardState extends State<ComplaintCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Auto-Scrolling Carousel Slider with Overlayed Date and Status
           Container(
             width: 370,
             height: 188.59,
             child: Stack(
+            alignment: Alignment.bottomCenter,
               children: [
-                // Carousel
-                CarouselSlider(
-                  options: CarouselOptions(
-                    height: 188.59,
-                    autoPlay: false,
-                    autoPlayInterval: Duration(seconds: 3),
-                    autoPlayAnimationDuration: Duration(milliseconds: 800),
-                    viewportFraction: 1.0,
-                    enlargeCenterPage: false,
-                  ),
-                  items: images.map<Widget>((image) {
+                PageView.builder(
+                  controller: _pageController,
+                  itemCount: images.length,
+                  onPageChanged: (index) {
+                    setState(() {
+                      activeIndex = index;
+                    });
+                  },
+                  itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        // Open image in full-screen view when tapped
                         _showFullScreenImage(
-                            image['image'], dirlatitude, dirlongitude);
+                            images[index]['image'], dirlatitude, dirlongitude);
                       },
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(16),
@@ -460,42 +457,29 @@ class _ComplaintCardState extends State<ComplaintCard> {
                           width: 370,
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: NetworkImage('${image['image']}'),
+                              image: NetworkImage(images[index]['image']),
                               fit: BoxFit.cover,
                             ),
                           ),
                         ),
                       ),
                     );
-                  }).toList(),
+                  },
                 ),
-                // Left Indicator
                 Positioned(
-                  top: 0,
-                  bottom: 0,
-                  left: 0,
-                  child: IconButton(
-                    icon: Icon(Icons.arrow_back_ios),
-                    color: Colors.white,
-                    onPressed: () {
-                      // Add logic to go to the previous image
-                    },
+                  bottom: 12,
+                  child: SmoothPageIndicator(
+                    controller: _pageController,
+                    count: images.length,
+                    effect: ExpandingDotsEffect(
+                      activeDotColor: Colors.white,
+                      dotColor: Colors.black,
+                      dotHeight: 6,
+                      dotWidth: 6,
+                      expansionFactor: 2,
+                    ),
                   ),
-                ),
-                // Right Indicator
-                Positioned(
-                  top: 0,
-                  bottom: 0,
-                  right: 0,
-                  child: IconButton(
-                    icon: Icon(Icons.arrow_forward_ios),
-                    color: Colors.white,
-                    onPressed: () {
-                      // Add logic to go to the next image
-                    },
-                  ),
-                ),
-                // Date and Status Overlay
+                ), 
                 Positioned(
                   top: 12,
                   right: 12,
@@ -528,7 +512,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                       ),
                       SizedBox(width: 8),
                       Container(
-                        width: 128,
+                        width: 138,
                         height: 26,
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 5),
@@ -581,8 +565,10 @@ class _ComplaintCardState extends State<ComplaintCard> {
                       icon: Icon(Icons.directions, color: Colors.blue),
                       onPressed: () {
                         if (dirlatitude != null && dirlongitude != null) {
+                          print(dirlatitude);
+                          print(dirlongitude);
                           final url = Uri.parse(
-                              'https://www.google.com/maps?q=$_latitude,$_longitude');
+                              'https://www.google.com/maps?q=$dirlatitude,$dirlongitude');
                           _launchURL(url);
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(

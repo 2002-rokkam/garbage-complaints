@@ -1,5 +1,6 @@
 // CitizensScreen/CitizensScreen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/PoweredByBikaji.dart';
 import '../ContactUsPage.dart';
 import '../customerLogout.dart';
 import 'ComplaintsScreen/ComplaintScreen.dart';
@@ -340,77 +341,9 @@ class _CitizensScreenState extends State<CitizensScreen> {
                     ),
                   ],
                 ),
-
                 SizedBox(height: 26),
-
-                Container(
-                  width: 402,
-                  height: 147,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 88, vertical: 11),
-                  decoration: BoxDecoration(color: Colors.white),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        height: 102,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: 111,
-                              height: 63,
-                              decoration: BoxDecoration(),
-                              child: Image.asset(
-                                'assets/images/bikaji.png',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            const SizedBox(height: 7),
-                            Container(
-                              width: double.infinity,
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Powered By',
-                                    style: TextStyle(
-                                      color: Color(0xFF3B4A5C),
-                                      fontSize: 14,
-                                      fontFamily: 'Nunito Sans',
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    'Bikaji International',
-                                    style: TextStyle(
-                                      color: Color(0xFF3B4A5C),
-                                      fontSize: 16,
-                                      fontFamily: 'Nunito Sans',
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                          
-                        ),
-                        
-                      ),
-
-                    ],
-                  ),
-                ),
-  SizedBox(height: 26),
-
+                PoweredByBikaji(),
+                SizedBox(height: 26),
               ],
             ),
           ),

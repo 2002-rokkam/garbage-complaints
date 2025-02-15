@@ -166,13 +166,9 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
 
     Position position = await _getCurrentLocation();
 
-    String address =
-        await _getAddressFromLatLong(position.latitude, position.longitude);
-
-    // For PWAs, we need to convert the image to Base64.
+    String address = await _getAddressFromLatLong(position.latitude, position.longitude);
     String imagePath;
     if (kIsWeb) {
-      // Convert image to Base64 for PWA
       final bytes = await image.readAsBytes();
       imagePath = 'data:image/jpeg;base64,' + base64Encode(bytes);
     } else {
@@ -521,8 +517,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                                         errorBuilder:
                                             (context, error, stackTrace) {
                                           return Center(
-                                              child:
-                                                  Text('Failed to load image'));
+                                              child: Text('Failed to load image'));
                                         },
                                       );
                                     } else {
@@ -669,11 +664,8 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                         setState(() {
                           _isLoading = true;
                         });
-
                         try {
-                          bool isWithinRadius =
-                              await _isAfterImageWithinRadius();
-
+                          bool isWithinRadius = await _isAfterImageWithinRadius();
                           if (isWithinRadius) {
                             await _submitAfterImage();
                           } else {

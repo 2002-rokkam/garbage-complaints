@@ -24,11 +24,16 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
   bool _isLoading = false;
   late TabController _tabController;
   String? workerId;
+  Map<DateTime, int> activityCounts = {};
+  Map<DateTime, int> qrCounts = {};
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {
+      setState(() {}); // Update UI when tab changes
+    });
     _fetchWorkerId();
   }
 
@@ -36,6 +41,7 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
     workerId = await getWorkerId();
     if (workerId != null && workerId!.isNotEmpty) {
       fetchActivities();
+      fetchQRDetails(workerId!);
     } else {
       setState(() {
         _isLoading = false;
@@ -63,9 +69,18 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         var sectionActivities = data['activities'];
+
+        Map<DateTime, int> counts = {};
+        for (var activity in sectionActivities) {
+          final date = DateTime.parse(activity['date_time']).toLocal();
+          final day = DateTime(date.year, date.month, date.day);
+          counts[day] = (counts[day] ?? 0) + 1;
+        }
+
         setState(() {
           _activities = sectionActivities;
-          fetchQRDetails(workerId!);
+          activityCounts = counts;
+          _isLoading = false;
         });
       } else {
         throw Exception('Failed to load activities');
@@ -84,17 +99,18 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
       final response = await http.get(url);
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-
         var qrDetails = data['activities'];
-        var filteredQRDetails = qrDetails.where((qr) {
-          DateTime qrDate = DateTime.parse(qr['date_time']).toLocal();
-          return qrDate.day == _selectedDate.day &&
-              qrDate.month == _selectedDate.month &&
-              qrDate.year == _selectedDate.year;
-        }).toList();
+
+        Map<DateTime, int> counts = {};
+        for (var qr in qrDetails) {
+          final date = DateTime.parse(qr['date_time']).toLocal();
+          final day = DateTime(date.year, date.month, date.day);
+          counts[day] = (counts[day] ?? 0) + 1;
+        }
 
         setState(() {
-          _tripDetails = filteredQRDetails;
+          _tripDetails = qrDetails;
+          qrCounts = counts;
           _isLoading = false;
         });
       } else {
@@ -127,6 +143,7 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
     }
 
     final selectedActivities = getActivitiesForSelectedDate();
+    final isBeforeAfterTab = _tabController.index == 0;
 
     return Scaffold(
       appBar: AppBar(
@@ -153,54 +170,82 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
       ),
       body: Column(
         children: [
-          Container(
-            child: TableCalendar(
-              focusedDay: _selectedDate,
-              firstDay: DateTime(2000),
-              lastDay: DateTime(2100),
-              calendarFormat: CalendarFormat.month,
-              selectedDayPredicate: (day) => isSameDay(day, _selectedDate),
-              onDaySelected: (selectedDay, focusedDay) {
-                setState(() {
-                  _selectedDate = selectedDay;
-                  _isLoading = true; // Show loading when a new date is selected
-                });
-                fetchActivities(); // Fetch activities for the new selected date
-              },
-              calendarStyle: CalendarStyle(
-                selectedDecoration: BoxDecoration(
-                  color: Color(0xFF5C964A),
-                  shape: BoxShape.circle,
-                ),
-                todayDecoration: BoxDecoration(
-                  color: Color(0xFFFFA726),
-                  shape: BoxShape.circle,
-                ),
+          TableCalendar(
+            focusedDay: _selectedDate,
+            firstDay: DateTime(2000),
+            lastDay: DateTime(2100),
+            calendarFormat: CalendarFormat.month,
+            selectedDayPredicate: (day) => isSameDay(day, _selectedDate),
+            onDaySelected: (selectedDay, focusedDay) {
+              setState(() {
+                _selectedDate = selectedDay;
+                _isLoading = true;
+              });
+              fetchActivities();
+              fetchQRDetails(workerId!);
+            },
+            calendarStyle: CalendarStyle(
+              selectedDecoration: BoxDecoration(
+                color: Color(0xFF5C964A),
+                shape: BoxShape.circle,
+              ),
+              todayDecoration: BoxDecoration(
+                color: Color(0xFFFFA726),
+                shape: BoxShape.circle,
               ),
             ),
-          ),
-          // Cleaning image below the calendar
+            calendarBuilders: CalendarBuilders(
+              markerBuilder: (context, date, _) {
+                final count = isBeforeAfterTab
+                    ? activityCounts[
+                            DateTime(date.year, date.month, date.day)] ??
+                        0
+                    : qrCounts[DateTime(date.year, date.month, date.day)] ?? 0;
 
-          Container(
-            height: 100,
-            child: _isLoading
-                ? Center(child: CircularProgressIndicator())
-                : TabBarView(
-                    controller: _tabController,
-                    children: [
-                      // Before & After Activities Card
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                if (count > 0) {
+                  return Positioned(
+                    bottom: 1,
+                    child: Container(
+                      width: 16,
+                      height: 16,
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: Text(
+                          '$count',
+                          style: TextStyle(color: Colors.white, fontSize: 10),
+                        ),
+                      ),
+                    ),
+                  );
+                }
+                return null;
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child:
+                (_tabController.index == 0 && selectedActivities.isNotEmpty) ||
+                        (_tabController.index == 1 && _tripDetails.isNotEmpty)
+                    ? Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 5,
+                        child: ListTile(
+                          contentPadding: EdgeInsets.all(16),
+                          title: Text(
+                            _tabController.index == 0
+                                ? 'Total Activities: ${selectedActivities.length}'
+                                : 'Total QR Scans: ${_tripDetails.length}',
                           ),
-                          elevation: 5,
-                          child: ListTile(
-                            title: Text('Total Activities'),
-                            subtitle: Text('${selectedActivities.length}'),
-                            trailing: ElevatedButton(
-                              onPressed: () {
+                          trailing: ElevatedButton(
+                            onPressed: () {
+                              if (_tabController.index == 0 &&
+                                  selectedActivities.isNotEmpty) {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -210,29 +255,8 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
                                     ),
                                   ),
                                 );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors
-                                    .green, // Set the background color to green
-                              ),
-                              child: Text('View All'),
-                            ),
-                          ),
-                        ),
-                      ),
-                      // QR Data Activities Card
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          elevation: 5,
-                          child: ListTile(
-                            title: Text('Total QR Scans'),
-                            subtitle: Text('${_tripDetails.length}'),
-                            trailing: ElevatedButton(
-                              onPressed: () {
+                              } else if (_tabController.index == 1 &&
+                                  _tripDetails.isNotEmpty) {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -242,18 +266,27 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
                                     ),
                                   ),
                                 );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors
-                                    .green, // Set the background color to green
+                              }
+                            },
+                            child: Text('View'),
+                            style: ElevatedButton.styleFrom(
+                              primary: Color(0xFF5C964A),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
                               ),
-                              child: Text('View All'),
                             ),
                           ),
                         ),
+                      )
+                    : Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            'No activities available',
+                            style: TextStyle(fontSize: 16, color: Colors.grey),
+                          ),
+                        ),
                       ),
-                    ],
-                  ),
           ),
         ],
       ),

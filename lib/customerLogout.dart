@@ -4,9 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
-
 import 'onBoardingPage1.dart';
-
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
@@ -16,7 +14,6 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   bool isLoggingOut = false;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,9 +23,8 @@ class _SettingsPageState extends State<SettingsPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(height: 50),
-            // Wide Logout Button
             Container(
-              width: double.infinity, // Makes the button take the full width
+              width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
                   showLogoutConfirmationDialog(context);
@@ -52,10 +48,9 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             if (isLoggingOut) ...[
               SizedBox(height: 20),
-              CircularProgressIndicator(), // Show a loading indicator when logging out
+              CircularProgressIndicator(), 
             ],
             SizedBox(height: 20),
-            // Privacy Policy Button
             GestureDetector(
               onTap: () async {
                 const url = 'https://techvysion.com/SBMG/privacypolicy';
@@ -82,8 +77,6 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
     );
   }
-
-  // Show confirmation dialog
   void showLogoutConfirmationDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -102,9 +95,7 @@ class _SettingsPageState extends State<SettingsPage> {
               setState(() {
                 isLoggingOut = true;
               });
-
               await logout(context);
-
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (context) => OnboardingScreen()),
@@ -118,7 +109,6 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  // Logout function with API call
   Future<void> logout(BuildContext context) async {
     showDialog(
       context: context,
@@ -127,10 +117,8 @@ class _SettingsPageState extends State<SettingsPage> {
         child: CircularProgressIndicator(),
       ),
     );
-
     try {
       String logoutUrl = 'https://sbmgrajasthan.com/api/logout';
-
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('id_token');
 

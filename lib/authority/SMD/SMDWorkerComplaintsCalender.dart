@@ -5,7 +5,6 @@ import 'package:table_calendar/table_calendar.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../BDO/BDOWorkerComplaintsListScreenCalender.dart';
 
 class SMDWorkerComplaintsCalender extends StatefulWidget {
@@ -26,7 +25,6 @@ class _SMDWorkerComplaintsCalenderState
     _fetchComplaintData();
   }
 
-  // Fetch gram_panchayat from SharedPreferences and use it in the API call
   Future<void> _fetchComplaintData() async {
     final prefs = await SharedPreferences.getInstance();
     final District = prefs.getString('District') ?? '';
@@ -59,33 +57,53 @@ class _SMDWorkerComplaintsCalenderState
     }
   }
 
-  void _onDateSelected(DateTime selectedDay, DateTime focusedDay) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => BDOWorkerComplaintsListScreenCalender(
-          date: selectedDay,
-          complaints: complaints,
-          onUpdate: _fetchComplaintData, // Pass the refresh method
-        ),
-      ),
-    );
+  List getComplaintsForSelectedDate() {
+    return complaints.where((complaint) {
+      final date = DateTime.parse(complaint['created_at']).toLocal();
+      return date.year == _selectedDay.year &&
+          date.month == _selectedDay.month &&
+          date.day == _selectedDay.day;
+    }).toList();
   }
 
+  void _onViewPressed() {
+    final selectedComplaints = getComplaintsForSelectedDate();
+    if (selectedComplaints.isNotEmpty) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BDOWorkerComplaintsListScreenCalender(
+            date: _selectedDay,
+            complaints: complaints,
+            onUpdate: _fetchComplaintData,
+          ),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("No complaints for this date.")),
+      );
+    }
+  }
+ 
   @override
   Widget build(BuildContext context) {
+    final normalizedSelectedDay =
+        DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day);
+        int complaintCount = complaintCounts[normalizedSelectedDay] ?? 0;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
           'Complaints',
           style: TextStyle(
-            color: Colors.white, // White text color
-            fontSize: 20, // Optional: Adjust font size
-            fontWeight: FontWeight.bold, // Optional: Bold text
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Color(0xFF5C964A), // Set green color for the app bar
-        toolbarHeight: 80.0, // Set a custom height for the app bar
+        backgroundColor: Color(0xFF5C964A),
+        toolbarHeight: 80.0,
       ),
       backgroundColor: Color.fromRGBO(239, 239, 239, 1),
       body: Column(
@@ -93,32 +111,27 @@ class _SMDWorkerComplaintsCalenderState
           TableCalendar(
             firstDay: DateTime.utc(2024, 1, 1),
             lastDay: DateTime.utc(2025, 12, 31),
-            focusedDay: DateTime.now(),
+            focusedDay: _selectedDay,
             calendarFormat: CalendarFormat.month,
             selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-            onDaySelected: _onDateSelected,
+            onDaySelected: (selectedDay, focusedDay) {
+              setState(() {
+                _selectedDay = selectedDay;
+              });
+            },
             calendarStyle: CalendarStyle(
               selectedDecoration: BoxDecoration(
-                color: Color(0xFF5C964A), // Green color for selected date
+                color: Color(0xFF5C964A),
                 shape: BoxShape.circle,
               ),
               todayDecoration: BoxDecoration(
-                color: Color(0xFFFFA726), // Optional: Orange for today
-                shape: BoxShape.circle,
-              ),
-              outsideDecoration: BoxDecoration(
-                color: Colors
-                    .transparent, // Keep outside days transparent if needed
-              ),
-              defaultDecoration: BoxDecoration(
-                color: Colors
-                    .transparent, // Regular days have transparent background
+                color: Color(0xFFFFA726),
                 shape: BoxShape.circle,
               ),
             ),
             calendarBuilders: CalendarBuilders(
               markerBuilder: (context, date, _) {
-                final count = complaintCounts[date] ?? 0;
+                final count = complaintCounts[DateTime(date.year, date.month, date.day)] ?? 0;
                 if (count > 0) {
                   return Positioned(
                     bottom: 1,
@@ -141,7 +154,37 @@ class _SMDWorkerComplaintsCalenderState
                 return null;
               },
             ),
-          )
+          ),
+          SizedBox(height: 16),
+          complaintCount > 0
+              ? Card(
+                  elevation: 5,
+                  margin: EdgeInsets.symmetric(horizontal: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: ListTile(
+                    contentPadding: EdgeInsets.all(16),
+                    title: Text('Total Complaints: $complaintCount'),
+                    trailing: ElevatedButton(
+                      onPressed: _onViewPressed,
+                      child: Text('View'),
+                      style: ElevatedButton.styleFrom(
+                        primary: Color(0xFF5C964A),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              : Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    "No complaints available",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
         ],
       ),
     );

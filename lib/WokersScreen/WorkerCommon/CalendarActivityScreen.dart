@@ -19,25 +19,23 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
   DateTime _selectedDate = DateTime.now();
   List _activities = [];
   bool _isLoading = false;
+  Map<DateTime, int> complaintCounts = {}; // Store complaint count per date
 
   @override
   void initState() {
     super.initState();
     fetchActivities();
+    fetchComplaintData(); // Fetch complaints for calendar
   }
 
   Future<String> getWorkerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String workerId = prefs.getString('worker_id') ?? "";
-    return workerId;
+    return prefs.getString('worker_id') ?? "";
   }
 
   Future<void> fetchActivities() async {
     String workerId = await getWorkerId();
-
-    setState(() {
-      _isLoading = true;
-    });
+    setState(() => _isLoading = true);
 
     final url = Uri.parse(
         'https://sbmgrajasthan.com/api/worker/$workerId/section/${widget.section}');
@@ -55,9 +53,38 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
     } catch (e) {
       print(e);
     } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> fetchComplaintData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final gramPanchayat = prefs.getString('gram_panchayat') ?? '';
+
+    final url =
+        'https://sbmgrajasthan.com/api/complaintdetails-by-gram-panchayat/?gram_panchayat=$gramPanchayat';
+
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final complaintsList = data['complaints'];
+
+        Map<DateTime, int> counts = {};
+        for (var complaint in complaintsList) {
+          final date = DateTime.parse(complaint['created_at']).toLocal();
+          final day = DateTime(date.year, date.month, date.day);
+          counts[day] = (counts[day] ?? 0) + 1;
+        }
+
+        setState(() {
+          complaintCounts = counts;
+        });
+      } else {
+        throw Exception('Failed to load complaints');
+      }
+    } catch (e) {
+      print('Error fetching complaints: $e');
     }
   }
 
@@ -83,54 +110,79 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
         title: Text(
           '${widget.section}',
           style: TextStyle(
-            color: Colors.white, // White text color
-            fontSize: 20, // Optional: Adjust font size
-            fontWeight: FontWeight.bold, // Optional: Bold text
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Color(0xFF5C964A), // Green background color
+        backgroundColor: Color(0xFF5C964A),
       ),
       body: Column(
         children: [
-          // Calendar Section
-          Container(
-            child: TableCalendar(
-              focusedDay: _selectedDate,
-              firstDay: DateTime(2000),
-              lastDay: DateTime(2100),
-              calendarFormat: CalendarFormat.month,
-              selectedDayPredicate: (day) => isSameDay(day, _selectedDate),
-              onDaySelected: (selectedDay, focusedDay) {
-                setState(() {
-                  _selectedDate = selectedDay;
-                });
-              },
-              calendarStyle: CalendarStyle(
-                selectedDecoration: BoxDecoration(
-                  color: Color(0xFF5C964A), // Green color for selected date
-                  shape: BoxShape.circle,
-                ),
-                todayDecoration: BoxDecoration(
-                  color: Color(0xFFFFA726), // Optional: Orange for today
-                  shape: BoxShape.circle,
-                ),
+          TableCalendar(
+            focusedDay: _selectedDate,
+            firstDay: DateTime(2000),
+            lastDay: DateTime(2100),
+            calendarFormat: CalendarFormat.month,
+            selectedDayPredicate: (day) => isSameDay(day, _selectedDate),
+            onDaySelected: (selectedDay, focusedDay) {
+              setState(() {
+                _selectedDate = selectedDay;
+              });
+            },
+            calendarStyle: CalendarStyle(
+              selectedDecoration: BoxDecoration(
+                color: Color(0xFF5C964A),
+                shape: BoxShape.circle,
+              ),
+              todayDecoration: BoxDecoration(
+                color: Color(0xFFFFA726),
+                shape: BoxShape.circle,
               ),
             ),
+            calendarBuilders: CalendarBuilders(
+              markerBuilder: (context, date, _) {
+                final count = complaintCounts[
+                        DateTime(date.year, date.month, date.day)] ??
+                    0;
+                if (count > 0) {
+                  return Positioned(
+                    bottom: 1,
+                    child: Container(
+                      width: 16,
+                      height: 16,
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: Text(
+                          '$count',
+                          style: TextStyle(color: Colors.white, fontSize: 10),
+                        ),
+                      ),
+                    ),
+                  );
+                }
+                return null;
+              },
+            ),
           ),
+
           // Activity Card Section
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Card(
-              elevation: 5,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: ListTile(
-                contentPadding: EdgeInsets.all(16),
-                title: Text('Total Activities: $activityCount'),
-                trailing: ElevatedButton(
-                  onPressed: () {
-                    if (activityCount > 0) {
+          if (activityCount > 0)
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Card(
+                elevation: 5,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: ListTile(
+                  contentPadding: EdgeInsets.all(16),
+                  title: Text('Total Activities: $activityCount'),
+                  trailing: ElevatedButton(
+                    onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -140,24 +192,26 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
                           ),
                         ),
                       );
-                    } else {
-                      // Optionally show a message when no activities exist for the selected date.
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("No activities for this date.")),
-                      );
-                    }
-                  },
-                  child: Text('View'),
-                  style: ElevatedButton.styleFrom(
-                    primary: Color(0xFF5C964A),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                    },
+                    child: Text('View'),
+                    style: ElevatedButton.styleFrom(
+                      primary: Color(0xFF5C964A),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
                   ),
                 ),
               ),
+            )
+          else
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                "No activities available",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
         ],
       ),
     );

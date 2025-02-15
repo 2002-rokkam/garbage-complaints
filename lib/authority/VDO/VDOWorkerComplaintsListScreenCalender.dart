@@ -1,4 +1,4 @@
-// WokersScreen/WorkerComplaints/WorkerComplaintsListScreen.dart
+// authority/VDO/VDOWorkerComplaintsListScreenCalender.dart
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:geocoding/geocoding.dart';
@@ -10,15 +10,15 @@ import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'dart:convert';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class WorkerComplaintsListScreen extends StatelessWidget {
+class VDOWorkerComplaintsListScreenCalender extends StatelessWidget {
   final DateTime date;
   final List<dynamic> complaints;
   final VoidCallback onUpdate; 
 
-  WorkerComplaintsListScreen(
+  VDOWorkerComplaintsListScreenCalender(
       {required this.date, required this.complaints, required this.onUpdate});
 
   @override
@@ -35,9 +35,9 @@ class WorkerComplaintsListScreen extends StatelessWidget {
         title: Text(
           'Complaints on ${date.toLocal()}'.split(' ')[0],
           style: TextStyle(
-            color: Colors.white, 
-            fontSize: 20,
-            fontWeight: FontWeight.bold, 
+            color: Colors.white, // White text color
+            fontSize: 20, // Optional: Adjust font size
+            fontWeight: FontWeight.bold, // Optional: Bold text
           ),
         ),
         backgroundColor: Color(0xFF5C964A), 
@@ -55,7 +55,7 @@ class WorkerComplaintsListScreen extends StatelessWidget {
                 final complaint = selectedDateComplaints[index];
                 return ComplaintCard(
                   complaint: complaint,
-                  onUpdate: onUpdate, 
+                  onUpdate: onUpdate, // Pass the callback
                 );
               },
             ),
@@ -65,7 +65,7 @@ class WorkerComplaintsListScreen extends StatelessWidget {
 
 class ComplaintCard extends StatefulWidget {
   final dynamic complaint;
-  final VoidCallback onUpdate; 
+  final VoidCallback onUpdate; // Callback for refreshing data
 
   ComplaintCard({required this.complaint, required this.onUpdate});
 
@@ -79,7 +79,6 @@ class _ComplaintCardState extends State<ComplaintCard> {
   double? _latitude;
   double? _longitude;
   late String workerId;
-  String _workerEmail = '';
 
   @override
   void initState() {
@@ -143,8 +142,6 @@ class _ComplaintCardState extends State<ComplaintCard> {
     setState(() {
       _latitude = position.latitude;
       _longitude = position.longitude;
-      print(_latitude);
-      print(_longitude);
     });
   }
 
@@ -172,26 +169,18 @@ class _ComplaintCardState extends State<ComplaintCard> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pop();
-                      _submitFormData(); 
+                      Navigator.of(context).pop(); // Close the dialog
+                      _submitFormData(); // Submit the image
                     },
-                    style: ElevatedButton.styleFrom(
-                      primary:
-                          Colors.green, 
-                    ),
                     child: Text('Submit'),
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pop(); 
+                      Navigator.of(context).pop(); // Close the dialog
                       setState(() {
-                        _imageFile = null; 
+                        _imageFile = null; // Clear the image
                       });
                     },
-                    style: ElevatedButton.styleFrom(
-                      primary:
-                          Colors.green,
-                    ),
                     child: Text('Cancel'),
                   ),
                 ],
@@ -213,51 +202,27 @@ class _ComplaintCardState extends State<ComplaintCard> {
     workerId = await getWorkerId();
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _workerEmail = prefs.getString('email') ?? '';
-    });
+    setState(() {});
   }
 
   Future<void> _submitFormData() async {
     if (_imageFile == null || _latitude == null || _longitude == null) {
-      _showErrorDialog('Please select an image and allow location access');
-      return;
-    }
-
-    final complaintLatitude = widget.complaint['photos'][0]['latitude'];
-    final complaintLongitude = widget.complaint['photos'][0]['longitude'];
-
-    if (complaintLatitude == null || complaintLongitude == null) {
-      _showErrorDialog('Complaint location data is missing');
-      return;
-    }
-    double distance = await Geolocator.distanceBetween(
-      complaintLatitude,
-      complaintLongitude,
-      _latitude!,
-      _longitude!,
-    );
-
-    if (distance > 15) {
-      _showErrorDialog(
-          'You must be within 10 meters of the complaint location to submit a reply.');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Please select an image and allow location access'),
+      ));
       return;
     }
 
     Dio dio = Dio();
-    String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
-    String uniqueFilename = 'solved_complaint_image_$timestamp.jpg';
-
     FormData formData = FormData.fromMap({
       'solved_image': await MultipartFile.fromFile(
         _imageFile!.path,
-        filename: uniqueFilename,
+        filename: 'solved_complaint_image11111.jpg',
       ),
       'solved_lat': _latitude,
       'solved_long': _longitude,
       'worker_id': workerId,
     });
-
     try {
       Response response = await dio.post(
         'https://sbmgrajasthan.com/api/update-complaint/${widget.complaint['complaint_id']}',
@@ -269,7 +234,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
           content: Text('Complaint updated successfully'),
         ));
         widget.onUpdate();
-        Navigator.pop(context, true);
+        Navigator.pop(context, true); // Notify parent to refresh data
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Failed to update complaint'),
@@ -280,43 +245,6 @@ class _ComplaintCardState extends State<ComplaintCard> {
         content: Text('Error: ${e.toString()}'),
       ));
     }
-  }
-
-void _showErrorDialog(String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                message,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop(); 
-                },
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.green, 
-                ),
-                child: Text('OK'),
-              ),
-            ],
-          ),
-        );
-      },
-    );
   }
 
   void _showResolvedPhoto(Map<String, dynamic>? resolvedPhoto) {
@@ -338,7 +266,7 @@ void _showErrorDialog(String message) {
                 ElevatedButton(
                   onPressed: () => Navigator.of(context).pop(),
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.green, 
+                    primary: Colors.green, // Set the background color to green
                   ),
                   child: Text('Close'),
                 ),
@@ -358,7 +286,8 @@ void _showErrorDialog(String message) {
       String imageUrl, double dirlatitude, double dirlongitude) async {
     final createdAt = DateTime.parse(widget.complaint['created_at']).toLocal();
     String time = '${createdAt.hour}:${createdAt.minute}:${createdAt.second}';
-    String location = 'Lat: ${dirlatitude.toStringAsFixed(6)}, Long: ${dirlongitude.toStringAsFixed(6)}';
+    String location ='Lat: ${dirlatitude.toStringAsFixed(6)}, Long: ${dirlongitude.toStringAsFixed(6)}';
+
     showDialog(
       context: context,
       builder: (context) {
@@ -369,6 +298,7 @@ void _showErrorDialog(String message) {
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  // Image with interactive zoom
                   InteractiveViewer(
                     panEnabled: true,
                     minScale: 0.5,
@@ -394,6 +324,7 @@ void _showErrorDialog(String message) {
                     ),
                   ),
                   SizedBox(height: 20),
+                  // Time overlay below the image
                   Container(
                     width: 370,
                     height: 45,
@@ -424,6 +355,7 @@ void _showErrorDialog(String message) {
                       ],
                     ),
                   ),
+                  // Location (Latitude & Longitude) below the time
                   Container(
                     width: 370,
                     height: 45,
@@ -465,88 +397,110 @@ void _showErrorDialog(String message) {
 
   Future<void> _launchURL(Uri url) async {
     if (await canLaunchUrl(url)) {
-      await launchUrl(url, mode: LaunchMode.externalApplication);
+      await launchUrl(url);
     } else {
       throw 'Could not launch $url';
     }
   }
 
- @override
-Widget build(BuildContext context) {
-  final images = widget.complaint['photos'];
-  final status = widget.complaint['status'];
-  final createdAt = DateTime.parse(widget.complaint['created_at']).toLocal();
-  final caption = widget.complaint['caption'];
-  final resolvedPhoto = widget.complaint['resolved_photo'];
-  final dirlatitude = widget.complaint['photos'][0]['latitude'];
-  final dirlongitude = widget.complaint['photos'][0]['longitude'];
+  Future<void> _verifyComplaint(String complaintId) async {
+    final url = Uri.parse('https://sbmgrajasthan.com/api/complaint/$complaintId/verify');
+    print(complaintId);
+    print(workerId);
+    
+    final response = await http.patch(
+      url,
+      body: jsonEncode({"verifier_id": workerId}),
+    );
 
-  String time = '${createdAt.hour}:${createdAt.minute}:${createdAt.second}';
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Complaint verified successfully!')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Verification failed. Try again!')),
+      );
+    }
+  }
 
-  int activeIndex = 0;
-  final PageController _pageController = PageController();
+  @override
+  Widget build(BuildContext context) {
+    final images = widget.complaint['photos'];
+    final status = widget.complaint['status'];
+    final createdAt = DateTime.parse(widget.complaint['created_at']).toLocal();
+    final caption = widget.complaint['caption'];
+    final resolvedPhoto = widget.complaint['resolved_photo'];
+    final dirlatitude = widget.complaint['photos'][0]['latitude'];
+    final dirlongitude = widget.complaint['photos'][0]['longitude'];
+    String time = '${createdAt.hour}:${createdAt.minute}:${createdAt.second}';
 
-  return Container(
-    margin: EdgeInsets.only(bottom: 16.0),
-    width: 370,
-    decoration: ShapeDecoration(
-      color: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+    int activeIndex = 0;
+    final PageController _pageController = PageController();
+
+    return Container(
+      margin: EdgeInsets.only(bottom: 16.0),
+      width: 370,
+      decoration: ShapeDecoration(
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
       ),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          width: 370,
-          height: 188.59,
-          child: Stack(
-            alignment: Alignment.bottomCenter,
-            children: [
-              PageView.builder(
-                controller: _pageController,
-                itemCount: images.length,
-                onPageChanged: (index) {
-                  setState(() {
-                    activeIndex = index;
-                  });
-                },
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      _showFullScreenImage(images[index]['image'], dirlatitude, dirlongitude);
-                    },
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: Container(
-                        width: 370,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: NetworkImage(images[index]['image']),
-                            fit: BoxFit.cover,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 370,
+            height: 188.59,
+            child: Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                 PageView.builder(
+                  controller: _pageController,
+                  itemCount: images.length,
+                  onPageChanged: (index) {
+                    setState(() {
+                      activeIndex = index;
+                    });
+                  },
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        _showFullScreenImage(
+                            images[index]['image'], dirlatitude, dirlongitude);
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: Container(
+                          width: 370,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: NetworkImage(images[index]['image']),
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ),
+                    );
+                  },
+                ),
+                Positioned(
+                  bottom: 12,
+                  child: SmoothPageIndicator(
+                    controller: _pageController,
+                    count: images.length,
+                    effect: ExpandingDotsEffect(
+                      activeDotColor: Colors.white,
+                      dotColor: Colors.black,
+                      dotHeight: 6,
+                      dotWidth: 6,
+                      expansionFactor: 2,
                     ),
-                  );
-                },
-              ),
-              Positioned(
-                bottom: 12,
-                child: SmoothPageIndicator(
-                  controller: _pageController,
-                  count: images.length,
-                  effect: ExpandingDotsEffect(
-                    activeDotColor: Colors.white,
-                    dotColor: Colors.black,
-                    dotHeight: 6,
-                    dotWidth: 6,
-                    expansionFactor: 2,
                   ),
                 ),
-              ),
-               Positioned(
+                // Date and Status Overlay
+                Positioned(
                   top: 12,
                   right: 12,
                   child: Row(
@@ -578,7 +532,7 @@ Widget build(BuildContext context) {
                       ),
                       SizedBox(width: 8),
                       Container(
-                        width: 138,
+                        width: 128,
                         height: 26,
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 5),
@@ -601,87 +555,118 @@ Widget build(BuildContext context) {
                     ],
                   ),
                 ),
-            ],
+              ],
+            ),
           ),
-        ),
-        SizedBox(height: 8),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 12.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Icon(Icons.location_pin, color: Colors.red),
-                  SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      _address,
-                      style: TextStyle(
-                        color: Color(0xFF252525),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+          SizedBox(height: 8),
+          // Location and Caption
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.location_pin, color: Colors.red),
+                    SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        _address,
+                        style: TextStyle(
+                          color: Color(0xFF252525),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.directions, color: Colors.blue),
-                    onPressed: () {
-                      if (dirlatitude != null && dirlongitude != null) {
-                        final url = Uri.parse(
-                            'https://www.google.com/maps/search/?api=1&query=$dirlatitude,$dirlongitude');
-                        _launchURL(url);
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text('Location not available'),
-                        ));
-                      }
-                    },
-                  ),
-                ],
-              ),
-              SizedBox(height: 8),
-              Text(
-                caption,
-                style: TextStyle(
-                  color: Color(0xFF252525),
-                  fontSize: 16,
+                    // Location Redirect Icon
+                    IconButton(
+                      icon: Icon(Icons.directions, color: Colors.blue),
+                      onPressed: () {
+                        if (dirlatitude != null && dirlongitude != null) {
+                          final url = Uri.parse(
+                              'https://www.google.com/maps?q=$dirlatitude,$dirlongitude');
+                          _launchURL(url);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('Location not available'),
+                          ));
+                        }
+                      },
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(height: 16),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 12.0),
-          child: Container(
-            width: double.infinity,
-            height: 40,
-            decoration: ShapeDecoration(
-              color: Color(0xFF5C964A),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(100),
-              ),
-            ),
-            child: TextButton(
-              onPressed: status == "Resolved"
-                  ? () => _showResolvedPhoto(resolvedPhoto)
-                  : _pickImage,
-              child: Text(
-                status == "Resolved" ? 'View Reply' : 'Reply with Image',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
+                SizedBox(height: 8),
+                Text(
+                  caption,
+                  style: TextStyle(
+                    color: Color(0xFF252525),
+                    fontSize: 16,
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
-        ),
-        SizedBox(height: 8),
-      ],
-    ),
-  );
-}
+          SizedBox(height: 16),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 12.0),
+            child: resolvedPhoto != null && resolvedPhoto['image'] != null
+                ? Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          height: 40,
+                          decoration: ShapeDecoration(
+                            color: Color(0xFF5C964A),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                          ),
+                          child: TextButton(
+                            onPressed: () => _showResolvedPhoto(resolvedPhoto),
+                            child: Text(
+                              'View Reply',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: Container(
+                          height: 40,
+                          decoration: ShapeDecoration(
+                            color: Colors.green,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                          ),
+                          child: TextButton(
+                            onPressed: () =>
+                                _verifyComplaint(widget.complaint['complaint_id']),
+                            child: Text(
+                              'Verify',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                : SizedBox(),
+          ),
+          SizedBox(height: 8),
+        ],
+      ),
+    );
+  }
 }

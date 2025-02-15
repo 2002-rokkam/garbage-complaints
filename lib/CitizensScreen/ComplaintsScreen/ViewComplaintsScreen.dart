@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class ViewComplaintsScreen extends StatefulWidget {
   const ViewComplaintsScreen({super.key});
@@ -52,18 +53,23 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
         },
       );
 
-      if (response.statusCode == 200) {
+     if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         setState(() {
           allComplaints = data['complaints'];
           allComplaints.sort((a, b) => DateTime.parse(b['created_at'])
               .compareTo(DateTime.parse(a['created_at'])));
+
           pendingComplaints = allComplaints
-              .where((complaint) => complaint['status'] == 'Pending')
+              .where((complaint) =>
+                  complaint['status'] == 'Pending' ||
+                  complaint['status'] == 'Resolved')
               .toList();
+
           resolvedComplaints = allComplaints
-              .where((complaint) => complaint['status'] == 'Resolved')
+              .where((complaint) => complaint['status'] == 'Verified')
               .toList();
+
           isLoading = false;
         });
       } else {
@@ -139,6 +145,7 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
     String formattedDate = DateFormat('dd-MM-yyyy')
         .format(DateTime.parse(complaint['created_at']));
     List<dynamic> images = complaint['photos'];
+    final PageController _pageController = PageController();
 
     return Card(
       margin: EdgeInsets.all(10),
@@ -150,8 +157,10 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
             child: Container(
               height: 150,
               child: Stack(
+                alignment: Alignment.bottomCenter,
                 children: [
                   PageView.builder(
+                    controller: _pageController,
                     itemCount: images.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
@@ -168,26 +177,20 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
                       );
                     },
                   ),
-                  if (images.length > 1) ...[
-                    Positioned(
-                      left: 10,
-                      top: 50,
-                      child: Icon(
-                        Icons.arrow_back_ios,
-                        color: Colors.white.withOpacity(0.7),
-                        size: 30,
+                  Positioned(
+                    bottom: 8,
+                    child: SmoothPageIndicator(
+                      controller: _pageController,
+                      count: images.length,
+                      effect: ExpandingDotsEffect(
+                        activeDotColor: Colors.white,
+                        dotColor: Colors.black,
+                        dotHeight: 6,
+                        dotWidth: 6,
+                        expansionFactor: 2,
                       ),
                     ),
-                    Positioned(
-                      right: 10,
-                      top: 50,
-                      child: Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.white.withOpacity(0.7),
-                        size: 30,
-                      ),
-                    ),
-                  ],
+                  ),
                 ],
               ),
             ),
@@ -292,8 +295,7 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
                     onPressed: () => Navigator.of(context).pop(),
                     child: Text('Close'),
                     style: ElevatedButton.styleFrom(
-                      primary:
-                          Colors.green, // Set the background color to green
+                      primary:Colors.green, 
                     ),
                   ),
                 ],

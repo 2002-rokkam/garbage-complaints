@@ -26,7 +26,6 @@ class _BDOScreenState extends State<BDOScreen> {
     super.initState();
     fetchData();
   }
-
   Future<void> fetchData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? District = prefs.getString('District');
@@ -37,8 +36,6 @@ class _BDOScreenState extends State<BDOScreen> {
               .replace(queryParameters: {
         'district': District,
       }));
-
-      print('Status Code: ${response.statusCode}');
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -107,7 +104,6 @@ class _BDOScreenState extends State<BDOScreen> {
         backgroundColor: Color.fromRGBO(239, 239, 239, 1),
         body: Column(
           children: [
-            // Fixed image slider
             Container(
               height: 180,
               decoration: const BoxDecoration(
@@ -124,10 +120,9 @@ class _BDOScreenState extends State<BDOScreen> {
               child: Stack(
                 children: [
                   Container(
-                    height: screenHeight * 0.14, // Adjust the height as needed
+                    height: screenHeight * 0.14, 
                     decoration: BoxDecoration(
-                      color: Color(
-                          0xFF5C964A), // Change this to your app's primary color
+                      color: Color(0xFF5C964A), 
                       borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(24),
                         bottomRight: Radius.circular(24),
@@ -140,10 +135,8 @@ class _BDOScreenState extends State<BDOScreen> {
                         child: Padding(
                           padding: const EdgeInsets.only(top: 16.0),
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(
-                                16), // Rounded corners for the image
-                            child: Image.asset(
-                              'assets/images/mainimage.png', // Path to your asset image
+                            borderRadius: BorderRadius.circular(16), 
+                            child: Image.asset('assets/images/mainimage.png', 
                               width: MediaQuery.of(context).size.width * 0.9,
                               height: 150,
                               fit: BoxFit.cover,
@@ -156,7 +149,6 @@ class _BDOScreenState extends State<BDOScreen> {
                 ],
               ),
             ),
-            // Complaints label
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -172,7 +164,6 @@ class _BDOScreenState extends State<BDOScreen> {
                 ),
               ),
             ),
-            // Scrollable content
             Expanded(
               child: SingleChildScrollView(
                 child: Column(

@@ -104,6 +104,8 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
         "Content-Type": "application/json",
       },
     );
+          print(idToken);
+          print("sai");
 
     if (response.statusCode == 200) {
       final responseData = jsonDecode(response.body);
@@ -111,6 +113,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
 
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('id_token', token);
+      print(token);
     } else {
       throw 'Failed to login. Status code: ${response.statusCode}';
     }

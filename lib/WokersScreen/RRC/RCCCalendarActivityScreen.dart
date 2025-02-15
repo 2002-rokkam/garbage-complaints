@@ -1,11 +1,9 @@
 // WokersScreen/RRC/RCCCalendarActivityScreen.dart
-// WokersScreen/RRC/RCCCalendarActivityScreen.dart
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-
 class RCCCalendarActivityScreen extends StatefulWidget {
   final String section;
 
@@ -16,7 +14,6 @@ class RCCCalendarActivityScreen extends StatefulWidget {
   _RCCCalendarActivityScreenState createState() =>
       _RCCCalendarActivityScreenState();
 }
-
 class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
     with SingleTickerProviderStateMixin {
   DateTime _selectedDate = DateTime.now();
@@ -28,10 +25,19 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
   @override
   void initState() {
     super.initState();
-    fetchActivities();
     _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {
+      setState(() {
+        _isLoading = true;
+      });
+      if (_tabController.index == 0) {
+        fetchActivities();
+      } else {
+        fetchTripDetails();
+      }
+    });
+    fetchActivities();
   }
-
   Future<String> getWorkerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('worker_id') ?? "";
@@ -39,10 +45,7 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
 
   Future<void> fetchActivities() async {
     String workerId = await getWorkerId();
-
-    setState(() {
-      _isLoading = true;
-    });
+    setState(() => _isLoading = true);
 
     final url = Uri.parse(
         'https://sbmgrajasthan.com/api/worker/$workerId/section/${widget.section}');
@@ -51,25 +54,20 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
       final response = await http.get(url);
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        var sectionActivities = data['activities'];
         setState(() {
-          _activities = sectionActivities;
+          _activities = data['activities'];
         });
-      } else {
-        throw Exception('Failed to load activities');
       }
     } catch (e) {
       print(e);
     } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      setState(() => _isLoading = false);
     }
   }
 
   Future<void> fetchTripDetails() async {
     String workerId = await getWorkerId();
-
+    setState(() => _isLoading = true);
     final url = Uri.parse(
         'https://sbmgrajasthan.com/api/worker/$workerId/section/Waste Details');
 
@@ -77,42 +75,35 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
       final response = await http.get(url);
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-
-        // Filter trip details based on the selected date
-        var allTripDetails = data['activities'];
-        var filteredTripDetails = allTripDetails.where((trip) {
-          DateTime tripDate = DateTime.parse(trip['date_time']).toLocal();
-          return tripDate.day == _selectedDate.day &&
-              tripDate.month == _selectedDate.month &&
-              tripDate.year == _selectedDate.year;
-        }).toList();
-
         setState(() {
-          _tripDetails = filteredTripDetails;
+          _tripDetails = data['activities'];
         });
-      } else {
-        throw Exception('Failed to load trip details');
       }
     } catch (e) {
       print('Error: $e');
+    } finally {
+      setState(() => _isLoading = false);
     }
   }
 
   List getActivitiesForSelectedDate() {
-    return _activities
-        .where((activity) =>
-            DateTime.parse(activity['date_time']).toLocal().day ==
-                _selectedDate.day &&
-            DateTime.parse(activity['date_time']).toLocal().month ==
-                _selectedDate.month &&
-            DateTime.parse(activity['date_time']).toLocal().year ==
-                _selectedDate.year)
-        .toList();
+    return _activities.where((activity) {
+      DateTime activityDate = DateTime.parse(activity['date_time']).toLocal();
+      return isSameDay(activityDate, _selectedDate);
+    }).toList();
+  }
+
+  List getTripDetailsForSelectedDate() {
+    return _tripDetails.where((trip) {
+      DateTime tripDate = DateTime.parse(trip['date_time']).toLocal();
+      return isSameDay(tripDate, _selectedDate);
+    }).toList();
   }
 
   @override
   Widget build(BuildContext context) {
     final selectedActivities = getActivitiesForSelectedDate();
+    final selectedTrips = getTripDetailsForSelectedDate();
 
     return Scaffold(
       appBar: AppBar(
@@ -149,8 +140,14 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
               onDaySelected: (selectedDay, focusedDay) {
                 setState(() {
                   _selectedDate = selectedDay;
+                  _isLoading = true;
                 });
-                fetchTripDetails();
+
+                if (_tabController.index == 0) {
+                  fetchActivities();
+                } else {
+                  fetchTripDetails();
+                }
               },
               calendarStyle: CalendarStyle(
                 selectedDecoration: BoxDecoration(
@@ -162,96 +159,133 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
                   shape: BoxShape.circle,
                 ),
               ),
+              calendarBuilders: CalendarBuilders(
+                markerBuilder: (context, date, _) {
+                  final isBeforeAfterTab = _tabController.index == 0;
+                  final count = isBeforeAfterTab
+                      ? _activities.where((activity) {
+                          DateTime activityDate =
+                              DateTime.parse(activity['date_time']).toLocal();
+                          return isSameDay(activityDate, date);
+                        }).length
+                      : _tripDetails.where((trip) {
+                          DateTime tripDate =
+                              DateTime.parse(trip['date_time']).toLocal();
+                          return isSameDay(tripDate, date);
+                        }).length;
+
+                  if (count > 0) {
+                    return Positioned(
+                      bottom: 1,
+                      child: Container(
+                        width: 16,
+                        height: 16,
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: Text(
+                            '$count',
+                            style: TextStyle(color: Colors.white, fontSize: 10),
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                  return null;
+                },
+              ),
             ),
           ),
           Container(
             height: 80,
             child: _isLoading
                 ? Center(child: CircularProgressIndicator())
-                : selectedActivities.isEmpty
-                    ? Center(child: Text('No activities for selected date.'))
-                    : TabBarView(
-                        controller: _tabController,
-                        children: [
-                          Card(
-                            margin: const EdgeInsets.all(8.0),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Total Activities: ${selectedActivities.length}',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              BeforeAfterScreen(
-                                            activities: selectedActivities,
+                : TabBarView(
+                    controller: _tabController,
+                    children: [
+                      selectedActivities.isEmpty
+                          ? Center(child: Text('No Activities Available'))
+                          : Card(
+                              margin: const EdgeInsets.all(8.0),
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Total Activities: ${selectedActivities.length}',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                BeforeAfterScreen(
+                                              activities: selectedActivities,
+                                            ),
                                           ),
+                                        );
+                                      },
+                                      child: Text(
+                                        'View All',
+                                        style: TextStyle(
+                                          color: Colors.green,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
                                         ),
-                                      );
-                                    },
-                                    child: Text(
-                                      'View All',
-                                      style: TextStyle(
-                                        color: Colors.green,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                          Card(
-                            margin: const EdgeInsets.all(8.0),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Total Trip Details: ${_tripDetails.length}',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              TripDetailsScreen(
-                                            tripDetails: _tripDetails,
+                      selectedTrips.isEmpty
+                          ? Center(child: Text('No Trip Details Available'))
+                          : Card(
+                              margin: const EdgeInsets.all(8.0),
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Total Trip Details: ${selectedTrips.length}',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                TripDetailsScreen(
+                                              tripDetails: selectedTrips,
+                                            ),
                                           ),
+                                        );
+                                      },
+                                      child: Text(
+                                        'View All',
+                                        style: TextStyle(
+                                          color: Colors.green,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
                                         ),
-                                      );
-                                    },
-                                    child: Text(
-                                      'View All',
-                                      style: TextStyle(
-                                        color: Colors.green,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-          )
+                    ],
+                  ),
+          ),
         ],
       ),
     );

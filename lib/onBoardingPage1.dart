@@ -49,7 +49,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    // Adjusting offsets dynamically based on screen width
     double locationLogoOffsetX = -screenWidth * 0.046; 
     double locationLogoOffsetY = -screenHeight * 0.01; 
     double initialTruckPosition = -truckWidth * 2; 

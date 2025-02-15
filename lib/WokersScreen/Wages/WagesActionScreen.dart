@@ -123,7 +123,6 @@ class _WagesActionScreenState extends State<WagesActionScreen> {
                     ],
         ),
       ),
-      // Floating action button will stay fixed at the bottom of the screen
       floatingActionButton: FloatingActionButton.extended(
         onPressed: addNewContainer,
         backgroundColor: Color(0xFFFFD262),

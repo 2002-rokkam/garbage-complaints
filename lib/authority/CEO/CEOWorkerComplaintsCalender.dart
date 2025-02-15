@@ -26,7 +26,6 @@ class _CEOWorkerComplaintsCalenderState
     _fetchComplaintData();
   }
 
-  // Fetch gram_panchayat from SharedPreferences and use it in the API call
   Future<void> _fetchComplaintData() async {
     final prefs = await SharedPreferences.getInstance();
     final District = prefs.getString('District') ?? '';
