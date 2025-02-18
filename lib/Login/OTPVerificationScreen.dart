@@ -6,6 +6,7 @@ import '../CitizensScreen/CitizensScreen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/services.dart';
+
 class OTPVerificationScreen extends StatefulWidget {
   final String verificationId;
   final String phoneNumber;
@@ -24,10 +25,8 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final List<TextEditingController> _controllers =
       List.generate(6, (index) => TextEditingController());
-  final List<FocusNode> _focusNodes =
-      List.generate(6, (index) => FocusNode());
-  final List<Color> _borderColors =
-      List.generate(6, (index) => Colors.grey);
+  final List<FocusNode> _focusNodes = List.generate(6, (index) => FocusNode());
+  final List<Color> _borderColors = List.generate(6, (index) => Colors.grey);
   bool _isLoading = false;
 
   @override
@@ -41,7 +40,6 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
     super.dispose();
   }
 
-  // Function to verify OTP
   Future<void> _verifyOTP() async {
     String otp = _controllers.map((controller) => controller.text).join();
 
@@ -60,10 +58,13 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
 
       UserCredential userCredential =
           await _auth.signInWithCredential(credential);
-      String? idToken = await userCredential.user?.getIdToken();
+      String? idToken = await userCredential.user?.getIdToken(true);
+      print(idToken);
 
       if (idToken != null) {
         final response = await _sendTokenToBackend(idToken);
+        print("Response Code: ${response.statusCode}");
+          print("Response:${response.body}");
         if (response.statusCode == 200) {
           Navigator.pushReplacement(
             context,
@@ -71,17 +72,20 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
           );
         } else {
           _setBorderColor(Colors.red);
+         print("err Code: ${response.statusCode}");
+
         }
       }
     } catch (e) {
       print("Error during verification: $e");
       _setBorderColor(Colors.red);
+         
     } finally {
       setState(() => _isLoading = false);
     }
   }
 
- void _setBorderColor(Color color) {
+  void _setBorderColor(Color color) {
     setState(() {
       for (int i = 0; i < 6; i++) {
         if (_controllers[i].text.isEmpty ||
@@ -94,9 +98,11 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
     });
   }
 
-  // Send token to backend
   Future<http.Response> _sendTokenToBackend(String idToken) async {
+    print("step1");
     final url = Uri.parse("https://sbmgrajasthan.com/api/customer-login");
+        print("step1");
+
     final response = await http.post(
       url,
       headers: {
@@ -104,9 +110,10 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
         "Content-Type": "application/json",
       },
     );
-          print(idToken);
-          print("sai");
-
+     print("Authorization Bearer $idToken");
+    print(idToken);
+    print("Response Code: ${response.statusCode}");
+      print("Response:${response.body}");
     if (response.statusCode == 200) {
       final responseData = jsonDecode(response.body);
       final token = responseData['data']['token'];
@@ -116,6 +123,8 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
       print(token);
     } else {
       throw 'Failed to login. Status code: ${response.statusCode}';
+          print("err Code: ${response.statusCode}");
+
     }
     return response;
   }
@@ -198,7 +207,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
                                   borderSide: BorderSide(
-                                    color: _borderColors[index], 
+                                    color: _borderColors[index],
                                     width: 2,
                                   ),
                                 ),
@@ -217,7 +226,8 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                               onTap: () {
                                 _controllers[index].selection =
                                     TextSelection.fromPosition(
-                                  TextPosition(offset: _controllers[index].text.length),
+                                  TextPosition(
+                                      offset: _controllers[index].text.length),
                                 );
                               },
                             ),

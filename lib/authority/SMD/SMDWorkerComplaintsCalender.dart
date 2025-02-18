@@ -85,12 +85,12 @@ class _SMDWorkerComplaintsCalenderState
       );
     }
   }
- 
+
   @override
   Widget build(BuildContext context) {
     final normalizedSelectedDay =
         DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day);
-        int complaintCount = complaintCounts[normalizedSelectedDay] ?? 0;
+    int complaintCount = complaintCounts[normalizedSelectedDay] ?? 0;
 
     return Scaffold(
       appBar: AppBar(
@@ -131,7 +131,9 @@ class _SMDWorkerComplaintsCalenderState
             ),
             calendarBuilders: CalendarBuilders(
               markerBuilder: (context, date, _) {
-                final count = complaintCounts[DateTime(date.year, date.month, date.day)] ?? 0;
+                final count = complaintCounts[
+                        DateTime(date.year, date.month, date.day)] ??
+                    0;
                 if (count > 0) {
                   return Positioned(
                     bottom: 1,

@@ -25,7 +25,8 @@ class D2DBeforeAfterContainer extends StatefulWidget {
       : super(key: key);
 
   @override
-  _D2DBeforeAfterContainerState createState() => _D2DBeforeAfterContainerState();
+  _D2DBeforeAfterContainerState createState() =>
+      _D2DBeforeAfterContainerState();
 }
 
 class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
@@ -635,7 +636,7 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
                           _isLoading = true;
                         });
                         try {
-                            await _submitAfterImage();
+                          await _submitAfterImage();
                         } catch (e) {
                           print("Error in slider action: $e");
                         } finally {
@@ -662,9 +663,7 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
 
   Future<Uint8List> _loadImageBytes(String imagePath) async {
     if (imagePath.startsWith('data:image')) {
-      return base64Decode(imagePath
-          .split(',')
-          .last); 
+      return base64Decode(imagePath.split(',').last);
     } else {
       final file = File(imagePath);
       return await file.readAsBytes();

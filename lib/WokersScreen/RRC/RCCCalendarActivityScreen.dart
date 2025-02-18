@@ -38,6 +38,7 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
     });
     fetchActivities();
   }
+
   Future<String> getWorkerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('worker_id') ?? "";

@@ -249,67 +249,70 @@ class _SMDRCCCalendarActivityScreenState
                                 ],
                               ),
                             ),
-                             _tripDetails.isEmpty
-                          ? Center(child: Text('No trips for selected date.'))
-                          : Card(
-                              color: Color.fromRGBO(239, 239, 239, 1),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment
-                                    .center, // Center vertically
-                                children: [
-                                  Expanded(
-                                    child: Align(
-                                      alignment: Alignment
-                                          .centerLeft, // Align text to the left
-                                      child: Text(
-                                        'Total Trip Details: ${_tripDetails.length}',
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold),
-                                      ),
+                            _tripDetails.isEmpty
+                                ? Center(
+                                    child: Text('No trips for selected date.'))
+                                : Card(
+                                    color: Color.fromRGBO(239, 239, 239, 1),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment
+                                          .center, // Center vertically
+                                      children: [
+                                        Expanded(
+                                          child: Align(
+                                            alignment: Alignment
+                                                .centerLeft, // Align text to the left
+                                            child: Text(
+                                              'Total Trip Details: ${_tripDetails.length}',
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        ),
+                                        Align(
+                                          alignment: Alignment
+                                              .centerRight, // Align button to the right
+                                          child: TextButton(
+                                            onPressed: () {
+                                              if (_tabController.index == 0) {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        VDOBeforeAfterScreen(
+                                                      activities:
+                                                          selectedActivities,
+                                                    ),
+                                                  ),
+                                                );
+                                              } else {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        BDOTripDetailsScreen(
+                                                      tripDetails: _tripDetails,
+                                                    ),
+                                                  ),
+                                                );
+                                              }
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              primary: Colors
+                                                  .green, // Set the background color to green
+                                            ),
+                                            child: Text(
+                                              'View All',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  Align(
-                                    alignment: Alignment
-                                        .centerRight, // Align button to the right
-                                    child: TextButton(
-                                      onPressed: () {
-                                        if (_tabController.index == 0) {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  VDOBeforeAfterScreen(
-                                                activities: selectedActivities,
-                                              ),
-                                            ),
-                                          );
-                                        } else {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  BDOTripDetailsScreen(
-                                                tripDetails: _tripDetails,
-                                              ),
-                                            ),
-                                          );
-                                        }
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        primary: Colors
-                                            .green, // Set the background color to green
-                                      ),
-                                      child: Text(
-                                        'View All',
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 16),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
                           ],
                         )),
         ],

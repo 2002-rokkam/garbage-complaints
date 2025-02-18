@@ -282,7 +282,7 @@ class _CEORCCCalendarActivityScreenState
                     ],
                   ),
           )
-
+      
         ],
       ),
     );

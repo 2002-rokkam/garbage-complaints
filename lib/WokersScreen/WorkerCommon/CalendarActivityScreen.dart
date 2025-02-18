@@ -33,36 +33,73 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
     return prefs.getString('worker_id') ?? "";
   }
 
+
   Future<void> fetchActivities() async {
-    String workerId = await getWorkerId();
-    setState(() => _isLoading = true);
+  String workerId = await getWorkerId();
+  setState(() => _isLoading = true);
 
-    final url = Uri.parse(
-        'https://sbmgrajasthan.com/api/worker/$workerId/section/${widget.section}');
+  final url = Uri.parse(
+      'https://sbmgrajasthan.com/api/worker/$workerId/section/${widget.section}');
 
-    try {
-      final response = await http.get(url);
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        setState(() {
-          _activities = data['activities'];
-        });
-      } else {
-        throw Exception('Failed to load activities');
+  try {
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      List activities = data['activities'];
+
+      Map<DateTime, int> counts = {};
+      for (var activity in activities) {
+        final date = DateTime.parse(activity['date_time']).toLocal();
+        final day = DateTime(date.year, date.month, date.day);
+        counts[day] = (counts[day] ?? 0) + 1;
       }
-    } catch (e) {
-      print(e);
-    } finally {
-      setState(() => _isLoading = false);
+
+      setState(() {
+        _activities = activities;
+        complaintCounts = counts; // Rename this to activityCounts if needed
+      });
+    } else {
+      throw Exception('Failed to load activities');
     }
+  } catch (e) {
+    print(e);
+  } finally {
+    setState(() => _isLoading = false);
   }
+}
+
+
+  // Future<void> fetchActivities() async {
+  //   String workerId = await getWorkerId();
+  //   setState(() => _isLoading = true);
+
+  //   final url = Uri.parse(
+  //       'hhttps://sbmgrajasthan.com/api/worker/$workerId/section/${widget.section}');
+
+  //   try {
+  //     final response = await http.get(url);
+  //     if (response.statusCode == 200) {
+  //       final data = json.decode(response.body);
+  //       setState(() {
+  //         _activities = data['activities'];
+  //       });
+  //     } else {
+  //       throw Exception('Failed to load activities');
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //   } finally {
+  //     setState(() => _isLoading = false);
+  //   }
+  // }
+  
 
   Future<void> fetchComplaintData() async {
     final prefs = await SharedPreferences.getInstance();
     final gramPanchayat = prefs.getString('gram_panchayat') ?? '';
 
     final url =
-        'https://sbmgrajasthan.com/api/complaintdetails-by-gram-panchayat/?gram_panchayat=$gramPanchayat';
+        'hhttps://sbmgrajasthan.com/api/complaintdetails-by-gram-panchayat/?gram_panchayat=$gramPanchayat';
 
     try {
       final response = await http.get(Uri.parse(url));
@@ -130,16 +167,6 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
                 _selectedDate = selectedDay;
               });
             },
-            calendarStyle: CalendarStyle(
-              selectedDecoration: BoxDecoration(
-                color: Color(0xFF5C964A),
-                shape: BoxShape.circle,
-              ),
-              todayDecoration: BoxDecoration(
-                color: Color(0xFFFFA726),
-                shape: BoxShape.circle,
-              ),
-            ),
             calendarBuilders: CalendarBuilders(
               markerBuilder: (context, date, _) {
                 final count = complaintCounts[
@@ -152,7 +179,7 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
                       width: 16,
                       height: 16,
                       decoration: BoxDecoration(
-                        color: Colors.red,
+                        color: Colors.green, // Highlighting activities
                         shape: BoxShape.circle,
                       ),
                       child: Center(

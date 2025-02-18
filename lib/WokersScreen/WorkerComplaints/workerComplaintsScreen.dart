@@ -137,7 +137,9 @@ class _workerComplaintsScreenState extends State<workerComplaintsScreen> {
             ),
             calendarBuilders: CalendarBuilders(
               markerBuilder: (context, date, _) {
-                final count = complaintCounts[ DateTime(date.year, date.month, date.day)] ?? 0;
+                final count = complaintCounts[
+                        DateTime(date.year, date.month, date.day)] ??
+                    0;
                 if (count > 0) {
                   return Positioned(
                     bottom: 1,

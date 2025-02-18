@@ -16,7 +16,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 class WorkerComplaintsListScreen extends StatelessWidget {
   final DateTime date;
   final List<dynamic> complaints;
-  final VoidCallback onUpdate; 
+  final VoidCallback onUpdate;
 
   WorkerComplaintsListScreen(
       {required this.date, required this.complaints, required this.onUpdate});
@@ -35,12 +35,12 @@ class WorkerComplaintsListScreen extends StatelessWidget {
         title: Text(
           'Complaints on ${date.toLocal()}'.split(' ')[0],
           style: TextStyle(
-            color: Colors.white, 
+            color: Colors.white,
             fontSize: 20,
-            fontWeight: FontWeight.bold, 
+            fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Color(0xFF5C964A), 
+        backgroundColor: Color(0xFF5C964A),
         toolbarHeight: 80.0,
       ),
       backgroundColor: Color.fromRGBO(239, 239, 239, 1),
@@ -55,7 +55,7 @@ class WorkerComplaintsListScreen extends StatelessWidget {
                 final complaint = selectedDateComplaints[index];
                 return ComplaintCard(
                   complaint: complaint,
-                  onUpdate: onUpdate, 
+                  onUpdate: onUpdate,
                 );
               },
             ),
@@ -65,7 +65,7 @@ class WorkerComplaintsListScreen extends StatelessWidget {
 
 class ComplaintCard extends StatefulWidget {
   final dynamic complaint;
-  final VoidCallback onUpdate; 
+  final VoidCallback onUpdate;
 
   ComplaintCard({required this.complaint, required this.onUpdate});
 
@@ -173,24 +173,22 @@ class _ComplaintCardState extends State<ComplaintCard> {
                   ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).pop();
-                      _submitFormData(); 
+                      _submitFormData();
                     },
                     style: ElevatedButton.styleFrom(
-                      primary:
-                          Colors.green, 
+                      primary: Colors.green,
                     ),
                     child: Text('Submit'),
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pop(); 
+                      Navigator.of(context).pop();
                       setState(() {
-                        _imageFile = null; 
+                        _imageFile = null;
                       });
                     },
                     style: ElevatedButton.styleFrom(
-                      primary:
-                          Colors.green,
+                      primary: Colors.green,
                     ),
                     child: Text('Cancel'),
                   ),
@@ -282,7 +280,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
     }
   }
 
-void _showErrorDialog(String message) {
+  void _showErrorDialog(String message) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -305,10 +303,10 @@ void _showErrorDialog(String message) {
               SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).pop(); 
+                  Navigator.of(context).pop();
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.green, 
+                  primary: Colors.green,
                 ),
                 child: Text('OK'),
               ),
@@ -338,7 +336,7 @@ void _showErrorDialog(String message) {
                 ElevatedButton(
                   onPressed: () => Navigator.of(context).pop(),
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.green, 
+                    primary: Colors.green,
                   ),
                   child: Text('Close'),
                 ),
@@ -358,7 +356,8 @@ void _showErrorDialog(String message) {
       String imageUrl, double dirlatitude, double dirlongitude) async {
     final createdAt = DateTime.parse(widget.complaint['created_at']).toLocal();
     String time = '${createdAt.hour}:${createdAt.minute}:${createdAt.second}';
-    String location = 'Lat: ${dirlatitude.toStringAsFixed(6)}, Long: ${dirlongitude.toStringAsFixed(6)}';
+    String location =
+        'Lat: ${dirlatitude.toStringAsFixed(6)}, Long: ${dirlongitude.toStringAsFixed(6)}';
     showDialog(
       context: context,
       builder: (context) {
@@ -471,82 +470,83 @@ void _showErrorDialog(String message) {
     }
   }
 
- @override
-Widget build(BuildContext context) {
-  final images = widget.complaint['photos'];
-  final status = widget.complaint['status'];
-  final createdAt = DateTime.parse(widget.complaint['created_at']).toLocal();
-  final caption = widget.complaint['caption'];
-  final resolvedPhoto = widget.complaint['resolved_photo'];
-  final dirlatitude = widget.complaint['photos'][0]['latitude'];
-  final dirlongitude = widget.complaint['photos'][0]['longitude'];
+  @override
+  Widget build(BuildContext context) {
+    final images = widget.complaint['photos'];
+    final status = widget.complaint['status'];
+    final createdAt = DateTime.parse(widget.complaint['created_at']).toLocal();
+    final caption = widget.complaint['caption'];
+    final resolvedPhoto = widget.complaint['resolved_photo'];
+    final dirlatitude = widget.complaint['photos'][0]['latitude'];
+    final dirlongitude = widget.complaint['photos'][0]['longitude'];
 
-  String time = '${createdAt.hour}:${createdAt.minute}:${createdAt.second}';
+    String time = '${createdAt.hour}:${createdAt.minute}:${createdAt.second}';
 
-  int activeIndex = 0;
-  final PageController _pageController = PageController();
+    int activeIndex = 0;
+    final PageController _pageController = PageController();
 
-  return Container(
-    margin: EdgeInsets.only(bottom: 16.0),
-    width: 370,
-    decoration: ShapeDecoration(
-      color: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+    return Container(
+      margin: EdgeInsets.only(bottom: 16.0),
+      width: 370,
+      decoration: ShapeDecoration(
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
       ),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          width: 370,
-          height: 188.59,
-          child: Stack(
-            alignment: Alignment.bottomCenter,
-            children: [
-              PageView.builder(
-                controller: _pageController,
-                itemCount: images.length,
-                onPageChanged: (index) {
-                  setState(() {
-                    activeIndex = index;
-                  });
-                },
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      _showFullScreenImage(images[index]['image'], dirlatitude, dirlongitude);
-                    },
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: Container(
-                        width: 370,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: NetworkImage(images[index]['image']),
-                            fit: BoxFit.cover,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 370,
+            height: 188.59,
+            child: Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                PageView.builder(
+                  controller: _pageController,
+                  itemCount: images.length,
+                  onPageChanged: (index) {
+                    setState(() {
+                      activeIndex = index;
+                    });
+                  },
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        _showFullScreenImage(
+                            images[index]['image'], dirlatitude, dirlongitude);
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: Container(
+                          width: 370,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: NetworkImage(images[index]['image']),
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ),
+                    );
+                  },
+                ),
+                Positioned(
+                  bottom: 12,
+                  child: SmoothPageIndicator(
+                    controller: _pageController,
+                    count: images.length,
+                    effect: ExpandingDotsEffect(
+                      activeDotColor: Colors.white,
+                      dotColor: Colors.black,
+                      dotHeight: 6,
+                      dotWidth: 6,
+                      expansionFactor: 2,
                     ),
-                  );
-                },
-              ),
-              Positioned(
-                bottom: 12,
-                child: SmoothPageIndicator(
-                  controller: _pageController,
-                  count: images.length,
-                  effect: ExpandingDotsEffect(
-                    activeDotColor: Colors.white,
-                    dotColor: Colors.black,
-                    dotHeight: 6,
-                    dotWidth: 6,
-                    expansionFactor: 2,
                   ),
                 ),
-              ),
-               Positioned(
+                Positioned(
                   top: 12,
                   right: 12,
                   child: Row(
@@ -558,7 +558,7 @@ Widget build(BuildContext context) {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 5),
                         decoration: ShapeDecoration(
-                          color: status == "Resolved"
+                          color: status == "Resolved" || status == "Verified"
                               ? Color(0xFF5C964A)
                               : Colors.orange,
                           shape: RoundedRectangleBorder(
@@ -601,87 +601,92 @@ Widget build(BuildContext context) {
                     ],
                   ),
                 ),
-            ],
+              ],
+            ),
           ),
-        ),
-        SizedBox(height: 8),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 12.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Icon(Icons.location_pin, color: Colors.red),
-                  SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      _address,
-                      style: TextStyle(
-                        color: Color(0xFF252525),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+          SizedBox(height: 8),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.location_pin, color: Colors.red),
+                    SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        _address,
+                        style: TextStyle(
+                          color: Color(0xFF252525),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.directions, color: Colors.blue),
-                    onPressed: () {
-                      if (dirlatitude != null && dirlongitude != null) {
-                        final url = Uri.parse(
-                            'https://www.google.com/maps/search/?api=1&query=$dirlatitude,$dirlongitude');
-                        _launchURL(url);
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text('Location not available'),
-                        ));
-                      }
-                    },
-                  ),
-                ],
-              ),
-              SizedBox(height: 8),
-              Text(
-                caption,
-                style: TextStyle(
-                  color: Color(0xFF252525),
-                  fontSize: 16,
+                    TextButton(
+                      onPressed: () {
+                        if (dirlatitude != null && dirlongitude != null) {
+                          final url = Uri.parse(
+                              'https://www.google.com/maps/search/?api=1&query=$dirlatitude,$dirlongitude');
+                          _launchURL(url);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('Location not available'),
+                          ));
+                        }
+                      },
+                      child: Text(
+                        'Open Map',
+                        style: TextStyle(color: Colors.black, fontSize: 16),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(height: 16),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 12.0),
-          child: Container(
-            width: double.infinity,
-            height: 40,
-            decoration: ShapeDecoration(
-              color: Color(0xFF5C964A),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(100),
-              ),
-            ),
-            child: TextButton(
-              onPressed: status == "Resolved"
-                  ? () => _showResolvedPhoto(resolvedPhoto)
-                  : _pickImage,
-              child: Text(
-                status == "Resolved" ? 'View Reply' : 'Reply with Image',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
+                SizedBox(height: 8),
+                Text(
+                  caption,
+                  style: TextStyle(
+                    color: Color(0xFF252525),
+                    fontSize: 16,
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
-        ),
-        SizedBox(height: 8),
-      ],
-    ),
-  );
-}
+          SizedBox(height: 16),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 12.0),
+            child: Container(
+              width: double.infinity,
+              height: 40,
+              decoration: ShapeDecoration(
+                color: Color(0xFF5C964A),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(100),
+                ),
+              ),
+              child: TextButton(
+                onPressed: (status == "Resolved" || status == "Verified")
+                    ? () => _showResolvedPhoto(resolvedPhoto)
+                    : _pickImage,
+                child: Text(
+                  (status == "Resolved" || status == "Verified")
+                      ? 'View Reply'
+                      : 'Reply with Image',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 8),
+        ],
+      ),
+    );
+  }
 }

@@ -11,10 +11,11 @@ import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+
 class BDOWorkerComplaintsListScreenCalender extends StatelessWidget {
   final DateTime date;
   final List<dynamic> complaints;
-  final VoidCallback onUpdate; 
+  final VoidCallback onUpdate;
 
   BDOWorkerComplaintsListScreenCalender(
       {required this.date, required this.complaints, required this.onUpdate});
@@ -38,7 +39,7 @@ class BDOWorkerComplaintsListScreenCalender extends StatelessWidget {
             fontWeight: FontWeight.bold, // Optional: Bold text
           ),
         ),
-        backgroundColor: Color(0xFF5C964A), 
+        backgroundColor: Color(0xFF5C964A),
         toolbarHeight: 80.0,
       ),
       backgroundColor: Color.fromRGBO(239, 239, 239, 1),
@@ -287,7 +288,8 @@ class _ComplaintCardState extends State<ComplaintCard> {
       String imageUrl, double dirlatitude, double dirlongitude) async {
     final createdAt = DateTime.parse(widget.complaint['created_at']).toLocal();
     String time = '${createdAt.hour}:${createdAt.minute}:${createdAt.second}';
-    String location ='Lat: ${dirlatitude.toStringAsFixed(6)}, Long: ${dirlongitude.toStringAsFixed(6)}';
+    String location =
+        'Lat: ${dirlatitude.toStringAsFixed(6)}, Long: ${dirlongitude.toStringAsFixed(6)}';
 
     showDialog(
       context: context,
@@ -403,6 +405,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
       throw 'Could not launch $url';
     }
   }
+
   int _currentIndex = 0;
 
   @override
@@ -418,7 +421,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
     String time = '${createdAt.hour}:${createdAt.minute}:${createdAt.second}';
     int activeIndex = 0;
     final PageController _pageController = PageController();
-    
+
     return Container(
       margin: EdgeInsets.only(bottom: 16.0),
       width: 370,
@@ -435,7 +438,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
             width: 370,
             height: 188.59,
             child: Stack(
-            alignment: Alignment.bottomCenter,
+              alignment: Alignment.bottomCenter,
               children: [
                 PageView.builder(
                   controller: _pageController,
@@ -479,7 +482,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                       expansionFactor: 2,
                     ),
                   ),
-                ), 
+                ),
                 Positioned(
                   top: 12,
                   right: 12,
@@ -492,7 +495,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 5),
                         decoration: ShapeDecoration(
-                          color: status == "Resolved"
+                          color: status == "Resolved" || status == "Verified"
                               ? Color(0xFF5C964A)
                               : Colors.orange,
                           shape: RoundedRectangleBorder(
@@ -561,12 +564,9 @@ class _ComplaintCardState extends State<ComplaintCard> {
                       ),
                     ),
                     // Location Redirect Icon
-                    IconButton(
-                      icon: Icon(Icons.directions, color: Colors.blue),
+                    TextButton(
                       onPressed: () {
                         if (dirlatitude != null && dirlongitude != null) {
-                          print(dirlatitude);
-                          print(dirlongitude);
                           final url = Uri.parse(
                               'https://www.google.com/maps?q=$dirlatitude,$dirlongitude');
                           _launchURL(url);
@@ -576,6 +576,10 @@ class _ComplaintCardState extends State<ComplaintCard> {
                           ));
                         }
                       },
+                      child: Text(
+                        'Open Map',
+                        style: TextStyle(color: Colors.black, fontSize: 16),
+                      ),
                     ),
                   ],
                 ),

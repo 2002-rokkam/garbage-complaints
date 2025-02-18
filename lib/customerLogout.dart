@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
 import 'onBoardingPage1.dart';
+
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
@@ -48,7 +49,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             if (isLoggingOut) ...[
               SizedBox(height: 20),
-              CircularProgressIndicator(), 
+              CircularProgressIndicator(),
             ],
             SizedBox(height: 20),
             GestureDetector(
@@ -77,6 +78,7 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
     );
   }
+
   void showLogoutConfirmationDialog(BuildContext context) {
     showDialog(
       context: context,

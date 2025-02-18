@@ -13,8 +13,9 @@ class VDOWorkerComplaintsCalender extends StatefulWidget {
       _VDOWorkerComplaintsCalenderState();
 }
 
-class _VDOWorkerComplaintsCalenderState extends State<VDOWorkerComplaintsCalender> {
-   DateTime _selectedDay = DateTime.now();
+class _VDOWorkerComplaintsCalenderState
+    extends State<VDOWorkerComplaintsCalender> {
+  DateTime _selectedDay = DateTime.now();
   Map<DateTime, int> complaintCounts = {};
   List<dynamic> complaints = [];
   bool _isLoading = false;
@@ -139,7 +140,9 @@ class _VDOWorkerComplaintsCalenderState extends State<VDOWorkerComplaintsCalende
             ),
             calendarBuilders: CalendarBuilders(
               markerBuilder: (context, date, _) {
-                final count = complaintCounts[ DateTime(date.year, date.month, date.day)] ?? 0;
+                final count = complaintCounts[
+                        DateTime(date.year, date.month, date.day)] ??
+                    0;
                 if (count > 0) {
                   return Positioned(
                     bottom: 1,

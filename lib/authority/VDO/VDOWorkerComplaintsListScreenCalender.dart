@@ -16,7 +16,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 class VDOWorkerComplaintsListScreenCalender extends StatelessWidget {
   final DateTime date;
   final List<dynamic> complaints;
-  final VoidCallback onUpdate; 
+  final VoidCallback onUpdate;
 
   VDOWorkerComplaintsListScreenCalender(
       {required this.date, required this.complaints, required this.onUpdate});
@@ -40,7 +40,7 @@ class VDOWorkerComplaintsListScreenCalender extends StatelessWidget {
             fontWeight: FontWeight.bold, // Optional: Bold text
           ),
         ),
-        backgroundColor: Color(0xFF5C964A), 
+        backgroundColor: Color(0xFF5C964A),
         toolbarHeight: 80.0,
       ),
       backgroundColor: Color.fromRGBO(239, 239, 239, 1),
@@ -286,7 +286,8 @@ class _ComplaintCardState extends State<ComplaintCard> {
       String imageUrl, double dirlatitude, double dirlongitude) async {
     final createdAt = DateTime.parse(widget.complaint['created_at']).toLocal();
     String time = '${createdAt.hour}:${createdAt.minute}:${createdAt.second}';
-    String location ='Lat: ${dirlatitude.toStringAsFixed(6)}, Long: ${dirlongitude.toStringAsFixed(6)}';
+    String location =
+        'Lat: ${dirlatitude.toStringAsFixed(6)}, Long: ${dirlongitude.toStringAsFixed(6)}';
 
     showDialog(
       context: context,
@@ -407,19 +408,29 @@ class _ComplaintCardState extends State<ComplaintCard> {
     final url = Uri.parse('https://sbmgrajasthan.com/api/complaint/$complaintId/verify');
     print(complaintId);
     print(workerId);
-    
-    final response = await http.patch(
-      url,
-      body: jsonEncode({"verifier_id": workerId}),
-    );
-
-    if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Complaint verified successfully!')),
+    try {
+      final response = await http.patch(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({"verifier_id": workerId}),
       );
-    } else {
+
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Complaint verified successfully!')),
+        );
+        widget.onUpdate(); 
+        Navigator.pop(context, true); // Refresh the page
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Verification failed: ${response.body}')),
+        );
+      }
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Verification failed. Try again!')),
+        SnackBar(content: Text('An error occurred: $e')),
       );
     }
   }
@@ -428,6 +439,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
   Widget build(BuildContext context) {
     final images = widget.complaint['photos'];
     final status = widget.complaint['status'];
+    print(widget.complaint);
     final createdAt = DateTime.parse(widget.complaint['created_at']).toLocal();
     final caption = widget.complaint['caption'];
     final resolvedPhoto = widget.complaint['resolved_photo'];
@@ -456,7 +468,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
             child: Stack(
               alignment: Alignment.bottomCenter,
               children: [
-                 PageView.builder(
+                PageView.builder(
                   controller: _pageController,
                   itemCount: images.length,
                   onPageChanged: (index) {
@@ -512,7 +524,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 5),
                         decoration: ShapeDecoration(
-                          color: status == "Resolved"
+                          color: status == "Resolved" || status == "Verified"
                               ? Color(0xFF5C964A)
                               : Colors.orange,
                           shape: RoundedRectangleBorder(
@@ -581,8 +593,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                       ),
                     ),
                     // Location Redirect Icon
-                    IconButton(
-                      icon: Icon(Icons.directions, color: Colors.blue),
+                    TextButton(
                       onPressed: () {
                         if (dirlatitude != null && dirlongitude != null) {
                           final url = Uri.parse(
@@ -594,6 +605,10 @@ class _ComplaintCardState extends State<ComplaintCard> {
                           ));
                         }
                       },
+                      child: Text(
+                        'Open Map',
+                        style: TextStyle(color: Colors.black, fontSize: 16),
+                      ),
                     ),
                   ],
                 ),
@@ -636,30 +651,32 @@ class _ComplaintCardState extends State<ComplaintCard> {
                           ),
                         ),
                       ),
-                      SizedBox(width: 8),
-                      Expanded(
-                        child: Container(
-                          height: 40,
-                          decoration: ShapeDecoration(
-                            color: Colors.green,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(100),
+                      if (status == "Resolved") ...[
+                        SizedBox(width: 8),
+                        Expanded(
+                          child: Container(
+                            height: 40,
+                            decoration: ShapeDecoration(
+                              color: Color(0xFF5C964A),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(100),
+                              ),
                             ),
-                          ),
-                          child: TextButton(
-                            onPressed: () =>
-                                _verifyComplaint(widget.complaint['complaint_id']),
-                            child: Text(
-                              'Verify',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
+                            child: TextButton(
+                              onPressed: () => _verifyComplaint(
+                                  widget.complaint['complaint_id']),
+                              child: Text(
+                                'Verify',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
+                      ],
                     ],
                   )
                 : SizedBox(),

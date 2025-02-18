@@ -66,8 +66,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
       });
 
       try {
-        var uri =
-            Uri.parse('https://sbmgrajasthan.com/api/complaints-register');
+        var uri = Uri.parse('https://sbmgrajasthan.com/api/complaints-register');
 
         var request = http.MultipartRequest('POST', uri)
           ..fields['district'] = formattedDistrict
@@ -96,7 +95,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
 
         var response = await request.send();
 
-        if (response.statusCode == 201) {
+        if (response.statusCode == 201 || response.statusCode == 200) {
           final responseData = await response.stream.bytesToString();
           final jsonResponse = jsonDecode(responseData);
           Navigator.pushReplacement(
@@ -343,9 +342,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
     return LayoutBuilder(
       builder: (context, constraints) {
         return Scaffold(
-          resizeToAvoidBottomInset:
-              false, 
-
+          resizeToAvoidBottomInset: false,
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(constraints.maxHeight * 0.18),
             child: Container(

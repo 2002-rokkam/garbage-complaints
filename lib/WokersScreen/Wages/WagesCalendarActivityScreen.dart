@@ -72,7 +72,7 @@ class _WagesCalendarActivityScreenState
     DateTime dateTime = DateTime.parse(dateTimeString).toLocal();
     return DateFormat('HH:mm:ss, d/M/yyyy').format(dateTime);
   }
-
+  
 
   void _showImageFullscreen(String imageUrl) {
     showDialog(

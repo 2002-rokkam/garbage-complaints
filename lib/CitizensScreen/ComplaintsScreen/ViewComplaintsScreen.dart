@@ -44,7 +44,6 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
 
   Future<void> _fetchComplaints() async {
     final String apiUrl = 'https://sbmgrajasthan.com/api/complaints';
-
     try {
       final response = await http.get(
         Uri.parse(apiUrl),
@@ -295,7 +294,7 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
                     onPressed: () => Navigator.of(context).pop(),
                     child: Text('Close'),
                     style: ElevatedButton.styleFrom(
-                      primary:Colors.green, 
+                      primary: Colors.green,
                     ),
                   ),
                 ],

@@ -166,7 +166,8 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
 
     Position position = await _getCurrentLocation();
 
-    String address = await _getAddressFromLatLong(position.latitude, position.longitude);
+    String address =
+        await _getAddressFromLatLong(position.latitude, position.longitude);
     String imagePath;
     if (kIsWeb) {
       final bytes = await image.readAsBytes();
@@ -517,7 +518,8 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                                         errorBuilder:
                                             (context, error, stackTrace) {
                                           return Center(
-                                              child: Text('Failed to load image'));
+                                              child:
+                                                  Text('Failed to load image'));
                                         },
                                       );
                                     } else {
@@ -665,7 +667,8 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                           _isLoading = true;
                         });
                         try {
-                          bool isWithinRadius = await _isAfterImageWithinRadius();
+                          bool isWithinRadius =
+                              await _isAfterImageWithinRadius();
                           if (isWithinRadius) {
                             await _submitAfterImage();
                           } else {
