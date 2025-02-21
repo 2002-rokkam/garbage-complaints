@@ -26,7 +26,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
   final List<TextEditingController> _controllers =
       List.generate(6, (index) => TextEditingController());
   final List<FocusNode> _focusNodes = List.generate(6, (index) => FocusNode());
-  final List<Color> _borderColors = List.generate(6, (index) => Colors.grey);
+  List<Color> _borderColors = List.generate(6, (index) => Colors.grey);
   bool _isLoading = false;
 
   @override
@@ -87,14 +87,8 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
 
   void _setBorderColor(Color color) {
     setState(() {
-      for (int i = 0; i < 6; i++) {
-        if (_controllers[i].text.isEmpty ||
-            _controllers[i].text.contains(RegExp(r'[^0-9]'))) {
-          _borderColors[i] = color;
-        } else {
-          _borderColors[i] = Colors.grey;
-        }
-      }
+      _borderColors =
+          List.filled(6, color); // ✅ This ensures a new list instance
     });
   }
 
@@ -204,10 +198,19 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                               ),
                               decoration: InputDecoration(
                                 counterText: "",
-                                border: OutlineInputBorder(
+                                enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
                                   borderSide: BorderSide(
-                                    color: _borderColors[index],
+                                    color: _borderColors[
+                                        index], // ✅ Updated dynamically
+                                    width: 2,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    color: _borderColors[
+                                        index], // ✅ Ensure it updates dynamically
                                     width: 2,
                                   ),
                                 ),

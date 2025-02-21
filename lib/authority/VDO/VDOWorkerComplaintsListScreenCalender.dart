@@ -404,6 +404,56 @@ class _ComplaintCardState extends State<ComplaintCard> {
     }
   }
 
+void _showVerifyConfirmation(String complaintId) {
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          title: Column(
+            children: [
+              Icon(Icons.verified, color: Colors.green, size: 60),
+              SizedBox(height: 10),
+              Text(
+                "Confirm Verification",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+          content: Text(
+            "Are you sure you want to verify this complaint?",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 16),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Cancel", style: TextStyle(color: Colors.red)),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _verifyComplaint(complaintId);
+              },
+              child: Text("Yes, Verify"),
+            ),
+          ],
+        );
+      },
+    );
+}
+
   Future<void> _verifyComplaint(String complaintId) async {
     final url = Uri.parse('https://sbmgrajasthan.com/api/complaint/$complaintId/verify');
     print(complaintId);
@@ -663,8 +713,11 @@ class _ComplaintCardState extends State<ComplaintCard> {
                               ),
                             ),
                             child: TextButton(
-                              onPressed: () => _verifyComplaint(
-                                  widget.complaint['complaint_id']),
+                              onPressed: () {
+                                _showVerifyConfirmation(
+                                    widget.complaint['complaint_id']);
+                              },
+
                               child: Text(
                                 'Verify',
                                 style: TextStyle(

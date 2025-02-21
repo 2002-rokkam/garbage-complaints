@@ -30,6 +30,7 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
 
     try {
       await _auth.verifyPhoneNumber(
+        timeout: Duration.zero,
         phoneNumber: _countryCode + phoneNumber,
         verificationCompleted: (PhoneAuthCredential credential) async {
           await _auth.signInWithCredential(credential);
@@ -47,7 +48,12 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
             ),
           );
         },
-        codeAutoRetrievalTimeout: (String verificationId) {},
+        codeAutoRetrievalTimeout: (String verificationId) {
+          setState(() {
+            _isLoading = false;
+          });
+          print("Auto-retrieval timed out. Enter OTP manually.");
+        },
       );
     } catch (e) {
       setState(() => _isLoading = false);
