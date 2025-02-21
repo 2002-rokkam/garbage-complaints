@@ -7,12 +7,15 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../PoweredByBikaji.dart';
 import '../../Login/workerLogout.dart';
-// import 'SMDWorkerComplaintsCalender.dart';
 import '../BDO/BDOWorkerComplaintsCalender.dart';
 import 'SMDWorkerComplaintsCalender.dart';
 import 'SMDselectRegion.dart';
 import '../../button_items.dart';
-
+import '../BDO/BDOWages/BDOWagesCalendarActivityScreen.dart';
+import 'SMDCalender/SMDCalendarActivityScreen.dart';
+import 'SMDD2D/SMDD2DCalnderActivity.dart';
+import 'SMDRCC/SMDRCCCalendarActivityScreen.dart';
+import 'SMDcontractorDetails.dart';
 class SMDScreen extends StatefulWidget {
   @override
   _SMDScreenState createState() => _SMDScreenState();
@@ -78,14 +81,31 @@ class _SMDScreenState extends State<SMDScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        DateFormat('dd/MM/yyyy').format(DateTime.now()),
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                    GestureDetector(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => Dialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            child: Container(
+                              height: 400, // Adjust height as needed
+                              padding: EdgeInsets.all(16.0),
+                              child: SMDselectRegion(), // Show your region selection screen inside the popup
+                            ),
+                          ),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          DateFormat('dd/MM/yyyy').format(DateTime.now()),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
@@ -468,20 +488,24 @@ class _SMDScreenState extends State<SMDScreen> {
     );
   }
 
+  void _navigateToPage(String routeName, BuildContext context) async {
+    Widget page = await _getPage(routeName, context);
+
+    if (page is! Scaffold) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => page),
+      );
+    }
+  }
+
   Widget _buildButton(
       String label, String imageUrl, String routeName, BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => _getPage(routeName),
-          ),
-        );
-      },
+      onTap: () => _navigateToPage(routeName, context),
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.4, // Responsive width
-        height: MediaQuery.of(context).size.height * 0.15, // Responsive height
+        width: MediaQuery.of(context).size.width * 0.4,
+        height: MediaQuery.of(context).size.height * 0.15,
         padding: const EdgeInsets.all(8),
         margin: const EdgeInsets.symmetric(horizontal: 8),
         decoration: ShapeDecoration(
@@ -509,18 +533,10 @@ class _SMDScreenState extends State<SMDScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: MediaQuery.of(context).size.width *
-                  0.12, // Responsive image width
-              height: MediaQuery.of(context).size.width *
-                  0.12, // Responsive image height
-              clipBehavior: Clip.antiAlias,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8), // Rounded corners
-              ),
-              child: Image.asset(
-                imageUrl,
-                fit: BoxFit.cover,
-              ),
+              width: MediaQuery.of(context).size.width * 0.12,
+              height: MediaQuery.of(context).size.width * 0.12,
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+              child: Image.asset(imageUrl, fit: BoxFit.cover),
             ),
             SizedBox(height: 8),
             Text(
@@ -540,22 +556,84 @@ class _SMDScreenState extends State<SMDScreen> {
     );
   }
 
-  Widget _getPage(String routeName) {
+  Future<Widget> _getPage(String routeName, BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? appbarselectedDistrict = prefs.getString('appbarselectedDistrict');
+    String? appbarselectedBlock = prefs.getString('appbarselectedBlock');
+    String? appbarselectedGramPanchayat =
+        prefs.getString('appbarselectedGramPanchayat');
+
+    // Check if any of the values are empty or null
+    if (appbarselectedDistrict == null ||
+        appbarselectedDistrict.isEmpty ||
+        appbarselectedBlock == null ||
+        appbarselectedBlock.isEmpty ||
+        appbarselectedGramPanchayat == null ||
+        appbarselectedGramPanchayat.isEmpty) {
+      // Show the region selection dialog
+      showDialog(
+        context: context,
+        builder: (context) => Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+          child: Container(
+            height: 400, // Adjust height as needed
+            padding: EdgeInsets.all(16.0),
+            child: SMDselectRegion(),
+          ),
+        ),
+      );
+      return Scaffold(); // Return an empty scaffold to prevent navigation
+    }
+
     switch (routeName) {
       case 'DoorToDoorScreen':
-        return SMDselectRegion(section: 'Door to Door');
+        return SMDD2DCalnderActivityScreen(
+          section: 'Door to Door',
+          district: appbarselectedDistrict,
+          block: appbarselectedBlock,
+          gramPanchayat: appbarselectedGramPanchayat,
+        );
       case 'RoadSweepingScreen':
-        return SMDselectRegion(section: 'Road Sweeping');
+        return SMDCalendarActivityScreen(
+          section: 'Road Sweeping',
+          district: appbarselectedDistrict,
+          block: appbarselectedBlock,
+          gramPanchayat: appbarselectedGramPanchayat,
+        );
       case 'DrainCleaningScreen':
-        return SMDselectRegion(section: 'Drainage Cleaning');
+        return SMDCalendarActivityScreen(
+          section: 'Drainage Cleaning',
+          district: appbarselectedDistrict,
+          block: appbarselectedBlock,
+          gramPanchayat: appbarselectedGramPanchayat,
+        );
       case 'CSCScreen':
-        return SMDselectRegion(section: 'CSC');
+        return SMDCalendarActivityScreen(
+          section: 'CSC',
+          district: appbarselectedDistrict,
+          block: appbarselectedBlock,
+          gramPanchayat: appbarselectedGramPanchayat,
+        );
       case 'RRCScreen':
-        return SMDselectRegion(section: 'RRC');
+        return SMDRCCCalendarActivityScreen(
+          section: 'RRC',
+          district: appbarselectedDistrict,
+          block: appbarselectedBlock,
+          gramPanchayat: appbarselectedGramPanchayat,
+        );
       case 'WagesScreen':
-        return SMDselectRegion(section: 'Wages');
+        return BDOWagesCalendarActivityScreen(
+          section: 'Wages',
+          district: appbarselectedDistrict,
+          block: appbarselectedBlock,
+          gramPanchayat: appbarselectedGramPanchayat,
+        );
       case 'ContractorDetailsScreen':
-        return SMDselectRegion(section: 'Contractor'); // Add this case
+        return Contractordetails(
+          gramPanchayat: appbarselectedGramPanchayat,
+        );
       default:
         return Scaffold(body: Center(child: Text('Page not found')));
     }

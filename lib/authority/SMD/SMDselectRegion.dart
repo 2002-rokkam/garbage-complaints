@@ -3,21 +3,14 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import '../BDO/BDOWages/BDOWagesCalendarActivityScreen.dart';
-import 'SMDCalender/SMDCalendarActivityScreen.dart';
-import 'SMDD2D/SMDD2DCalnderActivity.dart';
-import 'SMDRCC/SMDRCCCalendarActivityScreen.dart';
-import 'SMDcontractorDetails.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SMDselectRegion extends StatefulWidget {
-  final String section;
-
-  const SMDselectRegion({Key? key, required this.section}) : super(key: key);
+  const SMDselectRegion({Key? key}) : super(key: key);
 
   @override
   State<SMDselectRegion> createState() => _SMDselectRegionState();
 }
-
 class _SMDselectRegionState extends State<SMDselectRegion> {
   String? selectedDistrict;
   String? selectedBlock;
@@ -94,7 +87,7 @@ class _SMDselectRegionState extends State<SMDselectRegion> {
     }
   }
 
-  void submitSelection() {
+  Future<void> submitSelection() async {
     if (selectedDistrict != null &&
         selectedBlock != null &&
         selectedGramPanchayat != null) {
@@ -118,60 +111,12 @@ class _SMDselectRegionState extends State<SMDselectRegion> {
         return '_${match.group(1)?.toLowerCase()}';
       });
 
-      print(formattedDistrict);
-      print(formattedBlock);
-      print(formattedGramPanchayat);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('appbarselectedDistrict', formattedDistrict);
+      await prefs.setString('appbarselectedBlock', formattedBlock);
+      await prefs.setString('appbarselectedGramPanchayat', formattedGramPanchayat);
+          Navigator.pop(context);
 
-      Widget targetScreen;
-
-      switch (widget.section) {
-        case 'Door to Door':
-          targetScreen = SMDD2DCalnderActivityScreen(
-            section: 'Door to Door',
-            district: formattedDistrict,
-            block: formattedBlock,
-            gramPanchayat: formattedGramPanchayat,
-          );
-          break;
-        case 'Road Sweeping':
-        case 'Drainage Cleaning':
-        case 'CSC':
-          targetScreen = SMDCalendarActivityScreen(
-            section: widget.section,
-            district: formattedDistrict,
-            block: formattedBlock,
-            gramPanchayat: formattedGramPanchayat,
-          );
-          break;
-        case 'RRC':
-          targetScreen = SMDRCCCalendarActivityScreen(
-            section: 'RRC',
-            district: formattedDistrict,
-            block: formattedBlock,
-            gramPanchayat: formattedGramPanchayat,
-          );
-          break;
-        case 'Wages':
-          targetScreen = BDOWagesCalendarActivityScreen(
-            section: 'Wages',
-            district: formattedDistrict,
-            block: formattedBlock,
-            gramPanchayat: formattedGramPanchayat,
-          );
-          break;
-        case 'Contractor':
-          targetScreen = Contractordetails(
-            gramPanchayat: formattedGramPanchayat,
-          );
-          break;
-        default:
-          return;
-      }
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => targetScreen),
-      );
     } else {
       showDialog(
         context: context,
@@ -192,10 +137,28 @@ class _SMDselectRegionState extends State<SMDselectRegion> {
     }
   }
 
+  Future<void> loadSavedSelections() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      selectedDistrict = prefs.getString('appbarselectedDistrict');
+      selectedBlock = prefs.getString('appbarselectedBlock');
+      selectedGramPanchayat = prefs.getString('appbarselectedGramPanchayat');
+    });
+
+    // Load blocks and gram panchayats based on saved selections
+    if (selectedDistrict != null) {
+      fetchBlocks(selectedDistrict!);
+    }
+    if (selectedDistrict != null && selectedBlock != null) {
+      fetchGramPanchayats(selectedDistrict!, selectedBlock!);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     fetchDistricts(); // Fetch districts when the page loads
+    loadSavedSelections(); // Load saved selections
   }
 
   void showOptions(BuildContext context, List<String> options,
@@ -248,10 +211,6 @@ class _SMDselectRegionState extends State<SMDselectRegion> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Select Your Region'),
-        backgroundColor: Color(0xFF5C964A),
-      ),
       backgroundColor: Colors.grey.shade200,
       body: Padding(
         padding: const EdgeInsets.all(16.0),

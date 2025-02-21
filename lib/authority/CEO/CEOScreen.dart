@@ -7,8 +7,12 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../PoweredByBikaji.dart';
 import '../../Login/workerLogout.dart';
-// import 'CEOWorkerComplaintsCalender.dart';
 import '../BDO/BDOWorkerComplaintsCalender.dart';
+import '../BDO/BDOWages/BDOWagesCalendarActivityScreen.dart';
+import 'CEOCalender/CEOCalendarActivityScreen.dart';
+import 'CEOD2D/CEOD2DCalnderActivity.dart';
+import 'CEORCC/CEORCCCalendarActivityScreen.dart';
+import 'contractorDetails.dart';
 import 'CEOselectRegion.dart';
 import '../../button_items.dart';
 
@@ -76,14 +80,32 @@ class _CEOScreenState extends State<CEOScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        DateFormat('dd/MM/yyyy').format(DateTime.now()),
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                    GestureDetector(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => Dialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            child: Container(
+                              height: 400, // Adjust height as needed
+                              padding: EdgeInsets.all(16.0),
+                              child:
+                                  CEOselectRegion(), // Show your region selection screen inside the popup
+                            ),
+                          ),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          DateFormat('dd/MM/yyyy').format(DateTime.now()),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
@@ -262,15 +284,14 @@ class _CEOScreenState extends State<CEOScreen> {
                       ),
                     ),
                     SizedBox(height: 16),
-
                     Row(
                       mainAxisAlignment:
-                          MainAxisAlignment.spaceEvenly, // Adjusts the spacing
+                          MainAxisAlignment.spaceEvenly, 
                       children: [
                         GestureDetector(
                           onTap: () {},
                           child: Container(
-                            width: 170, // Adjust width as needed
+                            width: 170,
                             height: 139,
                             decoration: ShapeDecoration(
                               color: Colors.white,
@@ -465,20 +486,24 @@ class _CEOScreenState extends State<CEOScreen> {
     );
   }
 
+  void _navigateToPage(String routeName, BuildContext context) async {
+    Widget page = await _getPage(routeName, context);
+
+    if (page is! Scaffold) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => page),
+      );
+    }
+  }
+
   Widget _buildButton(
       String label, String imageUrl, String routeName, BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => _getPage(routeName),
-          ),
-        );
-      },
+      onTap: () => _navigateToPage(routeName, context),
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.4, // Responsive width
-        height: MediaQuery.of(context).size.height * 0.15, // Responsive height
+        width: MediaQuery.of(context).size.width * 0.4,
+        height: MediaQuery.of(context).size.height * 0.15,
         padding: const EdgeInsets.all(8),
         margin: const EdgeInsets.symmetric(horizontal: 8),
         decoration: ShapeDecoration(
@@ -506,18 +531,10 @@ class _CEOScreenState extends State<CEOScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: MediaQuery.of(context).size.width *
-                  0.12, // Responsive image width
-              height: MediaQuery.of(context).size.width *
-                  0.12, // Responsive image height
-              clipBehavior: Clip.antiAlias,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8), // Rounded corners
-              ),
-              child: Image.asset(
-                imageUrl,
-                fit: BoxFit.cover,
-              ),
+              width: MediaQuery.of(context).size.width * 0.12,
+              height: MediaQuery.of(context).size.width * 0.12,
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+              child: Image.asset(imageUrl, fit: BoxFit.cover),
             ),
             SizedBox(height: 8),
             Text(
@@ -537,22 +554,84 @@ class _CEOScreenState extends State<CEOScreen> {
     );
   }
 
-  Widget _getPage(String routeName) {
+  Future<Widget> _getPage(String routeName, BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? appbarselectedDistrict = prefs.getString('appbarselectedDistrict');
+    String? appbarselectedBlock = prefs.getString('appbarselectedBlock');
+    String? appbarselectedGramPanchayat =
+        prefs.getString('appbarselectedGramPanchayat');
+
+    // Check if any of the values are empty or null
+    if (appbarselectedDistrict == null ||
+        appbarselectedDistrict.isEmpty ||
+        appbarselectedBlock == null ||
+        appbarselectedBlock.isEmpty ||
+        appbarselectedGramPanchayat == null ||
+        appbarselectedGramPanchayat.isEmpty) {
+      // Show the region selection dialog
+      showDialog(
+        context: context,
+        builder: (context) => Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+          child: Container(
+            height: 400, // Adjust height as needed
+            padding: EdgeInsets.all(16.0),
+            child: CEOselectRegion(),
+          ),
+        ),
+      );
+      return Scaffold(); // Return an empty scaffold to prevent navigation
+    }
+
     switch (routeName) {
       case 'DoorToDoorScreen':
-        return CEOselectRegion(section: 'Door to Door');
+        return CEOD2DCalnderActivityScreen(
+          section: 'Door to Door',
+          district: appbarselectedDistrict,
+          block: appbarselectedBlock,
+          gramPanchayat: appbarselectedGramPanchayat,
+        );
       case 'RoadSweepingScreen':
-        return CEOselectRegion(section: 'Road Sweeping');
+        return CEOCalendarActivityScreen(
+          section: 'Road Sweeping',
+          district: appbarselectedDistrict,
+          block: appbarselectedBlock,
+          gramPanchayat: appbarselectedGramPanchayat,
+        );
       case 'DrainCleaningScreen':
-        return CEOselectRegion(section: 'Drainage Cleaning');
+        return CEOCalendarActivityScreen(
+          section: 'Drainage Cleaning',
+          district: appbarselectedDistrict,
+          block: appbarselectedBlock,
+          gramPanchayat: appbarselectedGramPanchayat,
+        );
       case 'CSCScreen':
-        return CEOselectRegion(section: 'CSC');
+        return CEOCalendarActivityScreen(
+          section: 'CSC',
+          district: appbarselectedDistrict,
+          block: appbarselectedBlock,
+          gramPanchayat: appbarselectedGramPanchayat,
+        );
       case 'RRCScreen':
-        return CEOselectRegion(section: 'RRC');
+        return CEORCCCalendarActivityScreen(
+          section: 'RRC',
+          district: appbarselectedDistrict,
+          block: appbarselectedBlock,
+          gramPanchayat: appbarselectedGramPanchayat,
+        );
       case 'WagesScreen':
-        return CEOselectRegion(section: 'Wages');
+        return BDOWagesCalendarActivityScreen(
+          section: 'Wages',
+          district: appbarselectedDistrict,
+          block: appbarselectedBlock,
+          gramPanchayat: appbarselectedGramPanchayat,
+        );
       case 'ContractorDetailsScreen':
-        return CEOselectRegion(section: 'Contractor'); // Add this case
+        return Contractordetails(
+          gramPanchayat: appbarselectedGramPanchayat,
+        );
       default:
         return Scaffold(body: Center(child: Text('Page not found')));
     }

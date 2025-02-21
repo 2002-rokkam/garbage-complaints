@@ -3,16 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'CalnderActivity/BDOCalendarActivityScreen.dart';
-import 'BDOD2D/BDOD2DCalnderActivity.dart';
-import 'BDORCC/BDORCCCalendarActivityScreen.dart';
-import 'BDOWages/BDOWagesCalendarActivityScreen.dart';
-import 'contractorDetails.dart';
 
 class RegionSelector extends StatefulWidget {
-  final String section;
-
-  const RegionSelector({Key? key, required this.section}) : super(key: key);
+  const RegionSelector({Key? key}) : super(key: key);
 
   @override
   State<RegionSelector> createState() => _RegionSelectorState();
@@ -36,19 +29,22 @@ class _RegionSelectorState extends State<RegionSelector> {
     setState(() {
       selectedDistrict = prefs.getString('District');
     });
-    // if (selectedDistrict != null) {
-    //   fetchBlocks(selectedDistrict!);
-    // }
   }
 
   Future<void> loadBDOFromPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? bdo = prefs.getString('Bdo');
     if (bdo != null) {
-      // Replace underscores with spaces
       selectedBlock = bdo.replaceAll('_', ' ');
-      print("BDO: $bdo"); // Log the BDO for debugging or usage
+      print("BDO: $bdo");
     }
+  }
+
+  Future<void> loadGramPanchayatFromPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      selectedGramPanchayat = prefs.getString('appbarselectedGramPanchayat');
+    });
   }
 
   Future<void> fetchDistricts() async {
@@ -72,7 +68,6 @@ class _RegionSelectorState extends State<RegionSelector> {
     try {
       final response = await http.get(
           Uri.parse('$gpUrl?district=$selectedDistrict&block=$selectedBlock'));
-      print(response.statusCode);
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
         if (data['district'] == selectedDistrict) {
@@ -90,7 +85,7 @@ class _RegionSelectorState extends State<RegionSelector> {
     }
   }
 
-  void submitSelection() {
+  Future<void> submitSelection() async {
     if (selectedDistrict != null &&
         selectedBlock != null &&
         selectedGramPanchayat != null) {
@@ -114,56 +109,12 @@ class _RegionSelectorState extends State<RegionSelector> {
         return '_${match.group(1)?.toLowerCase()}';
       });
 
-      Widget targetScreen;
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('appbarselectedDistrict', formattedDistrict);
+      await prefs.setString('appbarselectedBlock', formattedBlock);
+      await prefs.setString('appbarselectedGramPanchayat', formattedGramPanchayat);
+       Navigator.pop(context);
 
-      switch (widget.section) {
-        case 'Door to Door':
-          targetScreen = BDOD2DCalnderActivityScreen(
-            section: 'Door to Door',
-            district: formattedDistrict,
-            block: formattedBlock,
-            gramPanchayat: formattedGramPanchayat,
-          );
-          break;
-        case 'Road Sweeping':
-        case 'Drainage Cleaning':
-        case 'CSC':
-          targetScreen = BDOCalendarActivityScreen(
-            section: widget.section,
-            district: formattedDistrict,
-            block: formattedBlock,
-            gramPanchayat: formattedGramPanchayat,
-          );
-          break;
-        case 'RRC':
-          targetScreen = BDORCCCalendarActivityScreen(
-            section: 'RRC',
-            district: formattedDistrict,
-            block: formattedBlock,
-            gramPanchayat: formattedGramPanchayat,
-          );
-          break;
-        case 'Wages':
-          targetScreen = BDOWagesCalendarActivityScreen(
-            section: 'Wages',
-            district: formattedDistrict,
-            block: formattedBlock,
-            gramPanchayat: formattedGramPanchayat,
-          );
-          break;
-        case 'Contractor':
-          targetScreen = Contractordetails(
-            gramPanchayat: formattedGramPanchayat,
-          );
-          break;
-        default:
-          return;
-      }
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => targetScreen),
-      );
     } else {
       showDialog(
         context: context,
@@ -189,7 +140,8 @@ class _RegionSelectorState extends State<RegionSelector> {
     super.initState();
     fetchDistricts();
     loadDistrictFromPrefs();
-    loadBDOFromPrefs(); // Load BDO on init
+    loadBDOFromPrefs();
+    loadGramPanchayatFromPrefs(); // Load Gram Panchayat from SharedPreferences
   }
 
   void showOptions(BuildContext context, List<String> options,
@@ -253,10 +205,6 @@ class _RegionSelectorState extends State<RegionSelector> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Select Your Region'),
-        backgroundColor: const Color(0xFF5C964A),
-      ),
       backgroundColor: Color.fromRGBO(239, 239, 239, 1),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

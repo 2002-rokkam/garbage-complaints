@@ -3,16 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import '../BDO/BDOWages/BDOWagesCalendarActivityScreen.dart';
-import 'CEOCalender/CEOCalendarActivityScreen.dart';
-import 'CEOD2D/CEOD2DCalnderActivity.dart';
-import 'CEORCC/CEORCCCalendarActivityScreen.dart';
-import 'contractorDetails.dart';
 
 class CEOselectRegion extends StatefulWidget {
-  final String section;
 
-  const CEOselectRegion({Key? key, required this.section}) : super(key: key);
+  const CEOselectRegion({Key? key}) : super(key: key);
 
   @override
   State<CEOselectRegion> createState() => _CEOselectRegionState();
@@ -35,9 +29,14 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       selectedDistrict = prefs.getString('District');
+      selectedBlock = prefs.getString('appbarselectedBlock'); 
+      selectedGramPanchayat = prefs.getString('appbarselectedGramPanchayat');
     });
     if (selectedDistrict != null) {
       fetchBlocks(selectedDistrict!);
+    }
+    if (selectedBlock != null && selectedDistrict != null) {
+      fetchGramPanchayats(selectedDistrict!, selectedBlock!);
     }
   }
 
@@ -101,84 +100,33 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
     }
   }
 
-  void submitSelection() {
+  Future<void> submitSelection() async {
     if (selectedDistrict != null &&
         selectedBlock != null &&
         selectedGramPanchayat != null) {
       String formattedDistrict = selectedDistrict!.replaceAll(' ', '_');
       String formattedBlock = selectedBlock!.replaceAll(' ', '_');
-      String formattedGramPanchayat =
-          selectedGramPanchayat!.replaceAll(' ', '_');
+      String formattedGramPanchayat =selectedGramPanchayat!.replaceAll(' ', '_');
 
-      formattedDistrict =
-          formattedDistrict.replaceAllMapped(RegExp(r'_(.)'), (match) {
+      formattedDistrict = formattedDistrict.replaceAllMapped(RegExp(r'_(.)'), (match) {
         return '_${match.group(1)?.toLowerCase()}';
       });
 
-      formattedBlock =
-          formattedBlock.replaceAllMapped(RegExp(r'_(.)'), (match) {
+      formattedBlock = formattedBlock.replaceAllMapped(RegExp(r'_(.)'), (match) {
         return '_${match.group(1)?.toLowerCase()}';
       });
 
-      formattedGramPanchayat =
-          formattedGramPanchayat.replaceAllMapped(RegExp(r'_(.)'), (match) {
+      formattedGramPanchayat = formattedGramPanchayat.replaceAllMapped(RegExp(r'_(.)'), (match) {
         return '_${match.group(1)?.toLowerCase()}';
       });
 
-      print(formattedDistrict);
-      print(formattedBlock);
-      print(formattedGramPanchayat);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('appbarselectedDistrict', formattedDistrict);
+      await prefs.setString('appbarselectedBlock', formattedBlock);
+      await prefs.setString('appbarselectedGramPanchayat', formattedGramPanchayat);
 
-      Widget targetScreen;
+          Navigator.pop(context);
 
-      switch (widget.section) {
-        case 'Door to Door':
-          targetScreen = CEOD2DCalnderActivityScreen(
-            section: 'Door to Door',
-            district: formattedDistrict,
-            block: formattedBlock,
-            gramPanchayat: formattedGramPanchayat,
-          );
-          break;
-        case 'Road Sweeping':
-        case 'Drainage Cleaning':
-        case 'CSC':
-          targetScreen = CEOCalendarActivityScreen(
-            section: widget.section,
-            district: formattedDistrict,
-            block: formattedBlock,
-            gramPanchayat: formattedGramPanchayat,
-          );
-          break;
-        case 'RRC':
-          targetScreen = CEORCCCalendarActivityScreen(
-            section: 'RRC',
-            district: formattedDistrict,
-            block: formattedBlock,
-            gramPanchayat: formattedGramPanchayat,
-          );
-          break;
-        case 'Wages':
-          targetScreen = BDOWagesCalendarActivityScreen(
-            section: 'Wages',
-            district: formattedDistrict,
-            block: formattedBlock,
-            gramPanchayat: formattedGramPanchayat,
-          );
-          break;
-        case 'Contractor':
-          targetScreen = Contractordetails(
-            gramPanchayat: formattedGramPanchayat,
-          );
-          break;
-        default:
-          return;
-      }
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => targetScreen),
-      );
     } else {
       showDialog(
         context: context,
@@ -267,10 +215,6 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Select Your Region'),
-        backgroundColor: const Color(0xFF5C964A),
-      ),
       backgroundColor: Color.fromRGBO(239, 239, 239, 1),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
