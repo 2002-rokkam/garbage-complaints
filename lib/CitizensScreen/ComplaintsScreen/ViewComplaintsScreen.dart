@@ -43,7 +43,8 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
   }
 
   Future<void> _fetchComplaints() async {
-    final String apiUrl = 'https://sbmgrajasthan.com/api/complaints';
+    final String apiUrl =
+        'https://bd0f-122-172-86-18.ngrok-free.app/api/complaints';
     try {
       final response = await http.get(
         Uri.parse(apiUrl),
@@ -52,7 +53,7 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
         },
       );
 
-     if (response.statusCode == 200) {
+      if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         setState(() {
           allComplaints = data['complaints'];

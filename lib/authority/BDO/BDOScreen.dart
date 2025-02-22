@@ -16,7 +16,6 @@ import 'BDORCC/BDORCCCalendarActivityScreen.dart';
 import 'BDOWages/BDOWagesCalendarActivityScreen.dart';
 import 'contractorDetails.dart';
 
-
 class BDOScreen extends StatefulWidget {
   @override
   _BDOScreenState createState() => _BDOScreenState();
@@ -38,9 +37,9 @@ class _BDOScreenState extends State<BDOScreen> {
     String? District = prefs.getString('District');
     print(District);
     if (District != null) {
-      final response = await http.get(
-          Uri.parse('https://sbmgrajasthan.com/api/complaints-by-district/')
-              .replace(queryParameters: {
+      final response = await http.get(Uri.parse(
+              'https://bd0f-122-172-86-18.ngrok-free.app/api/complaints-by-district/')
+          .replace(queryParameters: {
         'district': District,
       }));
 
@@ -89,9 +88,9 @@ class _BDOScreenState extends State<BDOScreen> {
                               borderRadius: BorderRadius.circular(12.0),
                             ),
                             child: Container(
-                              height: 400, 
+                              height: 400,
                               padding: EdgeInsets.all(16.0),
-                              child:RegionSelector(),
+                              child: RegionSelector(),
                             ),
                           ),
                         );
@@ -482,7 +481,7 @@ class _BDOScreenState extends State<BDOScreen> {
     );
   }
 
- void _navigateToPage(String routeName, BuildContext context) async {
+  void _navigateToPage(String routeName, BuildContext context) async {
     Widget page = await _getPage(routeName, context);
 
     if (page is! Scaffold) {
@@ -550,11 +549,12 @@ class _BDOScreenState extends State<BDOScreen> {
     );
   }
 
- Future<Widget> _getPage(String routeName, BuildContext context) async {
+  Future<Widget> _getPage(String routeName, BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? appbarselectedDistrict = prefs.getString('appbarselectedDistrict');
     String? appbarselectedBlock = prefs.getString('appbarselectedBlock');
-    String? appbarselectedGramPanchayat =prefs.getString('appbarselectedGramPanchayat');
+    String? appbarselectedGramPanchayat =
+        prefs.getString('appbarselectedGramPanchayat');
 
     if (appbarselectedDistrict == null ||
         appbarselectedDistrict.isEmpty ||

@@ -46,7 +46,8 @@ class _BDOCalendarActivityScreenState extends State<BDOCalendarActivityScreen> {
     String workerId = await getWorkerId();
     setState(() {});
 
-    final url = Uri.parse('https://sbmgrajasthan.com/api/bdo-section-dashboard')
+    final url = Uri.parse(
+            'https://bd0f-122-172-86-18.ngrok-free.app/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': widget.section,
@@ -84,7 +85,7 @@ class _BDOCalendarActivityScreenState extends State<BDOCalendarActivityScreen> {
         .toList();
   }
 
- @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

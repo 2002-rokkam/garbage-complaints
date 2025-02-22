@@ -1,4 +1,4 @@
-// WokersScreen/WorkerCommon/BeforeAfterContainer.dart
+// WokersScreen/WorkerCommon/AnimalScreenBeforeAfterContainer.dart
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -12,12 +12,12 @@ import 'package:geocoding/geocoding.dart';
 import 'package:slider_button/slider_button.dart';
 import 'package:flutter/foundation.dart' show kIsWeb; // Import kIsWeb
 
-class BeforeAfterContainer extends StatefulWidget {
+class AnimalScreenBeforeAfterContainer extends StatefulWidget {
   final String section;
   final Map<String, dynamic>? initialData;
   final Function onReload;
 
-  const BeforeAfterContainer(
+  const AnimalScreenBeforeAfterContainer(
       {Key? key,
       required this.section,
       this.initialData,
@@ -25,10 +25,10 @@ class BeforeAfterContainer extends StatefulWidget {
       : super(key: key);
 
   @override
-  _BeforeAfterContainerState createState() => _BeforeAfterContainerState();
+  _AnimalScreenBeforeAfterContainerState createState() => _AnimalScreenBeforeAfterContainerState();
 }
 
-class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
+class _AnimalScreenBeforeAfterContainerState extends State<AnimalScreenBeforeAfterContainer> {
   final ImagePicker _picker = ImagePicker();
   Map<String, dynamic>? _beforeImage;
   Map<String, dynamic>? _afterImage;
@@ -460,7 +460,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                                 ),
                                 SizedBox(height: 8),
                                 Text(
-                                  'Before',
+                                  'Transaportation',
                                   style: TextStyle(
                                     color: Color(0xFF6B6B6B),
                                     fontSize: 14,
@@ -566,7 +566,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                                 ),
                                 SizedBox(height: 8),
                                 Text(
-                                  'After',
+                                  'Disposal',
                                   style: TextStyle(
                                     color: Color(0xFF6B6B6B),
                                     fontSize: 14,

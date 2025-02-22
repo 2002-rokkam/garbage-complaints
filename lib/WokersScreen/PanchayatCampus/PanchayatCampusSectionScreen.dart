@@ -1,32 +1,34 @@
-// WokersScreen/D2D/D2DSectionScreen.dart
+// WokersScreen/PanchayatCampus/PanchayatCampusSectionScreen.dart
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../WorkerCommon/D2DBeforeAfterContainer.dart';
-import 'D2DCalnderActivity.dart';
-import 'QRTab.dart';
+import '../WorkerCommon/BeforeAfterContainer.dart';
+import 'PanchayatCampusCalnderActivity.dart';
 
-class D2DSectionScreen extends StatefulWidget {
+class PanchayatCampusSectionScreen extends StatefulWidget {
   final String section;
 
-  const D2DSectionScreen({Key? key, required this.section}) : super(key: key);
+  const PanchayatCampusSectionScreen({Key? key, required this.section}) : super(key: key);
 
   @override
-  _D2DSectionScreenState createState() => _D2DSectionScreenState();
+  _PanchayatCampusSectionScreenState createState() => _PanchayatCampusSectionScreenState();
 }
 
-class _D2DSectionScreenState extends State<D2DSectionScreen>
+class _PanchayatCampusSectionScreenState extends State<PanchayatCampusSectionScreen>
     with SingleTickerProviderStateMixin {
   List<Widget> beforeAfterContainers = [];
+  List<Widget> ToiletbeforeAfterContainers = [];
+
   bool isLoading = true;
   late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(_handleTabChange);
     _fetchActivities();
+    _fetchToiletActivities();
   }
 
   @override
@@ -56,8 +58,7 @@ class _D2DSectionScreenState extends State<D2DSectionScreen>
     try {
       String workerId = await getWorkerId();
       Dio dio = Dio();
-      final response = await dio.get(
-          'https://bd0f-122-172-86-18.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+      final response = await dio.get('https://bd0f-122-172-86-18.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
 
       if (response.statusCode == 200) {
         final data = response.data;
@@ -66,7 +67,7 @@ class _D2DSectionScreenState extends State<D2DSectionScreen>
         setState(() {
           beforeAfterContainers = activities
               .where((activity) => activity['status'] == 'trip started')
-              .map((activity) => D2DBeforeAfterContainer(
+              .map((activity) => BeforeAfterContainer(
                     section: widget.section,
                     initialData: activity,
                     onReload: _fetchActivities,
@@ -85,12 +86,64 @@ class _D2DSectionScreenState extends State<D2DSectionScreen>
     }
   }
 
+   Future<void> _fetchToiletActivities() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    Future<String> getWorkerId() async {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      String workerId = prefs.getString('worker_id') ?? "";
+      return workerId;
+    }
+
+    try {
+      String workerId = await getWorkerId();
+      Dio dio = Dio();
+      final response = await dio.get('https://bd0f-122-172-86-18.ngrok-free.app/api/worker/$workerId/section/Panchayat Toilet');
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+        List activities = data['activities'];
+
+        setState(() {
+          ToiletbeforeAfterContainers = activities
+              .where((activity) => activity['status'] == 'trip started')
+              .map((activity) => BeforeAfterContainer(
+                    section: "Panchayat Toilet",
+                    initialData: activity,
+                    onReload: _fetchToiletActivities,
+                  ))
+              .toList();
+        });
+      } else {
+        print("Error fetching activities: ${response.data['message']}");
+      }
+    } catch (e) {
+      print("Error fetching activities: $e");
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   void addNewContainer() {
     setState(() {
-      beforeAfterContainers.add(D2DBeforeAfterContainer(
+      beforeAfterContainers.add(BeforeAfterContainer(
         section: widget.section,
         initialData: null,
         onReload: _fetchActivities,
+      ));
+    });
+  }
+
+  void addToiletContainer() {
+    setState(() {
+      ToiletbeforeAfterContainers.add(BeforeAfterContainer(
+        section: "Panchayat Toilet",
+        initialData: null,
+        onReload: _fetchToiletActivities,
       ));
     });
   }
@@ -129,7 +182,7 @@ class _D2DSectionScreenState extends State<D2DSectionScreen>
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        D2DCalnderActivityScreen(section: widget.section),
+                        PanchayatCampusActivityScreen(section: widget.section),
                   ),
                 );
               },
@@ -138,9 +191,8 @@ class _D2DSectionScreenState extends State<D2DSectionScreen>
           bottom: TabBar(
             controller: _tabController,
             tabs: const [
-              Tab(text: "Before After"),
-              Tab(text: "QR"),
-              Tab(text: "GPS"),
+              Tab(text: "Campus"),
+              Tab(text: "Toilet"),
             ],
             labelColor: Colors.white,
             unselectedLabelColor: Colors.white,
@@ -152,11 +204,10 @@ class _D2DSectionScreenState extends State<D2DSectionScreen>
           controller: _tabController,
           children: [
             _buildBeforeAfterTab(),
-            QRTab(),
-            _buildGPSTab(),
+            _SchoolToiletBeforeAfterTab(),
           ],
         ),
-        floatingActionButton: _tabController.index == 0
+        floatingActionButton: (_tabController.index == 0)
             ? FloatingActionButton.extended(
                 onPressed: addNewContainer,
                 backgroundColor: const Color(0xFFFFD262),
@@ -176,7 +227,25 @@ class _D2DSectionScreenState extends State<D2DSectionScreen>
                   ],
                 ),
               )
-            : null,
+            : FloatingActionButton.extended(
+                onPressed: addToiletContainer,
+                backgroundColor: const Color(0xFFFFD262),
+                label: Row(
+                  children: const [
+                    Icon(Icons.add, size: 24, color: Color(0xFF252525)),
+                    SizedBox(width: 12),
+                    Text(
+                      'Add More',
+                      style: TextStyle(
+                        color: Color(0xFF252525),
+                        fontSize: 14,
+                        fontFamily: 'Nunito Sans',
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
       ),
     );
   }
@@ -190,7 +259,7 @@ class _D2DSectionScreenState extends State<D2DSectionScreen>
               children: beforeAfterContainers.isNotEmpty
                   ? beforeAfterContainers
                   : [
-                      D2DBeforeAfterContainer(
+                      BeforeAfterContainer(
                         section: widget.section,
                         onReload: _fetchActivities,
                       ),
@@ -199,12 +268,21 @@ class _D2DSectionScreenState extends State<D2DSectionScreen>
           );
   }
 
-  Widget _buildGPSTab() {
-    return const Center(
-      child: Text(
-        "GPS Tab Content",
-        style: TextStyle(fontSize: 16),
-      ),
-    );
+   Widget _SchoolToiletBeforeAfterTab() {
+    return isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: ToiletbeforeAfterContainers.isNotEmpty
+                  ? ToiletbeforeAfterContainers
+                  : [
+                      BeforeAfterContainer(
+                        section: "Panchayat Toilet",
+                        onReload: _fetchToiletActivities,
+                      ),
+                    ],
+            ),
+          );
   }
 }

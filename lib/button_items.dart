@@ -25,7 +25,26 @@ const List<Map<String, String>> buttonItems = [
     'imageUrl': 'assets/images/RRC.png',
     'route': 'RRCScreen'
   },
-  {'label': 'Wages', 'imageUrl': 'assets/images/wages.png', 'route': 'WagesScreen'},
+  {
+    'label': 'Wages',
+    'imageUrl': 'assets/images/wages.png',
+    'route': 'WagesScreen'
+  },
+  {
+    'label': 'School Campus Sweeping',
+    'imageUrl': 'assets/images/SchoolCampus.png',
+    'route': 'SchoolCampus'
+  },
+  {
+    'label': 'Panchayat Campus',
+    'imageUrl': 'assets/images/PanchayatCampus.png',
+    'route': 'PanchayatCampus'
+  },
+  {
+    'label': 'Animal Body transport',
+    'imageUrl': 'assets/images/AnimalBodytransport.png',
+    'route': 'AnimalBodytransport'
+  },
   {
     'label': 'Contractor Details',
     'imageUrl': 'assets/images/Contractors.png',

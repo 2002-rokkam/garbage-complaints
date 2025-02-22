@@ -43,7 +43,7 @@ class _WagesCalendarActivityScreenState
     });
 
     final url = Uri.parse(
-        'https://sbmgrajasthan.com/api/worker/$workerId/section/${widget.section}');
+        'https://bd0f-122-172-86-18.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
 
     try {
       final response = await http.get(url);
@@ -72,7 +72,6 @@ class _WagesCalendarActivityScreenState
     DateTime dateTime = DateTime.parse(dateTimeString).toLocal();
     return DateFormat('HH:mm:ss, d/M/yyyy').format(dateTime);
   }
-  
 
   void _showImageFullscreen(String imageUrl) {
     showDialog(

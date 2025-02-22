@@ -5,10 +5,13 @@ import 'dart:async';
 import '../PoweredByBikaji.dart';
 import '../Login/workerLogout.dart';
 import '../authority/CEO/contractorDetails.dart';
+import 'PanchayatCampus/PanchayatCampusSectionScreen.dart';
+import 'SchoolCampus/SchoolCampusSectionScreen.dart';
 import 'WorkerCommon/ActionScreen.dart';
 import 'D2D/D2DSectionScreen.dart';
 import 'RRC/RRCSectionScreen.dart';
 import 'Wages/WagesActionScreen.dart';
+import 'WorkerCommon/AnimalScreen.dart';
 import 'WorkerComplaints/workerComplaintsScreen.dart';
 import 'package:intl/intl.dart';
 import '../../button_items.dart';
@@ -362,6 +365,12 @@ class _WorkerScreenState extends State<WorkerScreen> {
         return RRCScreen(section: 'RRC');
       case 'WagesScreen':
         return WagesActionScreen(section: 'Wages');
+      case 'SchoolCampus':
+        return SchoolCampusSectionScreen(section: 'School Campus');
+      case 'PanchayatCampus':
+        return PanchayatCampusSectionScreen(section: 'Panchayat Campus');
+      case 'AnimalBodytransport':
+        return AnimalScreen(section: 'Animal Transport');
       case 'ContractorDetailsScreen':
         return FutureBuilder<String>(
           future: _getGramPanchayat(),

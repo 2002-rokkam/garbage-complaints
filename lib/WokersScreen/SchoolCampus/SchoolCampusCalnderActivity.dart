@@ -1,54 +1,65 @@
-// WokersScreen/RRC/RCCCalendarActivityScreen.dart
+// WokersScreen/SchoolCampus/SchoolCampusCalnderActivity.dart
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class RCCCalendarActivityScreen extends StatefulWidget {
+class SchoolCampusActivityScreen extends StatefulWidget {
   final String section;
 
-  const RCCCalendarActivityScreen({Key? key, required this.section})
+  const SchoolCampusActivityScreen({Key? key, required this.section})
       : super(key: key);
 
   @override
-  _RCCCalendarActivityScreenState createState() =>
-      _RCCCalendarActivityScreenState();
+  _SchoolCampusActivityScreenState createState() =>
+      _SchoolCampusActivityScreenState();
 }
 
-class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
+class _SchoolCampusActivityScreenState extends State<SchoolCampusActivityScreen>
     with SingleTickerProviderStateMixin {
   DateTime _selectedDate = DateTime.now();
   List _activities = [];
   List _tripDetails = [];
   bool _isLoading = false;
   late TabController _tabController;
+  String? workerId;
+  Map<DateTime, int> activityCounts = {};
+  Map<DateTime, int> qrCounts = {};
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
-      setState(() {
-        _isLoading = true;
-      });
-      if (_tabController.index == 0) {
-        fetchActivities();
-      } else {
-        fetchTripDetails();
-      }
+      setState(() {}); // Update UI when tab changes
     });
-    fetchActivities();
+    _fetchWorkerId();
   }
 
-  Future<String> getWorkerId() async {
+  Future<void> _fetchWorkerId() async {
+    workerId = await getWorkerId();
+    if (workerId != null && workerId!.isNotEmpty) {
+      fetchActivities();
+      fetchQRDetails(workerId!);
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<String?> getWorkerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('worker_id') ?? "";
+    return prefs.getString('worker_id');
   }
 
   Future<void> fetchActivities() async {
-    String workerId = await getWorkerId();
-    setState(() => _isLoading = true);
+    if (workerId == null || workerId!.isEmpty) return;
+
+    setState(() {
+      _isLoading = true;
+    });
 
     final url = Uri.parse(
         'https://bd0f-122-172-86-18.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
@@ -57,56 +68,82 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
       final response = await http.get(url);
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
+        var sectionActivities = data['activities'];
+
+        Map<DateTime, int> counts = {};
+        for (var activity in sectionActivities) {
+          final date = DateTime.parse(activity['date_time']).toLocal();
+          final day = DateTime(date.year, date.month, date.day);
+          counts[day] = (counts[day] ?? 0) + 1;
+        }
+
         setState(() {
-          _activities = data['activities'];
+          _activities = sectionActivities;
+          activityCounts = counts;
+          _isLoading = false;
         });
+      } else {
+        throw Exception('Failed to load activities');
       }
     } catch (e) {
       print(e);
-    } finally {
-      setState(() => _isLoading = false);
     }
   }
 
-  Future<void> fetchTripDetails() async {
-    String workerId = await getWorkerId();
-    setState(() => _isLoading = true);
-    final url = Uri.parse(
-        'https://bd0f-122-172-86-18.ngrok-free.app/api/worker/$workerId/section/Waste Details');
+  Future<void> fetchQRDetails(String workerId) async {
+    if (workerId.isEmpty) return;
 
+    final url = Uri.parse(
+        'https://bd0f-122-172-86-18.ngrok-free.app/api/worker/$workerId/section/School Toilet');
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
+        var qrDetails = data['activities'];
+
+        Map<DateTime, int> counts = {};
+        for (var qr in qrDetails) {
+          final date = DateTime.parse(qr['date_time']).toLocal();
+          final day = DateTime(date.year, date.month, date.day);
+          counts[day] = (counts[day] ?? 0) + 1;
+        }
+
         setState(() {
-          _tripDetails = data['activities'];
+          _tripDetails = qrDetails;
+          qrCounts = counts;
+          _isLoading = false;
         });
+      } else {
+        throw Exception('Failed to load QR details');
       }
     } catch (e) {
       print('Error: $e');
-    } finally {
-      setState(() => _isLoading = false);
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
   List getActivitiesForSelectedDate() {
-    return _activities.where((activity) {
-      DateTime activityDate = DateTime.parse(activity['date_time']).toLocal();
-      return isSameDay(activityDate, _selectedDate);
-    }).toList();
-  }
-
-  List getTripDetailsForSelectedDate() {
-    return _tripDetails.where((trip) {
-      DateTime tripDate = DateTime.parse(trip['date_time']).toLocal();
-      return isSameDay(tripDate, _selectedDate);
-    }).toList();
+    return _activities
+        .where((activity) =>
+            DateTime.parse(activity['date_time']).toLocal().day ==
+                _selectedDate.day &&
+            DateTime.parse(activity['date_time']).toLocal().month ==
+                _selectedDate.month &&
+            DateTime.parse(activity['date_time']).toLocal().year ==
+                _selectedDate.year)
+        .toList();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (workerId == null) {
+      return Center(child: CircularProgressIndicator());
+    }
+
     final selectedActivities = getActivitiesForSelectedDate();
-    final selectedTrips = getTripDetailsForSelectedDate();
+    final isBeforeAfterTab = _tabController.index == 0;
 
     return Scaffold(
       appBar: AppBar(
@@ -126,261 +163,130 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
           indicatorColor: Color.fromRGBO(255, 210, 98, 1),
           indicatorWeight: 3.0,
           tabs: [
-            Tab(text: 'Before & After'),
-            Tab(text: 'Trip Details'),
+            Tab(text: 'School Campus'),
+            Tab(text: 'School Toilet'),
           ],
         ),
       ),
       body: Column(
         children: [
-          Container(
-            child: TableCalendar(
-              focusedDay: _selectedDate,
-              firstDay: DateTime(2000),
-              lastDay: DateTime(2100),
-              calendarFormat: CalendarFormat.month,
-              selectedDayPredicate: (day) => isSameDay(day, _selectedDate),
-              onDaySelected: (selectedDay, focusedDay) {
-                setState(() {
-                  _selectedDate = selectedDay;
-                  _isLoading = true;
-                });
-
-                if (_tabController.index == 0) {
-                  fetchActivities();
-                } else {
-                  fetchTripDetails();
-                }
-              },
-              calendarStyle: CalendarStyle(
-                selectedDecoration: BoxDecoration(
-                  color: Color(0xFF5C964A),
-                  shape: BoxShape.circle,
-                ),
-                todayDecoration: BoxDecoration(
-                  color: Color(0xFFFFA726),
-                  shape: BoxShape.circle,
-                ),
+          TableCalendar(
+            focusedDay: _selectedDate,
+            firstDay: DateTime(2000),
+            lastDay: DateTime(2100),
+            calendarFormat: CalendarFormat.month,
+            selectedDayPredicate: (day) => isSameDay(day, _selectedDate),
+            onDaySelected: (selectedDay, focusedDay) {
+              setState(() {
+                _selectedDate = selectedDay;
+                _isLoading = true;
+              });
+              fetchActivities();
+              fetchQRDetails(workerId!);
+            },
+            calendarStyle: CalendarStyle(
+              selectedDecoration: BoxDecoration(
+                color: Color(0xFF5C964A),
+                shape: BoxShape.circle,
               ),
-              calendarBuilders: CalendarBuilders(
-                markerBuilder: (context, date, _) {
-                  final isBeforeAfterTab = _tabController.index == 0;
-                  final count = isBeforeAfterTab
-                      ? _activities.where((activity) {
-                          DateTime activityDate =
-                              DateTime.parse(activity['date_time']).toLocal();
-                          return isSameDay(activityDate, date);
-                        }).length
-                      : _tripDetails.where((trip) {
-                          DateTime tripDate =
-                              DateTime.parse(trip['date_time']).toLocal();
-                          return isSameDay(tripDate, date);
-                        }).length;
+              todayDecoration: BoxDecoration(
+                color: Color(0xFFFFA726),
+                shape: BoxShape.circle,
+              ),
+            ),
+            calendarBuilders: CalendarBuilders(
+              markerBuilder: (context, date, _) {
+                final count = isBeforeAfterTab
+                    ? activityCounts[
+                            DateTime(date.year, date.month, date.day)] ??
+                        0
+                    : qrCounts[DateTime(date.year, date.month, date.day)] ?? 0;
 
-                  if (count > 0) {
-                    return Positioned(
-                      bottom: 1,
-                      child: Container(
-                        width: 16,
-                        height: 16,
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          shape: BoxShape.circle,
+                if (count > 0) {
+                  return Positioned(
+                    bottom: 1,
+                    child: Container(
+                      width: 16,
+                      height: 16,
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: Text(
+                          '$count',
+                          style: TextStyle(color: Colors.white, fontSize: 10),
                         ),
-                        child: Center(
+                      ),
+                    ),
+                  );
+                }
+                return null;
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child:
+                (_tabController.index == 0 && selectedActivities.isNotEmpty) ||
+                        (_tabController.index == 1 && _tripDetails.isNotEmpty)
+                    ? Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 5,
+                        child: ListTile(
+                          contentPadding: EdgeInsets.all(16),
+                          title: Text(
+                            _tabController.index == 0
+                                ? 'Total Activities: ${selectedActivities.length}'
+                                : 'Total QR Scans: ${_tripDetails.length}',
+                          ),
+                          trailing: ElevatedButton(
+                            onPressed: () {
+                              if (_tabController.index == 0 &&
+                                  selectedActivities.isNotEmpty) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => BeforeAfterScreen(
+                                      selectedDate: _selectedDate,
+                                      activities: selectedActivities,
+                                    ),
+                                  ),
+                                );
+                              } else if (_tabController.index == 1 &&
+                                  _tripDetails.isNotEmpty) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => BeforeAfterScreen(
+                                      selectedDate: _selectedDate,
+                                      activities: _tripDetails,
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                            child: Text('View'),
+                            style: ElevatedButton.styleFrom(
+                              primary: Color(0xFF5C964A),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    : Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
                           child: Text(
-                            '$count',
-                            style: TextStyle(color: Colors.white, fontSize: 10),
+                            'No activities available',
+                            style: TextStyle(fontSize: 16, color: Colors.grey),
                           ),
                         ),
                       ),
-                    );
-                  }
-                  return null;
-                },
-              ),
-            ),
-          ),
-          Container(
-            height: 80,
-            child: _isLoading
-                ? Center(child: CircularProgressIndicator())
-                : TabBarView(
-                    controller: _tabController,
-                    children: [
-                      selectedActivities.isEmpty
-                          ? Center(child: Text('No Activities Available'))
-                          : Card(
-                              margin: const EdgeInsets.all(8.0),
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Total Activities: ${selectedActivities.length}',
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                BeforeAfterScreen(
-                                              activities: selectedActivities,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      child: Text(
-                                        'View All',
-                                        style: TextStyle(
-                                          color: Colors.green,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                      selectedTrips.isEmpty
-                          ? Center(child: Text('No Trip Details Available'))
-                          : Card(
-                              margin: const EdgeInsets.all(8.0),
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Total Trip Details: ${selectedTrips.length}',
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                TripDetailsScreen(
-                                              tripDetails: selectedTrips,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      child: Text(
-                                        'View All',
-                                        style: TextStyle(
-                                          color: Colors.green,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                    ],
-                  ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class TripDetailsScreen extends StatelessWidget {
-  final List tripDetails;
-
-  const TripDetailsScreen({Key? key, required this.tripDetails})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Trip Details'),
-        backgroundColor: Color(0xFF5C964A),
-      ),
-      body: tripDetails.isEmpty
-          ? Center(
-              child: Text(
-                'No trip details available for the selected date.',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
-            )
-          : ListView.builder(
-              padding: EdgeInsets.all(16),
-              itemCount: tripDetails.length,
-              itemBuilder: (context, index) {
-                final trip = tripDetails[index];
-                return Card(
-                  elevation: 3,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  margin: EdgeInsets.symmetric(vertical: 8),
-                  child: Padding(
-                    padding: EdgeInsets.all(screenWidth * 0.04),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Trips: ${trip['trips']}',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 8),
-                        _buildDetailRow('Quantity of Waste',
-                            '${trip['quantity_waste']} kg'),
-                        _buildDetailRow('Segregated Degradable',
-                            '${trip['segregated_degradable']} kg'),
-                        _buildDetailRow('Segregated Non-Degradable',
-                            '${trip['segregated_non_degradable']} kg'),
-                        _buildDetailRow('Segregated Plastic',
-                            '${trip['segregated_plastic']} kg'),
-                        _buildDetailRow('Date', trip['date_time']),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-    );
-  }
-
-  Widget _buildDetailRow(String title, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              '$title:',
-              style: TextStyle(
-                color: Colors.grey[600],
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-          Text(
-            value,
-            style: TextStyle(
-              color: Colors.grey[800],
-              fontSize: 14,
-            ),
           ),
         ],
       ),
@@ -390,8 +296,10 @@ class TripDetailsScreen extends StatelessWidget {
 
 class BeforeAfterScreen extends StatelessWidget {
   final List activities;
+  final DateTime selectedDate;
 
-  const BeforeAfterScreen({Key? key, required this.activities})
+  const BeforeAfterScreen(
+      {Key? key, required this.activities, required this.selectedDate})
       : super(key: key);
 
   void _showFullScreenImage(BuildContext context, String imageUrl,
@@ -510,7 +418,7 @@ class BeforeAfterScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Before & After'),
+        title: Text('School Details'),
         backgroundColor: Color(0xFF5C964A),
       ),
       body: SingleChildScrollView(
@@ -521,15 +429,13 @@ class BeforeAfterScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: Color(0xFFFFD262),
-                    width: 1,
-                  ),
+                  border: Border.all(color: Color(0xFFFFD262), width: 1),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CEOselectRegion extends StatefulWidget {
-
   const CEOselectRegion({Key? key}) : super(key: key);
 
   @override
@@ -21,15 +20,17 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
   List<String> blocks = [];
   List<String> gramPanchayats = [];
 
-  final String districtsUrl = "https://sbmgrajasthan.com/api/getDistricts";
-  final String blocksUrl = "https://sbmgrajasthan.com/api/getBlocks/";
-  final String gpUrl = "https://sbmgrajasthan.com/api/getGp/";
+  final String districtsUrl =
+      "https://bd0f-122-172-86-18.ngrok-free.app/api/getDistricts";
+  final String blocksUrl =
+      "https://bd0f-122-172-86-18.ngrok-free.app/api/getBlocks/";
+  final String gpUrl = "https://bd0f-122-172-86-18.ngrok-free.app/api/getGp/";
 
   Future<void> loadDistrictFromPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       selectedDistrict = prefs.getString('District');
-      selectedBlock = prefs.getString('appbarselectedBlock'); 
+      selectedBlock = prefs.getString('appbarselectedBlock');
       selectedGramPanchayat = prefs.getString('appbarselectedGramPanchayat');
     });
     if (selectedDistrict != null) {
@@ -106,27 +107,31 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
         selectedGramPanchayat != null) {
       String formattedDistrict = selectedDistrict!.replaceAll(' ', '_');
       String formattedBlock = selectedBlock!.replaceAll(' ', '_');
-      String formattedGramPanchayat =selectedGramPanchayat!.replaceAll(' ', '_');
+      String formattedGramPanchayat =
+          selectedGramPanchayat!.replaceAll(' ', '_');
 
-      formattedDistrict = formattedDistrict.replaceAllMapped(RegExp(r'_(.)'), (match) {
+      formattedDistrict =
+          formattedDistrict.replaceAllMapped(RegExp(r'_(.)'), (match) {
         return '_${match.group(1)?.toLowerCase()}';
       });
 
-      formattedBlock = formattedBlock.replaceAllMapped(RegExp(r'_(.)'), (match) {
+      formattedBlock =
+          formattedBlock.replaceAllMapped(RegExp(r'_(.)'), (match) {
         return '_${match.group(1)?.toLowerCase()}';
       });
 
-      formattedGramPanchayat = formattedGramPanchayat.replaceAllMapped(RegExp(r'_(.)'), (match) {
+      formattedGramPanchayat =
+          formattedGramPanchayat.replaceAllMapped(RegExp(r'_(.)'), (match) {
         return '_${match.group(1)?.toLowerCase()}';
       });
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('appbarselectedDistrict', formattedDistrict);
       await prefs.setString('appbarselectedBlock', formattedBlock);
-      await prefs.setString('appbarselectedGramPanchayat', formattedGramPanchayat);
+      await prefs.setString(
+          'appbarselectedGramPanchayat', formattedGramPanchayat);
 
-          Navigator.pop(context);
-
+      Navigator.pop(context);
     } else {
       showDialog(
         context: context,

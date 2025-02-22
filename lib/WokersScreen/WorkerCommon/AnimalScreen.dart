@@ -1,21 +1,20 @@
-// WokersScreen/Wages/WagesActionScreen.dart
+// WokersScreen/WorkerCommon/AnimalScreen.dart
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'AnimalScreenBeforeAfterContainer.dart';
+import 'CalendarActivityScreen.dart';
 
-import 'WagesBeforeScreen.dart';
-import 'WagesCalendarActivityScreen.dart';
-
-class WagesActionScreen extends StatefulWidget {
+class AnimalScreen extends StatefulWidget {
   final String section;
 
-  const WagesActionScreen({Key? key, required this.section}) : super(key: key);
+  const AnimalScreen({Key? key, required this.section}) : super(key: key);
 
   @override
-  _WagesActionScreenState createState() => _WagesActionScreenState();
+  _AnimalScreenState createState() => _AnimalScreenState();
 }
 
-class _WagesActionScreenState extends State<WagesActionScreen> {
+class _AnimalScreenState extends State<AnimalScreen> {
   List<Widget> beforeAfterContainers = [];
   bool isLoading = true;
 
@@ -43,6 +42,19 @@ class _WagesActionScreenState extends State<WagesActionScreen> {
           'https://bd0f-122-172-86-18.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
 
       if (response.statusCode == 200) {
+        final data = response.data;
+        List activities = data['activities'];
+
+        setState(() {
+          beforeAfterContainers = activities
+              .where((activity) => activity['status'] == 'trip started')
+              .map((activity) => AnimalScreenBeforeAfterContainer(
+                    section: widget.section,
+                    initialData: activity,
+                    onReload: _fetchActivities,
+                  ))
+              .toList();
+        });
       } else {
         print("Error fetching activities: ${response.data['message']}");
       }
@@ -57,8 +69,9 @@ class _WagesActionScreenState extends State<WagesActionScreen> {
 
   void addNewContainer() {
     setState(() {
-      beforeAfterContainers.add(WagesBeforeScreen(
+      beforeAfterContainers.add(AnimalScreenBeforeAfterContainer(
         section: widget.section,
+        initialData: null,
         onReload: _fetchActivities,
       ));
     });
@@ -99,7 +112,7 @@ class _WagesActionScreenState extends State<WagesActionScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) =>
-                          WagesCalendarActivityScreen(section: widget.section),
+                          CalendarActivityScreen(section: widget.section),
                     ),
                   );
                 },
@@ -116,13 +129,14 @@ class _WagesActionScreenState extends State<WagesActionScreen> {
               : beforeAfterContainers.isNotEmpty
                   ? beforeAfterContainers
                   : [
-                      WagesBeforeScreen(
+                      AnimalScreenBeforeAfterContainer(
                         section: widget.section,
                         onReload: _fetchActivities,
                       ),
                     ],
         ),
       ),
+      // Floating action button will stay fixed at the bottom of the screen
       floatingActionButton: FloatingActionButton.extended(
         onPressed: addNewContainer,
         backgroundColor: Color(0xFFFFD262),

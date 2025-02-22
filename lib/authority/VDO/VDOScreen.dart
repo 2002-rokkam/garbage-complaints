@@ -37,7 +37,7 @@ class _VDOScreenState extends State<VDOScreen> {
     print(gramPanchayat);
     if (gramPanchayat != null) {
       final response = await http.get(Uri.parse(
-              'https://sbmgrajasthan.com/api/complaints-by-gram-panchayat/')
+              'https://bd0f-122-172-86-18.ngrok-free.app/api/complaints-by-gram-panchayat/')
           .replace(queryParameters: {
         'gram_panchayat': gramPanchayat,
       }));
@@ -558,7 +558,7 @@ class _VDOScreenState extends State<VDOScreen> {
       case 'WagesScreen':
         return VDOWagesCalendarActivityScreen(section: 'Wages');
       case 'ContractorDetailsScreen':
-        return FillContractorDetailsScreen(); // Add this case
+        return FillContractorDetailsScreen();
       default:
         return Scaffold(body: Center(child: Text('Page not found')));
     }

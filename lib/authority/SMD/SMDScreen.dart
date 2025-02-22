@@ -16,6 +16,7 @@ import 'SMDCalender/SMDCalendarActivityScreen.dart';
 import 'SMDD2D/SMDD2DCalnderActivity.dart';
 import 'SMDRCC/SMDRCCCalendarActivityScreen.dart';
 import 'SMDcontractorDetails.dart';
+
 class SMDScreen extends StatefulWidget {
   @override
   _SMDScreenState createState() => _SMDScreenState();
@@ -37,9 +38,9 @@ class _SMDScreenState extends State<SMDScreen> {
     String? District = prefs.getString('District');
     print(District);
     if (District != null) {
-      final response = await http.get(
-          Uri.parse('https://sbmgrajasthan.com/api/complaints-by-state/')
-              .replace(queryParameters: {
+      final response = await http.get(Uri.parse(
+              'https://bd0f-122-172-86-18.ngrok-free.app/api/complaints-by-state/')
+          .replace(queryParameters: {
         'district': District,
       }));
 
@@ -92,7 +93,8 @@ class _SMDScreenState extends State<SMDScreen> {
                             child: Container(
                               height: 400, // Adjust height as needed
                               padding: EdgeInsets.all(16.0),
-                              child: SMDselectRegion(), // Show your region selection screen inside the popup
+                              child:
+                                  SMDselectRegion(), // Show your region selection screen inside the popup
                             ),
                           ),
                         );

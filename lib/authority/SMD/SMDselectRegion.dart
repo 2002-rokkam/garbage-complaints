@@ -11,6 +11,7 @@ class SMDselectRegion extends StatefulWidget {
   @override
   State<SMDselectRegion> createState() => _SMDselectRegionState();
 }
+
 class _SMDselectRegionState extends State<SMDselectRegion> {
   String? selectedDistrict;
   String? selectedBlock;
@@ -20,9 +21,11 @@ class _SMDselectRegionState extends State<SMDselectRegion> {
   List<String> blocks = [];
   List<String> gramPanchayats = [];
 
-  final String districtsUrl = "https://sbmgrajasthan.com/api/getDistricts";
-  final String blocksUrl = "https://sbmgrajasthan.com/api/getBlocks/";
-  final String gpUrl = "https://sbmgrajasthan.com/api/getGp/";
+  final String districtsUrl =
+      "https://bd0f-122-172-86-18.ngrok-free.app/api/getDistricts";
+  final String blocksUrl =
+      "https://bd0f-122-172-86-18.ngrok-free.app/api/getBlocks/";
+  final String gpUrl = "https://bd0f-122-172-86-18.ngrok-free.app/api/getGp/";
 
   Future<void> fetchDistricts() async {
     try {
@@ -114,9 +117,9 @@ class _SMDselectRegionState extends State<SMDselectRegion> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('appbarselectedDistrict', formattedDistrict);
       await prefs.setString('appbarselectedBlock', formattedBlock);
-      await prefs.setString('appbarselectedGramPanchayat', formattedGramPanchayat);
-          Navigator.pop(context);
-
+      await prefs.setString(
+          'appbarselectedGramPanchayat', formattedGramPanchayat);
+      Navigator.pop(context);
     } else {
       showDialog(
         context: context,

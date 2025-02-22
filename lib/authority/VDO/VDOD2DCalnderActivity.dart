@@ -46,7 +46,8 @@ class _VDOD2DCalnderActivityScreenState
       _isLoading = true;
     });
 
-    final url = Uri.parse('https://sbmgrajasthan.com/api/vdo-section-dashboard')
+    final url = Uri.parse(
+            'https://bd0f-122-172-86-18.ngrok-free.app/api/vdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': widget.section,
@@ -75,7 +76,8 @@ class _VDOD2DCalnderActivityScreenState
   Future<void> fetchTripDetails() async {
     String workerId = await getWorkerId();
 
-    final url = Uri.parse('https://sbmgrajasthan.com/api/vdo-section-dashboard')
+    final url = Uri.parse(
+            'https://bd0f-122-172-86-18.ngrok-free.app/api/vdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': 'D2D_QR',

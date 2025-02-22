@@ -37,9 +37,9 @@ class _CEOScreenState extends State<CEOScreen> {
     String? District = prefs.getString('District');
     print(District);
     if (District != null) {
-      final response = await http.get(
-          Uri.parse('https://sbmgrajasthan.com/api/complaints-by-district/')
-              .replace(queryParameters: {
+      final response = await http.get(Uri.parse(
+              'https://bd0f-122-172-86-18.ngrok-free.app/api/complaints-by-district/')
+          .replace(queryParameters: {
         'district': District,
       }));
 
@@ -70,7 +70,7 @@ class _CEOScreenState extends State<CEOScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          automaticallyImplyLeading: false, // This removes the back button
+          automaticallyImplyLeading: false, 
           backgroundColor: const Color(0xFF5C964A),
           flexibleSpace: Container(
             height: 100,
@@ -89,10 +89,9 @@ class _CEOScreenState extends State<CEOScreen> {
                               borderRadius: BorderRadius.circular(12.0),
                             ),
                             child: Container(
-                              height: 400, // Adjust height as needed
+                              height: 400,
                               padding: EdgeInsets.all(16.0),
-                              child:
-                                  CEOselectRegion(), // Show your region selection screen inside the popup
+                              child: CEOselectRegion(),
                             ),
                           ),
                         );
@@ -129,7 +128,6 @@ class _CEOScreenState extends State<CEOScreen> {
         backgroundColor: Color.fromRGBO(239, 239, 239, 1),
         body: Column(
           children: [
-            // Fixed image slider
             Container(
               height: 180,
               decoration: const BoxDecoration(
@@ -146,10 +144,10 @@ class _CEOScreenState extends State<CEOScreen> {
               child: Stack(
                 children: [
                   Container(
-                    height: screenHeight * 0.14, // Adjust the height as needed
+                    height: screenHeight * 0.14,
                     decoration: BoxDecoration(
                       color: Color(
-                          0xFF5C964A), // Change this to your app's primary color
+                          0xFF5C964A),
                       borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(24),
                         bottomRight: Radius.circular(24),
@@ -163,9 +161,8 @@ class _CEOScreenState extends State<CEOScreen> {
                           padding: const EdgeInsets.only(top: 16.0),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(
-                                16), // Rounded corners for the image
-                            child: Image.asset(
-                              'assets/images/mainimage.png', // Path to your asset image
+                                16),
+                            child: Image.asset('assets/images/mainimage.png',
                               width: MediaQuery.of(context).size.width * 0.9,
                               height: 150,
                               fit: BoxFit.cover,
@@ -285,8 +282,7 @@ class _CEOScreenState extends State<CEOScreen> {
                     ),
                     SizedBox(height: 16),
                     Row(
-                      mainAxisAlignment:
-                          MainAxisAlignment.spaceEvenly, 
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         GestureDetector(
                           onTap: () {},
@@ -558,17 +554,14 @@ class _CEOScreenState extends State<CEOScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? appbarselectedDistrict = prefs.getString('appbarselectedDistrict');
     String? appbarselectedBlock = prefs.getString('appbarselectedBlock');
-    String? appbarselectedGramPanchayat =
-        prefs.getString('appbarselectedGramPanchayat');
+    String? appbarselectedGramPanchayat = prefs.getString('appbarselectedGramPanchayat');
 
-    // Check if any of the values are empty or null
     if (appbarselectedDistrict == null ||
         appbarselectedDistrict.isEmpty ||
         appbarselectedBlock == null ||
         appbarselectedBlock.isEmpty ||
         appbarselectedGramPanchayat == null ||
         appbarselectedGramPanchayat.isEmpty) {
-      // Show the region selection dialog
       showDialog(
         context: context,
         builder: (context) => Dialog(
@@ -576,13 +569,13 @@ class _CEOScreenState extends State<CEOScreen> {
             borderRadius: BorderRadius.circular(12.0),
           ),
           child: Container(
-            height: 400, // Adjust height as needed
+            height: 400,
             padding: EdgeInsets.all(16.0),
             child: CEOselectRegion(),
           ),
         ),
       );
-      return Scaffold(); // Return an empty scaffold to prevent navigation
+      return Scaffold();
     }
 
     switch (routeName) {

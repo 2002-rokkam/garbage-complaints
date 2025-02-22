@@ -225,7 +225,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
     });
     try {
       Response response = await dio.post(
-        'https://sbmgrajasthan.com/api/update-complaint/${widget.complaint['complaint_id']}',
+        'https://bd0f-122-172-86-18.ngrok-free.app/api/update-complaint/${widget.complaint['complaint_id']}',
         data: formData,
       );
 
@@ -404,8 +404,8 @@ class _ComplaintCardState extends State<ComplaintCard> {
     }
   }
 
-void _showVerifyConfirmation(String complaintId) {
-  showDialog(
+  void _showVerifyConfirmation(String complaintId) {
+    showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -452,10 +452,11 @@ void _showVerifyConfirmation(String complaintId) {
         );
       },
     );
-}
+  }
 
   Future<void> _verifyComplaint(String complaintId) async {
-    final url = Uri.parse('https://sbmgrajasthan.com/api/complaint/$complaintId/verify');
+    final url = Uri.parse(
+        'https://bd0f-122-172-86-18.ngrok-free.app/api/complaint/$complaintId/verify');
     print(complaintId);
     print(workerId);
     try {
@@ -471,7 +472,7 @@ void _showVerifyConfirmation(String complaintId) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Complaint verified successfully!')),
         );
-        widget.onUpdate(); 
+        widget.onUpdate();
         Navigator.pop(context, true); // Refresh the page
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -717,7 +718,6 @@ void _showVerifyConfirmation(String complaintId) {
                                 _showVerifyConfirmation(
                                     widget.complaint['complaint_id']);
                               },
-
                               child: Text(
                                 'Verify',
                                 style: TextStyle(
