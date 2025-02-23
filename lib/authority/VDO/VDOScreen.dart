@@ -37,7 +37,7 @@ class _VDOScreenState extends State<VDOScreen> {
     print(gramPanchayat);
     if (gramPanchayat != null) {
       final response = await http.get(Uri.parse(
-              'https://bd0f-122-172-86-18.ngrok-free.app/api/complaints-by-gram-panchayat/')
+              'https://334e-122-172-86-132.ngrok-free.app/api/complaints-by-gram-panchayat/')
           .replace(queryParameters: {
         'gram_panchayat': gramPanchayat,
       }));

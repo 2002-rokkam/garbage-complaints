@@ -40,7 +40,7 @@ class _ActionScreenState extends State<ActionScreen> {
       String workerId = await getWorkerId();
       Dio dio = Dio();
       final response = await dio.get(
-          'https://bd0f-122-172-86-18.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+          'https://334e-122-172-86-132.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
 
       if (response.statusCode == 200) {
         final data = response.data;

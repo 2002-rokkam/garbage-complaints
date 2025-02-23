@@ -120,7 +120,7 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
     );
     try {
-      String logoutUrl = 'https://bd0f-122-172-86-18.ngrok-free.app/api/logout';
+      String logoutUrl = 'https://334e-122-172-86-132.ngrok-free.app/api/logout';
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('id_token');
 

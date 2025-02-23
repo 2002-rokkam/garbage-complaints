@@ -38,7 +38,7 @@ class _BDOScreenState extends State<BDOScreen> {
     print(District);
     if (District != null) {
       final response = await http.get(Uri.parse(
-              'https://bd0f-122-172-86-18.ngrok-free.app/api/complaints-by-district/')
+              'https://334e-122-172-86-132.ngrok-free.app/api/complaints-by-district/')
           .replace(queryParameters: {
         'district': District,
       }));

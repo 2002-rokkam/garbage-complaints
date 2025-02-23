@@ -62,7 +62,7 @@ class _PanchayatCampusActivityScreenState extends State<PanchayatCampusActivityS
     });
 
     final url = Uri.parse(
-        'https://bd0f-122-172-86-18.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+        'https://334e-122-172-86-132.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
 
     try {
       final response = await http.get(url);
@@ -94,7 +94,7 @@ class _PanchayatCampusActivityScreenState extends State<PanchayatCampusActivityS
     if (workerId.isEmpty) return;
 
     final url = Uri.parse(
-        'https://bd0f-122-172-86-18.ngrok-free.app/api/worker/$workerId/section/Panchayat Toilet');
+        'https://334e-122-172-86-132.ngrok-free.app/api/worker/$workerId/section/Panchayat Toilet');
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {

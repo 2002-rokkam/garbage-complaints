@@ -22,10 +22,10 @@ class _SMDselectRegionState extends State<SMDselectRegion> {
   List<String> gramPanchayats = [];
 
   final String districtsUrl =
-      "https://bd0f-122-172-86-18.ngrok-free.app/api/getDistricts";
+      "https://334e-122-172-86-132.ngrok-free.app/api/getDistricts";
   final String blocksUrl =
-      "https://bd0f-122-172-86-18.ngrok-free.app/api/getBlocks/";
-  final String gpUrl = "https://bd0f-122-172-86-18.ngrok-free.app/api/getGp/";
+      "https://334e-122-172-86-132.ngrok-free.app/api/getBlocks/";
+  final String gpUrl = "https://334e-122-172-86-132.ngrok-free.app/api/getGp/";
 
   Future<void> fetchDistricts() async {
     try {

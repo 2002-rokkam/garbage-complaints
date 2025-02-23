@@ -11,6 +11,7 @@ import 'onBoardingPage1.dart';
 import 'firebase_options.dart';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'Login/PhoneAuthScreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -49,7 +50,7 @@ class MyApp extends StatelessWidget {
       home =
           determinePageBasedOnPosition(position); 
     } else {
-      home = OnboardingScreen(); 
+      home = PhoneInputScreen(); 
     }
 
     return MaterialApp(
@@ -70,7 +71,7 @@ class MyApp extends StatelessWidget {
       case 'Aceo':
         return CEOScreen();
       default:
-        return OnboardingScreen();
+        return PhoneInputScreen();
     }
   }
 }

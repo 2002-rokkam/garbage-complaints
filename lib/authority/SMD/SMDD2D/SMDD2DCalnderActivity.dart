@@ -70,7 +70,7 @@ class _SMDD2DCalnderActivityScreenState
     });
 
     final url = Uri.parse(
-            'https://bd0f-122-172-86-18.ngrok-free.app/api/bdo-section-dashboard')
+            'https://334e-122-172-86-132.ngrok-free.app/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': widget.section,
@@ -101,7 +101,7 @@ class _SMDD2DCalnderActivityScreenState
     if (workerId.isEmpty) return;
 
     final url = Uri.parse(
-            'https://bd0f-122-172-86-18.ngrok-free.app/api/bdo-section-dashboard')
+            'https://334e-122-172-86-132.ngrok-free.app/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': 'D2D_QR',

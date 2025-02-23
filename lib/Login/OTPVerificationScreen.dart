@@ -93,7 +93,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
   Future<http.Response> _sendTokenToBackend(String idToken) async {
     print("step1");
     final url = Uri.parse(
-        "https://bd0f-122-172-86-18.ngrok-free.app/api/customer-login");
+        "https://334e-122-172-86-132.ngrok-free.app/api/customer-login");
     print("step1");
 
     final response = await http.post(

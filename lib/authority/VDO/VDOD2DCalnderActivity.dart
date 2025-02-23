@@ -47,7 +47,7 @@ class _VDOD2DCalnderActivityScreenState
     });
 
     final url = Uri.parse(
-            'https://bd0f-122-172-86-18.ngrok-free.app/api/vdo-section-dashboard')
+            'https://334e-122-172-86-132.ngrok-free.app/api/vdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': widget.section,
@@ -77,7 +77,7 @@ class _VDOD2DCalnderActivityScreenState
     String workerId = await getWorkerId();
 
     final url = Uri.parse(
-            'https://bd0f-122-172-86-18.ngrok-free.app/api/vdo-section-dashboard')
+            'https://334e-122-172-86-132.ngrok-free.app/api/vdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': 'D2D_QR',

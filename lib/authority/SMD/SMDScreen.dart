@@ -39,7 +39,7 @@ class _SMDScreenState extends State<SMDScreen> {
     print(District);
     if (District != null) {
       final response = await http.get(Uri.parse(
-              'https://bd0f-122-172-86-18.ngrok-free.app/api/complaints-by-state/')
+              'https://334e-122-172-86-132.ngrok-free.app/api/complaints-by-state/')
           .replace(queryParameters: {
         'district': District,
       }));
