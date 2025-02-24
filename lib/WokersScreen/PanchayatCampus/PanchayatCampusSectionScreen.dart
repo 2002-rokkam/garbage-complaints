@@ -1,5 +1,6 @@
 // WokersScreen/PanchayatCampus/PanchayatCampusSectionScreen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../WorkerCommon/BeforeAfterContainer.dart';
@@ -8,13 +9,16 @@ import 'PanchayatCampusCalnderActivity.dart';
 class PanchayatCampusSectionScreen extends StatefulWidget {
   final String section;
 
-  const PanchayatCampusSectionScreen({Key? key, required this.section}) : super(key: key);
+  const PanchayatCampusSectionScreen({Key? key, required this.section})
+      : super(key: key);
 
   @override
-  _PanchayatCampusSectionScreenState createState() => _PanchayatCampusSectionScreenState();
+  _PanchayatCampusSectionScreenState createState() =>
+      _PanchayatCampusSectionScreenState();
 }
 
-class _PanchayatCampusSectionScreenState extends State<PanchayatCampusSectionScreen>
+class _PanchayatCampusSectionScreenState
+    extends State<PanchayatCampusSectionScreen>
     with SingleTickerProviderStateMixin {
   List<Widget> beforeAfterContainers = [];
   List<Widget> ToiletbeforeAfterContainers = [];
@@ -22,9 +26,20 @@ class _PanchayatCampusSectionScreenState extends State<PanchayatCampusSectionScr
   bool isLoading = true;
   late TabController _tabController;
 
+  late Locale _locale;
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    _loadLanguagePreference();
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(_handleTabChange);
     _fetchActivities();
@@ -58,7 +73,8 @@ class _PanchayatCampusSectionScreenState extends State<PanchayatCampusSectionScr
     try {
       String workerId = await getWorkerId();
       Dio dio = Dio();
-      final response = await dio.get('https://334e-122-172-86-132.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+      final response = await dio.get(
+          'https://sbmgrajasthan.com/api/worker/$workerId/section/${widget.section}');
 
       if (response.statusCode == 200) {
         final data = response.data;
@@ -86,7 +102,7 @@ class _PanchayatCampusSectionScreenState extends State<PanchayatCampusSectionScr
     }
   }
 
-   Future<void> _fetchToiletActivities() async {
+  Future<void> _fetchToiletActivities() async {
     setState(() {
       isLoading = true;
     });
@@ -100,7 +116,8 @@ class _PanchayatCampusSectionScreenState extends State<PanchayatCampusSectionScr
     try {
       String workerId = await getWorkerId();
       Dio dio = Dio();
-      final response = await dio.get('https://334e-122-172-86-132.ngrok-free.app/api/worker/$workerId/section/Panchayat Toilet');
+      final response = await dio.get(
+          'https://sbmgrajasthan.com/api/worker/$workerId/section/Panchayat Toilet');
 
       if (response.statusCode == 200) {
         final data = response.data;
@@ -150,6 +167,8 @@ class _PanchayatCampusSectionScreenState extends State<PanchayatCampusSectionScr
 
   @override
   Widget build(BuildContext context) {
+        final localizations = AppLocalizations.of(context)!;
+
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -212,11 +231,11 @@ class _PanchayatCampusSectionScreenState extends State<PanchayatCampusSectionScr
                 onPressed: addNewContainer,
                 backgroundColor: const Color(0xFFFFD262),
                 label: Row(
-                  children: const [
+                  children:  [
                     Icon(Icons.add, size: 24, color: Color(0xFF252525)),
                     SizedBox(width: 12),
                     Text(
-                      'Add More',
+                      localizations.addMore,
                       style: TextStyle(
                         color: Color(0xFF252525),
                         fontSize: 14,
@@ -231,11 +250,11 @@ class _PanchayatCampusSectionScreenState extends State<PanchayatCampusSectionScr
                 onPressed: addToiletContainer,
                 backgroundColor: const Color(0xFFFFD262),
                 label: Row(
-                  children: const [
+                  children: [
                     Icon(Icons.add, size: 24, color: Color(0xFF252525)),
                     SizedBox(width: 12),
                     Text(
-                      'Add More',
+                      localizations.addMore,
                       style: TextStyle(
                         color: Color(0xFF252525),
                         fontSize: 14,
@@ -268,7 +287,7 @@ class _PanchayatCampusSectionScreenState extends State<PanchayatCampusSectionScr
           );
   }
 
-   Widget _SchoolToiletBeforeAfterTab() {
+  Widget _SchoolToiletBeforeAfterTab() {
     return isLoading
         ? const Center(child: CircularProgressIndicator())
         : SingleChildScrollView(

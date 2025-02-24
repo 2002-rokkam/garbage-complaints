@@ -1,5 +1,7 @@
 // main.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'CitizensScreen/CitizensScreen.dart';
@@ -11,7 +13,6 @@ import 'onBoardingPage1.dart';
 import 'firebase_options.dart';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'Login/PhoneAuthScreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,35 +26,74 @@ void main() async {
   }
 
   final prefs = await SharedPreferences.getInstance();
-
   String? token = prefs.getString('id_token');
   String? userId = prefs.getString('worker_id');
   String? position = prefs.getString('position');
+  String? languageCode = prefs.getString('language') ?? 'en';
 
-  runApp(MyApp(token: token, userId: userId, position: position));
+  runApp(MyApp(
+      token: token,
+      userId: userId,
+      position: position,
+      locale: Locale(languageCode)));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   final String? token;
   final String? userId;
   final String? position;
+  final Locale locale;
 
-  MyApp({this.token, this.userId, this.position});
+  const MyApp(
+      {Key? key, this.token, this.userId, this.position, required this.locale})
+      : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late Locale _locale;
+
+  @override
+  void initState() {
+    super.initState();
+    _locale = widget.locale;
+  }
+
+  void _changeLanguage(Locale locale) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('language', locale.languageCode);
+    setState(() {
+      _locale = locale;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     Widget home;
 
-    if (token != null) {
-      home = CitizensScreen(); 
-    } else if (userId != null && position != null) {
-      home =
-          determinePageBasedOnPosition(position); 
+    if (widget.token != null) {
+      home = CitizensScreen();
+    } else if (widget.userId != null && widget.position != null) {
+      home = determinePageBasedOnPosition(widget.position);
     } else {
-      home = PhoneInputScreen(); 
+      home = OnboardingScreen(changeLanguage: _changeLanguage);
+
     }
 
     return MaterialApp(
+      locale: _locale,
+      supportedLocales: const [
+        Locale('en', ''),
+        Locale('hi', ''),
+      ],
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       home: home,
     );
   }
@@ -71,7 +111,7 @@ class MyApp extends StatelessWidget {
       case 'Aceo':
         return CEOScreen();
       default:
-        return PhoneInputScreen();
+        return OnboardingScreen(changeLanguage: _changeLanguage);
     }
   }
 }

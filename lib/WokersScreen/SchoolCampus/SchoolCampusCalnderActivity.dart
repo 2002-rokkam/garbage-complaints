@@ -1,5 +1,6 @@
 // WokersScreen/SchoolCampus/SchoolCampusCalnderActivity.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -62,7 +63,7 @@ class _SchoolCampusActivityScreenState extends State<SchoolCampusActivityScreen>
     });
 
     final url = Uri.parse(
-        'https://334e-122-172-86-132.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+        'https://sbmgrajasthan.com/api/worker/$workerId/section/${widget.section}');
 
     try {
       final response = await http.get(url);
@@ -94,7 +95,7 @@ class _SchoolCampusActivityScreenState extends State<SchoolCampusActivityScreen>
     if (workerId.isEmpty) return;
 
     final url = Uri.parse(
-        'https://334e-122-172-86-132.ngrok-free.app/api/worker/$workerId/section/School Toilet');
+        'https://sbmgrajasthan.com/api/worker/$workerId/section/School Toilet');
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {

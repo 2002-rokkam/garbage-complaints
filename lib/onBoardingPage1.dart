@@ -1,15 +1,20 @@
 // onBoardingPage1.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'LanguageSelectionScreen.dart';
 import 'Login/PhoneAuthScreen.dart';
 
 class OnboardingScreen extends StatefulWidget {
-  const OnboardingScreen({super.key});
+  final Function(Locale) changeLanguage;
+
+  OnboardingScreen({super.key, required this.changeLanguage});
 
   @override
   State<OnboardingScreen> createState() => _Onboard1State();
 }
 
-class _Onboard1State extends State<OnboardingScreen> with TickerProviderStateMixin {
+class _Onboard1State extends State<OnboardingScreen>
+    with TickerProviderStateMixin {
   String title = "SBMG";
   double fontSize = 28;
   FontWeight fontWeight = FontWeight.w800;
@@ -40,7 +45,9 @@ class _Onboard1State extends State<OnboardingScreen> with TickerProviderStateMix
     // Navigate to next screen after 8 seconds
     Future.delayed(const Duration(seconds: 5), () {
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => PhoneInputScreen()));
+          context, MaterialPageRoute(builder: (context) => LanguageSelectionScreen(
+                    changeLanguage: widget.changeLanguage,
+                  )));
     });
 
     // Delay the text change and animation
@@ -60,8 +67,8 @@ class _Onboard1State extends State<OnboardingScreen> with TickerProviderStateMix
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _truckAnimation = Tween<double>(
-        begin: -200, 
-        end: screenWidth * 0.372, 
+        begin: -200,
+        end: screenWidth * 0.372,
       ).animate(CurvedAnimation(
         parent: _controller,
         curve: Curves.easeInOut,

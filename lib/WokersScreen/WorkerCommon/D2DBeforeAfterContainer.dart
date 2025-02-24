@@ -1,6 +1,7 @@
 // WokersScreen/WorkerCommon/D2DBeforeAfterContainer.dart
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:io' show Platform;
@@ -39,11 +40,20 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
   String activityId = '';
   bool _isSubmitting = false;
   bool _isLoading = false;
+  late Locale _locale;
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-
+    _loadLanguagePreference();
     if (widget.initialData != null) {
       activityId = widget.initialData!['record_id'].toString();
 
@@ -112,8 +122,7 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
 
       String address = await _getAddressFromLatLong(latitude, longitude);
 
-      var uri = Uri.parse(
-          'https://334e-122-172-86-132.ngrok-free.app/api/submit-activity');
+      var uri = Uri.parse('https://sbmgrajasthan.com/api/submit-activity');
       var request = http.MultipartRequest('POST', uri)
         ..fields['worker_id'] = workerId
         ..fields['section'] = widget.section
@@ -205,8 +214,7 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
     }
 
     try {
-      var uri = Uri.parse(
-          'https://334e-122-172-86-132.ngrok-free.app/api/submit-activity');
+      var uri = Uri.parse('https://sbmgrajasthan.com/api/submit-activity');
       var request = http.MultipartRequest('PUT', uri)
         ..fields['activity_id'] = activityId
         ..fields['latitude_after'] = _afterImage!['latitude'].toString()
@@ -241,6 +249,7 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
           builder: (BuildContext context) {
             final screenWidth = MediaQuery.of(context).size.width;
             final screenHeight = MediaQuery.of(context).size.height;
+            final localizations = AppLocalizations.of(context)!;
 
             return Dialog(
               shape: RoundedRectangleBorder(
@@ -274,7 +283,7 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
                     SizedBox(
                       width: screenWidth * 0.8,
                       child: Text(
-                        'Successfully Submitted!',
+                        localizations.successfullySubmitted,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Color(0xFF1D1B20),
@@ -306,7 +315,7 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
                         ),
                         child: Center(
                           child: Text(
-                            'Close',
+                            localizations.close,
                             style: TextStyle(
                               color: Color(0xFF3E6632),
                               fontSize: screenWidth * 0.035,
@@ -375,6 +384,8 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
 
   @override
   Widget build(BuildContext context) {
+          final localizations = AppLocalizations.of(context)!;
+
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       padding: EdgeInsets.all(16),
@@ -467,7 +478,8 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
                                   errorBuilder: (BuildContext context,
                                       Object error, StackTrace? stackTrace) {
                                     return Center(
-                                        child: Text('Failed to load image'));
+                                        child: Text(
+                                            localizations.failedToLoadImage));
                                   },
                                 )
                               : // PWA platform check
@@ -481,7 +493,8 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
                                           child: CircularProgressIndicator());
                                     } else if (snapshot.hasError) {
                                       return Center(
-                                          child: Text('Failed to load image'));
+                                          child: Text(
+                                              localizations.failedToLoadImage));
                                     } else if (snapshot.hasData) {
                                       return Image.memory(
                                         snapshot.data!,
@@ -489,13 +502,14 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
                                         errorBuilder:
                                             (context, error, stackTrace) {
                                           return Center(
-                                              child:
-                                                  Text('Failed to load image'));
+                                              child: Text(localizations
+                                                  .failedToLoadImage));
                                         },
                                       );
                                     } else {
                                       return Center(
-                                          child: Text('No image data'));
+                                          child:
+                                              Text(localizations.noImageData));
                                     }
                                   },
                                 ),
@@ -556,18 +570,21 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
                                       child: CircularProgressIndicator());
                                 } else if (snapshot.hasError) {
                                   return Center(
-                                      child: Text('Failed to load image'));
+                                      child: Text(
+                                          localizations.failedToLoadImage));
                                 } else if (snapshot.hasData) {
                                   return Image.memory(
                                     snapshot.data!,
                                     fit: BoxFit.cover,
                                     errorBuilder: (context, error, stackTrace) {
                                       return Center(
-                                          child: Text('Failed to load image'));
+                                          child: Text(
+                                              localizations.failedToLoadImage));
                                     },
                                   );
                                 } else {
-                                  return Center(child: Text('No image data'));
+                                  return Center(
+                                      child: Text(localizations.noImageData));
                                 }
                               },
                             ),
@@ -615,7 +632,7 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
                         }
                       },
                       label: Text(
-                        "Slide to confirm 'Before'",
+                        localizations.slideToConfirmBefore,
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
                       icon: Icon(Icons.check, color: Colors.white),
@@ -648,7 +665,7 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
                         }
                       },
                       label: Text(
-                        "Slide to confirm 'After'",
+                        localizations.slideToConfirmAfter,
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
                       icon: Icon(Icons.check, color: Colors.white),

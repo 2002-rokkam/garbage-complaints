@@ -1,53 +1,61 @@
 // button_items.dart
-const List<Map<String, String>> buttonItems = [
-  {
-    'label': 'Door to Door',
-    'imageUrl': 'assets/images/d2d.png',
-    'route': 'DoorToDoorScreen'
-  },
-  {
-    'label': 'Road Sweeping',
-    'imageUrl': 'assets/images/road_sweeping.png',
-    'route': 'RoadSweepingScreen'
-  },
-  {
-    'label': 'Drain Cleaning',
-    'imageUrl': 'assets/images/drainage_collectin.png',
-    'route': 'DrainCleaningScreen'
-  },
-  {
-    'label': 'Community Service Centre',
-    'imageUrl': 'assets/images/CSC.png',
-    'route': 'CSCScreen'
-  },
-  {
-    'label': 'Resource Recovery Centre',
-    'imageUrl': 'assets/images/RRC.png',
-    'route': 'RRCScreen'
-  },
-  {
-    'label': 'Wages',
-    'imageUrl': 'assets/images/wages.png',
-    'route': 'WagesScreen'
-  },
-  {
-    'label': 'School Campus Sweeping',
-    'imageUrl': 'assets/images/SchoolCampus.png',
-    'route': 'SchoolCampus'
-  },
-  {
-    'label': 'Panchayat Campus',
-    'imageUrl': 'assets/images/PanchayatCampus.png',
-    'route': 'PanchayatCampus'
-  },
-  {
-    'label': 'Animal Body transport',
-    'imageUrl': 'assets/images/AnimalBodytransport.png',
-    'route': 'AnimalBodytransport'
-  },
-  {
-    'label': 'Contractor Details',
-    'imageUrl': 'assets/images/Contractors.png',
-    'route': 'ContractorDetailsScreen'
-  },
-];
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+List<Map<String, dynamic>> buttonItems(BuildContext context) {
+  final localizations = AppLocalizations.of(context)!;
+
+  return [
+    {
+      'label': localizations.door_to_door,
+      'imageUrl': 'assets/images/d2d.png',
+      'route': 'DoorToDoorScreen'
+    },
+    {
+      'label': localizations.road_sweeping,
+      'imageUrl': 'assets/images/road_sweeping.png',
+      'route': 'RoadSweepingScreen'
+    },
+    {
+      'label': localizations.drain_cleaning,
+      'imageUrl': 'assets/images/drainage_collectin.png',
+      'route': 'DrainCleaningScreen'
+    },
+    {
+      'label': localizations.community_service_centre,
+      'imageUrl': 'assets/images/CSC.png',
+      'route': 'CSCScreen'
+    },
+    {
+      'label': localizations.resource_recovery_centre,
+      'imageUrl': 'assets/images/RRC.png',
+      'route': 'RRCScreen'
+    },
+    {
+      'label': localizations.wages,
+      'imageUrl': 'assets/images/wages.png',
+      'route': 'WagesScreen'
+    },
+    {
+      'label': localizations.school_campus_sweeping,
+      'imageUrl': 'assets/images/SchoolCampus.png',
+      'route': 'SchoolCampus'
+    },
+    {
+      'label': localizations.panchayat_campus,
+      'imageUrl': 'assets/images/PanchayatCampus.png',
+      'route': 'PanchayatCampus'
+    },
+    {
+      'label': localizations.animal_body_transport,
+      'imageUrl': 'assets/images/AnimalBodytransport.png',
+      'route': 'AnimalBodytransport'
+    },
+    {
+      'label': localizations.contractor_details,
+      'imageUrl': 'assets/images/Contractors.png',
+      'route': 'ContractorDetailsScreen'
+    },
+  ];
+}

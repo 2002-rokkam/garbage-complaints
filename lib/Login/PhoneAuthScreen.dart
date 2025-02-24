@@ -1,8 +1,11 @@
 // Login/PhoneAuthScreen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'AuthorityLoginScreen.dart';
 import 'OTPVerificationScreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PhoneInputScreen extends StatefulWidget {
   const PhoneInputScreen({super.key});
@@ -18,13 +21,29 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
 
   String _countryCode = '+91';
 
+  late Locale _locale;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLanguagePreference();
+  }
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
+  }
+
   void _sendOTP() async {
     setState(() => _isLoading = true);
     String phoneNumber = _phoneController.text.trim();
 
     if (phoneNumber.isEmpty || !RegExp(r'^[0-9]{10}$').hasMatch(phoneNumber)) {
       setState(() => _isLoading = false);
-      _showError("Please enter a valid 10-digit phone number.");
+      _showError(AppLocalizations.of(context)!.invalid_phone);
       return;
     }
 
@@ -36,7 +55,8 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
           await _auth.signInWithCredential(credential);
         },
         verificationFailed: (FirebaseAuthException e) {
-          _showError(e.message ?? "Verification failed");
+          _showError(
+              e.message ?? AppLocalizations.of(context)!.verification_failed);
         },
         codeSent: (String verificationId, int? resendToken) {
           setState(() => _isLoading = false);
@@ -65,12 +85,12 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("Error"),
+        title: Text(AppLocalizations.of(context)!.error),
         content: Text(message),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text("OK"),
+            child: Text(AppLocalizations.of(context)!.ok),
           ),
         ],
       ),
@@ -79,6 +99,7 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -92,8 +113,8 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
             Positioned(
               left: screenWidth / 2 - 50,
               top: screenHeight * 0.2,
-              child: const Text(
-                'Log in',
+              child: Text(
+                localizations.login,
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 32,
@@ -106,19 +127,10 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
               left: screenWidth / 2 - 100,
               top: screenHeight * 0.3,
               child: RichText(
-                text: const TextSpan(
+                text: TextSpan(
                   children: [
                     TextSpan(
-                      text: 'Enter ',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontFamily: 'Nunito Sans',
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    TextSpan(
-                      text: 'Mobile Number',
+                      text: localizations.enter_mobile_number,
                       style: TextStyle(
                         color: Color.fromARGB(255, 92, 150, 74),
                         fontSize: 20,
@@ -133,10 +145,10 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
             Positioned(
               left: screenWidth / 2 - 130,
               top: screenHeight * 0.35,
-              child: const SizedBox(
+              child: SizedBox(
                 width: 260,
                 child: Text(
-                  'This information is not shared with anyone',
+                  localizations.info_not_shared,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.black54,
@@ -173,8 +185,8 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
                         child: TextField(
                           controller: _phoneController,
                           keyboardType: TextInputType.phone,
-                          decoration: const InputDecoration(
-                            hintText: 'Enter your number',
+                          decoration: InputDecoration(
+                            hintText: localizations.enter_number,
                             border: InputBorder.none,
                           ),
                         ),
@@ -199,8 +211,8 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
                         ),
                         padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
-                      child: const Text(
-                        'Send OTP',
+                      child: Text(
+                        localizations.send_otp,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -221,8 +233,8 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
                         builder: (context) => AuthorityLoginScreen()),
                   );
                 },
-                child: const Text(
-                  'Login as Administration',
+                child: Text(
+                  localizations.login_admin,
                   style: TextStyle(
                     color: Color(0xFF5C964A),
                     fontSize: 16,

@@ -1,5 +1,6 @@
 // customerLogout.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -100,7 +101,7 @@ class _SettingsPageState extends State<SettingsPage> {
               await logout(context);
               Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => OnboardingScreen()),
+                MaterialPageRoute(builder: (context) => OnboardingScreen(changeLanguage: (locale) {})),
                 (Route<dynamic> route) => false,
               );
             },
@@ -120,7 +121,7 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
     );
     try {
-      String logoutUrl = 'https://334e-122-172-86-132.ngrok-free.app/api/logout';
+      String logoutUrl = 'https://sbmgrajasthan.com/api/logout';
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('id_token');
 
@@ -140,7 +141,7 @@ class _SettingsPageState extends State<SettingsPage> {
         if (context.mounted) {
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => OnboardingScreen()),
+            MaterialPageRoute(builder: (context) => OnboardingScreen(changeLanguage: (Locale locale) {})),
             (Route<dynamic> route) => false,
           );
         }

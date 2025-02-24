@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,12 +21,19 @@ class _SMDselectRegionState extends State<SMDselectRegion> {
   List<String> districts = [];
   List<String> blocks = [];
   List<String> gramPanchayats = [];
+  late Locale _locale;
 
-  final String districtsUrl =
-      "https://334e-122-172-86-132.ngrok-free.app/api/getDistricts";
-  final String blocksUrl =
-      "https://334e-122-172-86-132.ngrok-free.app/api/getBlocks/";
-  final String gpUrl = "https://334e-122-172-86-132.ngrok-free.app/api/getGp/";
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
+  }
+ 
+  final String districtsUrl = "https://sbmgrajasthan.com/api/getDistricts";
+  final String blocksUrl = "https://sbmgrajasthan.com/api/getBlocks/";
+  final String gpUrl = "https://sbmgrajasthan.com/api/getGp/";
 
   Future<void> fetchDistricts() async {
     try {
@@ -121,6 +129,7 @@ class _SMDselectRegionState extends State<SMDselectRegion> {
           'appbarselectedGramPanchayat', formattedGramPanchayat);
       Navigator.pop(context);
     } else {
+      final localizations = AppLocalizations.of(context)!;
       showDialog(
         context: context,
         builder: (context) {
@@ -131,7 +140,7 @@ class _SMDselectRegionState extends State<SMDselectRegion> {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text('OK'),
+                child: Text(localizations.ok),
               ),
             ],
           );
@@ -160,8 +169,9 @@ class _SMDselectRegionState extends State<SMDselectRegion> {
   @override
   void initState() {
     super.initState();
-    fetchDistricts(); // Fetch districts when the page loads
-    loadSavedSelections(); // Load saved selections
+    fetchDistricts(); 
+    loadSavedSelections(); 
+    _loadLanguagePreference();
   }
 
   void showOptions(BuildContext context, List<String> options,
@@ -213,6 +223,7 @@ class _SMDselectRegionState extends State<SMDselectRegion> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
       body: Padding(

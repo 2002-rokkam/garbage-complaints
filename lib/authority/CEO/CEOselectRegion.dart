@@ -1,6 +1,7 @@
 // authority/CEO/CEOselectRegion.dart
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,15 +17,23 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
   String? selectedBlock;
   String? selectedGramPanchayat;
 
+  late Locale _locale;
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
+  }
+
   List<String> districts = [];
   List<String> blocks = [];
   List<String> gramPanchayats = [];
 
-  final String districtsUrl =
-      "https://334e-122-172-86-132.ngrok-free.app/api/getDistricts";
-  final String blocksUrl =
-      "https://334e-122-172-86-132.ngrok-free.app/api/getBlocks/";
-  final String gpUrl = "https://334e-122-172-86-132.ngrok-free.app/api/getGp/";
+  final String districtsUrl = "https://sbmgrajasthan.com/api/getDistricts";
+  final String blocksUrl = "https://sbmgrajasthan.com/api/getBlocks/";
+  final String gpUrl = "https://sbmgrajasthan.com/api/getGp/";
 
   Future<void> loadDistrictFromPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -133,6 +142,7 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
 
       Navigator.pop(context);
     } else {
+      final localizations = AppLocalizations.of(context)!;
       showDialog(
         context: context,
         builder: (context) {
@@ -143,7 +153,7 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text('OK'),
+                child: Text(localizations.ok),
               ),
             ],
           );
@@ -157,6 +167,7 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
     super.initState();
     fetchDistricts();
     loadDistrictFromPrefs();
+    _loadLanguagePreference();
   }
 
   void showOptions(BuildContext context, List<String> options,
@@ -219,6 +230,7 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Color.fromRGBO(239, 239, 239, 1),
       body: Padding(

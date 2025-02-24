@@ -1,5 +1,6 @@
 // CitizensScreen/CitizensScreen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_application_2/PoweredByBikaji.dart';
 import '../ContactUsPage.dart';
 import '../customerLogout.dart';
@@ -351,42 +352,48 @@ class _CitizensScreenState extends State<CitizensScreen> {
       ],
     );
   }
-   String appBarTitle = 'SBMG Rajasthan';
+
+  String appBarTitle = 'SBMG Rajasthan';
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xFF5C964A),
-        title: Text(
-          appBarTitle,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Color(0xFF5C964A),
+          title: Text(
+            appBarTitle,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
-      ),
-      backgroundColor: Color.fromRGBO(239, 239, 239, 1),
-      body: _getSelectedScreen(),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        selectedItemColor: Color(0xFF5C964A),
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list),
-            label: 'Complaints',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-        ],
+        backgroundColor: Color.fromRGBO(239, 239, 239, 1),
+        body: _getSelectedScreen(),
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+          selectedItemColor: Color(0xFF5C964A),
+          unselectedItemColor: Colors.grey,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.list),
+              label: 'Complaints',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.settings),
+              label: 'Settings',
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -404,8 +411,7 @@ class _CitizensScreenState extends State<CitizensScreen> {
   Widget _buildButton(String label, String imageUrl, String routeName,
       String number, BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width *
-          0.42, // 42% of screen width for button
+      width: MediaQuery.of(context).size.width * 0.42,
       height: 150,
       padding: const EdgeInsets.all(8),
       margin: const EdgeInsets.symmetric(horizontal: 8),

@@ -1,11 +1,11 @@
 // authority/BDO/BDOD2D/QRDetailsScreen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class QRDetailsScreen extends StatelessWidget {
   final List tripDetails;
 
-  const QRDetailsScreen(
-      {Key? key, required this.tripDetails})
+  const QRDetailsScreen({Key? key, required this.tripDetails})
       : super(key: key);
 
   @override

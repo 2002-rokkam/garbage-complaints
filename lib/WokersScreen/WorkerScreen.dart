@@ -1,5 +1,6 @@
 // WokersScreen/WorkerScreen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import '../PoweredByBikaji.dart';
@@ -15,6 +16,7 @@ import 'WorkerCommon/AnimalScreen.dart';
 import 'WorkerComplaints/workerComplaintsScreen.dart';
 import 'package:intl/intl.dart';
 import '../../button_items.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class WorkerScreen extends StatefulWidget {
   @override
@@ -22,14 +24,26 @@ class WorkerScreen extends StatefulWidget {
 }
 
 class _WorkerScreenState extends State<WorkerScreen> {
+  late Locale _locale;
 
   @override
   void initState() {
-    super.initState();   
+    super.initState();
+    _loadLanguagePreference();
+  }
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     double screenHeight = MediaQuery.of(context).size.height;
     return WillPopScope(
       onWillPop: () async {
@@ -135,7 +149,7 @@ class _WorkerScreenState extends State<WorkerScreen> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Home',
+                  localizations.home,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -152,9 +166,9 @@ class _WorkerScreenState extends State<WorkerScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12.0),
                       child: Wrap(
-                        spacing: 0, // Horizontal space between buttons
-                        runSpacing: 16, // Vertical space between rows
-                        children: buttonItems.map((item) {
+                        spacing: 0,
+                        runSpacing: 16,
+                        children: buttonItems(context).map((item) {
                           return _buildButton(
                             item['label']!,
                             item['imageUrl']!,
@@ -164,16 +178,14 @@ class _WorkerScreenState extends State<WorkerScreen> {
                         }).toList(),
                       ),
                     ),
-
                     SizedBox(height: 16),
-                    // Scrollable "Home" label and buttons grid
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16.0, vertical: 4.0),
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'Action',
+                          localizations.action,
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -235,7 +247,7 @@ class _WorkerScreenState extends State<WorkerScreen> {
                                 ),
                                 const SizedBox(height: 10),
                                 Text(
-                                  'Complaints',
+                                  localizations.complaints,
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 16,
@@ -266,16 +278,12 @@ class _WorkerScreenState extends State<WorkerScreen> {
   Widget _buildImageContainer(String imageUrl) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
-
       child: Image.asset(
         imageUrl,
         fit: BoxFit.cover,
       ),
-
-      height: MediaQuery.of(context).size.height *
-          0.3, // Adjust height based on screen size
-      width: MediaQuery.of(context).size.width *
-          0.8, // Adjust width based on screen size
+      height: MediaQuery.of(context).size.height * 0.3,
+      width: MediaQuery.of(context).size.width * 0.8,
     );
   }
 

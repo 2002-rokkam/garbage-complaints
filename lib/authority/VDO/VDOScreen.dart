@@ -1,5 +1,6 @@
 // authority/VDO/VDOScreen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
 import '../../PoweredByBikaji.dart';
@@ -7,6 +8,7 @@ import '../../Login/workerLogout.dart';
 import 'VDOCalendarActivityScreen.dart';
 import 'VDOD2DCalnderActivity.dart';
 import 'VDORCCCalendarActivityScreen.dart';
+import 'VDOSchoolCampusCalnderActivity.dart';
 import 'VDOWagesCalendarActivityScreen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -37,7 +39,7 @@ class _VDOScreenState extends State<VDOScreen> {
     print(gramPanchayat);
     if (gramPanchayat != null) {
       final response = await http.get(Uri.parse(
-              'https://334e-122-172-86-132.ngrok-free.app/api/complaints-by-gram-panchayat/')
+              'https://sbmgrajasthan.com/api/complaints-by-gram-panchayat/')
           .replace(queryParameters: {
         'gram_panchayat': gramPanchayat,
       }));
@@ -434,7 +436,7 @@ class _VDOScreenState extends State<VDOScreen> {
                       child: Wrap(
                         spacing: 1, // Horizontal space between buttons
                         runSpacing: 12, // Vertical space between rows
-                        children: buttonItems.map((item) {
+                        children: buttonItems(context).map((item) {
                           return _buildButton(
                             item['label']!,
                             item['imageUrl']!,
@@ -557,6 +559,12 @@ class _VDOScreenState extends State<VDOScreen> {
         return VDORCCCalendarActivityScreen(section: 'RRC');
       case 'WagesScreen':
         return VDOWagesCalendarActivityScreen(section: 'Wages');
+      case 'SchoolCampus':
+        return VDOSchoolCampusCalnderActivity(section: 'School Campus');
+      case 'PanchayatCampus':
+        return VDOSchoolCampusCalnderActivity(section: 'Panchayat Campus');
+      case 'AnimalBodytransport':
+        return VDOCalendarActivityScreen(section: 'Animal Transport');
       case 'ContractorDetailsScreen':
         return FillContractorDetailsScreen();
       default:

@@ -1,5 +1,6 @@
 // authority/BDO/BDOWorkerComplaintsCalender.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:async';
 import 'package:table_calendar/table_calendar.dart';
 import 'dart:convert';
@@ -19,11 +20,21 @@ class _BDOWorkerComplaintsCalenderState
   Map<DateTime, int> complaintCounts = {};
   List<dynamic> complaints = [];
   bool _isLoading = false;
+  late Locale _locale;
 
   @override
   void initState() {
     super.initState();
     _fetchComplaintData();
+   _loadLanguagePreference();
+  }
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
   }
 
   Future<void> _fetchComplaintData() async {
@@ -35,7 +46,7 @@ class _BDOWorkerComplaintsCalenderState
     final District = prefs.getString('District') ?? '';
 
     final url =
-        'https://334e-122-172-86-132.ngrok-free.app/api/complaintdetails-by-district/?district=$District';
+        'https://sbmgrajasthan.com/api/complaintdetails-by-district/?district=$District';
 
     try {
       final response = await http.get(Uri.parse(url));

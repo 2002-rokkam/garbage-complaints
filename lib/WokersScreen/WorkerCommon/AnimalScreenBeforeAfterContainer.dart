@@ -1,6 +1,7 @@
 // WokersScreen/WorkerCommon/AnimalScreenBeforeAfterContainer.dart
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:io' show Platform;
@@ -25,10 +26,12 @@ class AnimalScreenBeforeAfterContainer extends StatefulWidget {
       : super(key: key);
 
   @override
-  _AnimalScreenBeforeAfterContainerState createState() => _AnimalScreenBeforeAfterContainerState();
+  _AnimalScreenBeforeAfterContainerState createState() =>
+      _AnimalScreenBeforeAfterContainerState();
 }
 
-class _AnimalScreenBeforeAfterContainerState extends State<AnimalScreenBeforeAfterContainer> {
+class _AnimalScreenBeforeAfterContainerState
+    extends State<AnimalScreenBeforeAfterContainer> {
   final ImagePicker _picker = ImagePicker();
   Map<String, dynamic>? _beforeImage;
   Map<String, dynamic>? _afterImage;
@@ -38,11 +41,20 @@ class _AnimalScreenBeforeAfterContainerState extends State<AnimalScreenBeforeAft
   String activityId = '';
   bool _isSubmitting = false;
   bool _isLoading = false;
+  late Locale _locale;
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-
+    _loadLanguagePreference();
     if (widget.initialData != null) {
       activityId = widget.initialData!['record_id'].toString();
 
@@ -111,8 +123,7 @@ class _AnimalScreenBeforeAfterContainerState extends State<AnimalScreenBeforeAft
 
       String address = await _getAddressFromLatLong(latitude, longitude);
 
-      var uri = Uri.parse(
-          'https://334e-122-172-86-132.ngrok-free.app/api/submit-activity');
+      var uri = Uri.parse('https://sbmgrajasthan.com/api/submit-activity');
       var request = http.MultipartRequest('POST', uri)
         ..fields['worker_id'] = workerId
         ..fields['section'] = widget.section
@@ -201,8 +212,7 @@ class _AnimalScreenBeforeAfterContainerState extends State<AnimalScreenBeforeAft
     }
 
     try {
-      var uri = Uri.parse(
-          'https://334e-122-172-86-132.ngrok-free.app/api/submit-activity');
+      var uri = Uri.parse('https://sbmgrajasthan.com/api/submit-activity');
       var request = http.MultipartRequest('PUT', uri)
         ..fields['activity_id'] = activityId
         ..fields['latitude_after'] = _afterImage!['latitude'].toString()
@@ -237,6 +247,7 @@ class _AnimalScreenBeforeAfterContainerState extends State<AnimalScreenBeforeAft
           builder: (BuildContext context) {
             final screenWidth = MediaQuery.of(context).size.width;
             final screenHeight = MediaQuery.of(context).size.height;
+            final localizations = AppLocalizations.of(context)!;
 
             return Dialog(
               shape: RoundedRectangleBorder(
@@ -270,7 +281,7 @@ class _AnimalScreenBeforeAfterContainerState extends State<AnimalScreenBeforeAft
                     SizedBox(
                       width: screenWidth * 0.8,
                       child: Text(
-                        'Successfully Submitted!',
+                        localizations.successfullySubmitted,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Color(0xFF1D1B20),
@@ -302,7 +313,7 @@ class _AnimalScreenBeforeAfterContainerState extends State<AnimalScreenBeforeAft
                         ),
                         child: Center(
                           child: Text(
-                            'Close',
+                            localizations.close,
                             style: TextStyle(
                               color: Color(0xFF3E6632),
                               fontSize: screenWidth * 0.035,
@@ -387,17 +398,19 @@ class _AnimalScreenBeforeAfterContainerState extends State<AnimalScreenBeforeAft
   }
 
   void _showPopup(String message) {
+    final localizations = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Error'),
+        title: Text(localizations.error),
         content: Text(message),
         actions: <Widget>[
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
+              widget.onReload();
             },
-            child: Text('OK'),
+            child: Text(localizations.ok),
           ),
         ],
       ),
@@ -406,6 +419,7 @@ class _AnimalScreenBeforeAfterContainerState extends State<AnimalScreenBeforeAft
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       padding: EdgeInsets.all(16),
@@ -460,7 +474,7 @@ class _AnimalScreenBeforeAfterContainerState extends State<AnimalScreenBeforeAft
                                 ),
                                 SizedBox(height: 8),
                                 Text(
-                                  'Transaportation',
+                                  localizations.transportation,
                                   style: TextStyle(
                                     color: Color(0xFF6B6B6B),
                                     fontSize: 14,
@@ -498,7 +512,8 @@ class _AnimalScreenBeforeAfterContainerState extends State<AnimalScreenBeforeAft
                                   errorBuilder: (BuildContext context,
                                       Object error, StackTrace? stackTrace) {
                                     return Center(
-                                        child: Text('Failed to load image'));
+                                        child: Text(
+                                            localizations.failedToLoadImage));
                                   },
                                 )
                               : // PWA platform check
@@ -512,7 +527,8 @@ class _AnimalScreenBeforeAfterContainerState extends State<AnimalScreenBeforeAft
                                           child: CircularProgressIndicator());
                                     } else if (snapshot.hasError) {
                                       return Center(
-                                          child: Text('Failed to load image'));
+                                          child: Text(
+                                              localizations.failedToLoadImage));
                                     } else if (snapshot.hasData) {
                                       return Image.memory(
                                         snapshot.data!,
@@ -520,13 +536,13 @@ class _AnimalScreenBeforeAfterContainerState extends State<AnimalScreenBeforeAft
                                         errorBuilder:
                                             (context, error, stackTrace) {
                                           return Center(
-                                              child:
-                                                  Text('Failed to load image'));
+                                              child: Text(localizations.failedToLoadImage));
                                         },
                                       );
                                     } else {
                                       return Center(
-                                          child: Text('No image data'));
+                                          child:
+                                              Text(localizations.noImageData));
                                     }
                                   },
                                 ),
@@ -566,7 +582,7 @@ class _AnimalScreenBeforeAfterContainerState extends State<AnimalScreenBeforeAft
                                 ),
                                 SizedBox(height: 8),
                                 Text(
-                                  'Disposal',
+                                  localizations.disposal,
                                   style: TextStyle(
                                     color: Color(0xFF6B6B6B),
                                     fontSize: 14,
@@ -587,18 +603,21 @@ class _AnimalScreenBeforeAfterContainerState extends State<AnimalScreenBeforeAft
                                       child: CircularProgressIndicator());
                                 } else if (snapshot.hasError) {
                                   return Center(
-                                      child: Text('Failed to load image'));
+                                      child: Text(
+                                          localizations.failedToLoadImage));
                                 } else if (snapshot.hasData) {
                                   return Image.memory(
                                     snapshot.data!,
                                     fit: BoxFit.cover,
                                     errorBuilder: (context, error, stackTrace) {
                                       return Center(
-                                          child: Text('Failed to load image'));
+                                          child: Text(
+                                              localizations.failedToLoadImage));
                                     },
                                   );
                                 } else {
-                                  return Center(child: Text('No image data'));
+                                  return Center(
+                                      child: Text(localizations.noImageData));
                                 }
                               },
                             ),
@@ -646,7 +665,7 @@ class _AnimalScreenBeforeAfterContainerState extends State<AnimalScreenBeforeAft
                         }
                       },
                       label: Text(
-                        "Slide to confirm 'Before'",
+                        localizations.slideToConfirmBefore,
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
                       icon: Icon(Icons.check, color: Colors.white),
@@ -674,8 +693,7 @@ class _AnimalScreenBeforeAfterContainerState extends State<AnimalScreenBeforeAft
                           if (isWithinRadius) {
                             await _submitAfterImage();
                           } else {
-                            _showPopup(
-                                'Error: After image is too far from the before image.');
+                            _showPopup(localizations.errorImageTooFar);
                           }
                         } catch (e) {
                           print("Error in slider action: $e");
@@ -686,7 +704,7 @@ class _AnimalScreenBeforeAfterContainerState extends State<AnimalScreenBeforeAft
                         }
                       },
                       label: Text(
-                        "Slide to confirm 'After'",
+                        localizations.slideToConfirmAfter,
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
                       icon: Icon(Icons.check, color: Colors.white),

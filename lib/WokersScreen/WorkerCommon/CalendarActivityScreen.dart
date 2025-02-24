@@ -1,5 +1,6 @@
 // WokersScreen/WorkerCommon/CalendarActivityScreen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -38,7 +39,7 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
     setState(() => _isLoading = true);
 
     final url = Uri.parse(
-        'https://334e-122-172-86-132.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+        'https://sbmgrajasthan.com/api/worker/$workerId/section/${widget.section}');
 
     try {
       final response = await http.get(url);
@@ -72,7 +73,7 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
   //   setState(() => _isLoading = true);
 
   //   final url = Uri.parse(
-  //       'https://334e-122-172-86-132.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+  //       'https://sbmgrajasthan.com/api/worker/$workerId/section/${widget.section}');
 
   //   try {
   //     final response = await http.get(url);
@@ -96,7 +97,7 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
     final gramPanchayat = prefs.getString('gram_panchayat') ?? '';
 
     final url =
-        'hhttps://334e-122-172-86-132.ngrok-free.app/api/complaintdetails-by-gram-panchayat/?gram_panchayat=$gramPanchayat';
+        'hhttps://sbmgrajasthan.com/api/complaintdetails-by-gram-panchayat/?gram_panchayat=$gramPanchayat';
 
     try {
       final response = await http.get(Uri.parse(url));
@@ -164,7 +165,7 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
                 _selectedDate = selectedDay;
               });
             },
-             calendarStyle: CalendarStyle(
+            calendarStyle: CalendarStyle(
               selectedDecoration: BoxDecoration(
                 color: Color(0xFF5C964A),
                 shape: BoxShape.circle,

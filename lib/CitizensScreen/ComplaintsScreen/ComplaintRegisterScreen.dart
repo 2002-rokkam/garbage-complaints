@@ -1,5 +1,6 @@
 // CitizensScreen/ComplaintsScreen/ComplaintRegisterScreen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../CitizensScreen.dart';
 
 class ComplaintRegisterScreen extends StatelessWidget {

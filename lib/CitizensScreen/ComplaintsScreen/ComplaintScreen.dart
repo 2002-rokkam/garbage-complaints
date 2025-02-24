@@ -1,6 +1,7 @@
 // CitizensScreen/ComplaintsScreen/ComplaintScreen.dart
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:io' show Platform;
@@ -66,8 +67,8 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
       });
 
       try {
-        var uri = Uri.parse(
-            'https://334e-122-172-86-132.ngrok-free.app/api/complaints-register');
+        var uri =
+            Uri.parse('https://sbmgrajasthan.com/api/complaints-register');
 
         var request = http.MultipartRequest('POST', uri)
           ..fields['district'] = formattedDistrict
@@ -294,10 +295,8 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
 
   List<String> gramPanchayats = [];
 
-  final String districtsUrl =
-      "https://334e-122-172-86-132.ngrok-free.app/api/getDistricts";
-  final String gpUrl =
-      "https://334e-122-172-86-132.ngrok-free.app/api/getGpComplaints";
+  final String districtsUrl = "https://sbmgrajasthan.com/api/getDistricts";
+  final String gpUrl = "https://sbmgrajasthan.com/api/getGpComplaints";
 
   Future<void> fetchDistricts() async {
     try {

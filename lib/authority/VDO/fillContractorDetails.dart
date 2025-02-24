@@ -1,6 +1,7 @@
 // authority/VDO/fillContractorDetails.dart
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -21,6 +22,17 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
   bool _isEditing = false;
   bool _isEditable = false;
 
+  late Locale _locale;
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
+  }
+ 
+
   Future<String> _getWorkerIdFromPrefs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? workerId = prefs.getString('worker_id');
@@ -32,7 +44,7 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
 
     try {
       final url = Uri.parse(
-          'https://334e-122-172-86-132.ngrok-free.app/api/contractor/detail/$workerId');
+          'https://sbmgrajasthan.com/api/contractor/detail/$workerId');
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
@@ -87,9 +99,10 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
 
       final String workerId = await _getWorkerIdFromPrefs(); // Sample worker ID
 
-      final url = Uri.parse(_isEditing // Decide between update and create endpoints
-          ? 'https://334e-122-172-86-132.ngrok-free.app/api/contractor/update/$workerId'
-          : 'https://334e-122-172-86-132.ngrok-free.app/api/contractor/create/$workerId');
+      final url =
+          Uri.parse(_isEditing // Decide between update and create endpoints
+              ? 'https://sbmgrajasthan.com/api/contractor/update/$workerId'
+              : 'https://sbmgrajasthan.com/api/contractor/create/$workerId');
       final payload = {
         'company_name': _companyNameController.text,
         'gst_no': _gstNoController.text,
@@ -144,6 +157,8 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
   }
 
   void _showSuccessDialog() {
+      final localizations = AppLocalizations.of(context)!;
+
     showDialog(
       context: context,
       builder: (context) => Dialog(
@@ -208,8 +223,8 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
                     vertical: 10.0,
                   ),
                 ),
-                child: const Text(
-                  'OK',
+                child:  Text(
+                  localizations.ok,
                   style: TextStyle(fontSize: 16.0, color: Colors.white),
                 ),
               ),
@@ -298,10 +313,12 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
   void initState() {
     super.initState();
     _loadContractorDetails();
+    _loadLanguagePreference();
   }
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Contractor Details',

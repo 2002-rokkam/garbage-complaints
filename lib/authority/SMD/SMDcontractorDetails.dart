@@ -1,6 +1,7 @@
 // authority/SMD/SMDcontractorDetails.dart
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
 
 class Contractordetails extends StatefulWidget {
@@ -24,7 +25,7 @@ class _ContractordetailsState extends State<Contractordetails> {
 
   Future<List<Map<String, dynamic>>> fetchContractorDetails() async {
     final apiUrl =
-        'https://334e-122-172-86-132.ngrok-free.app/api/contractors/?gp=${widget.gramPanchayat}';
+        'https://sbmgrajasthan.com/api/contractors/?gp=${widget.gramPanchayat}';
     final response = await http.get(Uri.parse(apiUrl));
 
     if (response.statusCode == 200) {

@@ -1,6 +1,7 @@
 // authority/BDO/CalnderActivity/BDOSelectedDateActivitiesScreen.dart
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BDOSelectedDateActivitiesScreen extends StatelessWidget {
   final DateTime selectedDate;
@@ -11,7 +12,7 @@ class BDOSelectedDateActivitiesScreen extends StatelessWidget {
     required this.selectedDate,
     required this.activities,
   }) : super(key: key);
-  
+
   void _showFullScreenImage(BuildContext context, String imageUrl,
       double dirlatitude, double dirlongitude, String time) async {
     print(activities);
@@ -119,7 +120,6 @@ class BDOSelectedDateActivitiesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final createdAt = DateTime.parse(activities[0]['created_at']).toLocal();
     String createdAttime =
         '${createdAt.hour}:${createdAt.minute}:${createdAt.second}';
@@ -208,7 +208,7 @@ class BDOSelectedDateActivitiesScreen extends StatelessWidget {
                               ],
                             ),
                             SizedBox(height: 8),
-                             Row(
+                            Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 GestureDetector(

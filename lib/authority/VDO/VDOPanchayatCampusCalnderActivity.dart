@@ -1,4 +1,4 @@
-// authority/VDO/VDORCCCalendarActivityScreen.dart
+// authority/VDO/VDOPanchayatCampusCalnderActivity.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -8,19 +8,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'VDObefreAfter.dart';
 
-class VDORCCCalendarActivityScreen extends StatefulWidget {
+class VDOPanchayatCampusCalnderActivity extends StatefulWidget {
   final String section;
 
-  const VDORCCCalendarActivityScreen({Key? key, required this.section})
+  const VDOPanchayatCampusCalnderActivity({Key? key, required this.section})
       : super(key: key);
 
   @override
-  _VDORCCCalendarActivityScreenState createState() =>
-      _VDORCCCalendarActivityScreenState();
+  _VDOPanchayatCampusCalnderActivityState createState() =>
+      _VDOPanchayatCampusCalnderActivityState();
 }
 
-class _VDORCCCalendarActivityScreenState
-    extends State<VDORCCCalendarActivityScreen>
+class _VDOPanchayatCampusCalnderActivityState
+    extends State<VDOPanchayatCampusCalnderActivity>
     with SingleTickerProviderStateMixin {
   DateTime _selectedDate = DateTime.now();
   List _activities = [];
@@ -32,6 +32,7 @@ class _VDORCCCalendarActivityScreenState
   void initState() {
     super.initState();
     fetchActivities();
+    fetchTripDetails();
     _tabController = TabController(length: 2, vsync: this);
   }
 
@@ -79,7 +80,7 @@ class _VDORCCCalendarActivityScreenState
     final url = Uri.parse('https://sbmgrajasthan.com/api/vdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
-      'section': 'Waste Details',
+      'section': 'Panchayat Toilet',
     });
 
     try {
@@ -87,7 +88,7 @@ class _VDORCCCalendarActivityScreenState
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         setState(() {
-          _tripDetails = data['section_data']['Waste Details']
+          _tripDetails = data['section_data']['Panchayat Toilet']
               .where((trip) =>
                   DateTime.parse(trip['date_time']).toLocal().day ==
                   _selectedDate.day)
@@ -135,8 +136,8 @@ class _VDORCCCalendarActivityScreenState
           indicatorColor: Color.fromRGBO(255, 210, 98, 1),
           indicatorWeight: 3.0,
           tabs: [
-            Tab(text: 'Before & After'),
-            Tab(text: 'Trip Details'),
+            Tab(text: 'Panchayat Campus'),
+            Tab(text: 'Panchayat Toilet'),
           ],
         ),
       ),
@@ -215,8 +216,8 @@ class _VDORCCCalendarActivityScreenState
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                TripDetailsScreen(
-                                              tripDetails: _tripDetails,
+                                                VDOBeforeAfterScreen(
+                                              activities: _tripDetails,
                                             ),
                                           ),
                                         );
@@ -274,8 +275,8 @@ class _VDORCCCalendarActivityScreenState
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                TripDetailsScreen(
-                                              tripDetails: _tripDetails,
+                                                VDOBeforeAfterScreen(
+                                              activities: _tripDetails,
                                             ),
                                           ),
                                         );
@@ -300,99 +301,6 @@ class _VDORCCCalendarActivityScreenState
           ),
         ],
       ),
-    );
-  }
-}
-
-class TripDetailsScreen extends StatelessWidget {
-  final List tripDetails;
-
-  const TripDetailsScreen({Key? key, required this.tripDetails})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Trip Details'),
-        backgroundColor: Color(0xFF5C964A),
-      ),
-      body: tripDetails.isEmpty
-          ? Center(
-              child: Text('No trip details available for the selected date.'))
-          : SingleChildScrollView(
-              child: Column(
-                children: tripDetails.map((trip) {
-                  return Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Worker Email: ${trip['worker_name']}',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            'Trips: ${trip['trips']}',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            'Quantity of Waste: ${trip['quantity_waste']} kg',
-                            style: TextStyle(
-                              color: Color(0xFF252525),
-                              fontSize: 14,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            'Segregated Degradable: ${trip['segregated_degradable']} kg',
-                            style: TextStyle(
-                              color: Color(0xFF252525),
-                              fontSize: 14,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            'Segregated Non-Degradable: ${trip['segregated_non_degradable']} kg',
-                            style: TextStyle(
-                              color: Color(0xFF252525),
-                              fontSize: 14,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            'Segregated Plastic: ${trip['segregated_plastic']} kg',
-                            style: TextStyle(
-                              color: Color(0xFF252525),
-                              fontSize: 14,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            'Date: ${trip['date_time']}',
-                            style: TextStyle(
-                              color: Color(0xFF252525),
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
     );
   }
 }

@@ -1,5 +1,7 @@
 // WokersScreen/WorkerCommon/ComplaintsSectionScreen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -26,10 +28,20 @@ class _ComplaintsSectionScreenState extends State<ComplaintsSectionScreen> {
   List<String> _selectedComplaints = [];
   final ImagePicker _picker = ImagePicker();
   File? _selectedImage;
+  late Locale _locale;
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+        _loadLanguagePreference();
     _selectedComplaints = _complaints[_selectedDate] ?? [];
   }
 
@@ -41,6 +53,7 @@ class _ComplaintsSectionScreenState extends State<ComplaintsSectionScreen> {
   }
 
   Future<void> _resolveComplaint(String complaint) async {
+          final localizations = AppLocalizations.of(context)!;
     final XFile? image = await _picker.pickImage(source: ImageSource.camera);
     if (image != null) {
       setState(() {
@@ -51,7 +64,6 @@ class _ComplaintsSectionScreenState extends State<ComplaintsSectionScreen> {
         _selectedComplaints.remove(complaint);
         _complaints[_selectedDate] = _selectedComplaints;
       });
-
       // Show confirmation dialog
       showDialog(
         context: context,
@@ -61,7 +73,7 @@ class _ComplaintsSectionScreenState extends State<ComplaintsSectionScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text("OK"),
+              child: Text(localizations.ok),
             ),
           ],
         ),
@@ -71,6 +83,7 @@ class _ComplaintsSectionScreenState extends State<ComplaintsSectionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         title: const Text("Complaints Section"),

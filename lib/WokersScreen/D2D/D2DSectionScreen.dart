@@ -1,5 +1,6 @@
 // WokersScreen/D2D/D2DSectionScreen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../WorkerCommon/D2DBeforeAfterContainer.dart';
@@ -20,10 +21,20 @@ class _D2DSectionScreenState extends State<D2DSectionScreen>
   List<Widget> beforeAfterContainers = [];
   bool isLoading = true;
   late TabController _tabController;
+  late Locale _locale;
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    _loadLanguagePreference();
     _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(_handleTabChange);
     _fetchActivities();
@@ -57,7 +68,7 @@ class _D2DSectionScreenState extends State<D2DSectionScreen>
       String workerId = await getWorkerId();
       Dio dio = Dio();
       final response = await dio.get(
-          'https://334e-122-172-86-132.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+          'https://sbmgrajasthan.com/api/worker/$workerId/section/${widget.section}');
 
       if (response.statusCode == 200) {
         final data = response.data;
@@ -97,6 +108,7 @@ class _D2DSectionScreenState extends State<D2DSectionScreen>
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -137,10 +149,10 @@ class _D2DSectionScreenState extends State<D2DSectionScreen>
           ],
           bottom: TabBar(
             controller: _tabController,
-            tabs: const [
-              Tab(text: "Before After"),
-              Tab(text: "QR"),
-              Tab(text: "GPS"),
+            tabs: [
+              Tab(text: localizations.beforeAfter),
+              Tab(text: localizations.qr),
+              Tab(text: localizations.gps),
             ],
             labelColor: Colors.white,
             unselectedLabelColor: Colors.white,
@@ -161,11 +173,11 @@ class _D2DSectionScreenState extends State<D2DSectionScreen>
                 onPressed: addNewContainer,
                 backgroundColor: const Color(0xFFFFD262),
                 label: Row(
-                  children: const [
+                  children: [
                     Icon(Icons.add, size: 24, color: Color(0xFF252525)),
                     SizedBox(width: 12),
                     Text(
-                      'Add More',
+                      localizations.addMore,
                       style: TextStyle(
                         color: Color(0xFF252525),
                         fontSize: 14,

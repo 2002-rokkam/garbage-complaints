@@ -1,5 +1,6 @@
 // WokersScreen/RRC/TripDetailCard.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -24,6 +25,22 @@ class _TripDetailCardState extends State<TripDetailCard> {
   bool segregatedNonDegradableValid = true;
   bool segregatedPlasticValid = true;
   bool isLoading = false;
+
+  late Locale _locale;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLanguagePreference();
+  }
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
+  }
 
   Future<String> getWorkerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -80,7 +97,7 @@ class _TripDetailCardState extends State<TripDetailCard> {
 
         final dio = Dio();
         final response = await dio.post(
-          'https://334e-122-172-86-132.ngrok-free.app/api/submit-activity',
+          'https://sbmgrajasthan.com/api/submit-activity',
           data: formData,
         );
 
@@ -105,6 +122,7 @@ class _TripDetailCardState extends State<TripDetailCard> {
   }
 
   void _showSuccessDialog(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -170,7 +188,7 @@ class _TripDetailCardState extends State<TripDetailCard> {
                     ),
                     child: Center(
                       child: Text(
-                        'Close',
+                        localizations.close,
                         style: TextStyle(
                           color: Color(0xFF3E6632),
                           fontSize: screenWidth * 0.035,
@@ -199,6 +217,7 @@ class _TripDetailCardState extends State<TripDetailCard> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 

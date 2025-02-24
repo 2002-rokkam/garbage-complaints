@@ -1,5 +1,6 @@
 // authority/CEO/CEOCalender/CEOCalendarActivityScreen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
@@ -46,8 +47,7 @@ class _CEOCalendarActivityScreenState extends State<CEOCalendarActivityScreen> {
     String workerId = await getWorkerId();
     setState(() {});
 
-    final url = Uri.parse(
-            'https://334e-122-172-86-132.ngrok-free.app/api/bdo-section-dashboard')
+    final url = Uri.parse('https://sbmgrajasthan.com/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': widget.section,

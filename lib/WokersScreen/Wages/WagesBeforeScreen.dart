@@ -1,6 +1,7 @@
 // WokersScreen/Wages/WagesBeforeScreen.dart
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
@@ -25,6 +26,21 @@ class _WagesBeforeScreenState extends State<WagesBeforeScreen> {
   final ImagePicker _picker = ImagePicker();
   Map<String, dynamic>? _beforeImage;
   bool _isLoading = false;
+
+  late Locale _locale;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
+  }
 
   Future<String> getWorkerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -77,7 +93,7 @@ class _WagesBeforeScreenState extends State<WagesBeforeScreen> {
 
       Dio dio = Dio();
       Response response = await dio.post(
-        'https://334e-122-172-86-132.ngrok-free.app/api/submit-activity',
+        'https://sbmgrajasthan.com/api/submit-activity',
         data: formData,
       );
 
@@ -173,6 +189,7 @@ class _WagesBeforeScreenState extends State<WagesBeforeScreen> {
   }
 
   void _showSuccessDialog() {
+    final localizations = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -247,7 +264,7 @@ class _WagesBeforeScreenState extends State<WagesBeforeScreen> {
                     ),
                     child: Center(
                       child: Text(
-                        'Close',
+                        localizations.close,
                         style: TextStyle(
                           color: Color(0xFF3E6632),
                           fontSize: screenWidth * 0.035,
@@ -268,6 +285,7 @@ class _WagesBeforeScreenState extends State<WagesBeforeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       padding: EdgeInsets.all(16),

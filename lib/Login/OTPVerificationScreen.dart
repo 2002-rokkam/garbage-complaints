@@ -1,11 +1,13 @@
 // Login/OTPVerificationScreen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../CitizensScreen/CitizensScreen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OTPVerificationScreen extends StatefulWidget {
   final String verificationId;
@@ -38,6 +40,22 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
       node.dispose();
     }
     super.dispose();
+  }
+
+  late Locale _locale;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLanguagePreference();
+  }
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
   }
 
   Future<void> _verifyOTP() async {
@@ -92,8 +110,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
 
   Future<http.Response> _sendTokenToBackend(String idToken) async {
     print("step1");
-    final url = Uri.parse(
-        "https://334e-122-172-86-132.ngrok-free.app/api/customer-login");
+    final url = Uri.parse("https://sbmgrajasthan.com/api/customer-login");
     print("step1");
 
     final response = await http.post(
@@ -123,6 +140,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: const Color(0xFFEFEFEF),
       body: SafeArea(
@@ -143,7 +161,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
               child: Column(
                 children: [
                   Text(
-                    'Enter OTP',
+                    localizations.enter_otp,
                     style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -152,7 +170,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    'A 6-digit OTP has been sent to ${widget.phoneNumber}',
+                    localizations.otp_sent(widget.phoneNumber),
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.black.withOpacity(0.6),
@@ -160,8 +178,6 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 40),
-
-                  // OTP Input Fields with Auto-Backspace Handling
                   RawKeyboardListener(
                     focusNode: FocusNode(),
                     onKey: (RawKeyEvent event) {
@@ -257,8 +273,8 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                 onPressed: _isLoading ? null : _verifyOTP,
                 child: _isLoading
                     ? const CircularProgressIndicator(color: Colors.black)
-                    : const Text(
-                        "Submit OTP",
+                    : Text(
+                        localizations.submit_otp,
                         style: TextStyle(fontSize: 16, color: Colors.white),
                       ),
               ),

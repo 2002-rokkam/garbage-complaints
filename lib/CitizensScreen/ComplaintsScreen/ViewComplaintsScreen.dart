@@ -1,5 +1,6 @@
 // CitizensScreen/ComplaintsScreen/ViewComplaintsScreen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -43,8 +44,7 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
   }
 
   Future<void> _fetchComplaints() async {
-    final String apiUrl =
-        'https://334e-122-172-86-132.ngrok-free.app/api/complaints';
+    final String apiUrl = 'https://sbmgrajasthan.com/api/complaints';
     try {
       final response = await http.get(
         Uri.parse(apiUrl),

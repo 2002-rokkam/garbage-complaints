@@ -1,5 +1,6 @@
 // authority/BDO/BDOD2D/BDOD2DCalnderActivity.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -36,11 +37,22 @@ class _BDOD2DCalnderActivityScreenState
   late TabController _tabController;
   String? workerId; // Make workerId nullable
 
+  late Locale _locale;
+
   @override
   void initState() {
     super.initState();
+    _loadLanguagePreference();
     _tabController = TabController(length: 2, vsync: this);
     _fetchWorkerId(); // Fetch the workerId and update the state
+  }
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
   }
 
   // Fetch the workerId and then call fetchActivities
@@ -69,8 +81,7 @@ class _BDOD2DCalnderActivityScreenState
       _isLoading = true;
     });
 
-    final url = Uri.parse(
-            'https://334e-122-172-86-132.ngrok-free.app/api/bdo-section-dashboard')
+    final url = Uri.parse('https://sbmgrajasthan.com/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': widget.section,
@@ -100,8 +111,7 @@ class _BDOD2DCalnderActivityScreenState
   Future<void> fetchQRDetails(String workerId) async {
     if (workerId.isEmpty) return;
 
-    final url = Uri.parse(
-            'https://334e-122-172-86-132.ngrok-free.app/api/bdo-section-dashboard')
+    final url = Uri.parse('https://sbmgrajasthan.com/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': 'D2D_QR',

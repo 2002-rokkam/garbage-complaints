@@ -1,5 +1,6 @@
 // authority/SMD/SMDScreen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
@@ -7,7 +8,11 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../PoweredByBikaji.dart';
 import '../../Login/workerLogout.dart';
+import '../BDO/BDOD2D/BDOD2DCalnderActivity.dart';
+import '../BDO/BDORCC/BDORCCCalendarActivityScreen.dart';
+import '../BDO/BDOSchoolCampus/BDOSchoolCampusCalnderActivity.dart';
 import '../BDO/BDOWorkerComplaintsCalender.dart';
+import '../BDO/CalnderActivity/BDOCalendarActivityScreen.dart';
 import 'SMDWorkerComplaintsCalender.dart';
 import 'SMDselectRegion.dart';
 import '../../button_items.dart';
@@ -38,9 +43,9 @@ class _SMDScreenState extends State<SMDScreen> {
     String? District = prefs.getString('District');
     print(District);
     if (District != null) {
-      final response = await http.get(Uri.parse(
-              'https://334e-122-172-86-132.ngrok-free.app/api/complaints-by-state/')
-          .replace(queryParameters: {
+      final response = await http.get(
+          Uri.parse('https://sbmgrajasthan.com/api/complaints-by-state/')
+              .replace(queryParameters: {
         'district': District,
       }));
 
@@ -287,15 +292,13 @@ class _SMDScreenState extends State<SMDScreen> {
                       ),
                     ),
                     SizedBox(height: 16),
-
                     Row(
-                      mainAxisAlignment:
-                          MainAxisAlignment.spaceEvenly, // Adjusts the spacing
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         GestureDetector(
                           onTap: () {},
                           child: Container(
-                            width: 170, // Adjust width as needed
+                            width: 170,
                             height: 139,
                             decoration: ShapeDecoration(
                               color: Colors.white,
@@ -339,12 +342,11 @@ class _SMDScreenState extends State<SMDScreen> {
                                     pendingComplaints.toString(),
                                     style: TextStyle(
                                       color: Colors.black,
-                                      fontSize: 18, // Adjust size as needed
+                                      fontSize: 18,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  const SizedBox(
-                                      height: 5), // Adjust spacing as needed
+                                  const SizedBox(height: 5),
                                   Text(
                                     'Pending ',
                                     style: TextStyle(
@@ -364,7 +366,7 @@ class _SMDScreenState extends State<SMDScreen> {
                         GestureDetector(
                           onTap: () {},
                           child: Container(
-                            width: 170, // Adjust width as needed
+                            width: 170,
                             height: 139,
                             decoration: ShapeDecoration(
                               color: Colors.white,
@@ -432,7 +434,6 @@ class _SMDScreenState extends State<SMDScreen> {
                         ),
                       ],
                     ),
-                    // Scrollable "Home" label and buttons grid
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16.0, vertical: 4.0),
@@ -448,13 +449,12 @@ class _SMDScreenState extends State<SMDScreen> {
                         ),
                       ),
                     ),
-
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 1.0),
                       child: Wrap(
-                        spacing: 1, // Horizontal space between buttons
-                        runSpacing: 12, // Vertical space between rows
-                        children: buttonItems.map((item) {
+                        spacing: 1,
+                        runSpacing: 12,
+                        children: buttonItems(context).map((item) {
                           return _buildButton(
                             item['label']!,
                             item['imageUrl']!,
@@ -483,10 +483,8 @@ class _SMDScreenState extends State<SMDScreen> {
         imageUrl,
         fit: BoxFit.cover,
       ),
-      height: MediaQuery.of(context).size.height *
-          0.3, // Adjust height based on screen size
-      width: MediaQuery.of(context).size.width *
-          0.8, // Adjust width based on screen size
+      height: MediaQuery.of(context).size.height * 0.3,
+      width: MediaQuery.of(context).size.width * 0.8,
     );
   }
 
@@ -565,14 +563,12 @@ class _SMDScreenState extends State<SMDScreen> {
     String? appbarselectedGramPanchayat =
         prefs.getString('appbarselectedGramPanchayat');
 
-    // Check if any of the values are empty or null
     if (appbarselectedDistrict == null ||
         appbarselectedDistrict.isEmpty ||
         appbarselectedBlock == null ||
         appbarselectedBlock.isEmpty ||
         appbarselectedGramPanchayat == null ||
         appbarselectedGramPanchayat.isEmpty) {
-      // Show the region selection dialog
       showDialog(
         context: context,
         builder: (context) => Dialog(
@@ -580,47 +576,68 @@ class _SMDScreenState extends State<SMDScreen> {
             borderRadius: BorderRadius.circular(12.0),
           ),
           child: Container(
-            height: 400, // Adjust height as needed
+            height: 400,
             padding: EdgeInsets.all(16.0),
             child: SMDselectRegion(),
           ),
         ),
       );
-      return Scaffold(); // Return an empty scaffold to prevent navigation
+      return Scaffold();
     }
 
     switch (routeName) {
       case 'DoorToDoorScreen':
-        return SMDD2DCalnderActivityScreen(
+        return BDOD2DCalnderActivityScreen(
           section: 'Door to Door',
           district: appbarselectedDistrict,
           block: appbarselectedBlock,
           gramPanchayat: appbarselectedGramPanchayat,
         );
       case 'RoadSweepingScreen':
-        return SMDCalendarActivityScreen(
+        return BDOCalendarActivityScreen(
           section: 'Road Sweeping',
           district: appbarselectedDistrict,
           block: appbarselectedBlock,
           gramPanchayat: appbarselectedGramPanchayat,
         );
       case 'DrainCleaningScreen':
-        return SMDCalendarActivityScreen(
+        return BDOCalendarActivityScreen(
           section: 'Drainage Cleaning',
           district: appbarselectedDistrict,
           block: appbarselectedBlock,
           gramPanchayat: appbarselectedGramPanchayat,
         );
       case 'CSCScreen':
-        return SMDCalendarActivityScreen(
+        return BDOCalendarActivityScreen(
           section: 'CSC',
           district: appbarselectedDistrict,
           block: appbarselectedBlock,
           gramPanchayat: appbarselectedGramPanchayat,
         );
       case 'RRCScreen':
-        return SMDRCCCalendarActivityScreen(
+        return BDORCCCalendarActivityScreen(
           section: 'RRC',
+          district: appbarselectedDistrict,
+          block: appbarselectedBlock,
+          gramPanchayat: appbarselectedGramPanchayat,
+        );
+      case 'SchoolCampus':
+        return BDOSchoolCampusCalnderActivityScreen(
+          section: 'School Campus',
+          district: appbarselectedDistrict,
+          block: appbarselectedBlock,
+          gramPanchayat: appbarselectedGramPanchayat,
+        );
+      case 'PanchayatCampus':
+        return BDOSchoolCampusCalnderActivityScreen(
+          section: 'Panchayat Campus',
+          district: appbarselectedDistrict,
+          block: appbarselectedBlock,
+          gramPanchayat: appbarselectedGramPanchayat,
+        );
+      case 'AnimalBodytransport':
+        return BDOCalendarActivityScreen(
+          section: 'Animal Transport',
           district: appbarselectedDistrict,
           block: appbarselectedBlock,
           gramPanchayat: appbarselectedGramPanchayat,

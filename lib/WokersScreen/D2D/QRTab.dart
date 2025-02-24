@@ -1,5 +1,6 @@
 // WokersScreen/D2D/QRTab.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -48,7 +49,7 @@ class _QRTabState extends State<QRTab> {
 
   Future<void> submitData(String scannedData, String workerId) async {
     final dio = Dio();
-    const url = 'https://334e-122-172-86-132.ngrok-free.app/api/submit-activity';
+    const url = 'https://sbmgrajasthan.com/api/submit-activity';
 
     try {
       FormData formData = FormData.fromMap({

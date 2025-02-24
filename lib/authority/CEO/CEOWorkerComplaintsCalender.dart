@@ -1,5 +1,6 @@
 // authority/CEO/CEOWorkerComplaintsCalender.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:async';
 import 'package:table_calendar/table_calendar.dart';
 import 'dart:convert';
@@ -31,7 +32,7 @@ class _CEOWorkerComplaintsCalenderState
     final District = prefs.getString('District') ?? '';
 
     final url =
-        'https://334e-122-172-86-132.ngrok-free.app/api/complaintdetails-by-district/?district=$District';
+        'https://sbmgrajasthan.com/api/complaintdetails-by-district/?district=$District';
 
     try {
       final response = await http.get(Uri.parse(url));
@@ -66,7 +67,7 @@ class _CEOWorkerComplaintsCalenderState
         builder: (context) => BDOWorkerComplaintsListScreenCalender(
           date: selectedDay,
           complaints: complaints,
-          onUpdate: _fetchComplaintData, // Pass the refresh method
+          onUpdate: _fetchComplaintData,
         ),
       ),
     );

@@ -1,6 +1,7 @@
 // authority/BDO/selectRegion.dart
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,11 +21,19 @@ class _RegionSelectorState extends State<RegionSelector> {
   List<String> blocks = [];
   List<String> gramPanchayats = [];
 
-  final String districtsUrl =
-      "https://334e-122-172-86-132.ngrok-free.app/api/getDistricts";
-  final String blocksUrl =
-      "https://334e-122-172-86-132.ngrok-free.app/api/getBlocks/";
-  final String gpUrl = "https://334e-122-172-86-132.ngrok-free.app/api/getGp/";
+  late Locale _locale;
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
+  }
+
+  final String districtsUrl = "https://sbmgrajasthan.com/api/getDistricts";
+  final String blocksUrl = "https://sbmgrajasthan.com/api/getBlocks/";
+  final String gpUrl = "https://sbmgrajasthan.com/api/getGp/";
 
   Future<void> loadDistrictFromPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -118,6 +127,7 @@ class _RegionSelectorState extends State<RegionSelector> {
           'appbarselectedGramPanchayat', formattedGramPanchayat);
       Navigator.pop(context);
     } else {
+       final localizations = AppLocalizations.of(context)!;
       showDialog(
         context: context,
         builder: (context) {
@@ -128,7 +138,7 @@ class _RegionSelectorState extends State<RegionSelector> {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text('OK'),
+                child: Text(localizations.ok),
               ),
             ],
           );
@@ -143,7 +153,8 @@ class _RegionSelectorState extends State<RegionSelector> {
     fetchDistricts();
     loadDistrictFromPrefs();
     loadBDOFromPrefs();
-    loadGramPanchayatFromPrefs(); // Load Gram Panchayat from SharedPreferences
+    loadGramPanchayatFromPrefs();
+    _loadLanguagePreference();
   }
 
   void showOptions(BuildContext context, List<String> options,
@@ -206,6 +217,7 @@ class _RegionSelectorState extends State<RegionSelector> {
 
   @override
   Widget build(BuildContext context) {
+     final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Color.fromRGBO(239, 239, 239, 1),
       body: Padding(
@@ -272,7 +284,6 @@ class _RegionSelectorState extends State<RegionSelector> {
             GestureDetector(
               onTap: () async {
                 if (selectedBlock != null) {
-                  // Show a loading indicator while fetching data
                   showDialog(
                     context: context,
                     barrierDismissible: false,
@@ -280,14 +291,9 @@ class _RegionSelectorState extends State<RegionSelector> {
                       return Center(child: CircularProgressIndicator());
                     },
                   );
-
-                  // Fetch Gram Panchayats
                   await fetchGramPanchayats(selectedDistrict!, selectedBlock!);
-
-                  // Close the loading indicator
                   Navigator.pop(context);
 
-                  // Show the bottom sheet only if data is available
                   if (gramPanchayats.isNotEmpty) {
                     showOptions(context, gramPanchayats, (value) {
                       setState(() {
@@ -295,7 +301,6 @@ class _RegionSelectorState extends State<RegionSelector> {
                       });
                     });
                   } else {
-                    // Show an error message if no data is available
                     showDialog(
                       context: context,
                       builder: (context) {
@@ -308,7 +313,7 @@ class _RegionSelectorState extends State<RegionSelector> {
                               onPressed: () {
                                 Navigator.pop(context);
                               },
-                              child: Text('OK'),
+                              child: Text(localizations.ok),
                             ),
                           ],
                         );

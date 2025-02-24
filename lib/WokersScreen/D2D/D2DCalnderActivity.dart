@@ -1,5 +1,6 @@
 // WokersScreen/D2D/D2DCalnderActivity.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -26,15 +27,25 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
   String? workerId;
   Map<DateTime, int> activityCounts = {};
   Map<DateTime, int> qrCounts = {};
+  late Locale _locale;
 
   @override
   void initState() {
     super.initState();
+    _loadLanguagePreference();
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
-      setState(() {}); // Update UI when tab changes
+      setState(() {});
     });
     _fetchWorkerId();
+  }
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
   }
 
   Future<void> _fetchWorkerId() async {
@@ -62,7 +73,7 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
     });
 
     final url = Uri.parse(
-        'https://334e-122-172-86-132.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+        'https://sbmgrajasthan.com/api/worker/$workerId/section/${widget.section}');
 
     try {
       final response = await http.get(url);
@@ -94,7 +105,7 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
     if (workerId.isEmpty) return;
 
     final url = Uri.parse(
-        'https://334e-122-172-86-132.ngrok-free.app/api/worker/$workerId/section/D2D_QR');
+        'https://sbmgrajasthan.com/api/worker/$workerId/section/D2D_QR');
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
@@ -141,7 +152,7 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
     if (workerId == null) {
       return Center(child: CircularProgressIndicator());
     }
-
+    final localizations = AppLocalizations.of(context)!;
     final selectedActivities = getActivitiesForSelectedDate();
     final isBeforeAfterTab = _tabController.index == 0;
 
@@ -163,8 +174,8 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
           indicatorColor: Color.fromRGBO(255, 210, 98, 1),
           indicatorWeight: 3.0,
           tabs: [
-            Tab(text: 'Before & After'),
-            Tab(text: 'QR Data'),
+            Tab(text: localizations.beforeAfter),
+            Tab(text: localizations.qrData),
           ],
         ),
       ),
@@ -179,10 +190,40 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
             onDaySelected: (selectedDay, focusedDay) {
               setState(() {
                 _selectedDate = selectedDay;
-                _isLoading = true;
               });
-              fetchActivities();
-              fetchQRDetails(workerId!);
+
+              final selectedDateKey = DateTime(
+                  selectedDay.year, selectedDay.month, selectedDay.day);
+              final count = _tabController.index == 0
+                  ? activityCounts[selectedDateKey] ?? 0
+                  : qrCounts[selectedDateKey] ?? 0;
+
+              if (count > 0) {
+                Future.delayed(Duration(milliseconds: 300), () {
+                  // Small delay for smooth transition
+                  if (_tabController.index == 0) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BeforeAfterScreen(
+                          selectedDate: _selectedDate,
+                          activities: getActivitiesForSelectedDate(),
+                        ),
+                      ),
+                    );
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => QRDetailsScreen(
+                          selectedDate: _selectedDate,
+                          tripDetails: _tripDetails,
+                        ),
+                      ),
+                    );
+                  }
+                });
+              }
             },
             calendarStyle: CalendarStyle(
               selectedDecoration: BoxDecoration(
@@ -227,66 +268,28 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child:
-                (_tabController.index == 0 && selectedActivities.isNotEmpty) ||
-                        (_tabController.index == 1 && _tripDetails.isNotEmpty)
-                    ? Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        elevation: 5,
-                        child: ListTile(
-                          contentPadding: EdgeInsets.all(16),
-                          title: Text(
-                            _tabController.index == 0
-                                ? 'Total Activities: ${selectedActivities.length}'
-                                : 'Total QR Scans: ${_tripDetails.length}',
-                          ),
-                          trailing: ElevatedButton(
-                            onPressed: () {
-                              if (_tabController.index == 0 &&
-                                  selectedActivities.isNotEmpty) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => BeforeAfterScreen(
-                                      selectedDate: _selectedDate,
-                                      activities: selectedActivities,
-                                    ),
-                                  ),
-                                );
-                              } else if (_tabController.index == 1 &&
-                                  _tripDetails.isNotEmpty) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => QRDetailsScreen(
-                                      selectedDate: _selectedDate,
-                                      tripDetails: _tripDetails,
-                                    ),
-                                  ),
-                                );
-                              }
-                            },
-                            child: Text('View'),
-                            style: ElevatedButton.styleFrom(
-                              primary: Color(0xFF5C964A),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                          ),
-                        ),
-                      )
-                    : Center(
+            child: (_tabController.index == 0 && selectedActivities.isEmpty)
+                ? Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        localizations.noActivities,
+                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                      ),
+                    ),
+                  )
+                : (_tabController.index == 1 && _tripDetails.isEmpty)
+                    ? Center(
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Text(
-                            'No activities available',
+                            localizations
+                                .noActivities, // Use localization for consistency
                             style: TextStyle(fontSize: 16, color: Colors.grey),
                           ),
                         ),
-                      ),
+                      )
+                    : Container(),
           ),
         ],
       ),

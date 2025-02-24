@@ -1,20 +1,19 @@
-// authority/CEO/CEOD2D/CEOD2DCalnderActivity.dart
+// authority/BDO/BDOPanchayatCampus/BDOPanchayatCampus.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../BDO/BDOD2D/QRDetailsScreen.dart';
-import '../../BDO/CalnderActivity/BDOSelectedDateActivitiesScreen.dart';
+import '../CalnderActivity/BDOSelectedDateActivitiesScreen.dart';
 
-class CEOD2DCalnderActivityScreen extends StatefulWidget {
+class BDOPanchayatCampusCalnderActivityScreen extends StatefulWidget {
   final String section;
   final String district;
   final String block;
   final String gramPanchayat;
 
-  const CEOD2DCalnderActivityScreen({
+  const BDOPanchayatCampusCalnderActivityScreen({
     Key? key,
     required this.section,
     required this.district,
@@ -23,35 +22,44 @@ class CEOD2DCalnderActivityScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _CEOD2DCalnderActivityScreenState createState() =>
-      _CEOD2DCalnderActivityScreenState();
+  _BDOPanchayatCampusCalnderActivityScreenState createState() =>
+      _BDOPanchayatCampusCalnderActivityScreenState();
 }
 
-class _CEOD2DCalnderActivityScreenState
-    extends State<CEOD2DCalnderActivityScreen>
+class _BDOPanchayatCampusCalnderActivityScreenState
+    extends State<BDOPanchayatCampusCalnderActivityScreen>
     with SingleTickerProviderStateMixin {
   DateTime _selectedDate = DateTime.now();
   List _activities = [];
   List _tripDetails = [];
   bool _isLoading = false;
   late TabController _tabController;
-  String? workerId; // Make workerId nullable
+  String? workerId;
+  late Locale _locale;
 
   @override
   void initState() {
     super.initState();
+    _loadLanguagePreference();
     _tabController = TabController(length: 2, vsync: this);
-    _fetchWorkerId(); // Fetch the workerId and update the state
+    _fetchWorkerId();
   }
 
-  // Fetch the workerId and then call fetchActivities
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
+  }
+
   Future<void> _fetchWorkerId() async {
-    workerId = await getWorkerId(); // Assign workerId here
+    workerId = await getWorkerId();
     if (workerId != null && workerId!.isNotEmpty) {
-      fetchActivities(); // Now call fetchActivities after workerId is available
+      fetchActivities();
     } else {
       setState(() {
-        _isLoading = false; // Handle the case if workerId is not available
+        _isLoading = false;
       });
       print('Worker ID not found.');
     }
@@ -59,12 +67,11 @@ class _CEOD2DCalnderActivityScreenState
 
   Future<String?> getWorkerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('worker_id'); // Return nullable workerId
+    return prefs.getString('worker_id');
   }
 
   Future<void> fetchActivities() async {
-    if (workerId == null || workerId!.isEmpty)
-      return; // Avoid calling if workerId is null
+    if (workerId == null || workerId!.isEmpty) return;
 
     setState(() {
       _isLoading = true;
@@ -82,12 +89,10 @@ class _CEOD2DCalnderActivityScreenState
       final response = await http.get(url);
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-
-        // Extracting activities for the specific section
         var sectionActivities = data['section_data'][widget.section] ?? [];
         setState(() {
           _activities = sectionActivities;
-          fetchQRDetails(workerId!); // Pass workerId here
+          fetchQRDetails(workerId!);
         });
       } else {
         throw Exception('Failed to load activities');
@@ -103,8 +108,7 @@ class _CEOD2DCalnderActivityScreenState
     final url = Uri.parse('https://sbmgrajasthan.com/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
-      'section': 'D2D_QR',
-      'date': _selectedDate.toIso8601String(),
+      'section': 'Panchayat Toilet',
       'district': widget.district,
       'gram_panchayat': widget.gramPanchayat,
     });
@@ -114,7 +118,7 @@ class _CEOD2DCalnderActivityScreenState
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         setState(() {
-          _tripDetails = data['section_data']['D2D_QR'] ?? [];
+          _tripDetails = data['section_data']['Panchayat Toilet'] ?? [];
           _isLoading = false;
         });
       } else {
@@ -180,12 +184,11 @@ class _CEOD2DCalnderActivityScreenState
           indicatorColor: Color.fromRGBO(255, 210, 98, 1),
           indicatorWeight: 3.0,
           tabs: [
-            Tab(text: 'Before & After'),
-            Tab(text: 'QR Data'),
+            Tab(text: 'Campus'),
+            Tab(text: 'Toilet'),
           ],
         ),
       ),
-      backgroundColor: Color.fromRGBO(239, 239, 239, 1),
       body: Column(
         children: [
           Container(
@@ -239,7 +242,8 @@ class _CEOD2DCalnderActivityScreenState
                                     );
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    primary: Colors.green,
+                                    primary: Colors
+                                        .green, // Set the background color to green
                                   ),
                                   child: Text('View All'),
                                 ),
@@ -256,20 +260,23 @@ class _CEOD2DCalnderActivityScreenState
                           ? Card(
                               child: ListTile(
                                 title: Text(
-                                    'Total QR Scans: ${getFilteredTripDetails().length}'),
+                                    'Total Activites:${getFilteredTripDetails().length}'),
                                 trailing: ElevatedButton(
                                   onPressed: () {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => QRDetailsScreen(
-                                          tripDetails: getFilteredTripDetails(),
+                                        builder: (context) =>
+                                            BDOSelectedDateActivitiesScreen(
+                                          selectedDate: _selectedDate,
+                                          activities: getFilteredTripDetails(),
                                         ),
                                       ),
                                     );
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    primary: Colors.green,
+                                    primary: Colors
+                                        .green, // Set the background color to green
                                   ),
                                   child: Text('View All'),
                                 ),

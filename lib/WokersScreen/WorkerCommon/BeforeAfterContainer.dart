@@ -1,6 +1,7 @@
 // WokersScreen/WorkerCommon/BeforeAfterContainer.dart
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:io' show Platform;
@@ -10,7 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:slider_button/slider_button.dart';
-import 'package:flutter/foundation.dart' show kIsWeb; // Import kIsWeb
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class BeforeAfterContainer extends StatefulWidget {
   final String section;
@@ -38,11 +39,19 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
   String activityId = '';
   bool _isSubmitting = false;
   bool _isLoading = false;
+  late Locale _locale;
 
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
+  }
   @override
   void initState() {
     super.initState();
-
+     _loadLanguagePreference();
     if (widget.initialData != null) {
       activityId = widget.initialData!['record_id'].toString();
 
@@ -111,8 +120,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
 
       String address = await _getAddressFromLatLong(latitude, longitude);
 
-      var uri = Uri.parse(
-          'https://334e-122-172-86-132.ngrok-free.app/api/submit-activity');
+      var uri = Uri.parse('https://sbmgrajasthan.com/api/submit-activity');
       var request = http.MultipartRequest('POST', uri)
         ..fields['worker_id'] = workerId
         ..fields['section'] = widget.section
@@ -195,14 +203,14 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
   }
 
   Future<void> _submitAfterImage() async {
+    print("Submitting after image... _afterImage: $_afterImage, activityId: $activityId");
     if (_afterImage == null || activityId.isEmpty) {
       print("Error: After image data or activity ID is missing.");
       return;
     }
 
     try {
-      var uri = Uri.parse(
-          'https://334e-122-172-86-132.ngrok-free.app/api/submit-activity');
+      var uri = Uri.parse('https://sbmgrajasthan.com/api/submit-activity');
       var request = http.MultipartRequest('PUT', uri)
         ..fields['activity_id'] = activityId
         ..fields['latitude_after'] = _afterImage!['latitude'].toString()
@@ -237,6 +245,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
           builder: (BuildContext context) {
             final screenWidth = MediaQuery.of(context).size.width;
             final screenHeight = MediaQuery.of(context).size.height;
+            final localizations = AppLocalizations.of(context)!;
 
             return Dialog(
               shape: RoundedRectangleBorder(
@@ -270,7 +279,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                     SizedBox(
                       width: screenWidth * 0.8,
                       child: Text(
-                        'Successfully Submitted!',
+                        localizations.successfullySubmitted,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Color(0xFF1D1B20),
@@ -302,7 +311,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                         ),
                         child: Center(
                           child: Text(
-                            'Close',
+                            localizations.close,
                             style: TextStyle(
                               color: Color(0xFF3E6632),
                               fontSize: screenWidth * 0.035,
@@ -387,17 +396,19 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
   }
 
   void _showPopup(String message) {
+    final localizations = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Error'),
+        title: Text(localizations.error),
         content: Text(message),
         actions: <Widget>[
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
+              widget.onReload();
             },
-            child: Text('OK'),
+            child: Text(localizations.ok),
           ),
         ],
       ),
@@ -406,6 +417,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       padding: EdgeInsets.all(16),
@@ -460,7 +472,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                                 ),
                                 SizedBox(height: 8),
                                 Text(
-                                  'Before',
+                                  localizations.before,
                                   style: TextStyle(
                                     color: Color(0xFF6B6B6B),
                                     fontSize: 14,
@@ -498,7 +510,8 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                                   errorBuilder: (BuildContext context,
                                       Object error, StackTrace? stackTrace) {
                                     return Center(
-                                        child: Text('Failed to load image'));
+                                        child: Text(
+                                            localizations.failedToLoadImage));
                                   },
                                 )
                               : // PWA platform check
@@ -512,7 +525,8 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                                           child: CircularProgressIndicator());
                                     } else if (snapshot.hasError) {
                                       return Center(
-                                          child: Text('Failed to load image'));
+                                          child: Text(
+                                              localizations.failedToLoadImage));
                                     } else if (snapshot.hasData) {
                                       return Image.memory(
                                         snapshot.data!,
@@ -520,13 +534,14 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                                         errorBuilder:
                                             (context, error, stackTrace) {
                                           return Center(
-                                              child:
-                                                  Text('Failed to load image'));
+                                              child: Text(localizations
+                                                  .failedToLoadImage));
                                         },
                                       );
                                     } else {
                                       return Center(
-                                          child: Text('No image data'));
+                                          child:
+                                              Text(localizations.noImageData));
                                     }
                                   },
                                 ),
@@ -566,7 +581,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                                 ),
                                 SizedBox(height: 8),
                                 Text(
-                                  'After',
+                                  localizations.after,
                                   style: TextStyle(
                                     color: Color(0xFF6B6B6B),
                                     fontSize: 14,
@@ -587,18 +602,21 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                                       child: CircularProgressIndicator());
                                 } else if (snapshot.hasError) {
                                   return Center(
-                                      child: Text('Failed to load image'));
+                                      child: Text(
+                                          localizations.failedToLoadImage));
                                 } else if (snapshot.hasData) {
                                   return Image.memory(
                                     snapshot.data!,
                                     fit: BoxFit.cover,
                                     errorBuilder: (context, error, stackTrace) {
                                       return Center(
-                                          child: Text('Failed to load image'));
+                                          child: Text(
+                                              localizations.failedToLoadImage));
                                     },
                                   );
                                 } else {
-                                  return Center(child: Text('No image data'));
+                                  return Center(
+                                      child: Text(localizations.noImageData));
                                 }
                               },
                             ),
@@ -646,7 +664,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                         }
                       },
                       label: Text(
-                        "Slide to confirm 'Before'",
+                        localizations.slideToConfirmBefore,
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
                       icon: Icon(Icons.check, color: Colors.white),
@@ -674,8 +692,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                           if (isWithinRadius) {
                             await _submitAfterImage();
                           } else {
-                            _showPopup(
-                                'Error: After image is too far from the before image.');
+                            _showPopup(localizations.errorImageTooFar);
                           }
                         } catch (e) {
                           print("Error in slider action: $e");
@@ -686,7 +703,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                         }
                       },
                       label: Text(
-                        "Slide to confirm 'After'",
+                        localizations.slideToConfirmAfter,
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
                       icon: Icon(Icons.check, color: Colors.white),
@@ -703,9 +720,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
 
   Future<Uint8List> _loadImageBytes(String imagePath) async {
     if (imagePath.startsWith('data:image')) {
-      return base64Decode(imagePath
-          .split(',')
-          .last); // Extract the Base64 part after 'data:image/...'
+      return base64Decode(imagePath.split(',').last);
     } else {
       final file = File(imagePath);
       return await file.readAsBytes();

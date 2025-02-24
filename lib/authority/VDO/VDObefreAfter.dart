@@ -1,5 +1,6 @@
 // authority/VDO/VDObefreAfter.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class VDOBeforeAfterScreen extends StatelessWidget {
   final List activities;
@@ -7,8 +8,8 @@ class VDOBeforeAfterScreen extends StatelessWidget {
       : super(key: key);
 
   void _showFullScreenImage(BuildContext context, String imageUrl,
-      double dirlatitude, double dirlongitude ,String time) async {
-        print(activities);
+      double dirlatitude, double dirlongitude, String time) async {
+    print(activities);
     String location =
         'Lat: ${dirlatitude.toStringAsFixed(6)}, Long: ${dirlongitude.toStringAsFixed(6)}';
 
@@ -114,7 +115,7 @@ class VDOBeforeAfterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print(activities);
-final createdAt = DateTime.parse(activities[0]['created_at']).toLocal();
+    final createdAt = DateTime.parse(activities[0]['created_at']).toLocal();
     String createdAttime =
         '${createdAt.hour}:${createdAt.minute}:${createdAt.second}';
 

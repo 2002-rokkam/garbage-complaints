@@ -1,5 +1,6 @@
 // authority/BDO/BDOWages/BDOWagesCalendarActivityScreen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -30,13 +31,23 @@ class _BDOWagesCalendarActivityScreenState
   bool _isLoading = false;
   int _selectedMonth = DateTime.now().month;
   int _selectedYear = DateTime.now().year;
+  late Locale _locale;
 
   @override
   void initState() {
     super.initState();
+    _loadLanguagePreference();
     fetchActivitiesForMonth(_selectedMonth, _selectedYear);
   }
-
+  
+   void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
+  }
+  
   Future<String> getWorkerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('worker_id') ?? "";
@@ -49,8 +60,7 @@ class _BDOWagesCalendarActivityScreenState
       _isLoading = true;
     });
 
-    final url = Uri.parse(
-            'https://334e-122-172-86-132.ngrok-free.app/api/bdo-section-dashboard')
+    final url = Uri.parse('https://sbmgrajasthan.com/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': widget.section,

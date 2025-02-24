@@ -1,5 +1,6 @@
 // WokersScreen/RRC/RRCSectionScreen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../WorkerCommon/BeforeAfterContainer.dart';
@@ -52,7 +53,7 @@ class _RRCScreenState extends State<RRCScreen>
       String workerId = await getWorkerId();
       Dio dio = Dio();
       final response = await dio.get(
-          'https://334e-122-172-86-132.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+          'https://sbmgrajasthan.com/api/worker/$workerId/section/${widget.section}');
 
       if (response.statusCode == 200) {
         final data = response.data;
@@ -103,6 +104,7 @@ class _RRCScreenState extends State<RRCScreen>
 
   @override
   Widget build(BuildContext context) {
+        final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Color.fromRGBO(239, 239, 239, 1),
       appBar: AppBar(
@@ -196,7 +198,7 @@ class _RRCScreenState extends State<RRCScreen>
                   ),
                   SizedBox(width: 12),
                   Text(
-                    'Add More',
+                    localizations.addMore,
                     style: TextStyle(
                       color: Color(0xFF252525),
                       fontSize: 14,

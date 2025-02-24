@@ -1,5 +1,6 @@
 // WokersScreen/WorkerComplaints/WorkerComplaintsListScreen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:async';
 import 'package:geocoding/geocoding.dart';
 import 'package:http/http.dart' as http;
@@ -80,12 +81,23 @@ class _ComplaintCardState extends State<ComplaintCard> {
   double? _longitude;
   late String workerId;
   String _workerEmail = '';
+  late Locale _locale;
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
+  }
+ 
 
   @override
   void initState() {
     super.initState();
     _fetchAddress();
     _loadWorkerDetails();
+     _loadLanguagePreference();
   }
 
   Future<void> _fetchAddress() async {
@@ -258,7 +270,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
 
     try {
       Response response = await dio.post(
-        'https://334e-122-172-86-132.ngrok-free.app/api/update-complaint/${widget.complaint['complaint_id']}',
+        'https://sbmgrajasthan.com/api/update-complaint/${widget.complaint['complaint_id']}',
         data: formData,
       );
 
@@ -281,6 +293,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
   }
 
   void _showErrorDialog(String message) {
+          final localizations = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -308,7 +321,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                 style: ElevatedButton.styleFrom(
                   primary: Colors.green,
                 ),
-                child: Text('OK'),
+                child: Text(localizations.ok),
               ),
             ],
           ),
@@ -472,6 +485,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
 
   @override
   Widget build(BuildContext context) {
+          final localizations = AppLocalizations.of(context)!;
     final images = widget.complaint['photos'];
     final status = widget.complaint['status'];
     final createdAt = DateTime.parse(widget.complaint['created_at']).toLocal();

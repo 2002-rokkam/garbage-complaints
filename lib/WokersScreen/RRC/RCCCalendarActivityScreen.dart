@@ -1,5 +1,6 @@
 // WokersScreen/RRC/RCCCalendarActivityScreen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -51,7 +52,7 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
     setState(() => _isLoading = true);
 
     final url = Uri.parse(
-        'https://334e-122-172-86-132.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+        'https://sbmgrajasthan.com/api/worker/$workerId/section/${widget.section}');
 
     try {
       final response = await http.get(url);
@@ -72,7 +73,7 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
     String workerId = await getWorkerId();
     setState(() => _isLoading = true);
     final url = Uri.parse(
-        'https://334e-122-172-86-132.ngrok-free.app/api/worker/$workerId/section/Waste Details');
+        'https://sbmgrajasthan.com/api/worker/$workerId/section/Waste Details');
 
     try {
       final response = await http.get(url);

@@ -1,5 +1,6 @@
 // WokersScreen/SchoolCampus/SchoolCampusSectionScreen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../WorkerCommon/BeforeAfterContainer.dart';
@@ -8,10 +9,12 @@ import 'SchoolCampusCalnderActivity.dart';
 class SchoolCampusSectionScreen extends StatefulWidget {
   final String section;
 
-  const SchoolCampusSectionScreen({Key? key, required this.section}) : super(key: key);
+  const SchoolCampusSectionScreen({Key? key, required this.section})
+      : super(key: key);
 
   @override
-  _SchoolCampusSectionScreenState createState() => _SchoolCampusSectionScreenState();
+  _SchoolCampusSectionScreenState createState() =>
+      _SchoolCampusSectionScreenState();
 }
 
 class _SchoolCampusSectionScreenState extends State<SchoolCampusSectionScreen>
@@ -21,6 +24,7 @@ class _SchoolCampusSectionScreenState extends State<SchoolCampusSectionScreen>
 
   bool isLoading = true;
   late TabController _tabController;
+  late Locale _locale;
 
   @override
   void initState() {
@@ -29,6 +33,16 @@ class _SchoolCampusSectionScreenState extends State<SchoolCampusSectionScreen>
     _tabController.addListener(_handleTabChange);
     _fetchActivities();
     _fetchToiletActivities();
+        _loadLanguagePreference();
+
+  }
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
   }
 
   @override
@@ -59,7 +73,7 @@ class _SchoolCampusSectionScreenState extends State<SchoolCampusSectionScreen>
       String workerId = await getWorkerId();
       Dio dio = Dio();
       final response = await dio.get(
-          'https://334e-122-172-86-132.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+          'https://sbmgrajasthan.com/api/worker/$workerId/section/${widget.section}');
 
       if (response.statusCode == 200) {
         final data = response.data;
@@ -87,8 +101,7 @@ class _SchoolCampusSectionScreenState extends State<SchoolCampusSectionScreen>
     }
   }
 
-
-   Future<void> _fetchToiletActivities() async {
+  Future<void> _fetchToiletActivities() async {
     setState(() {
       isLoading = true;
     });
@@ -102,7 +115,8 @@ class _SchoolCampusSectionScreenState extends State<SchoolCampusSectionScreen>
     try {
       String workerId = await getWorkerId();
       Dio dio = Dio();
-      final response = await dio.get('https://334e-122-172-86-132.ngrok-free.app/api/worker/$workerId/section/School Toilet');
+      final response = await dio.get(
+          'https://sbmgrajasthan.com/api/worker/$workerId/section/School Toilet');
 
       if (response.statusCode == 200) {
         final data = response.data;
@@ -152,6 +166,7 @@ class _SchoolCampusSectionScreenState extends State<SchoolCampusSectionScreen>
 
   @override
   Widget build(BuildContext context) {
+        final localizations = AppLocalizations.of(context)!;
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -214,11 +229,11 @@ class _SchoolCampusSectionScreenState extends State<SchoolCampusSectionScreen>
                 onPressed: addNewContainer,
                 backgroundColor: const Color(0xFFFFD262),
                 label: Row(
-                  children: const [
+                  children:  [
                     Icon(Icons.add, size: 24, color: Color(0xFF252525)),
                     SizedBox(width: 12),
                     Text(
-                      'Add More',
+                      localizations.addMore,
                       style: TextStyle(
                         color: Color(0xFF252525),
                         fontSize: 14,
@@ -233,11 +248,11 @@ class _SchoolCampusSectionScreenState extends State<SchoolCampusSectionScreen>
                 onPressed: addToiletContainer,
                 backgroundColor: const Color(0xFFFFD262),
                 label: Row(
-                  children: const [
+                  children:  [
                     Icon(Icons.add, size: 24, color: Color(0xFF252525)),
                     SizedBox(width: 12),
                     Text(
-                      'Add More',
+                      localizations.addMore,
                       style: TextStyle(
                         color: Color(0xFF252525),
                         fontSize: 14,
@@ -270,7 +285,7 @@ class _SchoolCampusSectionScreenState extends State<SchoolCampusSectionScreen>
           );
   }
 
-   Widget _SchoolToiletBeforeAfterTab() {
+  Widget _SchoolToiletBeforeAfterTab() {
     return isLoading
         ? const Center(child: CircularProgressIndicator())
         : SingleChildScrollView(

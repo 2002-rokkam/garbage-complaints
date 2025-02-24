@@ -1,5 +1,6 @@
 // authority/CEO/CEOScreen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
@@ -7,8 +8,12 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../PoweredByBikaji.dart';
 import '../../Login/workerLogout.dart';
+import '../BDO/BDOD2D/BDOD2DCalnderActivity.dart';
+import '../BDO/BDORCC/BDORCCCalendarActivityScreen.dart';
+import '../BDO/BDOSchoolCampus/BDOSchoolCampusCalnderActivity.dart';
 import '../BDO/BDOWorkerComplaintsCalender.dart';
 import '../BDO/BDOWages/BDOWagesCalendarActivityScreen.dart';
+import '../BDO/CalnderActivity/BDOCalendarActivityScreen.dart';
 import 'CEOCalender/CEOCalendarActivityScreen.dart';
 import 'CEOD2D/CEOD2DCalnderActivity.dart';
 import 'CEORCC/CEORCCCalendarActivityScreen.dart';
@@ -37,9 +42,9 @@ class _CEOScreenState extends State<CEOScreen> {
     String? District = prefs.getString('District');
     print(District);
     if (District != null) {
-      final response = await http.get(Uri.parse(
-              'https://334e-122-172-86-132.ngrok-free.app/api/complaints-by-district/')
-          .replace(queryParameters: {
+      final response = await http.get(
+          Uri.parse('https://sbmgrajasthan.com/api/complaints-by-district/')
+              .replace(queryParameters: {
         'district': District,
       }));
 
@@ -70,7 +75,7 @@ class _CEOScreenState extends State<CEOScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          automaticallyImplyLeading: false, 
+          automaticallyImplyLeading: false,
           backgroundColor: const Color(0xFF5C964A),
           flexibleSpace: Container(
             height: 100,
@@ -146,8 +151,7 @@ class _CEOScreenState extends State<CEOScreen> {
                   Container(
                     height: screenHeight * 0.14,
                     decoration: BoxDecoration(
-                      color: Color(
-                          0xFF5C964A),
+                      color: Color(0xFF5C964A),
                       borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(24),
                         bottomRight: Radius.circular(24),
@@ -160,9 +164,9 @@ class _CEOScreenState extends State<CEOScreen> {
                         child: Padding(
                           padding: const EdgeInsets.only(top: 16.0),
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(
-                                16),
-                            child: Image.asset('assets/images/mainimage.png',
+                            borderRadius: BorderRadius.circular(16),
+                            child: Image.asset(
+                              'assets/images/mainimage.png',
                               width: MediaQuery.of(context).size.width * 0.9,
                               height: 150,
                               fit: BoxFit.cover,
@@ -446,7 +450,7 @@ class _CEOScreenState extends State<CEOScreen> {
                       child: Wrap(
                         spacing: 1, // Horizontal space between buttons
                         runSpacing: 12, // Vertical space between rows
-                        children: buttonItems.map((item) {
+                        children: buttonItems(context).map((item) {
                           return _buildButton(
                             item['label']!,
                             item['imageUrl']!,
@@ -554,7 +558,8 @@ class _CEOScreenState extends State<CEOScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? appbarselectedDistrict = prefs.getString('appbarselectedDistrict');
     String? appbarselectedBlock = prefs.getString('appbarselectedBlock');
-    String? appbarselectedGramPanchayat = prefs.getString('appbarselectedGramPanchayat');
+    String? appbarselectedGramPanchayat =
+        prefs.getString('appbarselectedGramPanchayat');
 
     if (appbarselectedDistrict == null ||
         appbarselectedDistrict.isEmpty ||
@@ -580,36 +585,57 @@ class _CEOScreenState extends State<CEOScreen> {
 
     switch (routeName) {
       case 'DoorToDoorScreen':
-        return CEOD2DCalnderActivityScreen(
+        return BDOD2DCalnderActivityScreen(
           section: 'Door to Door',
           district: appbarselectedDistrict,
           block: appbarselectedBlock,
           gramPanchayat: appbarselectedGramPanchayat,
         );
       case 'RoadSweepingScreen':
-        return CEOCalendarActivityScreen(
+        return BDOCalendarActivityScreen(
           section: 'Road Sweeping',
           district: appbarselectedDistrict,
           block: appbarselectedBlock,
           gramPanchayat: appbarselectedGramPanchayat,
         );
       case 'DrainCleaningScreen':
-        return CEOCalendarActivityScreen(
+        return BDOCalendarActivityScreen(
           section: 'Drainage Cleaning',
           district: appbarselectedDistrict,
           block: appbarselectedBlock,
           gramPanchayat: appbarselectedGramPanchayat,
         );
       case 'CSCScreen':
-        return CEOCalendarActivityScreen(
+        return BDOCalendarActivityScreen(
           section: 'CSC',
           district: appbarselectedDistrict,
           block: appbarselectedBlock,
           gramPanchayat: appbarselectedGramPanchayat,
         );
       case 'RRCScreen':
-        return CEORCCCalendarActivityScreen(
+        return BDORCCCalendarActivityScreen(
           section: 'RRC',
+          district: appbarselectedDistrict,
+          block: appbarselectedBlock,
+          gramPanchayat: appbarselectedGramPanchayat,
+        );
+      case 'SchoolCampus':
+        return BDOSchoolCampusCalnderActivityScreen(
+          section: 'School Campus',
+          district: appbarselectedDistrict,
+          block: appbarselectedBlock,
+          gramPanchayat: appbarselectedGramPanchayat,
+        );
+      case 'PanchayatCampus':
+        return BDOSchoolCampusCalnderActivityScreen(
+          section: 'Panchayat Campus',
+          district: appbarselectedDistrict,
+          block: appbarselectedBlock,
+          gramPanchayat: appbarselectedGramPanchayat,
+        );
+      case 'AnimalBodytransport':
+        return BDOCalendarActivityScreen(
+          section: 'Animal Transport',
           district: appbarselectedDistrict,
           block: appbarselectedBlock,
           gramPanchayat: appbarselectedGramPanchayat,

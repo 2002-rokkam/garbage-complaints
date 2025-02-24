@@ -1,6 +1,7 @@
 // authority/BDO/BDORCC/BDORCCCalendarActivityScreen.dart
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -35,12 +36,22 @@ class _BDORCCCalendarActivityScreenState
   List _tripDetails = [];
   bool _isLoading = false;
   late TabController _tabController;
+  late Locale _locale;
 
   @override
   void initState() {
     super.initState();
+    _loadLanguagePreference();
     fetchActivities();
     _tabController = TabController(length: 2, vsync: this);
+  }
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
   }
 
   Future<String> getWorkerId() async {
@@ -55,8 +66,7 @@ class _BDORCCCalendarActivityScreenState
       _isLoading = true;
     });
 
-    final url = Uri.parse(
-            'https://334e-122-172-86-132.ngrok-free.app/api/bdo-section-dashboard')
+    final url = Uri.parse('https://sbmgrajasthan.com/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': widget.section,
@@ -87,8 +97,7 @@ class _BDORCCCalendarActivityScreenState
   Future<void> fetchTripDetails() async {
     String workerId = await getWorkerId();
 
-    final url = Uri.parse(
-            'https://334e-122-172-86-132.ngrok-free.app/api/bdo-section-dashboard')
+    final url = Uri.parse('https://sbmgrajasthan.com/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': 'Waste Details',

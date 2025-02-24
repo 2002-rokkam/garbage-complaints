@@ -1,5 +1,6 @@
 // authority/VDO/VDOD2DCalnderActivity.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -46,8 +47,7 @@ class _VDOD2DCalnderActivityScreenState
       _isLoading = true;
     });
 
-    final url = Uri.parse(
-            'https://334e-122-172-86-132.ngrok-free.app/api/vdo-section-dashboard')
+    final url = Uri.parse('https://sbmgrajasthan.com/api/vdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': widget.section,
@@ -76,8 +76,7 @@ class _VDOD2DCalnderActivityScreenState
   Future<void> fetchTripDetails() async {
     String workerId = await getWorkerId();
 
-    final url = Uri.parse(
-            'https://334e-122-172-86-132.ngrok-free.app/api/vdo-section-dashboard')
+    final url = Uri.parse('https://sbmgrajasthan.com/api/vdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': 'D2D_QR',

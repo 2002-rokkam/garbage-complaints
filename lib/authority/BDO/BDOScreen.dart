@@ -1,5 +1,6 @@
 // authority/BDO/BDOScreen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
 import '../../PoweredByBikaji.dart';
@@ -7,6 +8,7 @@ import '../../Login/workerLogout.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'BDOSchoolCampus/BDOSchoolCampusCalnderActivity.dart';
 import 'BDOWorkerComplaintsCalender.dart';
 import 'selectRegion.dart';
 import '../../button_items.dart';
@@ -25,11 +27,21 @@ class _BDOScreenState extends State<BDOScreen> {
   int totalComplaints = 0;
   int pendingComplaints = 0;
   int resolvedComplaints = 0;
+  late Locale _locale;
 
   @override
   void initState() {
     super.initState();
     fetchData();
+    _loadLanguagePreference();
+  }
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
   }
 
   Future<void> fetchData() async {
@@ -37,9 +49,9 @@ class _BDOScreenState extends State<BDOScreen> {
     String? District = prefs.getString('District');
     print(District);
     if (District != null) {
-      final response = await http.get(Uri.parse(
-              'https://334e-122-172-86-132.ngrok-free.app/api/complaints-by-district/')
-          .replace(queryParameters: {
+      final response = await http.get(
+          Uri.parse('https://sbmgrajasthan.com/api/complaints-by-district/')
+              .replace(queryParameters: {
         'district': District,
       }));
 
@@ -444,7 +456,7 @@ class _BDOScreenState extends State<BDOScreen> {
                       child: Wrap(
                         spacing: 1, // Horizontal space between buttons
                         runSpacing: 12, // Vertical space between rows
-                        children: buttonItems.map((item) {
+                        children: buttonItems(context).map((item) {
                           return _buildButton(
                             item['label']!,
                             item['imageUrl']!,
@@ -618,6 +630,27 @@ class _BDOScreenState extends State<BDOScreen> {
       case 'WagesScreen':
         return BDOWagesCalendarActivityScreen(
           section: 'Wages',
+          district: appbarselectedDistrict,
+          block: appbarselectedBlock,
+          gramPanchayat: appbarselectedGramPanchayat,
+        );
+      case 'SchoolCampus':
+        return BDOSchoolCampusCalnderActivityScreen(
+          section: 'School Campus',
+          district: appbarselectedDistrict,
+          block: appbarselectedBlock,
+          gramPanchayat: appbarselectedGramPanchayat,
+        );
+      case 'PanchayatCampus':
+        return BDOSchoolCampusCalnderActivityScreen(
+          section: 'Panchayat Campus',
+          district: appbarselectedDistrict,
+          block: appbarselectedBlock,
+          gramPanchayat: appbarselectedGramPanchayat,
+        );
+      case 'AnimalBodytransport':
+        return BDOCalendarActivityScreen(
+          section: 'Animal Transport',
           district: appbarselectedDistrict,
           block: appbarselectedBlock,
           gramPanchayat: appbarselectedGramPanchayat,

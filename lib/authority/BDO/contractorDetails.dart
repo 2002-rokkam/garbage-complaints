@@ -1,7 +1,9 @@
 // authority/BDO/contractorDetails.dart
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Contractordetails extends StatefulWidget {
   final String gramPanchayat;
@@ -15,16 +17,27 @@ class Contractordetails extends StatefulWidget {
 
 class _ContractordetailsState extends State<Contractordetails> {
   late Future<List<Map<String, dynamic>>> contractorDetails;
+  late Locale _locale;
 
   @override
   void initState() {
     super.initState();
-    contractorDetails = fetchContractorDetails();
+    _loadLanguagePreference();
+        contractorDetails = fetchContractorDetails();
+
+  }
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
   }
 
   Future<List<Map<String, dynamic>>> fetchContractorDetails() async {
     final apiUrl =
-        'https://334e-122-172-86-132.ngrok-free.app/api/contractors/?gp=${widget.gramPanchayat}';
+        'https://sbmgrajasthan.com/api/contractors/?gp=${widget.gramPanchayat}';
     final response = await http.get(Uri.parse(apiUrl));
 
     if (response.statusCode == 200) {

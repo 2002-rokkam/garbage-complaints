@@ -1,5 +1,6 @@
 // Login/workerLogout.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart'; // Import url_launcher package
@@ -124,7 +125,7 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
               // After successful logout, navigate to language selection screen
               Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => OnboardingScreen()),
+                MaterialPageRoute(builder: (context) => OnboardingScreen(changeLanguage: (Locale locale) {})),
                 (Route<dynamic> route) => false, // Prevent going back
               );
             },
@@ -148,7 +149,7 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
 
       // API URL
       String logoutUrl =
-          'https://334e-122-172-86-132.ngrok-free.app/api/worker-logout'; // Replace with your API endpoint
+          'https://sbmgrajasthan.com/api/worker-logout'; // Replace with your API endpoint
 
       // Prepare body and headers
       Map<String, String> headers = {
