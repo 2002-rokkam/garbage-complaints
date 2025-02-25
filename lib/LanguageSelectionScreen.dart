@@ -1,43 +1,4 @@
 // LanguageSelectionScreen.dart
-// import 'package:flutter/material.dart';
-// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-// import 'Login/PhoneAuthScreen.dart';
-
-// class LanguageSelectionScreen extends StatelessWidget {
-//   const LanguageSelectionScreen({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final localizations = AppLocalizations.of(context)!;
-
-//     return Scaffold(
-//       appBar: AppBar(title: Text(localizations.app_title)),
-//       body: Column(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: [
-//           ElevatedButton(
-//             onPressed: () {
-//               Navigator.pushReplacement(
-//                 context,
-//                 MaterialPageRoute(builder: (context) => PhoneInputScreen()),
-//               );
-//             },
-//             child: const Text("English"),
-//           ),
-//           ElevatedButton(
-//             onPressed: () {
-//               Navigator.pushReplacement(
-//                 context,
-//                 MaterialPageRoute(builder: (context) => PhoneInputScreen()),
-//               );
-//             },
-//             child: const Text("हिन्दी"),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -53,9 +14,8 @@ class LanguageSelectionScreen extends StatelessWidget {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('language', locale.languageCode);
 
-    changeLanguage(locale); // ✅ This updates the app language
+    changeLanguage(locale);
 
-    // Navigate to PhoneInputScreen after setting language
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => PhoneInputScreen()),
