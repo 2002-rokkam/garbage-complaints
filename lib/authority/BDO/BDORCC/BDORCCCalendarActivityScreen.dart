@@ -28,23 +28,14 @@ class BDORCCCalendarActivityScreen extends StatefulWidget {
       _BDORCCCalendarActivityScreenState();
 }
 
-class _BDORCCCalendarActivityScreenState
-    extends State<BDORCCCalendarActivityScreen>
-    with SingleTickerProviderStateMixin {
-  DateTime _selectedDate = DateTime.now();
+class _BDORCCCalendarActivityScreenState extends State<BDORCCCalendarActivityScreen> with SingleTickerProviderStateMixin {
+   DateTime _selectedDate = DateTime.now();
   List _activities = [];
   List _tripDetails = [];
   bool _isLoading = false;
   late TabController _tabController;
-  late Locale _locale;
 
-  @override
-  void initState() {
-    super.initState();
-    _loadLanguagePreference();
-    fetchActivities();
-    _tabController = TabController(length: 2, vsync: this);
-  }
+  late Locale _locale;
 
   void _loadLanguagePreference() async {
     final prefs = await SharedPreferences.getInstance();
@@ -54,6 +45,23 @@ class _BDORCCCalendarActivityScreenState
     });
   }
 
+  @override
+  void initState() {
+    super.initState();
+    _loadLanguagePreference();
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {
+      setState(() => _isLoading = true);
+      if (_tabController.index == 0) {
+        fetchActivities();
+      } else {
+        fetchTripDetails();
+      }
+    });
+    fetchActivities();
+    fetchTripDetails();
+  }
+
   Future<String> getWorkerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('worker_id') ?? "";
@@ -61,12 +69,9 @@ class _BDORCCCalendarActivityScreenState
 
   Future<void> fetchActivities() async {
     String workerId = await getWorkerId();
+    setState(() => _isLoading = true);
 
-    setState(() {
-      _isLoading = true;
-    });
-
-    final url = Uri.parse('https://sbmgrajasthan.com/api/bdo-section-dashboard')
+      final url = Uri.parse('https://sbmgrajasthan.com/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': widget.section,
@@ -82,22 +87,19 @@ class _BDORCCCalendarActivityScreenState
         setState(() {
           _activities = sectionActivities;
         });
-      } else {
-        throw Exception('Failed to load activities');
       }
     } catch (e) {
       print(e);
     } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      setState(() => _isLoading = false);
     }
   }
 
   Future<void> fetchTripDetails() async {
     String workerId = await getWorkerId();
+    setState(() => _isLoading = true);
 
-    final url = Uri.parse('https://sbmgrajasthan.com/api/bdo-section-dashboard')
+      final url = Uri.parse('https://sbmgrajasthan.com/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': 'Waste Details',
@@ -110,35 +112,34 @@ class _BDORCCCalendarActivityScreenState
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         setState(() {
-          _tripDetails = data['section_data']['Waste Details']
-              .where((trip) =>
-                  DateTime.parse(trip['date_time']).toLocal().day ==
-                  _selectedDate.day)
-              .toList();
+          _tripDetails = data['section_data']['Waste Details'] ?? [];
         });
-      } else {
-        throw Exception('Failed to load trip details');
       }
     } catch (e) {
-      print('Error: $e');
+      print(e);
+    } finally {
+      setState(() => _isLoading = false);
     }
   }
 
   List getActivitiesForSelectedDate() {
-    return _activities
-        .where((activity) =>
-            DateTime.parse(activity['date_time']).toLocal().day ==
-                _selectedDate.day &&
-            DateTime.parse(activity['date_time']).toLocal().month ==
-                _selectedDate.month &&
-            DateTime.parse(activity['date_time']).toLocal().year ==
-                _selectedDate.year)
-        .toList();
+    return _activities.where((activity) {
+      DateTime activityDate = DateTime.parse(activity['date_time']).toLocal();
+      return isSameDay(activityDate, _selectedDate);
+    }).toList();
+  }
+
+  List getTripDetailsForSelectedDate() {
+    return _tripDetails.where((trip) {
+      DateTime tripDate = DateTime.parse(trip['date_time']).toLocal();
+      return isSameDay(tripDate, _selectedDate);
+    }).toList();
   }
 
   @override
   Widget build(BuildContext context) {
     final selectedActivities = getActivitiesForSelectedDate();
+    final selectedTrips = getTripDetailsForSelectedDate();
 
     return Scaffold(
       appBar: AppBar(
@@ -163,7 +164,6 @@ class _BDORCCCalendarActivityScreenState
           ],
         ),
       ),
-      backgroundColor: Color.fromRGBO(239, 239, 239, 1),
       body: Column(
         children: [
           Container(
@@ -176,8 +176,36 @@ class _BDORCCCalendarActivityScreenState
               onDaySelected: (selectedDay, focusedDay) {
                 setState(() {
                   _selectedDate = selectedDay;
+                  _isLoading = true;
                 });
-                fetchTripDetails();
+
+                if (_tabController.index == 0) {
+                  fetchActivities().then((_) {
+                    final selectedActivities = getActivitiesForSelectedDate();
+                    if (selectedActivities.isNotEmpty) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => VDOBeforeAfterScreen(
+                              activities: selectedActivities),
+                        ),
+                      );
+                    }
+                  });
+                } else {
+                  fetchTripDetails().then((_) {
+                    final selectedTrips = getTripDetailsForSelectedDate();
+                    if (selectedTrips.isNotEmpty) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              BDOTripDetailsScreen(tripDetails: selectedTrips),
+                        ),
+                      );
+                    }
+                  });
+                }
               },
               calendarStyle: CalendarStyle(
                 selectedDecoration: BoxDecoration(
@@ -189,137 +217,61 @@ class _BDORCCCalendarActivityScreenState
                   shape: BoxShape.circle,
                 ),
               ),
+              calendarBuilders: CalendarBuilders(
+                markerBuilder: (context, date, _) {
+                  final isBeforeAfterTab = _tabController.index == 0;
+                  final count = isBeforeAfterTab
+                      ? _activities.where((activity) {
+                          DateTime activityDate =
+                              DateTime.parse(activity['date_time']).toLocal();
+                          return isSameDay(activityDate, date);
+                        }).length
+                      : _tripDetails.where((trip) {
+                          DateTime tripDate =
+                              DateTime.parse(trip['date_time']).toLocal();
+                          return isSameDay(tripDate, date);
+                        }).length;
+
+                  if (count > 0) {
+                    return Positioned(
+                      bottom: 1,
+                      child: Container(
+                        width: 16,
+                        height: 16,
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: Text(
+                            '$count',
+                            style: TextStyle(color: Colors.white, fontSize: 10),
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                  return null;
+                },
+              ),
             ),
           ),
           Container(
-              height: 80,
-              child: _isLoading
-                  ? Center(child: CircularProgressIndicator())
-                  : selectedActivities.isEmpty
-                      ? Center(child: Text('No activities for selected date.'))
-                      : TabBarView(
-                          controller: _tabController,
-                          children: [
-                            Card(
-                              color: Color.fromRGBO(239, 239, 239, 1),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment
-                                    .center, // Center vertically
-                                children: [
-                                  Expanded(
-                                    child: Align(
-                                      alignment: Alignment
-                                          .centerLeft, // Align text to the left
-                                      child: Text(
-                                        'Total Activities: ${selectedActivities.length}',
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment
-                                        .centerRight, // Align button to the right
-                                    child: TextButton(
-                                      onPressed: () {
-                                        if (_tabController.index == 0) {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  VDOBeforeAfterScreen(
-                                                activities: selectedActivities,
-                                              ),
-                                            ),
-                                          );
-                                        } else {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  BDOTripDetailsScreen(
-                                                tripDetails: _tripDetails,
-                                              ),
-                                            ),
-                                          );
-                                        }
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        primary: Colors
-                                            .green, // Set the background color to green
-                                      ),
-                                      child: Text(
-                                        'View All',
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 16),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Card(
-                              color: Color.fromRGBO(239, 239, 239, 1),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment
-                                    .center, // Center vertically
-                                children: [
-                                  Expanded(
-                                    child: Align(
-                                      alignment: Alignment
-                                          .centerLeft, // Align text to the left
-                                      child: Text(
-                                        'Total Trip Details: ${_tripDetails.length}',
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment
-                                        .centerRight, // Align button to the right
-                                    child: TextButton(
-                                      onPressed: () {
-                                        if (_tabController.index == 0) {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  VDOBeforeAfterScreen(
-                                                activities: selectedActivities,
-                                              ),
-                                            ),
-                                          );
-                                        } else {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  BDOTripDetailsScreen(
-                                                tripDetails: _tripDetails,
-                                              ),
-                                            ),
-                                          );
-                                        }
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        primary: Colors
-                                            .green, // Set the background color to green
-                                      ),
-                                      child: Text(
-                                        'View All',
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 16),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        )),
+            height: 80,
+            child: _isLoading
+                ? Center(child: CircularProgressIndicator())
+                : TabBarView(
+                    controller: _tabController,
+                    children: [
+                      selectedActivities.isEmpty
+                          ? Center(child: Text('No Activities Available'))
+                          : Container(),
+                      selectedTrips.isEmpty
+                          ? Center(child: Text('No Trip Details Available'))
+                          : Container(),
+                    ],
+                  ),
+          ),
         ],
       ),
     );

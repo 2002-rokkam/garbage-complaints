@@ -1,7 +1,6 @@
 // authority/VDO/fillContractorDetails.dart
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -19,28 +18,17 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
   final TextEditingController _contactNoController = TextEditingController();
 
   bool _isSubmitting = false;
-  bool _isEditing = false;
+  bool _isEditing = false; 
   bool _isEditable = false;
 
-  late Locale _locale;
-
-  void _loadLanguagePreference() async {
-    final prefs = await SharedPreferences.getInstance();
-    String? languageCode = prefs.getString('language') ?? 'en';
-    setState(() {
-      _locale = Locale(languageCode);
-    });
-  }
- 
-
-  Future<String> _getWorkerIdFromPrefs() async {
+   Future<String> _getWorkerIdFromPrefs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? workerId = prefs.getString('worker_id');
     return workerId ?? '';
   }
 
   Future<void> _loadContractorDetails() async {
-    final String workerId = await _getWorkerIdFromPrefs();
+    final String workerId = await _getWorkerIdFromPrefs(); // Sample worker ID
 
     try {
       final url = Uri.parse(
@@ -56,6 +44,13 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
           _gstNoController.text = data['gst_no'];
           _emailController.text = data['email'];
           _contactNoController.text = data['contact_no'];
+
+          _initialValues = {
+            'company_name': data['company_name'],
+            'gst_no': data['gst_no'],
+            'email': data['email'],
+            'contact_no': data['contact_no'],
+          };
         });
       } else if (response.statusCode == 404) {
         setState(() {
@@ -96,13 +91,11 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
       setState(() {
         _isSubmitting = true;
       });
+       final String workerId = await _getWorkerIdFromPrefs(); // Sample worker ID
 
-      final String workerId = await _getWorkerIdFromPrefs(); // Sample worker ID
-
-      final url =
-          Uri.parse(_isEditing // Decide between update and create endpoints
-              ? 'https://sbmgrajasthan.com/api/contractor/update/$workerId'
-              : 'https://sbmgrajasthan.com/api/contractor/create/$workerId');
+      final url = Uri.parse(_isEditing // Decide between update and create endpoints
+          ? 'https://sbmgrajasthan.com/api/contractor/update/$workerId'
+          : 'https://sbmgrajasthan.com/api/contractor/create/$workerId');
       final payload = {
         'company_name': _companyNameController.text,
         'gst_no': _gstNoController.text,
@@ -157,8 +150,6 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
   }
 
   void _showSuccessDialog() {
-      final localizations = AppLocalizations.of(context)!;
-
     showDialog(
       context: context,
       builder: (context) => Dialog(
@@ -223,8 +214,8 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
                     vertical: 10.0,
                   ),
                 ),
-                child:  Text(
-                  localizations.ok,
+                child: const Text(
+                  'OK',
                   style: TextStyle(fontSize: 16.0, color: Colors.white),
                 ),
               ),
@@ -309,16 +300,28 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
     );
   }
 
+  Map<String, String> _initialValues = {};
+
+  bool get _hasChanges {
+    return _companyNameController.text != _initialValues['company_name'] ||
+        _gstNoController.text != _initialValues['gst_no'] ||
+        _emailController.text != _initialValues['email'] ||
+        _contactNoController.text != _initialValues['contact_no'];
+  }
+
   @override
   void initState() {
     super.initState();
     _loadContractorDetails();
-    _loadLanguagePreference();
+
+    _companyNameController.addListener(() => setState(() {}));
+    _gstNoController.addListener(() => setState(() {}));
+    _emailController.addListener(() => setState(() {}));
+    _contactNoController.addListener(() => setState(() {}));
   }
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Contractor Details',
@@ -340,11 +343,7 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
               ),
               onPressed: () {
                 setState(() {
-                  if (_isEditable) {
-                    _isEditable = false; // Exit editable mode on close
-                  } else {
-                    _isEditable = true; // Enter editable mode on edit
-                  }
+                  _isEditable = !_isEditable;
                 });
               },
             ),
@@ -421,7 +420,9 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
                 ),
                 const SizedBox(height: 32.0),
                 ElevatedButton(
-                  onPressed: _isSubmitting ? null : _submitDetails,
+                  onPressed: (_isSubmitting || !_hasChanges || !_isEditable)
+                      ? null
+                      : _submitDetails,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
                     foregroundColor: Colors.white,

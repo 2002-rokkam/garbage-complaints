@@ -16,8 +16,7 @@ class BDOSelectedDateActivitiesScreen extends StatelessWidget {
   void _showFullScreenImage(BuildContext context, String imageUrl,
       double dirlatitude, double dirlongitude, String time) async {
     print(activities);
-    String location =
-        'Lat: ${dirlatitude.toStringAsFixed(6)}, Long: ${dirlongitude.toStringAsFixed(6)}';
+    String location = 'Lat: ${dirlatitude.toStringAsFixed(6)}, Long: ${dirlongitude.toStringAsFixed(6)}';
 
     showDialog(
       context: context,

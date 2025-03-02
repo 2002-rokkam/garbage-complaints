@@ -7,6 +7,7 @@ import '../../PoweredByBikaji.dart';
 import '../../Login/workerLogout.dart';
 import 'VDOCalendarActivityScreen.dart';
 import 'VDOD2DCalnderActivity.dart';
+import 'VDOPanchayatCampusCalnderActivity.dart';
 import 'VDORCCCalendarActivityScreen.dart';
 import 'VDOSchoolCampusCalnderActivity.dart';
 import 'VDOWagesCalendarActivityScreen.dart';
@@ -269,15 +270,13 @@ class _VDOScreenState extends State<VDOScreen> {
                       ),
                     ),
                     SizedBox(height: 16),
-
                     Row(
-                      mainAxisAlignment:
-                          MainAxisAlignment.spaceEvenly, // Adjusts the spacing
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         GestureDetector(
                           onTap: () {},
                           child: Container(
-                            width: 170, // Adjust width as needed
+                            width: 170,
                             height: 139,
                             decoration: ShapeDecoration(
                               color: Colors.white,
@@ -321,12 +320,11 @@ class _VDOScreenState extends State<VDOScreen> {
                                     pendingComplaints.toString(),
                                     style: TextStyle(
                                       color: Colors.black,
-                                      fontSize: 18, // Adjust size as needed
+                                      fontSize: 18, 
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  const SizedBox(
-                                      height: 5), // Adjust spacing as needed
+                                  const SizedBox(height: 5), 
                                   Text(
                                     'Pending ',
                                     style: TextStyle(
@@ -346,7 +344,7 @@ class _VDOScreenState extends State<VDOScreen> {
                         GestureDetector(
                           onTap: () {},
                           child: Container(
-                            width: 170, // Adjust width as needed
+                            width: 170, 
                             height: 139,
                             decoration: ShapeDecoration(
                               color: Colors.white,
@@ -465,11 +463,8 @@ class _VDOScreenState extends State<VDOScreen> {
         imageUrl,
         fit: BoxFit.cover,
       ),
-
-      height: MediaQuery.of(context).size.height *
-          0.3, // Adjust height based on screen size
-      width: MediaQuery.of(context).size.width *
-          0.8, // Adjust width based on screen size
+      height: MediaQuery.of(context).size.height * 0.3,
+      width: MediaQuery.of(context).size.width * 0.8,
     );
   }
 
@@ -562,7 +557,7 @@ class _VDOScreenState extends State<VDOScreen> {
       case 'SchoolCampus':
         return VDOSchoolCampusCalnderActivity(section: 'School Campus');
       case 'PanchayatCampus':
-        return VDOSchoolCampusCalnderActivity(section: 'Panchayat Campus');
+        return VDOPanchayatCampusCalnderActivity(section: 'Panchayat Campus');
       case 'AnimalBodytransport':
         return VDOCalendarActivityScreen(section: 'Animal Transport');
       case 'ContractorDetailsScreen':

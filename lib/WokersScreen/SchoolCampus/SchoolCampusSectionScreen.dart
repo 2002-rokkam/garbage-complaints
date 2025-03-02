@@ -21,7 +21,6 @@ class _SchoolCampusSectionScreenState extends State<SchoolCampusSectionScreen>
     with SingleTickerProviderStateMixin {
   List<Widget> beforeAfterContainers = [];
   List<Widget> ToiletbeforeAfterContainers = [];
-
   bool isLoading = true;
   late TabController _tabController;
   late Locale _locale;

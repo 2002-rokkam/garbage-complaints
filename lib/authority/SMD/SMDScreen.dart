@@ -1,6 +1,5 @@
 // authority/SMD/SMDScreen.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
@@ -11,15 +10,11 @@ import '../../Login/workerLogout.dart';
 import '../BDO/BDOD2D/BDOD2DCalnderActivity.dart';
 import '../BDO/BDORCC/BDORCCCalendarActivityScreen.dart';
 import '../BDO/BDOSchoolCampus/BDOSchoolCampusCalnderActivity.dart';
-import '../BDO/BDOWorkerComplaintsCalender.dart';
 import '../BDO/CalnderActivity/BDOCalendarActivityScreen.dart';
 import 'SMDWorkerComplaintsCalender.dart';
 import 'SMDselectRegion.dart';
 import '../../button_items.dart';
 import '../BDO/BDOWages/BDOWagesCalendarActivityScreen.dart';
-import 'SMDCalender/SMDCalendarActivityScreen.dart';
-import 'SMDD2D/SMDD2DCalnderActivity.dart';
-import 'SMDRCC/SMDRCCCalendarActivityScreen.dart';
 import 'SMDcontractorDetails.dart';
 
 class SMDScreen extends StatefulWidget {

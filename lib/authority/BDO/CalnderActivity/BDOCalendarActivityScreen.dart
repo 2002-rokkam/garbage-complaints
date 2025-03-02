@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 import '../../../commonActvityCalnder.dart';
 import 'BDOSelectedDateActivitiesScreen.dart';
 
@@ -32,6 +31,7 @@ class _BDOCalendarActivityScreenState extends State<BDOCalendarActivityScreen> {
   DateTime _selectedDate = DateTime.now();
   List _activities = [];
   late Locale _locale;
+  Map<DateTime, int> activityCounts = {};
 
   @override
   void initState() {
@@ -70,8 +70,15 @@ class _BDOCalendarActivityScreenState extends State<BDOCalendarActivityScreen> {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         var sectionActivities = data['section_data'][widget.section] ?? [];
+        Map<DateTime, int> counts = {};
+        for (var activity in sectionActivities) {
+          final date = DateTime.parse(activity['date_time']).toLocal();
+          final day = DateTime(date.year, date.month, date.day);
+          counts[day] = (counts[day] ?? 0) + 1;
+        }
         setState(() {
           _activities = sectionActivities;
+          activityCounts = counts;
         });
       } else {
         throw Exception('Failed to load activities');
@@ -113,12 +120,12 @@ class _BDOCalendarActivityScreenState extends State<BDOCalendarActivityScreen> {
         section: widget.section,
         initialDate: _selectedDate,
         activities: _activities,
+        activityCounts: activityCounts,
         onDateSelected: (selectedDate) {
           setState(() {
             _selectedDate = selectedDate;
           });
-        },
-        onViewAll: () {
+          if (getActivitiesForSelectedDate().isNotEmpty) {
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -128,6 +135,7 @@ class _BDOCalendarActivityScreenState extends State<BDOCalendarActivityScreen> {
               ),
             ),
           );
+          }
         },
       ),
     );

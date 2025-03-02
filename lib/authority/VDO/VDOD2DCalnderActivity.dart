@@ -5,14 +5,12 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'VDObefreAfter.dart';
 
 class VDOD2DCalnderActivityScreen extends StatefulWidget {
   final String section;
 
-  const VDOD2DCalnderActivityScreen({Key? key, required this.section})
-      : super(key: key);
+  VDOD2DCalnderActivityScreen({required this.section});
 
   @override
   _VDOD2DCalnderActivityScreenState createState() =>
@@ -27,12 +25,38 @@ class _VDOD2DCalnderActivityScreenState
   List _tripDetails = [];
   bool _isLoading = false;
   late TabController _tabController;
+  Map<DateTime, int> activityCounts = {};
+  Map<DateTime, int> qrCounts = {};
+  late Locale _locale;
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    fetchActivities();
     _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(_onTabChanged);
+    fetchActivities();
+    fetchTripDetails();
+    _loadLanguagePreference();
+  }
+
+  void _onTabChanged() {
+    setState(
+        () {}); // This ensures that the calendar updates when switching tabs
+  }
+
+  @override
+  void dispose() {
+    _tabController.removeListener(_onTabChanged);
+    _tabController.dispose();
+    super.dispose();
   }
 
   Future<String> getWorkerId() async {
@@ -58,8 +82,18 @@ class _VDOD2DCalnderActivityScreenState
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         var sectionActivities = data['section_data'][widget.section] ?? [];
+
+        Map<DateTime, int> counts = {};
+        for (var activity in sectionActivities) {
+          final date = DateTime.parse(activity['date_time']).toLocal();
+          final day = DateTime(date.year, date.month, date.day);
+          counts[day] = (counts[day] ?? 0) + 1;
+        }
+
         setState(() {
           _activities = sectionActivities;
+          activityCounts = counts;
+          _isLoading = false;
         });
       } else {
         throw Exception('Failed to load activities');
@@ -86,12 +120,19 @@ class _VDOD2DCalnderActivityScreenState
       final response = await http.get(url);
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
+        var qrDetails = data['section_data']['D2D_QR'] ?? [];
+
+        Map<DateTime, int> counts = {};
+        for (var qr in qrDetails) {
+          final date = DateTime.parse(qr['date_time']).toLocal();
+          final day = DateTime(date.year, date.month, date.day);
+          counts[day] = (counts[day] ?? 0) + 1;
+        }
+
         setState(() {
-          _tripDetails = data['section_data']['D2D_QR']
-              .where((trip) =>
-                  DateTime.parse(trip['date_time']).toLocal().day ==
-                  _selectedDate.day)
-              .toList();
+          _tripDetails = qrDetails;
+          qrCounts = counts;
+          _isLoading = false;
         });
       } else {
         throw Exception('Failed to load trip details');
@@ -115,23 +156,16 @@ class _VDOD2DCalnderActivityScreenState
 
   @override
   Widget build(BuildContext context) {
-    final selectedActivities = getActivitiesForSelectedDate();
+    final isBeforeAfterTab = _tabController.index == 0;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          '${widget.section}',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        title: Text(widget.section),
         backgroundColor: Color(0xFF5C964A),
         bottom: TabBar(
           controller: _tabController,
           labelColor: Colors.white,
-          unselectedLabelColor: Colors.white,
+          unselectedLabelColor: Colors.white70,
           indicatorColor: Color.fromRGBO(255, 210, 98, 1),
           indicatorWeight: 3.0,
           tabs: [
@@ -140,163 +174,89 @@ class _VDOD2DCalnderActivityScreenState
           ],
         ),
       ),
-      backgroundColor: Color.fromRGBO(239, 239, 239, 1),
       body: Column(
         children: [
-          Container(
-            child: TableCalendar(
-              focusedDay: _selectedDate,
-              firstDay: DateTime(2000),
-              lastDay: DateTime(2100),
-              calendarFormat: CalendarFormat.month,
-              selectedDayPredicate: (day) => isSameDay(day, _selectedDate),
-              onDaySelected: (selectedDay, focusedDay) {
-                setState(() {
-                  _selectedDate = selectedDay;
+          TableCalendar(
+            focusedDay: _selectedDate,
+            firstDay: DateTime(2000),
+            lastDay: DateTime(2100),
+            calendarFormat: CalendarFormat.month,
+            selectedDayPredicate: (day) => isSameDay(day, _selectedDate),
+            onDaySelected: (selectedDay, focusedDay) {
+              setState(() {
+                _selectedDate = selectedDay;
+              });
+
+              final selectedDateKey = DateTime(
+                  selectedDay.year, selectedDay.month, selectedDay.day);
+              final count = isBeforeAfterTab
+                  ? activityCounts[selectedDateKey] ?? 0
+                  : qrCounts[selectedDateKey] ?? 0;
+
+              if (count > 0) {
+                Future.delayed(Duration(milliseconds: 300), () {
+                  if (isBeforeAfterTab) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => VDOBeforeAfterScreen(
+                          activities: getActivitiesForSelectedDate(),
+                        ),
+                      ),
+                    );
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => QRDetailsScreen(
+                          tripDetails: _tripDetails,
+                        ),
+                      ),
+                    );
+                  }
                 });
-                fetchTripDetails();
-              },
-              calendarStyle: CalendarStyle(
-                selectedDecoration: BoxDecoration(
-                  color: Color(0xFF5C964A),
-                  shape: BoxShape.circle,
-                ),
-                todayDecoration: BoxDecoration(
-                  color: Color(0xFFFFA726),
-                  shape: BoxShape.circle,
-                ),
+              }
+            },
+            calendarStyle: CalendarStyle(
+              selectedDecoration: BoxDecoration(
+                color: Color(0xFF5C964A),
+                shape: BoxShape.circle,
+              ),
+              todayDecoration: BoxDecoration(
+                color: Color(0xFFFFA726),
+                shape: BoxShape.circle,
               ),
             ),
-          ),
-          Container(
-            height: 80,
-            child: _isLoading
-                ? Center(child: CircularProgressIndicator())
-                : selectedActivities.isEmpty
-                    ? Center(child: Text('No activities for selected date.'))
-                    : TabBarView(
-                        controller: _tabController,
-                        children: [
-                          Card(
-                            color: Color.fromRGBO(239, 239, 239, 1),
-                            child: Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.center, // Center vertically
-                              children: [
-                                Expanded(
-                                  child: Align(
-                                    alignment: Alignment
-                                        .centerLeft, // Align text to the left
-                                    child: Text(
-                                      'Total Activities: ${selectedActivities.length}',
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment
-                                      .centerRight, // Align button to the right
-                                  child: TextButton(
-                                    onPressed: () {
-                                      if (_tabController.index == 0) {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                VDOBeforeAfterScreen(
-                                              activities: selectedActivities,
-                                            ),
-                                          ),
-                                        );
-                                      } else {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                QRDetailsScreen(
-                                              tripDetails: _tripDetails,
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      primary: Colors
-                                          .green, // Set the background color to green
-                                    ),
-                                    child: Text(
-                                      'View All',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 16),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Card(
-                            color: Color.fromRGBO(239, 239, 239, 1),
-                            child: Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.center, // Center vertically
-                              children: [
-                                Expanded(
-                                  child: Align(
-                                    alignment: Alignment
-                                        .centerLeft, // Align text to the left
-                                    child: Text(
-                                      'Total Trip Details: ${_tripDetails.length}',
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment
-                                      .centerRight, // Align button to the right
-                                  child: TextButton(
-                                    onPressed: () {
-                                      if (_tabController.index == 0) {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                VDOBeforeAfterScreen(
-                                              activities: selectedActivities,
-                                            ),
-                                          ),
-                                        );
-                                      } else {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                QRDetailsScreen(
-                                              tripDetails: _tripDetails,
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      primary: Colors
-                                          .green, // Set the background color to green
-                                    ),
-                                    child: Text(
-                                      'View All',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 16),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+            calendarBuilders: CalendarBuilders(
+              markerBuilder: (context, date, _) {
+                final count = isBeforeAfterTab
+                    ? activityCounts[
+                            DateTime(date.year, date.month, date.day)] ??
+                        0
+                    : qrCounts[DateTime(date.year, date.month, date.day)] ?? 0;
+
+                if (count > 0) {
+                  return Positioned(
+                    bottom: 1,
+                    child: Container(
+                      width: 16,
+                      height: 16,
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
                       ),
+                      child: Center(
+                        child: Text(
+                          '$count',
+                          style: TextStyle(color: Colors.white, fontSize: 10),
+                        ),
+                      ),
+                    ),
+                  );
+                }
+                return null;
+              },
+            ),
           ),
         ],
       ),

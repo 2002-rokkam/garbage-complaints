@@ -26,15 +26,14 @@ class BDOPanchayatCampusCalnderActivityScreen extends StatefulWidget {
       _BDOPanchayatCampusCalnderActivityScreenState();
 }
 
-class _BDOPanchayatCampusCalnderActivityScreenState
-    extends State<BDOPanchayatCampusCalnderActivityScreen>
-    with SingleTickerProviderStateMixin {
-  DateTime _selectedDate = DateTime.now();
+class _BDOPanchayatCampusCalnderActivityScreenState extends State<BDOPanchayatCampusCalnderActivityScreen> with SingleTickerProviderStateMixin {
+   DateTime _selectedDate = DateTime.now();
   List _activities = [];
   List _tripDetails = [];
   bool _isLoading = false;
   late TabController _tabController;
-  String? workerId;
+  Map<DateTime, int> activityCounts = {};
+  Map<DateTime, int> tripCounts = {};
   late Locale _locale;
 
   @override
@@ -42,7 +41,11 @@ class _BDOPanchayatCampusCalnderActivityScreenState
     super.initState();
     _loadLanguagePreference();
     _tabController = TabController(length: 2, vsync: this);
-    _fetchWorkerId();
+    _tabController.addListener(() {
+      setState(() {});
+    });
+    fetchActivities();
+    fetchTripDetails();
   }
 
   void _loadLanguagePreference() async {
@@ -53,25 +56,13 @@ class _BDOPanchayatCampusCalnderActivityScreenState
     });
   }
 
-  Future<void> _fetchWorkerId() async {
-    workerId = await getWorkerId();
-    if (workerId != null && workerId!.isNotEmpty) {
-      fetchActivities();
-    } else {
-      setState(() {
-        _isLoading = false;
-      });
-      print('Worker ID not found.');
-    }
-  }
-
-  Future<String?> getWorkerId() async {
+  Future<String> getWorkerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('worker_id');
+    return prefs.getString('worker_id') ?? "";
   }
 
   Future<void> fetchActivities() async {
-    if (workerId == null || workerId!.isEmpty) return;
+    String workerId = await getWorkerId();
 
     setState(() {
       _isLoading = true;
@@ -90,9 +81,18 @@ class _BDOPanchayatCampusCalnderActivityScreenState
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         var sectionActivities = data['section_data'][widget.section] ?? [];
+
+        Map<DateTime, int> counts = {};
+        for (var activity in sectionActivities) {
+          final date = DateTime.parse(activity['date_time']).toLocal();
+          final day = DateTime(date.year, date.month, date.day);
+          counts[day] = (counts[day] ?? 0) + 1;
+        }
+
         setState(() {
           _activities = sectionActivities;
-          fetchQRDetails(workerId!);
+          activityCounts = counts;
+          _isLoading = false;
         });
       } else {
         throw Exception('Failed to load activities');
@@ -102,10 +102,10 @@ class _BDOPanchayatCampusCalnderActivityScreenState
     }
   }
 
-  Future<void> fetchQRDetails(String workerId) async {
-    if (workerId.isEmpty) return;
+  Future<void> fetchTripDetails() async {
+    String workerId = await getWorkerId();
 
-    final url = Uri.parse('https://sbmgrajasthan.com/api/bdo-section-dashboard')
+      final url = Uri.parse('https://sbmgrajasthan.com/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': 'Panchayat Toilet',
@@ -117,19 +117,38 @@ class _BDOPanchayatCampusCalnderActivityScreenState
       final response = await http.get(url);
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
+        var tripData = data['section_data']['Panchayat Toilet'] ?? [];
+
+        Map<DateTime, int> counts = {};
+        for (var trip in tripData) {
+          final date = DateTime.parse(trip['date_time']).toLocal();
+          final day = DateTime(date.year, date.month, date.day);
+          counts[day] = (counts[day] ?? 0) + 1;
+        }
+
         setState(() {
-          _tripDetails = data['section_data']['Panchayat Toilet'] ?? [];
+          _tripDetails = tripData;
+          tripCounts = counts;
           _isLoading = false;
         });
       } else {
-        throw Exception('Failed to load QR details');
+        throw Exception('Failed to load trip details');
       }
     } catch (e) {
       print('Error: $e');
-      setState(() {
-        _isLoading = false;
-      });
     }
+  }
+
+  List getPanchayatActivitiesForSelectedDate() {
+    return _tripDetails
+        .where((activity) =>
+            DateTime.parse(activity['date_time']).toLocal().day ==
+                _selectedDate.day &&
+            DateTime.parse(activity['date_time']).toLocal().month ==
+                _selectedDate.month &&
+            DateTime.parse(activity['date_time']).toLocal().year ==
+                _selectedDate.year)
+        .toList();
   }
 
   List getActivitiesForSelectedDate() {
@@ -144,27 +163,12 @@ class _BDOPanchayatCampusCalnderActivityScreenState
         .toList();
   }
 
-  List getFilteredTripDetails() {
-    return _tripDetails
-        .where((trip) =>
-            DateTime.parse(trip['date_time']).toLocal().day ==
-                _selectedDate.day &&
-            DateTime.parse(trip['date_time']).toLocal().month ==
-                _selectedDate.month &&
-            DateTime.parse(trip['date_time']).toLocal().year ==
-                _selectedDate.year)
-        .toList();
-  }
-
   @override
   Widget build(BuildContext context) {
-    if (workerId == null) {
-      return Center(
-          child:
-              CircularProgressIndicator()); // Wait for workerId to be fetched
-    }
-
+    final isBeforeAfterTab = _tabController.index == 0;
     final selectedActivities = getActivitiesForSelectedDate();
+    final PanchayatActivities = getPanchayatActivitiesForSelectedDate();
+    final localizations = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
@@ -184,113 +188,104 @@ class _BDOPanchayatCampusCalnderActivityScreenState
           indicatorColor: Color.fromRGBO(255, 210, 98, 1),
           indicatorWeight: 3.0,
           tabs: [
-            Tab(text: 'Campus'),
-            Tab(text: 'Toilet'),
+            Tab(text: 'Panchayat Campus'),
+            Tab(text: 'Panchayat Toilet'),
           ],
         ),
       ),
       body: Column(
         children: [
-          Container(
-            child: TableCalendar(
-              focusedDay: _selectedDate,
-              firstDay: DateTime(2000),
-              lastDay: DateTime(2100),
-              calendarFormat: CalendarFormat.month,
-              selectedDayPredicate: (day) => isSameDay(day, _selectedDate),
-              onDaySelected: (selectedDay, focusedDay) {
-                setState(() {
-                  _selectedDate = selectedDay;
-                  fetchQRDetails(workerId!); // Use workerId here
-                });
-              },
-              calendarStyle: CalendarStyle(
-                selectedDecoration: BoxDecoration(
-                  color: Color(0xFF5C964A),
-                  shape: BoxShape.circle,
-                ),
-                todayDecoration: BoxDecoration(
-                  color: Color(0xFFFFA726),
-                  shape: BoxShape.circle,
-                ),
+          TableCalendar(
+            focusedDay: _selectedDate,
+            firstDay: DateTime(2000),
+            lastDay: DateTime(2100),
+            calendarFormat: CalendarFormat.month,
+            selectedDayPredicate: (day) => isSameDay(day, _selectedDate),
+            onDaySelected: (selectedDay, focusedDay) {
+              setState(() {
+                _selectedDate = selectedDay;
+              });
+              if (_tabController.index == 0 && selectedActivities.isNotEmpty) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BDOSelectedDateActivitiesScreen(
+                      selectedDate: _selectedDate,
+                      activities: selectedActivities,
+                    ),
+                  ),
+                );
+              } else if (_tabController.index == 1 &&
+                  PanchayatActivities.isNotEmpty) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BDOSelectedDateActivitiesScreen(
+                      selectedDate: _selectedDate,
+                      activities: PanchayatActivities,
+                    ),
+                  ),
+                );
+              }
+            },
+            calendarStyle: CalendarStyle(
+              selectedDecoration: BoxDecoration(
+                color: Color(0xFF5C964A),
+                shape: BoxShape.circle,
+              ),
+              todayDecoration: BoxDecoration(
+                color: Color(0xFFFFA726),
+                shape: BoxShape.circle,
               ),
             ),
+            calendarBuilders: CalendarBuilders(
+              markerBuilder: (context, date, _) {
+                final count = isBeforeAfterTab
+                    ? activityCounts[
+                            DateTime(date.year, date.month, date.day)] ??
+                        0
+                    : tripCounts[DateTime(date.year, date.month, date.day)] ??
+                        0;
+
+                if (count > 0) {
+                  return Positioned(
+                    bottom: 1,
+                    child: Container(
+                      width: 16,
+                      height: 16,
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: Text(
+                          '$count',
+                          style: TextStyle(color: Colors.white, fontSize: 10),
+                        ),
+                      ),
+                    ),
+                  );
+                }
+                return null;
+              },
+            ),
           ),
-          Container(
-            height: 80, // Set a fixed height for the entire TabBarView
-            child: _isLoading
-                ? Center(child: CircularProgressIndicator())
-                : TabBarView(
-                    controller: _tabController,
-                    children: [
-                      selectedActivities.isNotEmpty
-                          ? Card(
-                              child: ListTile(
-                                title: Text(
-                                    'Total Activities : ${selectedActivities.length}'),
-                                trailing: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            BDOSelectedDateActivitiesScreen(
-                                          selectedDate: _selectedDate,
-                                          activities: selectedActivities,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    primary: Colors
-                                        .green, // Set the background color to green
-                                  ),
-                                  child: Text('View All'),
-                                ),
-                              ),
-                            )
-                          : Center(
-                              child: Text(
-                                'No activities for selected date.',
-                                style: TextStyle(
-                                    fontSize: 16, color: Colors.black54),
-                              ),
-                            ),
-                      getFilteredTripDetails().isNotEmpty
-                          ? Card(
-                              child: ListTile(
-                                title: Text(
-                                    'Total Activites:${getFilteredTripDetails().length}'),
-                                trailing: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            BDOSelectedDateActivitiesScreen(
-                                          selectedDate: _selectedDate,
-                                          activities: getFilteredTripDetails(),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    primary: Colors
-                                        .green, // Set the background color to green
-                                  ),
-                                  child: Text('View All'),
-                                ),
-                              ),
-                            )
-                          : Center(
-                              child: Text(
-                                'No QR scans for selected date.',
-                                style: TextStyle(
-                                    fontSize: 16, color: Colors.black54),
-                              ),
-                            ),
-                    ],
-                  ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child:
+                (_tabController.index == 0 && selectedActivities.isNotEmpty) ||
+                        (_tabController.index == 1 &&
+                            PanchayatActivities.isNotEmpty)
+                    ? Container()
+                    : Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            'No activities available',
+                            style: TextStyle(fontSize: 16, color: Colors.grey),
+                          ),
+                        ),
+                      ),
           ),
         ],
       ),

@@ -8,6 +8,7 @@ import '../../Login/workerLogout.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'BDOPanchayatCampus/BDOPanchayatCampus.dart';
 import 'BDOSchoolCampus/BDOSchoolCampusCalnderActivity.dart';
 import 'BDOWorkerComplaintsCalender.dart';
 import 'selectRegion.dart';
@@ -642,7 +643,7 @@ class _BDOScreenState extends State<BDOScreen> {
           gramPanchayat: appbarselectedGramPanchayat,
         );
       case 'PanchayatCampus':
-        return BDOSchoolCampusCalnderActivityScreen(
+        return BDOPanchayatCampusCalnderActivityScreen(
           section: 'Panchayat Campus',
           district: appbarselectedDistrict,
           block: appbarselectedBlock,

@@ -23,9 +23,21 @@ class _RRCScreenState extends State<RRCScreen>
   List tripDetails = [];
   bool isLoading = true;
 
+  late Locale _locale;
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
+  }
+ 
+
   @override
   void initState() {
     super.initState();
+    _loadLanguagePreference();
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
       setState(() {});

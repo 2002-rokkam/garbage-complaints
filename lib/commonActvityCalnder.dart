@@ -2,21 +2,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:table_calendar/table_calendar.dart';
-
 class ActivityCalendar extends StatefulWidget {
   final String section;
   final DateTime initialDate;
   final List activities;
+  final Map<DateTime, int> activityCounts;
   final Function(DateTime) onDateSelected;
-  final VoidCallback onViewAll;
 
   const ActivityCalendar({
     Key? key,
     required this.section,
     required this.initialDate,
     required this.activities,
+    required this.activityCounts,
     required this.onDateSelected,
-    required this.onViewAll,
   }) : super(key: key);
 
   @override
@@ -72,34 +71,37 @@ class _ActivityCalendarState extends State<ActivityCalendar> {
               shape: BoxShape.circle,
             ),
           ),
+          calendarBuilders: CalendarBuilders(
+            markerBuilder: (context, date, events) {
+              final count = widget.activityCounts[
+                      DateTime(date.year, date.month, date.day)] ??
+                  0;
+
+              if (count > 0) {
+                return Positioned(
+                  bottom: 1,
+                  child: Container(
+                    width: 16,
+                    height: 16,
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: Text(
+                        '$count',
+                        style: TextStyle(color: Colors.white, fontSize: 10),
+                      ),
+                    ),
+                  ),
+                );
+              }
+              return null;
+            },
+          ),
         ),
         selectedActivities.isNotEmpty
-            ? Card(
-                margin: const EdgeInsets.all(8.0),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Total Activities: ${selectedActivities.length}',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: widget.onViewAll,
-                        style: ElevatedButton.styleFrom(
-                          primary: Color(0xFF5C964A),
-                        ),
-                        child: Text('View All'),
-                      ),
-                    ],
-                  ),
-                ),
-              )
+            ? Container()
             : Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(

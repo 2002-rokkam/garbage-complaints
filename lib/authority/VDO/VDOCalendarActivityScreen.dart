@@ -1,6 +1,5 @@
 // authority/VDO/VDOCalendarActivityScreen.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -21,6 +20,7 @@ class VDOCalendarActivityScreen extends StatefulWidget {
 class _VDOCalendarActivityScreenState extends State<VDOCalendarActivityScreen> {
   DateTime _selectedDate = DateTime.now();
   List _activities = [];
+  Map<DateTime, int> activityCounts = {};
 
   @override
   void initState() {
@@ -35,7 +35,6 @@ class _VDOCalendarActivityScreenState extends State<VDOCalendarActivityScreen> {
 
   Future<void> fetchActivities() async {
     String workerId = await getWorkerId();
-    setState(() {});
 
     final url = Uri.parse('https://sbmgrajasthan.com/api/vdo-section-dashboard')
         .replace(queryParameters: {
@@ -48,16 +47,23 @@ class _VDOCalendarActivityScreenState extends State<VDOCalendarActivityScreen> {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         var sectionActivities = data['section_data'][widget.section] ?? [];
+
+        Map<DateTime, int> counts = {};
+        for (var activity in sectionActivities) {
+          final date = DateTime.parse(activity['date_time']).toLocal();
+          final day = DateTime(date.year, date.month, date.day);
+          counts[day] = (counts[day] ?? 0) + 1;
+        }
+
         setState(() {
           _activities = sectionActivities;
+          activityCounts = counts;
         });
       } else {
         throw Exception('Failed to load activities');
       }
     } catch (e) {
       print(e);
-    } finally {
-      setState(() {});
     }
   }
 
@@ -91,12 +97,12 @@ class _VDOCalendarActivityScreenState extends State<VDOCalendarActivityScreen> {
         section: widget.section,
         initialDate: _selectedDate,
         activities: _activities,
+        activityCounts: activityCounts,
         onDateSelected: (selectedDate) {
           setState(() {
             _selectedDate = selectedDate;
           });
-        },
-        onViewAll: () {
+          if (getActivitiesForSelectedDate().isNotEmpty) {
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -105,7 +111,8 @@ class _VDOCalendarActivityScreenState extends State<VDOCalendarActivityScreen> {
                 activities: getActivitiesForSelectedDate(),
               ),
             ),
-          );
+          );          
+          }
         },
       ),
     );

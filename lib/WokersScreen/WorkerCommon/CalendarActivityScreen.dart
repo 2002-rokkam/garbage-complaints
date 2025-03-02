@@ -20,13 +20,13 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
   DateTime _selectedDate = DateTime.now();
   List _activities = [];
   bool _isLoading = false;
-  Map<DateTime, int> complaintCounts = {}; // Store complaint count per date
+  Map<DateTime, int> complaintCounts = {};
 
   @override
   void initState() {
     super.initState();
     fetchActivities();
-    fetchComplaintData(); // Fetch complaints for calendar
+    fetchComplaintData();
   }
 
   Future<String> getWorkerId() async {
@@ -56,7 +56,7 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
 
         setState(() {
           _activities = activities;
-          complaintCounts = counts; // Rename this to activityCounts if needed
+          complaintCounts = counts; 
         });
       } else {
         throw Exception('Failed to load activities');
@@ -67,30 +67,6 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
       setState(() => _isLoading = false);
     }
   }
-
-  // Future<void> fetchActivities() async {
-  //   String workerId = await getWorkerId();
-  //   setState(() => _isLoading = true);
-
-  //   final url = Uri.parse(
-  //       'https://sbmgrajasthan.com/api/worker/$workerId/section/${widget.section}');
-
-  //   try {
-  //     final response = await http.get(url);
-  //     if (response.statusCode == 200) {
-  //       final data = json.decode(response.body);
-  //       setState(() {
-  //         _activities = data['activities'];
-  //       });
-  //     } else {
-  //       throw Exception('Failed to load activities');
-  //     }
-  //   } catch (e) {
-  //     print(e);
-  //   } finally {
-  //     setState(() => _isLoading = false);
-  //   }
-  // }
 
   Future<void> fetchComplaintData() async {
     final prefs = await SharedPreferences.getInstance();
@@ -164,6 +140,20 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
               setState(() {
                 _selectedDate = selectedDay;
               });
+
+              final selectedActivities = getActivitiesForSelectedDate();
+
+              if (selectedActivities.isNotEmpty) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SelectedDateActivitiesScreen(
+                      selectedDate: selectedDay,
+                      activities: selectedActivities,
+                    ),
+                  ),
+                );
+              }
             },
             calendarStyle: CalendarStyle(
               selectedDecoration: BoxDecoration(
@@ -203,43 +193,7 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
               },
             ),
           ),
-
-          // Activity Card Section
-          if (activityCount > 0)
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Card(
-                elevation: 5,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: ListTile(
-                  contentPadding: EdgeInsets.all(16),
-                  title: Text('Total Activities: $activityCount'),
-                  trailing: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SelectedDateActivitiesScreen(
-                            selectedDate: _selectedDate,
-                            activities: selectedActivities,
-                          ),
-                        ),
-                      );
-                    },
-                    child: Text('View'),
-                    style: ElevatedButton.styleFrom(
-                      primary: Color(0xFF5C964A),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            )
-          else
+          if (activityCount == 0)
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Text(

@@ -15,10 +15,19 @@ class QRTab extends StatefulWidget {
 class _QRTabState extends State<QRTab> {
   String scannedData = "";
   late Future<String> _workerIdFuture;
+ late Locale _locale;
 
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
+  }
   @override
   void initState() {
     super.initState();
+    _loadLanguagePreference();
     _workerIdFuture = _getWorkerId();
   }
 
@@ -151,6 +160,7 @@ class _QRTabState extends State<QRTab> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Center(
       child: GestureDetector(
         onTap: scanQRCode,
