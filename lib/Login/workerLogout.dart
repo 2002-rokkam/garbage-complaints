@@ -125,7 +125,9 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
               // After successful logout, navigate to language selection screen
               Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => OnboardingScreen(changeLanguage: (Locale locale) {})),
+                MaterialPageRoute(
+                    builder: (context) =>
+                        OnboardingScreen(changeLanguage: (Locale locale) {})),
                 (Route<dynamic> route) => false, // Prevent going back
               );
             },
@@ -149,7 +151,7 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
 
       // API URL
       String logoutUrl =
-          'https://sbmgrajasthan.com/api/worker-logout'; // Replace with your API endpoint
+          'https://8da6-122-172-85-234.ngrok-free.app/api/worker-logout'; // Replace with your API endpoint
 
       // Prepare body and headers
       Map<String, String> headers = {

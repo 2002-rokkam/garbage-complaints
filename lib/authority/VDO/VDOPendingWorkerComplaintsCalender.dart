@@ -1,24 +1,25 @@
-// authority/SMD/SMDWorkerComplaintsCalender.dart
+// authority/VDO/VDOPendingWorkerComplaintsCalender.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/authority/VDO/VDOWorkerComplaintsListScreenCalender.dart';
 import 'dart:async';
 import 'package:table_calendar/table_calendar.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import '../BDO/BDOWorkerComplaintsListScreenCalender.dart';
 
-class SMDWorkerComplaintsCalender extends StatefulWidget {
+class VDOPendingWorkerComplaintsCalender extends StatefulWidget {
   @override
-  _SMDWorkerComplaintsCalenderState createState() =>
-      _SMDWorkerComplaintsCalenderState();
+  _VDOPendingWorkerComplaintsCalenderState createState() =>
+      _VDOPendingWorkerComplaintsCalenderState();
 }
 
-class _SMDWorkerComplaintsCalenderState
-    extends State<SMDWorkerComplaintsCalender> {
+class _VDOPendingWorkerComplaintsCalenderState
+    extends State<VDOPendingWorkerComplaintsCalender> {
   DateTime _selectedDay = DateTime.now();
   Map<DateTime, int> complaintCounts = {};
   List<dynamic> complaints = [];
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -27,15 +28,18 @@ class _SMDWorkerComplaintsCalenderState
   }
 
   Future<void> _fetchComplaintData() async {
+    setState(() {
+      _isLoading = true;
+    });
+
     final prefs = await SharedPreferences.getInstance();
-    final District = prefs.getString('District') ?? '';
+    final gramPanchayat = prefs.getString('gram_panchayat') ?? '';
 
     final url =
-        'https://8da6-122-172-85-234.ngrok-free.app/api/complaintdetails-by-state';
+        'https://8da6-122-172-85-234.ngrok-free.app/api/pending-complaints/?gram_panchayat=$gramPanchayat';
 
     try {
       final response = await http.get(Uri.parse(url));
-      print(response);
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final complaintsList = data['complaints'];
@@ -56,6 +60,10 @@ class _SMDWorkerComplaintsCalenderState
       }
     } catch (e) {
       print('Error fetching complaints: $e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -74,9 +82,9 @@ class _SMDWorkerComplaintsCalenderState
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => BDOWorkerComplaintsListScreenCalender(
+          builder: (context) => VDOWorkerComplaintsListScreenCalender(
             date: _selectedDay,
-            complaints: complaints,
+            complaints: selectedComplaints,
             onUpdate: _fetchComplaintData,
           ),
         ),

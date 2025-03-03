@@ -23,10 +23,13 @@ class BDOD2DCalnderActivityScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _BDOD2DCalnderActivityScreenState createState() => _BDOD2DCalnderActivityScreenState();
+  _BDOD2DCalnderActivityScreenState createState() =>
+      _BDOD2DCalnderActivityScreenState();
 }
 
-class _BDOD2DCalnderActivityScreenState extends State<BDOD2DCalnderActivityScreen> with SingleTickerProviderStateMixin {
+class _BDOD2DCalnderActivityScreenState
+    extends State<BDOD2DCalnderActivityScreen>
+    with SingleTickerProviderStateMixin {
   DateTime _selectedDate = DateTime.now();
   List _activities = [];
   List _tripDetails = [];
@@ -55,8 +58,7 @@ class _BDOD2DCalnderActivityScreenState extends State<BDOD2DCalnderActivityScree
   }
 
   void _onTabChanged() {
-    setState(
-        () {}); 
+    setState(() {});
   }
 
   @override
@@ -78,7 +80,8 @@ class _BDOD2DCalnderActivityScreenState extends State<BDOD2DCalnderActivityScree
       _isLoading = true;
     });
 
-     final url = Uri.parse('https://sbmgrajasthan.com/api/bdo-section-dashboard')
+    final url = Uri.parse(
+            'https://8da6-122-172-85-234.ngrok-free.app/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': widget.section,
@@ -119,7 +122,8 @@ class _BDOD2DCalnderActivityScreenState extends State<BDOD2DCalnderActivityScree
   Future<void> fetchTripDetails() async {
     String workerId = await getWorkerId();
 
-      final url = Uri.parse('https://sbmgrajasthan.com/api/bdo-section-dashboard')
+    final url = Uri.parse(
+            'https://8da6-122-172-85-234.ngrok-free.app/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': 'D2D_QR',
@@ -164,7 +168,7 @@ class _BDOD2DCalnderActivityScreenState extends State<BDOD2DCalnderActivityScree
         .toList();
   }
 
-    List getFilteredTripDetails() {
+  List getFilteredTripDetails() {
     return _tripDetails
         .where((trip) =>
             DateTime.parse(trip['date_time']).toLocal().day ==
@@ -221,7 +225,7 @@ class _BDOD2DCalnderActivityScreenState extends State<BDOD2DCalnderActivityScree
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>  BDOSelectedDateActivitiesScreen(
+                        builder: (context) => BDOSelectedDateActivitiesScreen(
                           selectedDate: _selectedDate,
                           activities: getActivitiesForSelectedDate(),
                         ),

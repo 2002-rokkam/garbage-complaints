@@ -44,7 +44,8 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
   }
 
   Future<void> _fetchComplaints() async {
-    final String apiUrl = 'https://sbmgrajasthan.com/api/complaints';
+    final String apiUrl =
+        'https://8da6-122-172-85-234.ngrok-free.app/api/complaints';
     try {
       final response = await http.get(
         Uri.parse(apiUrl),

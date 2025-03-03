@@ -40,7 +40,7 @@ class _ActionScreenState extends State<ActionScreen> {
       String workerId = await getWorkerId();
       Dio dio = Dio();
       final response = await dio.get(
-          'https://sbmgrajasthan.com/api/worker/$workerId/section/${widget.section}');
+          'https://8da6-122-172-85-234.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
 
       if (response.statusCode == 200) {
         final data = response.data;
@@ -80,7 +80,7 @@ class _ActionScreenState extends State<ActionScreen> {
 
   @override
   Widget build(BuildContext context) {
-        final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Color.fromRGBO(239, 239, 239, 1),
       appBar: PreferredSize(

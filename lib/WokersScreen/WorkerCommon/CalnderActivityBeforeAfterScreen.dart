@@ -130,7 +130,7 @@ class CalnderActivityBeforeAfterScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('School Details'),
+        title: Text('Before After Details'),
         backgroundColor: Color(0xFF5C964A),
       ),
       body: SingleChildScrollView(

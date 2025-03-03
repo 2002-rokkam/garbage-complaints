@@ -18,7 +18,9 @@ class VDOSchoolCampusCalnderActivity extends StatefulWidget {
       _VDOSchoolCampusCalnderActivityState();
 }
 
-class _VDOSchoolCampusCalnderActivityState extends State<VDOSchoolCampusCalnderActivity> with SingleTickerProviderStateMixin {
+class _VDOSchoolCampusCalnderActivityState
+    extends State<VDOSchoolCampusCalnderActivity>
+    with SingleTickerProviderStateMixin {
   DateTime _selectedDate = DateTime.now();
   List _activities = [];
   List _tripDetails = [];
@@ -59,7 +61,8 @@ class _VDOSchoolCampusCalnderActivityState extends State<VDOSchoolCampusCalnderA
   }
 
   Future<void> fetchActivities(String workerId) async {
-    final url = Uri.parse('https://sbmgrajasthan.com/api/vdo-section-dashboard')
+    final url = Uri.parse(
+            'https://8da6-122-172-85-234.ngrok-free.app/api/vdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': widget.section,
@@ -91,7 +94,8 @@ class _VDOSchoolCampusCalnderActivityState extends State<VDOSchoolCampusCalnderA
   }
 
   Future<void> fetchTripDetails(String workerId) async {
-    final url = Uri.parse('https://sbmgrajasthan.com/api/vdo-section-dashboard')
+    final url = Uri.parse(
+            'https://8da6-122-172-85-234.ngrok-free.app/api/vdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': 'School Toilet',
@@ -125,12 +129,13 @@ class _VDOSchoolCampusCalnderActivityState extends State<VDOSchoolCampusCalnderA
   List getPanchayatActivitiesForSelectedDate() {
     return _tripDetails
         .where((activity) =>
-        DateTime.parse(activity['date_time']).toLocal().day ==
-            _selectedDate.day &&
-        DateTime.parse(activity['date_time']).toLocal().month ==
-            _selectedDate.month &&
-        DateTime.parse(activity['date_time']).toLocal().year ==
-            _selectedDate.year).toList();
+            DateTime.parse(activity['date_time']).toLocal().day ==
+                _selectedDate.day &&
+            DateTime.parse(activity['date_time']).toLocal().month ==
+                _selectedDate.month &&
+            DateTime.parse(activity['date_time']).toLocal().year ==
+                _selectedDate.year)
+        .toList();
   }
 
   List getActivitiesForSelectedDate() {
@@ -213,9 +218,12 @@ class _VDOSchoolCampusCalnderActivityState extends State<VDOSchoolCampusCalnderA
             calendarBuilders: CalendarBuilders(
               markerBuilder: (context, date, _) {
                 final count = isBeforeAfterTab
-                    ? activityCounts[ DateTime(date.year, date.month, date.day)] ?? 0
-                    : tripCounts[DateTime(date.year, date.month, date.day)] ?? 0;
-               if (count > 0) {
+                    ? activityCounts[
+                            DateTime(date.year, date.month, date.day)] ??
+                        0
+                    : tripCounts[DateTime(date.year, date.month, date.day)] ??
+                        0;
+                if (count > 0) {
                   return Positioned(
                     bottom: 1,
                     child: Container(

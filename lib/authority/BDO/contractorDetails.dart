@@ -23,8 +23,7 @@ class _ContractordetailsState extends State<Contractordetails> {
   void initState() {
     super.initState();
     _loadLanguagePreference();
-        contractorDetails = fetchContractorDetails();
-
+    contractorDetails = fetchContractorDetails();
   }
 
   void _loadLanguagePreference() async {
@@ -37,7 +36,7 @@ class _ContractordetailsState extends State<Contractordetails> {
 
   Future<List<Map<String, dynamic>>> fetchContractorDetails() async {
     final apiUrl =
-        'https://sbmgrajasthan.com/api/contractors/?gp=${widget.gramPanchayat}';
+        'https://8da6-122-172-85-234.ngrok-free.app/api/contractors/?gp=${widget.gramPanchayat}';
     final response = await http.get(Uri.parse(apiUrl));
 
     if (response.statusCode == 200) {

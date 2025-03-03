@@ -14,13 +14,16 @@ class PanchayatCampusActivityScreen extends StatefulWidget {
       : super(key: key);
 
   @override
-  _PanchayatCampusActivityScreenState createState() => _PanchayatCampusActivityScreenState();
+  _PanchayatCampusActivityScreenState createState() =>
+      _PanchayatCampusActivityScreenState();
 }
 
-class _PanchayatCampusActivityScreenState extends State<PanchayatCampusActivityScreen> with SingleTickerProviderStateMixin {
+class _PanchayatCampusActivityScreenState
+    extends State<PanchayatCampusActivityScreen>
+    with SingleTickerProviderStateMixin {
   DateTime _selectedDate = DateTime.now();
   List _activities = [];
-  List  _PanchayatDetails = [];
+  List _PanchayatDetails = [];
   bool _isLoading = false;
   late TabController _tabController;
   String? workerId;
@@ -32,11 +35,10 @@ class _PanchayatCampusActivityScreenState extends State<PanchayatCampusActivityS
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
-      setState(() {}); 
+      setState(() {});
     });
     _fetchWorkerId();
     _loadLanguagePreference();
-
   }
 
   late Locale _locale;
@@ -47,7 +49,6 @@ class _PanchayatCampusActivityScreenState extends State<PanchayatCampusActivityS
       _locale = Locale(languageCode);
     });
   }
- 
 
   Future<void> _fetchWorkerId() async {
     workerId = await getWorkerId();
@@ -74,7 +75,7 @@ class _PanchayatCampusActivityScreenState extends State<PanchayatCampusActivityS
     });
 
     final url = Uri.parse(
-        'https://sbmgrajasthan.com/api/worker/$workerId/section/${widget.section}');
+        'https://8da6-122-172-85-234.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
 
     try {
       final response = await http.get(url);
@@ -110,7 +111,7 @@ class _PanchayatCampusActivityScreenState extends State<PanchayatCampusActivityS
     });
 
     final url = Uri.parse(
-        'https://sbmgrajasthan.com/api/worker/$workerId/section/Panchayat Toilet');
+        'https://8da6-122-172-85-234.ngrok-free.app/api/worker/$workerId/section/Panchayat Toilet');
 
     try {
       final response = await http.get(url);
@@ -139,15 +140,13 @@ class _PanchayatCampusActivityScreenState extends State<PanchayatCampusActivityS
   }
 
   List getPanchayatActivitiesForSelectedDate() {
-    return _PanchayatDetails
-        .where((activity) =>
-            DateTime.parse(activity['date_time']).toLocal().day ==
-                _selectedDate.day &&
-            DateTime.parse(activity['date_time']).toLocal().month ==
-                _selectedDate.month &&
-            DateTime.parse(activity['date_time']).toLocal().year ==
-                _selectedDate.year)
-        .toList();
+    return _PanchayatDetails.where((activity) =>
+        DateTime.parse(activity['date_time']).toLocal().day ==
+            _selectedDate.day &&
+        DateTime.parse(activity['date_time']).toLocal().month ==
+            _selectedDate.month &&
+        DateTime.parse(activity['date_time']).toLocal().year ==
+            _selectedDate.year).toList();
   }
 
   List getActivitiesForSelectedDate() {
@@ -169,8 +168,8 @@ class _PanchayatCampusActivityScreenState extends State<PanchayatCampusActivityS
       return Center(child: CircularProgressIndicator());
     }
 
-   final selectedActivities = getActivitiesForSelectedDate();
-   final PanchayatActivities = getPanchayatActivitiesForSelectedDate();
+    final selectedActivities = getActivitiesForSelectedDate();
+    final PanchayatActivities = getPanchayatActivitiesForSelectedDate();
 
     final isBeforeAfterTab = _tabController.index == 0;
 
@@ -220,7 +219,8 @@ class _PanchayatCampusActivityScreenState extends State<PanchayatCampusActivityS
                     ),
                   ),
                 );
-              } else if (_tabController.index == 1 && PanchayatActivities.isNotEmpty) {
+              } else if (_tabController.index == 1 &&
+                  PanchayatActivities.isNotEmpty) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -230,7 +230,7 @@ class _PanchayatCampusActivityScreenState extends State<PanchayatCampusActivityS
                     ),
                   ),
                 );
-              } 
+              }
             },
             calendarStyle: CalendarStyle(
               selectedDecoration: BoxDecoration(
@@ -246,8 +246,11 @@ class _PanchayatCampusActivityScreenState extends State<PanchayatCampusActivityS
               markerBuilder: (context, date, _) {
                 final count = isBeforeAfterTab
                     ? activityCounts[
-                            DateTime(date.year, date.month, date.day)] ?? 0
-                    : PanchayatCounts[DateTime(date.year, date.month, date.day)] ?? 0;
+                            DateTime(date.year, date.month, date.day)] ??
+                        0
+                    : PanchayatCounts[
+                            DateTime(date.year, date.month, date.day)] ??
+                        0;
 
                 if (count > 0) {
                   return Positioned(
@@ -276,7 +279,8 @@ class _PanchayatCampusActivityScreenState extends State<PanchayatCampusActivityS
             padding: const EdgeInsets.all(8.0),
             child:
                 (_tabController.index == 0 && selectedActivities.isNotEmpty) ||
-                        (_tabController.index == 1 && PanchayatActivities.isNotEmpty)
+                        (_tabController.index == 1 &&
+                            PanchayatActivities.isNotEmpty)
                     ? Container()
                     : Center(
                         child: Padding(

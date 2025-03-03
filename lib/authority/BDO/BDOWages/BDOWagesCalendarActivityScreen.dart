@@ -39,15 +39,15 @@ class _BDOWagesCalendarActivityScreenState
     _loadLanguagePreference();
     fetchActivitiesForMonth(_selectedMonth, _selectedYear);
   }
-  
-   void _loadLanguagePreference() async {
+
+  void _loadLanguagePreference() async {
     final prefs = await SharedPreferences.getInstance();
     String? languageCode = prefs.getString('language') ?? 'en';
     setState(() {
       _locale = Locale(languageCode);
     });
   }
-  
+
   Future<String> getWorkerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('worker_id') ?? "";
@@ -60,7 +60,8 @@ class _BDOWagesCalendarActivityScreenState
       _isLoading = true;
     });
 
-    final url = Uri.parse('https://sbmgrajasthan.com/api/bdo-section-dashboard')
+    final url = Uri.parse(
+            'https://8da6-122-172-85-234.ngrok-free.app/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': widget.section,

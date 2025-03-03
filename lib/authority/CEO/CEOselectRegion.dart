@@ -16,7 +16,6 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
   String? selectedDistrict;
   String? selectedBlock;
   String? selectedGramPanchayat;
-
   late Locale _locale;
 
   void _loadLanguagePreference() async {
@@ -31,9 +30,11 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
   List<String> blocks = [];
   List<String> gramPanchayats = [];
 
-  final String districtsUrl = "https://sbmgrajasthan.com/api/getDistricts";
-  final String blocksUrl = "https://sbmgrajasthan.com/api/getBlocks/";
-  final String gpUrl = "https://sbmgrajasthan.com/api/getGp/";
+  final String districtsUrl =
+      "https://8da6-122-172-85-234.ngrok-free.app/api/getDistricts";
+  final String blocksUrl =
+      "https://8da6-122-172-85-234.ngrok-free.app/api/getBlocks/";
+  final String gpUrl = "https://8da6-122-172-85-234.ngrok-free.app/api/getGp/";
 
   Future<void> loadDistrictFromPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -139,7 +140,6 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
       await prefs.setString('appbarselectedBlock', formattedBlock);
       await prefs.setString(
           'appbarselectedGramPanchayat', formattedGramPanchayat);
-
       Navigator.pop(context);
     } else {
       final localizations = AppLocalizations.of(context)!;

@@ -101,7 +101,9 @@ class _SettingsPageState extends State<SettingsPage> {
               await logout(context);
               Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => OnboardingScreen(changeLanguage: (locale) {})),
+                MaterialPageRoute(
+                    builder: (context) =>
+                        OnboardingScreen(changeLanguage: (locale) {})),
                 (Route<dynamic> route) => false,
               );
             },
@@ -121,7 +123,8 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
     );
     try {
-      String logoutUrl = 'https://sbmgrajasthan.com/api/logout';
+      String logoutUrl =
+          'https://8da6-122-172-85-234.ngrok-free.app/api/logout';
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('id_token');
 
@@ -141,7 +144,9 @@ class _SettingsPageState extends State<SettingsPage> {
         if (context.mounted) {
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => OnboardingScreen(changeLanguage: (Locale locale) {})),
+            MaterialPageRoute(
+                builder: (context) =>
+                    OnboardingScreen(changeLanguage: (Locale locale) {})),
             (Route<dynamic> route) => false,
           );
         }

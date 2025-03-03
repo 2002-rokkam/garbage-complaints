@@ -9,6 +9,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'BDOPanchayatCampus/BDOPanchayatCampus.dart';
+import 'BDOPendingWorkerComplaintsCalender.dart';
+import 'BDOResolvedWorkerComplaintsCalender.dart';
 import 'BDOSchoolCampus/BDOSchoolCampusCalnderActivity.dart';
 import 'BDOWorkerComplaintsCalender.dart';
 import 'selectRegion.dart';
@@ -50,9 +52,9 @@ class _BDOScreenState extends State<BDOScreen> {
     String? District = prefs.getString('District');
     print(District);
     if (District != null) {
-      final response = await http.get(
-          Uri.parse('https://sbmgrajasthan.com/api/complaints-by-district/')
-              .replace(queryParameters: {
+      final response = await http.get(Uri.parse(
+              'https://8da6-122-172-85-234.ngrok-free.app/api/complaints-by-district/')
+          .replace(queryParameters: {
         'district': District,
       }));
 
@@ -206,14 +208,7 @@ class _BDOScreenState extends State<BDOScreen> {
                 child: Column(
                   children: [
                     GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => BDOWorkerComplaintsCalender(),
-                          ),
-                        );
-                      },
+                      onTap: () {},
                       child: Container(
                         width: 370,
                         height: 139,
@@ -296,7 +291,37 @@ class _BDOScreenState extends State<BDOScreen> {
                           MainAxisAlignment.spaceEvenly, // Adjusts the spacing
                       children: [
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () async {
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            String? appbarselectedGramPanchayat =
+                                prefs.getString('appbarselectedGramPanchayat');
+
+                            if (appbarselectedGramPanchayat == null ||
+                                appbarselectedGramPanchayat.isEmpty) {
+                              showDialog(
+                                context: context,
+                                builder: (context) => Dialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                  child: Container(
+                                    height: 400, // Adjust height as needed
+                                    padding: EdgeInsets.all(16.0),
+                                    child: RegionSelector(),
+                                  ),
+                                ),
+                              );
+                            } else {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      BDOPendingWorkerComplaintsCalender(),
+                                ),
+                              );
+                            }
+                          },
                           child: Container(
                             width: 170, // Adjust width as needed
                             height: 139,
@@ -365,9 +390,40 @@ class _BDOScreenState extends State<BDOScreen> {
                           ),
                         ),
                         GestureDetector(
-                          onTap: () {},
+
+                          onTap: () async {
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            String? appbarselectedGramPanchayat =
+                                prefs.getString('appbarselectedGramPanchayat');
+
+                            if (appbarselectedGramPanchayat == null ||
+                                appbarselectedGramPanchayat.isEmpty) {
+                              showDialog(
+                                context: context,
+                                builder: (context) => Dialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                  child: Container(
+                                    height: 400, // Adjust height as needed
+                                    padding: EdgeInsets.all(16.0),
+                                    child: RegionSelector(),
+                                  ),
+                                ),
+                              );
+                            } else {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      BDOResolvedWorkerComplaintsCalender(),
+                                ),
+                              );
+                            }
+                          },                        
                           child: Container(
-                            width: 170, // Adjust width as needed
+                            width: 170,
                             height: 139,
                             decoration: ShapeDecoration(
                               color: Colors.white,
@@ -451,7 +507,6 @@ class _BDOScreenState extends State<BDOScreen> {
                         ),
                       ),
                     ),
-
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 1.0),
                       child: Wrap(

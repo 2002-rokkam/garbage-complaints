@@ -33,7 +33,7 @@ class _WagesCalendarActivityScreenState
       _locale = Locale(languageCode);
     });
   }
- 
+
   @override
   void initState() {
     super.initState();
@@ -55,7 +55,7 @@ class _WagesCalendarActivityScreenState
     });
 
     final url = Uri.parse(
-        'https://sbmgrajasthan.com/api/worker/$workerId/section/${widget.section}');
+        'https://8da6-122-172-85-234.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
 
     try {
       final response = await http.get(url);

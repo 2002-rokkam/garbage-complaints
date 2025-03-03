@@ -33,7 +33,7 @@ class _workerComplaintsScreenState extends State<workerComplaintsScreen> {
     final gramPanchayat = prefs.getString('gram_panchayat') ?? '';
 
     final url =
-        'https://sbmgrajasthan.com/api/complaintdetails-by-gram-panchayat/?gram_panchayat=$gramPanchayat';
+        'https://8da6-122-172-85-234.ngrok-free.app/api/complaintdetails-by-gram-panchayat/?gram_panchayat=$gramPanchayat';
 
     try {
       final response = await http.get(Uri.parse(url));

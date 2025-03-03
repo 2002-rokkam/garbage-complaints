@@ -74,7 +74,7 @@ class _PanchayatCampusSectionScreenState
       String workerId = await getWorkerId();
       Dio dio = Dio();
       final response = await dio.get(
-          'https://sbmgrajasthan.com/api/worker/$workerId/section/${widget.section}');
+          'https://8da6-122-172-85-234.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
 
       if (response.statusCode == 200) {
         final data = response.data;
@@ -117,7 +117,7 @@ class _PanchayatCampusSectionScreenState
       String workerId = await getWorkerId();
       Dio dio = Dio();
       final response = await dio.get(
-          'https://sbmgrajasthan.com/api/worker/$workerId/section/Panchayat Toilet');
+          'https://8da6-122-172-85-234.ngrok-free.app/api/worker/$workerId/section/Panchayat Toilet');
 
       if (response.statusCode == 200) {
         final data = response.data;
@@ -167,7 +167,7 @@ class _PanchayatCampusSectionScreenState
 
   @override
   Widget build(BuildContext context) {
-        final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context)!;
 
     return DefaultTabController(
       length: 3,
@@ -231,7 +231,7 @@ class _PanchayatCampusSectionScreenState
                 onPressed: addNewContainer,
                 backgroundColor: const Color(0xFFFFD262),
                 label: Row(
-                  children:  [
+                  children: [
                     Icon(Icons.add, size: 24, color: Color(0xFF252525)),
                     SizedBox(width: 12),
                     Text(

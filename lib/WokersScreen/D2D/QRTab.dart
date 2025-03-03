@@ -15,7 +15,7 @@ class QRTab extends StatefulWidget {
 class _QRTabState extends State<QRTab> {
   String scannedData = "";
   late Future<String> _workerIdFuture;
- late Locale _locale;
+  late Locale _locale;
 
   void _loadLanguagePreference() async {
     final prefs = await SharedPreferences.getInstance();
@@ -24,6 +24,7 @@ class _QRTabState extends State<QRTab> {
       _locale = Locale(languageCode);
     });
   }
+
   @override
   void initState() {
     super.initState();
@@ -58,7 +59,8 @@ class _QRTabState extends State<QRTab> {
 
   Future<void> submitData(String scannedData, String workerId) async {
     final dio = Dio();
-    const url = 'https://sbmgrajasthan.com/api/submit-activity';
+    const url =
+        'https://8da6-122-172-85-234.ngrok-free.app/api/submit-activity';
 
     try {
       FormData formData = FormData.fromMap({

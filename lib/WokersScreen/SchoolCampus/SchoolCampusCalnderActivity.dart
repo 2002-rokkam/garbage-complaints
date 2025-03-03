@@ -22,7 +22,7 @@ class _SchoolCampusActivityScreenState extends State<SchoolCampusActivityScreen>
     with SingleTickerProviderStateMixin {
   DateTime _selectedDate = DateTime.now();
   List _activities = [];
-  List  _PanchayatDetails = [];
+  List _PanchayatDetails = [];
   bool _isLoading = false;
   late TabController _tabController;
   String? workerId;
@@ -33,10 +33,10 @@ class _SchoolCampusActivityScreenState extends State<SchoolCampusActivityScreen>
   @override
   void initState() {
     super.initState();
-        _loadLanguagePreference();
+    _loadLanguagePreference();
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
-      setState(() {}); 
+      setState(() {});
     });
     _fetchWorkerId();
   }
@@ -60,7 +60,7 @@ class _SchoolCampusActivityScreenState extends State<SchoolCampusActivityScreen>
       _locale = Locale(languageCode);
     });
   }
- 
+
   Future<String?> getWorkerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('worker_id');
@@ -73,7 +73,8 @@ class _SchoolCampusActivityScreenState extends State<SchoolCampusActivityScreen>
       _isLoading = true;
     });
 
-    final url = Uri.parse('https://sbmgrajasthan.com/api/worker/$workerId/section/${widget.section}');
+    final url = Uri.parse(
+        'https://8da6-122-172-85-234.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
 
     try {
       final response = await http.get(url);
@@ -108,8 +109,9 @@ class _SchoolCampusActivityScreenState extends State<SchoolCampusActivityScreen>
       _isLoading = true;
     });
 
-    final url = Uri.parse('https://sbmgrajasthan.com/api/worker/$workerId/section/School Toilet');
-    
+    final url = Uri.parse(
+        'https://8da6-122-172-85-234.ngrok-free.app/api/worker/$workerId/section/School Toilet');
+
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
@@ -137,15 +139,13 @@ class _SchoolCampusActivityScreenState extends State<SchoolCampusActivityScreen>
   }
 
   List getPanchayatActivitiesForSelectedDate() {
-    return _PanchayatDetails
-        .where((activity) =>
-            DateTime.parse(activity['date_time']).toLocal().day ==
-                _selectedDate.day &&
-            DateTime.parse(activity['date_time']).toLocal().month ==
-                _selectedDate.month &&
-            DateTime.parse(activity['date_time']).toLocal().year ==
-                _selectedDate.year)
-        .toList();
+    return _PanchayatDetails.where((activity) =>
+        DateTime.parse(activity['date_time']).toLocal().day ==
+            _selectedDate.day &&
+        DateTime.parse(activity['date_time']).toLocal().month ==
+            _selectedDate.month &&
+        DateTime.parse(activity['date_time']).toLocal().year ==
+            _selectedDate.year).toList();
   }
 
   List getActivitiesForSelectedDate() {
@@ -167,7 +167,7 @@ class _SchoolCampusActivityScreenState extends State<SchoolCampusActivityScreen>
     }
 
     final selectedActivities = getActivitiesForSelectedDate();
-   final  PanchayatActivities = getPanchayatActivitiesForSelectedDate();
+    final PanchayatActivities = getPanchayatActivitiesForSelectedDate();
 
     final isBeforeAfterTab = _tabController.index == 0;
 
@@ -217,7 +217,8 @@ class _SchoolCampusActivityScreenState extends State<SchoolCampusActivityScreen>
                     ),
                   ),
                 );
-              } else if (_tabController.index == 1 && PanchayatActivities.isNotEmpty) {
+              } else if (_tabController.index == 1 &&
+                  PanchayatActivities.isNotEmpty) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -245,7 +246,9 @@ class _SchoolCampusActivityScreenState extends State<SchoolCampusActivityScreen>
                     ? activityCounts[
                             DateTime(date.year, date.month, date.day)] ??
                         0
-                    : PanchayatCounts[DateTime(date.year, date.month, date.day)] ?? 0;
+                    : PanchayatCounts[
+                            DateTime(date.year, date.month, date.day)] ??
+                        0;
 
                 if (count > 0) {
                   return Positioned(
@@ -274,7 +277,8 @@ class _SchoolCampusActivityScreenState extends State<SchoolCampusActivityScreen>
             padding: const EdgeInsets.all(8.0),
             child:
                 (_tabController.index == 0 && selectedActivities.isNotEmpty) ||
-                        (_tabController.index == 1 && PanchayatActivities.isNotEmpty)
+                        (_tabController.index == 1 &&
+                            PanchayatActivities.isNotEmpty)
                     ? Container()
                     : Center(
                         child: Padding(
@@ -291,4 +295,3 @@ class _SchoolCampusActivityScreenState extends State<SchoolCampusActivityScreen>
     );
   }
 }
-

@@ -26,8 +26,10 @@ class BDOPanchayatCampusCalnderActivityScreen extends StatefulWidget {
       _BDOPanchayatCampusCalnderActivityScreenState();
 }
 
-class _BDOPanchayatCampusCalnderActivityScreenState extends State<BDOPanchayatCampusCalnderActivityScreen> with SingleTickerProviderStateMixin {
-   DateTime _selectedDate = DateTime.now();
+class _BDOPanchayatCampusCalnderActivityScreenState
+    extends State<BDOPanchayatCampusCalnderActivityScreen>
+    with SingleTickerProviderStateMixin {
+  DateTime _selectedDate = DateTime.now();
   List _activities = [];
   List _tripDetails = [];
   bool _isLoading = false;
@@ -68,7 +70,8 @@ class _BDOPanchayatCampusCalnderActivityScreenState extends State<BDOPanchayatCa
       _isLoading = true;
     });
 
-    final url = Uri.parse('https://sbmgrajasthan.com/api/bdo-section-dashboard')
+    final url = Uri.parse(
+            'https://8da6-122-172-85-234.ngrok-free.app/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': widget.section,
@@ -105,7 +108,8 @@ class _BDOPanchayatCampusCalnderActivityScreenState extends State<BDOPanchayatCa
   Future<void> fetchTripDetails() async {
     String workerId = await getWorkerId();
 
-      final url = Uri.parse('https://sbmgrajasthan.com/api/bdo-section-dashboard')
+    final url = Uri.parse(
+            'https://8da6-122-172-85-234.ngrok-free.app/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': 'Panchayat Toilet',

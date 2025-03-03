@@ -63,7 +63,8 @@ class _VDORCCCalendarActivityScreenState
     String workerId = await getWorkerId();
     setState(() => _isLoading = true);
 
-    final url = Uri.parse('https://sbmgrajasthan.com/api/vdo-section-dashboard')
+    final url = Uri.parse(
+            'https://8da6-122-172-85-234.ngrok-free.app/api/vdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': widget.section,
@@ -89,7 +90,8 @@ class _VDORCCCalendarActivityScreenState
     String workerId = await getWorkerId();
     setState(() => _isLoading = true);
 
-    final url = Uri.parse('https://sbmgrajasthan.com/api/vdo-section-dashboard')
+    final url = Uri.parse(
+            'https://8da6-122-172-85-234.ngrok-free.app/api/vdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': 'Waste Details',
@@ -174,8 +176,8 @@ class _VDORCCCalendarActivityScreenState
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              VDOBeforeAfterScreen(activities: selectedActivities),
+                          builder: (context) => VDOBeforeAfterScreen(
+                              activities: selectedActivities),
                         ),
                       );
                     }
@@ -280,7 +282,8 @@ class TripDetailsScreen extends StatelessWidget {
         backgroundColor: Color(0xFF5C964A),
       ),
       body: tripDetails.isEmpty
-          ? Center(child: Text('No trip details available for the selected date.'))
+          ? Center(
+              child: Text('No trip details available for the selected date.'))
           : SingleChildScrollView(
               child: Column(
                 children: tripDetails.map((trip) {

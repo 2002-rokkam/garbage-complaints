@@ -51,7 +51,7 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
       _locale = Locale(languageCode);
     });
   }
- 
+
   Future<String> getWorkerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('worker_id') ?? "";
@@ -62,7 +62,7 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
     setState(() => _isLoading = true);
 
     final url = Uri.parse(
-        'https://sbmgrajasthan.com/api/worker/$workerId/section/${widget.section}');
+        'https://8da6-122-172-85-234.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
 
     try {
       final response = await http.get(url);
@@ -83,7 +83,7 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
     String workerId = await getWorkerId();
     setState(() => _isLoading = true);
     final url = Uri.parse(
-        'https://sbmgrajasthan.com/api/worker/$workerId/section/Waste Details');
+        'https://8da6-122-172-85-234.ngrok-free.app/api/worker/$workerId/section/Waste Details');
 
     try {
       final response = await http.get(url);

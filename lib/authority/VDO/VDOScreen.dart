@@ -8,7 +8,9 @@ import '../../Login/workerLogout.dart';
 import 'VDOCalendarActivityScreen.dart';
 import 'VDOD2DCalnderActivity.dart';
 import 'VDOPanchayatCampusCalnderActivity.dart';
+import 'VDOPendingWorkerComplaintsCalender.dart';
 import 'VDORCCCalendarActivityScreen.dart';
+import 'VDOResolvedWorkerComplaintsCalender.dart';
 import 'VDOSchoolCampusCalnderActivity.dart';
 import 'VDOWagesCalendarActivityScreen.dart';
 import 'package:http/http.dart' as http;
@@ -40,7 +42,7 @@ class _VDOScreenState extends State<VDOScreen> {
     print(gramPanchayat);
     if (gramPanchayat != null) {
       final response = await http.get(Uri.parse(
-              'https://sbmgrajasthan.com/api/complaints-by-gram-panchayat/')
+              'https://8da6-122-172-85-234.ngrok-free.app/api/complaints-by-gram-panchayat/')
           .replace(queryParameters: {
         'gram_panchayat': gramPanchayat,
       }));
@@ -68,12 +70,11 @@ class _VDOScreenState extends State<VDOScreen> {
     double screenHeight = MediaQuery.of(context).size.height;
     return WillPopScope(
       onWillPop: () async {
-        // Disable back button
         return false;
       },
       child: Scaffold(
         appBar: AppBar(
-          automaticallyImplyLeading: false, // This removes the back button
+          automaticallyImplyLeading: false,
           backgroundColor: const Color(0xFF5C964A),
           flexibleSpace: Container(
             height: 100,
@@ -114,13 +115,12 @@ class _VDOScreenState extends State<VDOScreen> {
         backgroundColor: Color.fromRGBO(239, 239, 239, 1),
         body: Column(
           children: [
-            // Fixed image slider
             Container(
               height: 180,
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Color(0xFF5C964A), // Green
+                    Color(0xFF5C964A),
                     Color.fromRGBO(239, 239, 239, 1),
                   ],
                   begin: Alignment.topCenter,
@@ -131,10 +131,9 @@ class _VDOScreenState extends State<VDOScreen> {
               child: Stack(
                 children: [
                   Container(
-                    height: screenHeight * 0.14, // Adjust the height as needed
+                    height: screenHeight * 0.14,
                     decoration: BoxDecoration(
-                      color: Color(
-                          0xFF5C964A), // Change this to your app's primary color
+                      color: Color(0xFF5C964A),
                       borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(24),
                         bottomRight: Radius.circular(24),
@@ -147,10 +146,9 @@ class _VDOScreenState extends State<VDOScreen> {
                         child: Padding(
                           padding: const EdgeInsets.only(top: 16.0),
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(
-                                16), // Rounded corners for the image
+                            borderRadius: BorderRadius.circular(16),
                             child: Image.asset(
-                              'assets/images/mainimage.png', // Path to your asset image
+                              'assets/images/mainimage.png',
                               width: MediaQuery.of(context).size.width * 0.9,
                               height: 150,
                               fit: BoxFit.cover,
@@ -163,7 +161,6 @@ class _VDOScreenState extends State<VDOScreen> {
                 ],
               ),
             ),
-            // Complaints label
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -179,21 +176,12 @@ class _VDOScreenState extends State<VDOScreen> {
                 ),
               ),
             ),
-
-            // Scrollable content
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
                   children: [
                     GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => VDOWorkerComplaintsCalender(),
-                          ),
-                        );
-                      },
+                      onTap: () {},
                       child: Container(
                         width: 370,
                         height: 139,
@@ -274,7 +262,15 @@ class _VDOScreenState extends State<VDOScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         GestureDetector(
-                          onTap: () {},
+                         onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    VDOPendingWorkerComplaintsCalender(),
+                              ),
+                            );
+                          },
                           child: Container(
                             width: 170,
                             height: 139,
@@ -320,11 +316,11 @@ class _VDOScreenState extends State<VDOScreen> {
                                     pendingComplaints.toString(),
                                     style: TextStyle(
                                       color: Colors.black,
-                                      fontSize: 18, 
+                                      fontSize: 18,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  const SizedBox(height: 5), 
+                                  const SizedBox(height: 5),
                                   Text(
                                     'Pending ',
                                     style: TextStyle(
@@ -342,9 +338,17 @@ class _VDOScreenState extends State<VDOScreen> {
                           ),
                         ),
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    VDOResolvedWorkerComplaintsCalender(),
+                              ),
+                            );
+                          },
                           child: Container(
-                            width: 170, 
+                            width: 170,
                             height: 139,
                             decoration: ShapeDecoration(
                               color: Colors.white,
@@ -388,12 +392,11 @@ class _VDOScreenState extends State<VDOScreen> {
                                     resolvedComplaints.toString(),
                                     style: TextStyle(
                                       color: Colors.black,
-                                      fontSize: 18, // Adjust size as needed
+                                      fontSize: 18,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  const SizedBox(
-                                      height: 5), // Adjust spacing as needed
+                                  const SizedBox(height: 5),
                                   Text(
                                     'Resolved ',
                                     style: TextStyle(
@@ -412,7 +415,6 @@ class _VDOScreenState extends State<VDOScreen> {
                         ),
                       ],
                     ),
-                    // Scrollable "Home" label and buttons grid
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16.0, vertical: 4.0),
@@ -428,17 +430,17 @@ class _VDOScreenState extends State<VDOScreen> {
                         ),
                       ),
                     ),
-
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 1.0),
                       child: Wrap(
-                        spacing: 1, // Horizontal space between buttons
-                        runSpacing: 12, // Vertical space between rows
+                        spacing: 1,
+                        runSpacing: 12,
                         children: buttonItems(context).map((item) {
                           return _buildButton(
                             item['label']!,
                             item['imageUrl']!,
                             item['route']!,
+                            
                             context,
                           );
                         }).toList(),
@@ -480,8 +482,8 @@ class _VDOScreenState extends State<VDOScreen> {
         );
       },
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.4, // Responsive width
-        height: MediaQuery.of(context).size.height * 0.12, // Responsive height
+        width: MediaQuery.of(context).size.width * 0.4,
+        height: MediaQuery.of(context).size.height * 0.12,
         padding: const EdgeInsets.all(8),
         margin: const EdgeInsets.symmetric(horizontal: 8),
         decoration: ShapeDecoration(
@@ -509,13 +511,11 @@ class _VDOScreenState extends State<VDOScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: MediaQuery.of(context).size.width *
-                  0.12, // Responsive image width
-              height: MediaQuery.of(context).size.width *
-                  0.12, // Responsive image height
+              width: MediaQuery.of(context).size.width * 0.12,
+              height: MediaQuery.of(context).size.width * 0.12,
               clipBehavior: Clip.antiAlias,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8), // Rounded corners
+                borderRadius: BorderRadius.circular(8),
               ),
               child: Image.asset(
                 imageUrl,

@@ -93,7 +93,7 @@ class _WagesBeforeScreenState extends State<WagesBeforeScreen> {
 
       Dio dio = Dio();
       Response response = await dio.post(
-        'https://sbmgrajasthan.com/api/submit-activity',
+        'https://8da6-122-172-85-234.ngrok-free.app/api/submit-activity',
         data: formData,
       );
 

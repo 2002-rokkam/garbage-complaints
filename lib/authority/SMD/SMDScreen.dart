@@ -8,7 +8,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../PoweredByBikaji.dart';
 import '../../Login/workerLogout.dart';
 import '../BDO/BDOD2D/BDOD2DCalnderActivity.dart';
+import '../BDO/BDOPendingWorkerComplaintsCalender.dart';
 import '../BDO/BDORCC/BDORCCCalendarActivityScreen.dart';
+import '../BDO/BDOResolvedWorkerComplaintsCalender.dart';
 import '../BDO/BDOSchoolCampus/BDOSchoolCampusCalnderActivity.dart';
 import '../BDO/CalnderActivity/BDOCalendarActivityScreen.dart';
 import 'SMDWorkerComplaintsCalender.dart';
@@ -38,9 +40,9 @@ class _SMDScreenState extends State<SMDScreen> {
     String? District = prefs.getString('District');
     print(District);
     if (District != null) {
-      final response = await http.get(
-          Uri.parse('https://sbmgrajasthan.com/api/complaints-by-state/')
-              .replace(queryParameters: {
+      final response = await http.get(Uri.parse(
+              'https://8da6-122-172-85-234.ngrok-free.app/api/complaints-by-state/')
+          .replace(queryParameters: {
         'district': District,
       }));
 
@@ -291,7 +293,37 @@ class _SMDScreenState extends State<SMDScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         GestureDetector(
-                          onTap: () {},
+                         onTap: () async {
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            String? appbarselectedGramPanchayat =
+                                prefs.getString('appbarselectedGramPanchayat');
+
+                            if (appbarselectedGramPanchayat == null ||
+                                appbarselectedGramPanchayat.isEmpty) {
+                              showDialog(
+                                context: context,
+                                builder: (context) => Dialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                  child: Container(
+                                    height: 400, // Adjust height as needed
+                                    padding: EdgeInsets.all(16.0),
+                                    child: SMDselectRegion(),
+                                  ),
+                                ),
+                              );
+                            } else {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      BDOPendingWorkerComplaintsCalender(),
+                                ),
+                              );
+                            }
+                          },
                           child: Container(
                             width: 170,
                             height: 139,
@@ -359,7 +391,37 @@ class _SMDScreenState extends State<SMDScreen> {
                           ),
                         ),
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () async {
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            String? appbarselectedGramPanchayat =
+                                prefs.getString('appbarselectedGramPanchayat');
+
+                            if (appbarselectedGramPanchayat == null ||
+                                appbarselectedGramPanchayat.isEmpty) {
+                              showDialog(
+                                context: context,
+                                builder: (context) => Dialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                  child: Container(
+                                    height: 400, // Adjust height as needed
+                                    padding: EdgeInsets.all(16.0),
+                                    child: SMDselectRegion(),
+                                  ),
+                                ),
+                              );
+                            } else {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      BDOResolvedWorkerComplaintsCalender(),
+                                ),
+                              );
+                            }
+                          },
                           child: Container(
                             width: 170,
                             height: 139,

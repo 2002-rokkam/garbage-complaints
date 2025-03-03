@@ -26,9 +26,10 @@ class BDOSchoolCampusCalnderActivityScreen extends StatefulWidget {
       _BDOSchoolCampusCalnderActivityScreenState();
 }
 
-class _BDOSchoolCampusCalnderActivityScreenState extends State<BDOSchoolCampusCalnderActivityScreen> with SingleTickerProviderStateMixin {
-
-DateTime _selectedDate = DateTime.now();
+class _BDOSchoolCampusCalnderActivityScreenState
+    extends State<BDOSchoolCampusCalnderActivityScreen>
+    with SingleTickerProviderStateMixin {
+  DateTime _selectedDate = DateTime.now();
   List _activities = [];
   List _tripDetails = [];
   bool _isLoading = false;
@@ -69,7 +70,8 @@ DateTime _selectedDate = DateTime.now();
       _isLoading = true;
     });
 
-    final url = Uri.parse('https://sbmgrajasthan.com/api/bdo-section-dashboard')
+    final url = Uri.parse(
+            'https://8da6-122-172-85-234.ngrok-free.app/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': widget.section,
@@ -106,7 +108,8 @@ DateTime _selectedDate = DateTime.now();
   Future<void> fetchTripDetails() async {
     String workerId = await getWorkerId();
 
-    final url = Uri.parse('https://sbmgrajasthan.com/api/bdo-section-dashboard')
+    final url = Uri.parse(
+            'https://8da6-122-172-85-234.ngrok-free.app/api/bdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': 'School Toilet',
