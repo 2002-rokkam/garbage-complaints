@@ -16,9 +16,7 @@ import 'VDOWagesCalendarActivityScreen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'VDOWorkerComplaintsCalender.dart';
 import 'fillContractorDetails.dart';
-import '../../button_items.dart';
 
 class VDOScreen extends StatefulWidget {
   @override
@@ -29,11 +27,14 @@ class _VDOScreenState extends State<VDOScreen> {
   int totalComplaints = 0;
   int pendingComplaints = 0;
   int resolvedComplaints = 0;
+  
+ Map<String, int> activityCounts = {};
 
   @override
   void initState() {
     super.initState();
     fetchData();
+    fetchActivityCounts();
   }
 
   Future<void> fetchData() async {
@@ -63,6 +64,94 @@ class _VDOScreenState extends State<VDOScreen> {
     } else {
       throw Exception('Gram Panchayat not found in preferences');
     }
+  }
+
+   Future<void> fetchActivityCounts() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? gramPanchayat = prefs.getString('gram_panchayat');
+    String? District = prefs.getString('District');
+
+    final response = await http.get(Uri.parse('https://8da6-122-172-85-234.ngrok-free.app/api/gp-activity-count/?district=$District&gp=$gramPanchayat'));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      setState(() {
+        activityCounts = {
+          'Door to Door': data['Door to Door'] ?? 0,
+          'Road Sweeping': data['Road Sweeping'] ?? 0,
+          'Drainage Cleaning': data['Drainage Cleaning'] ?? 0,
+          'CSC': data['CSC'] ?? 0,
+          'RRC': data['RRC'] ?? 0,
+          'Wages': data['Wages'] ?? 0,
+          'School Campus': data['School Campus'] ?? 0,
+          'Panchayat Campus': data['Panchayat Campus'] ?? 0,
+          'Animal Transport': data['Animal Transport'] ?? 0,
+        };
+      });
+    } else {
+      throw Exception('Failed to load activity data');
+    }
+  }
+
+  List<Map<String, dynamic>> buttonItems(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
+    return [
+      {
+        'label': localizations.door_to_door,
+        'imageUrl': 'assets/images/d2d.png',
+        'route': 'DoorToDoorScreen',
+        'number': activityCounts['Door to Door']?.toString() ?? '0'
+      },
+      {
+        'label': localizations.road_sweeping,
+        'imageUrl': 'assets/images/road_sweeping.png',
+        'route': 'RoadSweepingScreen',
+        'number': activityCounts['Road Sweeping']?.toString() ?? '0'
+      },
+      {
+        'label': localizations.drain_cleaning,
+        'imageUrl': 'assets/images/drainage_collectin.png',
+        'route': 'DrainCleaningScreen',
+        'number': activityCounts['Drainage Cleaning']?.toString() ?? '0'
+      },
+      {
+        'label': localizations.community_service_centre,
+        'imageUrl': 'assets/images/CSC.png',
+        'route': 'CSCScreen',
+        'number': activityCounts['CSC']?.toString() ?? '0'
+      },
+      {
+        'label': localizations.resource_recovery_centre,
+        'imageUrl': 'assets/images/RRC.png',
+        'route': 'RRCScreen',
+        'number': activityCounts['RRC']?.toString() ?? '0'
+      },
+      {
+        'label': localizations.wages,
+        'imageUrl': 'assets/images/wages.png',
+        'route': 'WagesScreen',
+        'number': activityCounts['Wages']?.toString() ?? '0'
+      },
+      {
+        'label': localizations.school_campus_sweeping,
+        'imageUrl': 'assets/images/SchoolCampus.png',
+        'route': 'SchoolCampus',
+        'number': activityCounts['School Campus']?.toString() ?? '0'
+      },
+      {
+        'label': localizations.panchayat_campus,
+        'imageUrl': 'assets/images/PanchayatCampus.png',
+        'route': 'PanchayatCampus',
+        'number': activityCounts['Panchayat Campus']?.toString() ?? '0'
+      },
+      {
+        'label': localizations.animal_body_transport,
+        'imageUrl': 'assets/images/AnimalBodytransport.png',
+        'route': 'AnimalBodytransport',
+        'number': activityCounts['Animal Transport']?.toString() ?? '0'
+      },
+    ];
   }
 
   @override
@@ -262,7 +351,7 @@ class _VDOScreenState extends State<VDOScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         GestureDetector(
-                         onTap: () {
+                          onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -440,7 +529,7 @@ class _VDOScreenState extends State<VDOScreen> {
                             item['label']!,
                             item['imageUrl']!,
                             item['route']!,
-                            
+                            item['number']!,
                             context,
                           );
                         }).toList(),
@@ -470,8 +559,8 @@ class _VDOScreenState extends State<VDOScreen> {
     );
   }
 
-  Widget _buildButton(
-      String label, String imageUrl, String routeName, BuildContext context) {
+  Widget _buildButton(String label, String imageUrl, String routeName,
+      String number, BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -483,7 +572,7 @@ class _VDOScreenState extends State<VDOScreen> {
       },
       child: Container(
         width: MediaQuery.of(context).size.width * 0.4,
-        height: MediaQuery.of(context).size.height * 0.12,
+        height: MediaQuery.of(context).size.height * 0.16,
         padding: const EdgeInsets.all(8),
         margin: const EdgeInsets.symmetric(horizontal: 8),
         decoration: ShapeDecoration(
@@ -520,6 +609,16 @@ class _VDOScreenState extends State<VDOScreen> {
               child: Image.asset(
                 imageUrl,
                 fit: BoxFit.cover,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              number,
+              style: const TextStyle(
+                color: Color(0xFF6B6B6B),
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.16,
               ),
             ),
             SizedBox(height: 8),

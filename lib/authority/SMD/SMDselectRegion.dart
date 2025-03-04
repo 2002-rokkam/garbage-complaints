@@ -129,7 +129,7 @@ class _SMDselectRegionState extends State<SMDselectRegion> {
       await prefs.setString('appbarselectedBlock', formattedBlock);
       await prefs.setString(
           'appbarselectedGramPanchayat', formattedGramPanchayat);
-      Navigator.pop(context);
+      Navigator.pop(context, true);
     } else {
       final localizations = AppLocalizations.of(context)!;
       showDialog(

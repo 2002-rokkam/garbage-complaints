@@ -1,5 +1,6 @@
 // authority/SMD/SMDScreen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
@@ -13,9 +14,7 @@ import '../BDO/BDORCC/BDORCCCalendarActivityScreen.dart';
 import '../BDO/BDOResolvedWorkerComplaintsCalender.dart';
 import '../BDO/BDOSchoolCampus/BDOSchoolCampusCalnderActivity.dart';
 import '../BDO/CalnderActivity/BDOCalendarActivityScreen.dart';
-import 'SMDWorkerComplaintsCalender.dart';
 import 'SMDselectRegion.dart';
-import '../../button_items.dart';
 import '../BDO/BDOWages/BDOWagesCalendarActivityScreen.dart';
 import 'SMDcontractorDetails.dart';
 
@@ -28,40 +27,152 @@ class _SMDScreenState extends State<SMDScreen> {
   int totalComplaints = 0;
   int pendingComplaints = 0;
   int resolvedComplaints = 0;
+  Map<String, int> activityCounts = {};
+  late Locale _locale;
 
   @override
   void initState() {
     super.initState();
     fetchData();
+    fetchActivityCounts();
+    _loadLanguagePreference();
+  }
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
   }
 
   Future<void> fetchData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? District = prefs.getString('District');
-    print(District);
-    if (District != null) {
-      final response = await http.get(Uri.parse(
-              'https://8da6-122-172-85-234.ngrok-free.app/api/complaints-by-state/')
-          .replace(queryParameters: {
-        'district': District,
-      }));
+    String? appbarselectedGramPanchayat =
+        prefs.getString('appbarselectedGramPanchayat');
+    String apiUrl;
 
-      print('Status Code: ${response.statusCode}');
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        print('API Response: $data');
-        setState(() {
-          totalComplaints = data['total_complaints'];
-          pendingComplaints = data['pending_complaints'];
-          resolvedComplaints = data['resolved_complaints'];
-        });
-      } else {
-        throw Exception('Failed to load data');
-      }
+    if (appbarselectedGramPanchayat == null ||
+        appbarselectedGramPanchayat.isEmpty) {
+      apiUrl =
+          'https://8da6-122-172-85-234.ngrok-free.app/api/complaints-by-district/?district=$District';
     } else {
-      throw Exception('Gram Panchayat not found in preferences');
+      apiUrl =
+          'https://8da6-122-172-85-234.ngrok-free.app/api/complaints-by-gram-panchayat/?gram_panchayat=$appbarselectedGramPanchayat';
     }
+
+    final response = await http.get(Uri.parse(apiUrl));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      print('API Response: $data');
+      setState(() {
+        totalComplaints = data['total_complaints'];
+        pendingComplaints = data['pending_complaints'];
+        resolvedComplaints = data['resolved_complaints'];
+      });
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
+
+  Future<void> fetchActivityCounts() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? district = prefs.getString('District');
+    String? appbarselectedGramPanchayat =
+        prefs.getString('appbarselectedGramPanchayat');
+    print(appbarselectedGramPanchayat);
+    String apiUrl;
+
+    if (appbarselectedGramPanchayat == null ||
+        appbarselectedGramPanchayat.isEmpty) {
+      apiUrl =
+          'https://8da6-122-172-85-234.ngrok-free.app/api/district-activity-count/?district=$district';
+    } else {
+      apiUrl =
+          'https://8da6-122-172-85-234.ngrok-free.app/api/gp-activity-count/?district=$district&gp=$appbarselectedGramPanchayat';
+    }
+    final response = await http.get(Uri.parse(apiUrl));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      setState(() {
+        activityCounts = {
+          'Door to Door': data['Door to Door'] ?? 0,
+          'Road Sweeping': data['Road Sweeping'] ?? 0,
+          'Drainage Cleaning': data['Drainage Cleaning'] ?? 0,
+          'CSC': data['CSC'] ?? 0,
+          'RRC': data['RRC'] ?? 0,
+          'Wages': data['Wages'] ?? 0,
+          'School Campus': data['School Campus'] ?? 0,
+          'Panchayat Campus': data['Panchayat Campus'] ?? 0,
+          'Animal Transport': data['Animal Transport'] ?? 0,
+        };
+      });
+    } else {
+      throw Exception('Failed to load activity data');
+    }
+  }
+
+  List<Map<String, dynamic>> buttonItems(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    return [
+      {
+        'label': localizations.door_to_door,
+        'imageUrl': 'assets/images/d2d.png',
+        'route': 'DoorToDoorScreen',
+        'number': activityCounts['Door to Door']?.toString() ?? '0'
+      },
+      {
+        'label': localizations.road_sweeping,
+        'imageUrl': 'assets/images/road_sweeping.png',
+        'route': 'RoadSweepingScreen',
+        'number': activityCounts['Road Sweeping']?.toString() ?? '0'
+      },
+      {
+        'label': localizations.drain_cleaning,
+        'imageUrl': 'assets/images/drainage_collectin.png',
+        'route': 'DrainCleaningScreen',
+        'number': activityCounts['Drainage Cleaning']?.toString() ?? '0'
+      },
+      {
+        'label': localizations.community_service_centre,
+        'imageUrl': 'assets/images/CSC.png',
+        'route': 'CSCScreen',
+        'number': activityCounts['CSC']?.toString() ?? '0'
+      },
+      {
+        'label': localizations.resource_recovery_centre,
+        'imageUrl': 'assets/images/RRC.png',
+        'route': 'RRCScreen',
+        'number': activityCounts['RRC']?.toString() ?? '0'
+      },
+      {
+        'label': localizations.wages,
+        'imageUrl': 'assets/images/wages.png',
+        'route': 'WagesScreen',
+        'number': activityCounts['Wages']?.toString() ?? '0'
+      },
+      {
+        'label': localizations.school_campus_sweeping,
+        'imageUrl': 'assets/images/SchoolCampus.png',
+        'route': 'SchoolCampus',
+        'number': activityCounts['School Campus']?.toString() ?? '0'
+      },
+      {
+        'label': localizations.panchayat_campus,
+        'imageUrl': 'assets/images/PanchayatCampus.png',
+        'route': 'PanchayatCampus',
+        'number': activityCounts['Panchayat Campus']?.toString() ?? '0'
+      },
+      {
+        'label': localizations.animal_body_transport,
+        'imageUrl': 'assets/images/AnimalBodytransport.png',
+        'route': 'AnimalBodytransport',
+        'number': activityCounts['Animal Transport']?.toString() ?? '0'
+      },
+    ];
   }
 
   @override
@@ -85,8 +196,8 @@ class _SMDScreenState extends State<SMDScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     GestureDetector(
-                      onTap: () {
-                        showDialog(
+                      onTap: () async {
+                        bool? shouldReload = await showDialog(
                           context: context,
                           builder: (context) => Dialog(
                             shape: RoundedRectangleBorder(
@@ -100,6 +211,15 @@ class _SMDScreenState extends State<SMDScreen> {
                             ),
                           ),
                         );
+                        if (shouldReload == true) {
+                          setState(() {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SMDScreen()),
+                            );
+                          });
+                        }
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
@@ -205,14 +325,7 @@ class _SMDScreenState extends State<SMDScreen> {
                 child: Column(
                   children: [
                     GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SMDWorkerComplaintsCalender(),
-                          ),
-                        );
-                      },
+                      onTap: () {},
                       child: Container(
                         width: 370,
                         height: 139,
@@ -293,7 +406,7 @@ class _SMDScreenState extends State<SMDScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         GestureDetector(
-                         onTap: () async {
+                          onTap: () async {
                             SharedPreferences prefs =
                                 await SharedPreferences.getInstance();
                             String? appbarselectedGramPanchayat =
@@ -301,7 +414,7 @@ class _SMDScreenState extends State<SMDScreen> {
 
                             if (appbarselectedGramPanchayat == null ||
                                 appbarselectedGramPanchayat.isEmpty) {
-                              showDialog(
+                              bool? shouldReload = await showDialog(
                                 context: context,
                                 builder: (context) => Dialog(
                                   shape: RoundedRectangleBorder(
@@ -314,6 +427,15 @@ class _SMDScreenState extends State<SMDScreen> {
                                   ),
                                 ),
                               );
+                              if (shouldReload == true) {
+                                setState(() {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => SMDScreen()),
+                                  );
+                                });
+                              }
                             } else {
                               Navigator.push(
                                 context,
@@ -399,7 +521,7 @@ class _SMDScreenState extends State<SMDScreen> {
 
                             if (appbarselectedGramPanchayat == null ||
                                 appbarselectedGramPanchayat.isEmpty) {
-                              showDialog(
+                              bool? shouldReload = await showDialog(
                                 context: context,
                                 builder: (context) => Dialog(
                                   shape: RoundedRectangleBorder(
@@ -412,6 +534,15 @@ class _SMDScreenState extends State<SMDScreen> {
                                   ),
                                 ),
                               );
+                              if (shouldReload == true) {
+                                setState(() {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => SMDScreen()),
+                                  );
+                                });
+                              }
                             } else {
                               Navigator.push(
                                 context,
@@ -516,6 +647,7 @@ class _SMDScreenState extends State<SMDScreen> {
                             item['label']!,
                             item['imageUrl']!,
                             item['route']!,
+                            item['number']!,
                             context,
                           );
                         }).toList(),
@@ -556,13 +688,13 @@ class _SMDScreenState extends State<SMDScreen> {
     }
   }
 
-  Widget _buildButton(
-      String label, String imageUrl, String routeName, BuildContext context) {
+  Widget _buildButton(String label, String imageUrl, String routeName,
+      String number, BuildContext context) {
     return GestureDetector(
       onTap: () => _navigateToPage(routeName, context),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.4,
-        height: MediaQuery.of(context).size.height * 0.15,
+        height: MediaQuery.of(context).size.height * 0.17,
         padding: const EdgeInsets.all(8),
         margin: const EdgeInsets.symmetric(horizontal: 8),
         decoration: ShapeDecoration(
@@ -597,6 +729,16 @@ class _SMDScreenState extends State<SMDScreen> {
             ),
             SizedBox(height: 8),
             Text(
+              number,
+              style: const TextStyle(
+                color: Color(0xFF6B6B6B),
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.16,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
               label,
               textAlign: TextAlign.start,
               style: const TextStyle(
@@ -626,7 +768,7 @@ class _SMDScreenState extends State<SMDScreen> {
         appbarselectedBlock.isEmpty ||
         appbarselectedGramPanchayat == null ||
         appbarselectedGramPanchayat.isEmpty) {
-      showDialog(
+      bool? shouldReload = await showDialog(
         context: context,
         builder: (context) => Dialog(
           shape: RoundedRectangleBorder(
@@ -639,9 +781,16 @@ class _SMDScreenState extends State<SMDScreen> {
           ),
         ),
       );
+      if (shouldReload == true) {
+        setState(() {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => SMDScreen()),
+          );
+        });
+      }
       return Scaffold();
     }
-
     switch (routeName) {
       case 'DoorToDoorScreen':
         return BDOD2DCalnderActivityScreen(

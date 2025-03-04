@@ -12,9 +12,7 @@ import 'BDOPanchayatCampus/BDOPanchayatCampus.dart';
 import 'BDOPendingWorkerComplaintsCalender.dart';
 import 'BDOResolvedWorkerComplaintsCalender.dart';
 import 'BDOSchoolCampus/BDOSchoolCampusCalnderActivity.dart';
-import 'BDOWorkerComplaintsCalender.dart';
 import 'selectRegion.dart';
-import '../../button_items.dart';
 import 'CalnderActivity/BDOCalendarActivityScreen.dart';
 import 'BDOD2D/BDOD2DCalnderActivity.dart';
 import 'BDORCC/BDORCCCalendarActivityScreen.dart';
@@ -31,12 +29,14 @@ class _BDOScreenState extends State<BDOScreen> {
   int pendingComplaints = 0;
   int resolvedComplaints = 0;
   late Locale _locale;
+  Map<String, int> activityCounts = {};
 
   @override
   void initState() {
     super.initState();
     fetchData();
     _loadLanguagePreference();
+    fetchActivityCounts();
   }
 
   void _loadLanguagePreference() async {
@@ -50,28 +50,131 @@ class _BDOScreenState extends State<BDOScreen> {
   Future<void> fetchData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? District = prefs.getString('District');
-    print(District);
-    if (District != null) {
-      final response = await http.get(Uri.parse(
-              'https://8da6-122-172-85-234.ngrok-free.app/api/complaints-by-district/')
-          .replace(queryParameters: {
-        'district': District,
-      }));
+    String? appbarselectedGramPanchayat =
+        prefs.getString('appbarselectedGramPanchayat');
+    String apiUrl;
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        print('API Response: $data');
-        setState(() {
-          totalComplaints = data['total_complaints'];
-          pendingComplaints = data['pending_complaints'];
-          resolvedComplaints = data['resolved_complaints'];
-        });
-      } else {
-        throw Exception('Failed to load data');
-      }
+    if (appbarselectedGramPanchayat == null ||
+        appbarselectedGramPanchayat.isEmpty) {
+      apiUrl =
+          'https://8da6-122-172-85-234.ngrok-free.app/api/complaints-by-district/?district=$District';
     } else {
-      throw Exception('Gram Panchayat not found in preferences');
+      apiUrl =
+          'https://8da6-122-172-85-234.ngrok-free.app/api/complaints-by-gram-panchayat/?gram_panchayat=$appbarselectedGramPanchayat';
     }
+
+    final response = await http.get(Uri.parse(apiUrl));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      print('API Response: $data');
+      setState(() {
+        totalComplaints = data['total_complaints'];
+        pendingComplaints = data['pending_complaints'];
+        resolvedComplaints = data['resolved_complaints'];
+      });
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
+
+  Future<void> fetchActivityCounts() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? district = prefs.getString('District');
+    String? appbarselectedGramPanchayat =
+        prefs.getString('appbarselectedGramPanchayat');
+    print(appbarselectedGramPanchayat);
+    String apiUrl;
+
+    if (appbarselectedGramPanchayat == null ||
+        appbarselectedGramPanchayat.isEmpty) {
+      apiUrl =
+          'https://8da6-122-172-85-234.ngrok-free.app/api/district-activity-count/?district=$district';
+    } else {
+      apiUrl =
+          'https://8da6-122-172-85-234.ngrok-free.app/api/gp-activity-count/?district=$district&gp=$appbarselectedGramPanchayat';
+    }
+    final response = await http.get(Uri.parse(apiUrl));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      setState(() {
+        activityCounts = {
+          'Door to Door': data['Door to Door'] ?? 0,
+          'Road Sweeping': data['Road Sweeping'] ?? 0,
+          'Drainage Cleaning': data['Drainage Cleaning'] ?? 0,
+          'CSC': data['CSC'] ?? 0,
+          'RRC': data['RRC'] ?? 0,
+          'Wages': data['Wages'] ?? 0,
+          'School Campus': data['School Campus'] ?? 0,
+          'Panchayat Campus': data['Panchayat Campus'] ?? 0,
+          'Animal Transport': data['Animal Transport'] ?? 0,
+        };
+      });
+    } else {
+      throw Exception('Failed to load activity data');
+    }
+  }
+
+  List<Map<String, dynamic>> buttonItems(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
+    return [
+      {
+        'label': localizations.door_to_door,
+        'imageUrl': 'assets/images/d2d.png',
+        'route': 'DoorToDoorScreen',
+        'number': activityCounts['Door to Door']?.toString() ?? '0'
+      },
+      {
+        'label': localizations.road_sweeping,
+        'imageUrl': 'assets/images/road_sweeping.png',
+        'route': 'RoadSweepingScreen',
+        'number': activityCounts['Road Sweeping']?.toString() ?? '0'
+      },
+      {
+        'label': localizations.drain_cleaning,
+        'imageUrl': 'assets/images/drainage_collectin.png',
+        'route': 'DrainCleaningScreen',
+        'number': activityCounts['Drainage Cleaning']?.toString() ?? '0'
+      },
+      {
+        'label': localizations.community_service_centre,
+        'imageUrl': 'assets/images/CSC.png',
+        'route': 'CSCScreen',
+        'number': activityCounts['CSC']?.toString() ?? '0'
+      },
+      {
+        'label': localizations.resource_recovery_centre,
+        'imageUrl': 'assets/images/RRC.png',
+        'route': 'RRCScreen',
+        'number': activityCounts['RRC']?.toString() ?? '0'
+      },
+      {
+        'label': localizations.wages,
+        'imageUrl': 'assets/images/wages.png',
+        'route': 'WagesScreen',
+        'number': activityCounts['Wages']?.toString() ?? '0'
+      },
+      {
+        'label': localizations.school_campus_sweeping,
+        'imageUrl': 'assets/images/SchoolCampus.png',
+        'route': 'SchoolCampus',
+        'number': activityCounts['School Campus']?.toString() ?? '0'
+      },
+      {
+        'label': localizations.panchayat_campus,
+        'imageUrl': 'assets/images/PanchayatCampus.png',
+        'route': 'PanchayatCampus',
+        'number': activityCounts['Panchayat Campus']?.toString() ?? '0'
+      },
+      {
+        'label': localizations.animal_body_transport,
+        'imageUrl': 'assets/images/AnimalBodytransport.png',
+        'route': 'AnimalBodytransport',
+        'number': activityCounts['Animal Transport']?.toString() ?? '0'
+      },
+    ];
   }
 
   @override
@@ -95,8 +198,8 @@ class _BDOScreenState extends State<BDOScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     GestureDetector(
-                      onTap: () {
-                        showDialog(
+                      onTap: () async {
+                        bool? shouldReload = await showDialog(
                           context: context,
                           builder: (context) => Dialog(
                             shape: RoundedRectangleBorder(
@@ -109,6 +212,16 @@ class _BDOScreenState extends State<BDOScreen> {
                             ),
                           ),
                         );
+
+                        if (shouldReload == true) {
+                          setState(() {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => BDOScreen()),
+                            );
+                          });
+                        }
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
@@ -285,10 +398,8 @@ class _BDOScreenState extends State<BDOScreen> {
                       ),
                     ),
                     SizedBox(height: 16),
-
                     Row(
-                      mainAxisAlignment:
-                          MainAxisAlignment.spaceEvenly, // Adjusts the spacing
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         GestureDetector(
                           onTap: () async {
@@ -296,22 +407,30 @@ class _BDOScreenState extends State<BDOScreen> {
                                 await SharedPreferences.getInstance();
                             String? appbarselectedGramPanchayat =
                                 prefs.getString('appbarselectedGramPanchayat');
-
                             if (appbarselectedGramPanchayat == null ||
                                 appbarselectedGramPanchayat.isEmpty) {
-                              showDialog(
+                              bool? shouldReload = await showDialog(
                                 context: context,
                                 builder: (context) => Dialog(
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
                                   child: Container(
-                                    height: 400, // Adjust height as needed
+                                    height: 400,
                                     padding: EdgeInsets.all(16.0),
                                     child: RegionSelector(),
                                   ),
                                 ),
                               );
+                              if (shouldReload == true) {
+                                setState(() {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => BDOScreen()),
+                                  );
+                                });
+                              }
                             } else {
                               Navigator.push(
                                 context,
@@ -323,7 +442,7 @@ class _BDOScreenState extends State<BDOScreen> {
                             }
                           },
                           child: Container(
-                            width: 170, // Adjust width as needed
+                            width: 170,
                             height: 139,
                             decoration: ShapeDecoration(
                               color: Colors.white,
@@ -367,12 +486,11 @@ class _BDOScreenState extends State<BDOScreen> {
                                     pendingComplaints.toString(),
                                     style: TextStyle(
                                       color: Colors.black,
-                                      fontSize: 18, // Adjust size as needed
+                                      fontSize: 18,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  const SizedBox(
-                                      height: 5), // Adjust spacing as needed
+                                  const SizedBox(height: 5), 
                                   Text(
                                     'Pending ',
                                     style: TextStyle(
@@ -390,7 +508,6 @@ class _BDOScreenState extends State<BDOScreen> {
                           ),
                         ),
                         GestureDetector(
-
                           onTap: () async {
                             SharedPreferences prefs =
                                 await SharedPreferences.getInstance();
@@ -399,7 +516,7 @@ class _BDOScreenState extends State<BDOScreen> {
 
                             if (appbarselectedGramPanchayat == null ||
                                 appbarselectedGramPanchayat.isEmpty) {
-                              showDialog(
+                              bool? shouldReload = await showDialog(
                                 context: context,
                                 builder: (context) => Dialog(
                                   shape: RoundedRectangleBorder(
@@ -412,6 +529,15 @@ class _BDOScreenState extends State<BDOScreen> {
                                   ),
                                 ),
                               );
+                              if (shouldReload == true) {
+                                setState(() {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => BDOScreen()),
+                                  );
+                                });
+                              }
                             } else {
                               Navigator.push(
                                 context,
@@ -421,7 +547,7 @@ class _BDOScreenState extends State<BDOScreen> {
                                 ),
                               );
                             }
-                          },                        
+                          },
                           child: Container(
                             width: 170,
                             height: 139,
@@ -491,7 +617,6 @@ class _BDOScreenState extends State<BDOScreen> {
                         ),
                       ],
                     ),
-                    // Scrollable "Home" label and buttons grid
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16.0, vertical: 4.0),
@@ -517,6 +642,7 @@ class _BDOScreenState extends State<BDOScreen> {
                             item['label']!,
                             item['imageUrl']!,
                             item['route']!,
+                            item['number']!,
                             context,
                           );
                         }).toList(),
@@ -560,13 +686,13 @@ class _BDOScreenState extends State<BDOScreen> {
     }
   }
 
-  Widget _buildButton(
-      String label, String imageUrl, String routeName, BuildContext context) {
+  Widget _buildButton(String label, String imageUrl, String routeName,
+      String number, BuildContext context) {
     return GestureDetector(
       onTap: () => _navigateToPage(routeName, context),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.4,
-        height: MediaQuery.of(context).size.height * 0.15,
+        height: MediaQuery.of(context).size.height * 0.17,
         padding: const EdgeInsets.all(8),
         margin: const EdgeInsets.symmetric(horizontal: 8),
         decoration: ShapeDecoration(
@@ -601,6 +727,16 @@ class _BDOScreenState extends State<BDOScreen> {
             ),
             SizedBox(height: 8),
             Text(
+              number,
+              style: const TextStyle(
+                color: Color(0xFF6B6B6B),
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.16,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
               label,
               textAlign: TextAlign.start,
               style: const TextStyle(
@@ -631,7 +767,7 @@ class _BDOScreenState extends State<BDOScreen> {
         appbarselectedGramPanchayat == null ||
         appbarselectedGramPanchayat.isEmpty) {
       // Show the region selection dialog
-      showDialog(
+      bool? shouldReload = await showDialog(
         context: context,
         builder: (context) => Dialog(
           shape: RoundedRectangleBorder(
@@ -644,6 +780,14 @@ class _BDOScreenState extends State<BDOScreen> {
           ),
         ),
       );
+      if (shouldReload == true) {
+        setState(() {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => BDOScreen()),
+          );
+        });
+      }
       return Scaffold(); // Return an empty scaffold to prevent navigation
     }
 

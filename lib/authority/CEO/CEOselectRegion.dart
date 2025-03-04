@@ -138,9 +138,8 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('appbarselectedDistrict', formattedDistrict);
       await prefs.setString('appbarselectedBlock', formattedBlock);
-      await prefs.setString(
-          'appbarselectedGramPanchayat', formattedGramPanchayat);
-      Navigator.pop(context);
+      await prefs.setString('appbarselectedGramPanchayat', formattedGramPanchayat);
+      Navigator.pop(context, true);
     } else {
       final localizations = AppLocalizations.of(context)!;
       showDialog(

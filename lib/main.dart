@@ -79,7 +79,7 @@ class _MyAppState extends State<MyApp> {
       home = determinePageBasedOnPosition(widget.position);
     } else {
       home = OnboardingScreen(changeLanguage: _changeLanguage);
-
+      
     }
 
     return MaterialApp(
