@@ -29,6 +29,8 @@ class _SMDScreenState extends State<SMDScreen> {
   int resolvedComplaints = 0;
   Map<String, int> activityCounts = {};
   late Locale _locale;
+  String? appbarselectedGramPanchayat;
+  String? District;
 
   @override
   void initState() {
@@ -36,6 +38,13 @@ class _SMDScreenState extends State<SMDScreen> {
     fetchData();
     fetchActivityCounts();
     _loadLanguagePreference();
+    SharedPreferences.getInstance().then((prefs) {
+      setState(() {
+        appbarselectedGramPanchayat =
+            prefs.getString('appbarselectedGramPanchayat');
+        District = prefs.getString('District');
+      });
+    });
   }
 
   void _loadLanguagePreference() async {
@@ -56,10 +65,10 @@ class _SMDScreenState extends State<SMDScreen> {
     if (appbarselectedGramPanchayat == null ||
         appbarselectedGramPanchayat.isEmpty) {
       apiUrl =
-          'https://8da6-122-172-85-234.ngrok-free.app/api/complaints-by-district/?district=$District';
+          'https://sbmgrajasthan.com/api/complaints-by-district/?district=$District';
     } else {
       apiUrl =
-          'https://8da6-122-172-85-234.ngrok-free.app/api/complaints-by-gram-panchayat/?gram_panchayat=$appbarselectedGramPanchayat';
+          'https://sbmgrajasthan.com/api/complaints-by-gram-panchayat/?gram_panchayat=$appbarselectedGramPanchayat';
     }
 
     final response = await http.get(Uri.parse(apiUrl));
@@ -88,10 +97,10 @@ class _SMDScreenState extends State<SMDScreen> {
     if (appbarselectedGramPanchayat == null ||
         appbarselectedGramPanchayat.isEmpty) {
       apiUrl =
-          'https://8da6-122-172-85-234.ngrok-free.app/api/district-activity-count/?district=$district';
+          'https://sbmgrajasthan.com/api/district-activity-count/?district=$district';
     } else {
       apiUrl =
-          'https://8da6-122-172-85-234.ngrok-free.app/api/gp-activity-count/?district=$district&gp=$appbarselectedGramPanchayat';
+          'https://sbmgrajasthan.com/api/gp-activity-count/?district=$district&gp=$appbarselectedGramPanchayat';
     }
     final response = await http.get(Uri.parse(apiUrl));
 
@@ -172,6 +181,12 @@ class _SMDScreenState extends State<SMDScreen> {
         'route': 'AnimalBodytransport',
         'number': activityCounts['Animal Transport']?.toString() ?? '0'
       },
+        {
+        'label': localizations.contractor_details,
+        'imageUrl': 'assets/images/Contractors.png',
+        'route': 'ContractorDetailsScreen',
+        "number": ""
+      },
     ];
   }
 
@@ -224,7 +239,10 @@ class _SMDScreenState extends State<SMDScreen> {
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Text(
-                          DateFormat('dd/MM/yyyy').format(DateTime.now()),
+                          appbarselectedGramPanchayat == null ||
+                                  appbarselectedGramPanchayat!.isEmpty
+                              ? District ?? ''
+                              : appbarselectedGramPanchayat!,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 18,

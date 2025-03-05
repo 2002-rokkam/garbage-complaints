@@ -46,7 +46,7 @@ class _BDOPendingWorkerComplaintsCalenderState
     final gramPanchayat = prefs.getString('appbarselectedGramPanchayat') ?? "";
 
     final url =
-        'https://8da6-122-172-85-234.ngrok-free.app/api/pending-complaints/?gram_panchayat=$gramPanchayat';
+        'https://sbmgrajasthan.com/api/pending-complaints/?gram_panchayat=$gramPanchayat';
 
     try {
       final response = await http.get(Uri.parse(url));

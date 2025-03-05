@@ -42,8 +42,7 @@ class _VDOWagesCalendarActivityScreenState
       _isLoading = true;
     });
 
-    final url = Uri.parse(
-            'https://8da6-122-172-85-234.ngrok-free.app/api/vdo-section-dashboard')
+    final url = Uri.parse('https://sbmgrajasthan.com/api/vdo-section-dashboard')
         .replace(queryParameters: {
       'worker_id': workerId,
       'section': widget.section,

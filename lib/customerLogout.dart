@@ -123,8 +123,7 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
     );
     try {
-      String logoutUrl =
-          'https://8da6-122-172-85-234.ngrok-free.app/api/logout';
+      String logoutUrl = 'https://sbmgrajasthan.com/api/logout';
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('id_token');
 

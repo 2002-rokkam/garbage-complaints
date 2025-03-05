@@ -27,14 +27,20 @@ class _VDOScreenState extends State<VDOScreen> {
   int totalComplaints = 0;
   int pendingComplaints = 0;
   int resolvedComplaints = 0;
-  
- Map<String, int> activityCounts = {};
+  String? vdgramPanchayat;
+  Map<String, int> activityCounts = {};
 
   @override
   void initState() {
     super.initState();
     fetchData();
     fetchActivityCounts();
+     SharedPreferences.getInstance().then((prefs) {
+      setState(() {
+        vdgramPanchayat =
+            prefs.getString('gram_panchayat');
+      });
+    });
   }
 
   Future<void> fetchData() async {
@@ -43,7 +49,7 @@ class _VDOScreenState extends State<VDOScreen> {
     print(gramPanchayat);
     if (gramPanchayat != null) {
       final response = await http.get(Uri.parse(
-              'https://8da6-122-172-85-234.ngrok-free.app/api/complaints-by-gram-panchayat/')
+              'https://sbmgrajasthan.com/api/complaints-by-gram-panchayat/')
           .replace(queryParameters: {
         'gram_panchayat': gramPanchayat,
       }));
@@ -66,12 +72,13 @@ class _VDOScreenState extends State<VDOScreen> {
     }
   }
 
-   Future<void> fetchActivityCounts() async {
+  Future<void> fetchActivityCounts() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? gramPanchayat = prefs.getString('gram_panchayat');
     String? District = prefs.getString('District');
 
-    final response = await http.get(Uri.parse('https://8da6-122-172-85-234.ngrok-free.app/api/gp-activity-count/?district=$District&gp=$gramPanchayat'));
+    final response = await http.get(Uri.parse(
+        'https://sbmgrajasthan.com/api/gp-activity-count/?district=$District&gp=$gramPanchayat'));
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
@@ -151,6 +158,12 @@ class _VDOScreenState extends State<VDOScreen> {
         'route': 'AnimalBodytransport',
         'number': activityCounts['Animal Transport']?.toString() ?? '0'
       },
+      {
+        'label': localizations.contractor_details,
+        'imageUrl': 'assets/images/Contractors.png',
+        'route': 'ContractorDetailsScreen',
+        "number": ""
+      },
     ];
   }
 
@@ -176,7 +189,7 @@ class _VDOScreenState extends State<VDOScreen> {
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Text(
-                        DateFormat('dd/MM/yyyy').format(DateTime.now()),
+                       vdgramPanchayat!,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,

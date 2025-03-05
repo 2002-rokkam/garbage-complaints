@@ -32,7 +32,7 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
 
     try {
       final url = Uri.parse(
-          'https://8da6-122-172-85-234.ngrok-free.app/api/contractor/detail/$workerId');
+          'https://sbmgrajasthan.com/api/contractor/detail/$workerId');
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
@@ -93,9 +93,10 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
       });
       final String workerId = await _getWorkerIdFromPrefs(); // Sample worker ID
 
-      final url = Uri.parse(_isEditing // Decide between update and create endpoints
-          ? 'https://8da6-122-172-85-234.ngrok-free.app/api/contractor/update/$workerId'
-          : 'https://8da6-122-172-85-234.ngrok-free.app/api/contractor/create/$workerId');
+      final url =
+          Uri.parse(_isEditing // Decide between update and create endpoints
+              ? 'https://sbmgrajasthan.com/api/contractor/update/$workerId'
+              : 'https://sbmgrajasthan.com/api/contractor/create/$workerId');
       final payload = {
         'company_name': _companyNameController.text,
         'gst_no': _gstNoController.text,

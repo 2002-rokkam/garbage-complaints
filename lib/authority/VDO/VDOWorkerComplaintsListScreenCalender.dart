@@ -226,7 +226,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
     });
     try {
       Response response = await dio.post(
-        'https://8da6-122-172-85-234.ngrok-free.app/api/update-complaint/${widget.complaint['complaint_id']}',
+        'https://sbmgrajasthan.com/api/update-complaint/${widget.complaint['complaint_id']}',
         data: formData,
       );
 
@@ -457,7 +457,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
 
   Future<void> _verifyComplaint(String complaintId) async {
     final url = Uri.parse(
-        'https://8da6-122-172-85-234.ngrok-free.app/api/complaint/$complaintId/verify');
+        'https://sbmgrajasthan.com/api/complaint/$complaintId/verify');
     print(complaintId);
     print(workerId);
     try {

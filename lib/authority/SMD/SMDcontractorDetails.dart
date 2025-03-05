@@ -25,7 +25,7 @@ class _ContractordetailsState extends State<Contractordetails> {
 
   Future<List<Map<String, dynamic>>> fetchContractorDetails() async {
     final apiUrl =
-        'https://8da6-122-172-85-234.ngrok-free.app/api/contractors/?gp=${widget.gramPanchayat}';
+        'https://sbmgrajasthan.com/api/contractors/?gp=${widget.gramPanchayat}';
     final response = await http.get(Uri.parse(apiUrl));
 
     if (response.statusCode == 200) {

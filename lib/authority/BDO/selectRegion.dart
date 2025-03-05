@@ -31,11 +31,9 @@ class _RegionSelectorState extends State<RegionSelector> {
     });
   }
 
-  final String districtsUrl =
-      "https://8da6-122-172-85-234.ngrok-free.app/api/getDistricts";
-  final String blocksUrl =
-      "https://8da6-122-172-85-234.ngrok-free.app/api/getBlocks/";
-  final String gpUrl = "https://8da6-122-172-85-234.ngrok-free.app/api/getGp/";
+  final String districtsUrl = "https://sbmgrajasthan.com/api/getDistricts";
+  final String blocksUrl = "https://sbmgrajasthan.com/api/getBlocks/";
+  final String gpUrl = "https://sbmgrajasthan.com/api/getGp/";
 
   Future<void> loadDistrictFromPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -125,7 +123,8 @@ class _RegionSelectorState extends State<RegionSelector> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('appbarselectedDistrict', formattedDistrict);
       await prefs.setString('appbarselectedBlock', formattedBlock);
-      await prefs.setString('appbarselectedGramPanchayat', formattedGramPanchayat);
+      await prefs.setString(
+          'appbarselectedGramPanchayat', formattedGramPanchayat);
       Navigator.pop(context, true);
     } else {
       final localizations = AppLocalizations.of(context)!;

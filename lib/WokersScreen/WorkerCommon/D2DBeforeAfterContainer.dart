@@ -122,8 +122,7 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
 
       String address = await _getAddressFromLatLong(latitude, longitude);
 
-      var uri = Uri.parse(
-          'https://8da6-122-172-85-234.ngrok-free.app/api/submit-activity');
+      var uri = Uri.parse('https://sbmgrajasthan.com/api/submit-activity');
       var request = http.MultipartRequest('POST', uri)
         ..fields['worker_id'] = workerId
         ..fields['section'] = widget.section
@@ -215,8 +214,7 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
     }
 
     try {
-      var uri = Uri.parse(
-          'https://8da6-122-172-85-234.ngrok-free.app/api/submit-activity');
+      var uri = Uri.parse('https://sbmgrajasthan.com/api/submit-activity');
       var request = http.MultipartRequest('PUT', uri)
         ..fields['activity_id'] = activityId
         ..fields['latitude_after'] = _afterImage!['latitude'].toString()

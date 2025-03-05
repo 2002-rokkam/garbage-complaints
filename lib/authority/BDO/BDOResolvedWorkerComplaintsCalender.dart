@@ -46,7 +46,7 @@ class _BDOResolvedWorkerComplaintsCalenderState
     final gramPanchayat = prefs.getString('appbarselectedGramPanchayat') ?? "";
 
     final url =
-        'https://8da6-122-172-85-234.ngrok-free.app/api/resolved-complaints/?gram_panchayat=$gramPanchayat';
+        'https://sbmgrajasthan.com/api/resolved-complaints/?gram_panchayat=$gramPanchayat';
 
     try {
       final response = await http.get(Uri.parse(url));
@@ -85,7 +85,6 @@ class _BDOResolvedWorkerComplaintsCalenderState
           date.day == _selectedDay.day;
     }).toList();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -130,7 +129,7 @@ class _BDOResolvedWorkerComplaintsCalenderState
                     ),
                   ),
                 );
-              } 
+              }
             },
             calendarStyle: CalendarStyle(
               selectedDecoration: BoxDecoration(

@@ -31,11 +31,9 @@ class _SMDselectRegionState extends State<SMDselectRegion> {
     });
   }
 
-  final String districtsUrl =
-      "https://8da6-122-172-85-234.ngrok-free.app/api/getDistricts";
-  final String blocksUrl =
-      "https://8da6-122-172-85-234.ngrok-free.app/api/getBlocks/";
-  final String gpUrl = "https://8da6-122-172-85-234.ngrok-free.app/api/getGp/";
+  final String districtsUrl = "https://sbmgrajasthan.com/api/getDistricts";
+  final String blocksUrl = "https://sbmgrajasthan.com/api/getBlocks/";
+  final String gpUrl = "https://sbmgrajasthan.com/api/getGp/";
 
   Future<void> fetchDistricts() async {
     try {

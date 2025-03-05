@@ -74,7 +74,7 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
     });
 
     final url = Uri.parse(
-        'https://8da6-122-172-85-234.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+        'https://sbmgrajasthan.com/api/worker/$workerId/section/${widget.section}');
 
     try {
       final response = await http.get(url);
@@ -106,7 +106,7 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
     if (workerId.isEmpty) return;
 
     final url = Uri.parse(
-        'https://8da6-122-172-85-234.ngrok-free.app/api/worker/$workerId/section/D2D_QR');
+        'https://sbmgrajasthan.com/api/worker/$workerId/section/D2D_QR');
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {

@@ -35,7 +35,7 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse('https://8da6-122-172-85-234.ngrok-free.app/api/login'),
+        Uri.parse('https://sbmgrajasthan.com/api/login'),
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: {'email': email, 'password': password},
       );

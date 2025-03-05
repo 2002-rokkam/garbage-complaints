@@ -39,7 +39,7 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
     setState(() => _isLoading = true);
 
     final url = Uri.parse(
-        'https://8da6-122-172-85-234.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+        'https://sbmgrajasthan.com/api/worker/$workerId/section/${widget.section}');
 
     try {
       final response = await http.get(url);
@@ -73,7 +73,7 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
     final gramPanchayat = prefs.getString('gram_panchayat') ?? '';
 
     final url =
-        'hhttps://8da6-122-172-85-234.ngrok-free.app/api/complaintdetails-by-gram-panchayat/?gram_panchayat=$gramPanchayat';
+        'hhttps://sbmgrajasthan.com/api/complaintdetails-by-gram-panchayat/?gram_panchayat=$gramPanchayat';
 
     try {
       final response = await http.get(Uri.parse(url));

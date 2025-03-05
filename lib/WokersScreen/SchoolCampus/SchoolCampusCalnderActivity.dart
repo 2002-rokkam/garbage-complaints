@@ -74,7 +74,7 @@ class _SchoolCampusActivityScreenState extends State<SchoolCampusActivityScreen>
     });
 
     final url = Uri.parse(
-        'https://8da6-122-172-85-234.ngrok-free.app/api/worker/$workerId/section/${widget.section}');
+        'https://sbmgrajasthan.com/api/worker/$workerId/section/${widget.section}');
 
     try {
       final response = await http.get(url);
@@ -110,7 +110,7 @@ class _SchoolCampusActivityScreenState extends State<SchoolCampusActivityScreen>
     });
 
     final url = Uri.parse(
-        'https://8da6-122-172-85-234.ngrok-free.app/api/worker/$workerId/section/School Toilet');
+        'https://sbmgrajasthan.com/api/worker/$workerId/section/School Toilet');
 
     try {
       final response = await http.get(url);

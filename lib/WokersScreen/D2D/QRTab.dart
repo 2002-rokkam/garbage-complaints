@@ -59,8 +59,7 @@ class _QRTabState extends State<QRTab> {
 
   Future<void> submitData(String scannedData, String workerId) async {
     final dio = Dio();
-    const url =
-        'https://8da6-122-172-85-234.ngrok-free.app/api/submit-activity';
+    const url = 'https://sbmgrajasthan.com/api/submit-activity';
 
     try {
       FormData formData = FormData.fromMap({
