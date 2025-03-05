@@ -73,26 +73,6 @@ class _workerComplaintsScreenState extends State<workerComplaintsScreen> {
     }).toList();
   }
 
-  void _onViewPressed() {
-    final selectedComplaints = getComplaintsForSelectedDate();
-    if (selectedComplaints.isNotEmpty) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => WorkerComplaintsListScreen(
-            date: _selectedDay,
-            complaints: selectedComplaints,
-            onUpdate: _fetchComplaintData,
-          ),
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("No complaints for this date.")),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final normalizedSelectedDay =
@@ -125,6 +105,18 @@ class _workerComplaintsScreenState extends State<workerComplaintsScreen> {
               setState(() {
                 _selectedDay = selectedDay;
               });
+              if (getComplaintsForSelectedDate().isNotEmpty) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => WorkerComplaintsListScreen(
+                      date: _selectedDay,
+                      complaints: getComplaintsForSelectedDate(),
+                      onUpdate: _fetchComplaintData,
+                    ),
+                  ),
+                );
+              }
             },
             calendarStyle: CalendarStyle(
               selectedDecoration: BoxDecoration(
@@ -166,27 +158,7 @@ class _workerComplaintsScreenState extends State<workerComplaintsScreen> {
           ),
           SizedBox(height: 16),
           complaintCount > 0
-              ? Card(
-                  elevation: 5,
-                  margin: EdgeInsets.symmetric(horizontal: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: ListTile(
-                    contentPadding: EdgeInsets.all(16),
-                    title: Text('Total Complaints: $complaintCount'),
-                    trailing: ElevatedButton(
-                      onPressed: _onViewPressed,
-                      child: Text('View'),
-                      style: ElevatedButton.styleFrom(
-                        primary: Color(0xFF5C964A),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                    ),
-                  ),
-                )
+              ? Container()
               : Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(

@@ -7,6 +7,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'VDOScreen.dart';
 
 class VDOPendingWorkerComplaintsCalender extends StatefulWidget {
   @override
@@ -76,25 +77,7 @@ class _VDOPendingWorkerComplaintsCalenderState
     }).toList();
   }
 
-  void _onViewPressed() {
-    final selectedComplaints = getComplaintsForSelectedDate();
-    if (selectedComplaints.isNotEmpty) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => VDOWorkerComplaintsListScreenCalender(
-            date: _selectedDay,
-            complaints: selectedComplaints,
-            onUpdate: _fetchComplaintData,
-          ),
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("No complaints for this date.")),
-      );
-    }
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -114,6 +97,15 @@ class _VDOPendingWorkerComplaintsCalenderState
         ),
         backgroundColor: Color(0xFF5C964A),
         toolbarHeight: 80.0,
+        leading: IconButton(
+        icon: Icon(Icons.arrow_back, color: Colors.white),
+        onPressed: () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => VDOScreen()), 
+        );
+      },
+      ),
       ),
       backgroundColor: Color.fromRGBO(239, 239, 239, 1),
       body: Column(
@@ -128,6 +120,18 @@ class _VDOPendingWorkerComplaintsCalenderState
               setState(() {
                 _selectedDay = selectedDay;
               });
+              if (getComplaintsForSelectedDate().isNotEmpty) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => VDOWorkerComplaintsListScreenCalender(
+                      date: _selectedDay,
+                      complaints: getComplaintsForSelectedDate(),
+                      onUpdate: _fetchComplaintData,
+                    ),
+                  ),
+                );
+              } 
             },
             calendarStyle: CalendarStyle(
               selectedDecoration: BoxDecoration(
@@ -169,27 +173,7 @@ class _VDOPendingWorkerComplaintsCalenderState
           ),
           SizedBox(height: 16),
           complaintCount > 0
-              ? Card(
-                  elevation: 5,
-                  margin: EdgeInsets.symmetric(horizontal: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: ListTile(
-                    contentPadding: EdgeInsets.all(16),
-                    title: Text('Total Complaints: $complaintCount'),
-                    trailing: ElevatedButton(
-                      onPressed: _onViewPressed,
-                      child: Text('View'),
-                      style: ElevatedButton.styleFrom(
-                        primary: Color(0xFF5C964A),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                    ),
-                  ),
-                )
+              ? Container()
               : Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(

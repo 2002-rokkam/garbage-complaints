@@ -165,8 +165,8 @@ class _VDOSchoolCampusCalnderActivityState
           indicatorColor: Color.fromRGBO(255, 210, 98, 1),
           indicatorWeight: 3.0,
           tabs: [
-            Tab(text: 'School Campus'),
-            Tab(text: 'School Toilet'),
+            Tab(text: 'Campus'),
+            Tab(text: 'Toilet'),
           ],
         ),
       ),

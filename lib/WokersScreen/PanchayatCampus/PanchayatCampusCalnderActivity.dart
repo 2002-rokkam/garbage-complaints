@@ -191,8 +191,8 @@ class _PanchayatCampusActivityScreenState
           indicatorColor: Color.fromRGBO(255, 210, 98, 1),
           indicatorWeight: 3.0,
           tabs: [
-            Tab(text: 'Panchayat Campus'),
-            Tab(text: 'Panchayat Toilet'),
+            Tab(text: 'Campus'),
+            Tab(text: 'Toilet'),
           ],
         ),
       ),
