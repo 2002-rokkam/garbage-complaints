@@ -91,7 +91,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
   Future<void> _fetchAddress() async {
     try {
       final photos = widget.complaint['photos'];
-      if (photos.isNotEmpty) {
+      if (photos != null && photos.isNotEmpty) {
         final firstPhoto = photos[0];
         final latitude = firstPhoto['latitude'];
         final longitude = firstPhoto['longitude'];
@@ -99,10 +99,11 @@ class _ComplaintCardState extends State<ComplaintCard> {
         if (latitude != null && longitude != null) {
           List<Placemark> placemarks =
               await placemarkFromCoordinates(latitude, longitude);
-          if (placemarks.isNotEmpty) {
+
+          if (placemarks != null && placemarks.isNotEmpty) {
             Placemark place = placemarks.first;
             String address =
-                '${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
+                '${place.subLocality ?? 'N/A'}, ${place.locality ?? 'N/A'}, ${place.postalCode ?? 'N/A'}, ${place.country ?? 'N/A'}';
             setState(() {
               _address = address;
             });
@@ -111,13 +112,19 @@ class _ComplaintCardState extends State<ComplaintCard> {
               _address = "No address found";
             });
           }
+        } else {
+          setState(() {
+            _address = "No coordinates available";
+          });
         }
       } else {
         setState(() {
-          _address = "No coordinates available";
+          _address = "No photos available";
         });
       }
     } catch (e) {
+      print('Error fetching address: $e');
+
       setState(() {
         _address = "Error: ${e.toString()}";
       });
@@ -321,6 +328,18 @@ class _ComplaintCardState extends State<ComplaintCard> {
                         child: Image.network(
                           imageUrl,
                           fit: BoxFit.contain,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child;
+                            }
+                            return Center(
+                              child: Image.asset(
+                                'assets/images/Loder.gif',
+                                width: 200,
+                                height: 200,
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ),
@@ -659,8 +678,16 @@ class _ComplaintCardState extends State<ComplaintCard> {
                       },
                       child: Text(
                         'Open Map',
-                        style: TextStyle(color: Colors.black, fontSize: 16),
+                        style: TextStyle(
+                            color: Color.fromRGBO(56, 102, 51, 1),
+                            fontSize: 16),
                       ),
+                      style: TextButton.styleFrom(
+                        backgroundColor: Color.fromRGBO(231, 242, 228, 1),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),                
                     ),
                   ],
                 ),

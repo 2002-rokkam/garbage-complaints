@@ -167,7 +167,13 @@ class _RRCScreenState extends State<RRCScreen>
         ),
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? Center(
+              child: Image.asset(
+                'assets/images/Loder.gif',
+                width: 200,
+                height: 200,
+              ),
+            )
           : TabBarView(
               controller: _tabController,
               children: [

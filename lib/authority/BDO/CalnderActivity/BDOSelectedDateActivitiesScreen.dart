@@ -48,6 +48,18 @@ class BDOSelectedDateActivitiesScreen extends StatelessWidget {
                         child: Image.network(
                           imageUrl,
                           fit: BoxFit.contain,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child;
+                            }
+                            return Center(
+                              child: Image.asset(
+                                'assets/images/Loder.gif',
+                                width: 200,
+                                height: 200,
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ),

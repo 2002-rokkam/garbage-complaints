@@ -211,6 +211,14 @@ class _CEOScreenState extends State<CEOScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                     Row(
+                      children: [
+                        Image.asset(
+                          'assets/images/Group.png',
+                          color: Colors.white,
+                          width: 24,
+                          height: 24,
+                        ), 
                     GestureDetector(
                       onTap: () async {
                         bool? shouldReload = await showDialog(
@@ -250,7 +258,7 @@ class _CEOScreenState extends State<CEOScreen> {
                           ),
                         ),
                       ),
-                    ),
+                    ),]),
                     IconButton(
                       icon: Icon(Icons.settings, color: Colors.white),
                       onPressed: () {

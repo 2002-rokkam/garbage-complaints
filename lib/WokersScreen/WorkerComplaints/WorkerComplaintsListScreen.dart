@@ -400,6 +400,18 @@ class _ComplaintCardState extends State<ComplaintCard> {
                         child: Image.network(
                           imageUrl,
                           fit: BoxFit.contain,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child;
+                            }
+                            return Center(
+                              child: Image.asset(
+                                'assets/images/Loder.gif',
+                                width: 200,
+                                height: 200,
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ),
@@ -652,8 +664,16 @@ class _ComplaintCardState extends State<ComplaintCard> {
                       },
                       child: Text(
                         'Open Map',
-                        style: TextStyle(color: Colors.black, fontSize: 16),
+                        style: TextStyle(
+                            color: Color.fromRGBO(56, 102, 51, 1),
+                            fontSize: 16),
                       ),
+                      style: TextButton.styleFrom(
+                        backgroundColor: Color.fromRGBO(231, 242, 228, 1),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),  
                     ),
                   ],
                 ),

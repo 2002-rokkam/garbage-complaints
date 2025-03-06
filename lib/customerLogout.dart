@@ -50,7 +50,13 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             if (isLoggingOut) ...[
               SizedBox(height: 20),
-              CircularProgressIndicator(),
+              Center(
+                child: Image.asset(
+                  'assets/images/Loder.gif',
+                  width: 200,
+                  height: 200,
+                ),
+              ),
             ],
             SizedBox(height: 20),
             GestureDetector(
@@ -119,8 +125,12 @@ class _SettingsPageState extends State<SettingsPage> {
       context: context,
       barrierDismissible: false,
       builder: (context) => Center(
-        child: CircularProgressIndicator(),
-      ),
+              child: Image.asset(
+                'assets/images/Loder.gif',
+                width: 200,
+                height: 200,
+              ),
+            )
     );
     try {
       String logoutUrl = 'https://sbmgrajasthan.com/api/logout';

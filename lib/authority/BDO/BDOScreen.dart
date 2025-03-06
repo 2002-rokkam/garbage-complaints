@@ -183,7 +183,7 @@ class _BDOScreenState extends State<BDOScreen> {
         'route': 'AnimalBodytransport',
         'number': activityCounts['Animal Transport']?.toString() ?? '0'
       },
-        {
+      {
         'label': localizations.contractor_details,
         'imageUrl': 'assets/images/Contractors.png',
         'route': 'ContractorDetailsScreen',
@@ -212,46 +212,56 @@ class _BDOScreenState extends State<BDOScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    GestureDetector(
-                      onTap: () async {
-                        bool? shouldReload = await showDialog(
-                          context: context,
-                          builder: (context) => Dialog(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.0),
-                            ),
-                            child: Container(
-                              height: 400,
-                              padding: EdgeInsets.all(16.0),
-                              child: RegionSelector(),
-                            ),
-                          ),
-                        );
-
-                        if (shouldReload == true) {
-                          setState(() {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => BDOScreen()),
+                    Row(
+                      children: [
+                        Image.asset(
+                          'assets/images/Group.png',
+                          color: Colors.white,
+                          width: 24,
+                          height: 24,
+                        ), // Add your icon here
+                        GestureDetector(
+                          onTap: () async {
+                            bool? shouldReload = await showDialog(
+                              context: context,
+                              builder: (context) => Dialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12.0),
+                                ),
+                                child: Container(
+                                  height: 400,
+                                  padding: EdgeInsets.all(16.0),
+                                  child: RegionSelector(),
+                                ),
+                              ),
                             );
-                          });
-                        }
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          appbarselectedGramPanchayat == null ||
-                                  appbarselectedGramPanchayat!.isEmpty
-                              ? District ?? ''
-                              : appbarselectedGramPanchayat!,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+
+                            if (shouldReload == true) {
+                              setState(() {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => BDOScreen()),
+                                );
+                              });
+                            }
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Text(
+                              appbarselectedGramPanchayat == null ||
+                                      appbarselectedGramPanchayat!.isEmpty
+                                  ? District ?? ''
+                                  : appbarselectedGramPanchayat!,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
                     IconButton(
                       icon: Icon(Icons.settings, color: Colors.white),
@@ -265,7 +275,7 @@ class _BDOScreenState extends State<BDOScreen> {
                       },
                     ),
                   ],
-                ),
+                )
               ],
             ),
           ),

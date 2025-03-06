@@ -151,7 +151,11 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
   @override
   Widget build(BuildContext context) {
     if (workerId == null) {
-      return Center(child: CircularProgressIndicator());
+      return Center(child: Image.asset(
+                  'assets/images/Loder.gif', 
+                  width: 200, 
+                  height: 200,
+                ));
     }
     final localizations = AppLocalizations.of(context)!;
     final selectedActivities = getActivitiesForSelectedDate();
@@ -180,7 +184,15 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
           ],
         ),
       ),
-      body: Column(
+      body: _isLoading
+          ? Center(
+              child: Image.asset(
+                'assets/images/Loder.gif', // Your custom loader image
+                width: 200,
+                height: 200,
+              ),
+            )
+          : Column(
         children: [
           TableCalendar(
             focusedDay: _selectedDate,

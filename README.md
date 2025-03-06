@@ -36,3 +36,15 @@ ngrok.exe http 8000
  
 
       final localizations = AppLocalizations.of(context)!;
+
+
+      Center(
+                child: Image.asset(
+                  'assets/images/Loder.gif',
+                  width: 200, 
+                  height: 200,
+                ),
+              )
+
+
+CircularProgressIndicator()

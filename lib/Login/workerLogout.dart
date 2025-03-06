@@ -69,7 +69,13 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
             ),
             if (isLoggingOut) ...[
               SizedBox(height: 20),
-              CircularProgressIndicator(), // Show a loading indicator when logging out
+              Center(
+                child: Image.asset(
+                  'assets/images/Loder.gif',
+                  width: 200,
+                  height: 200,
+                ),
+              ), // Show a loading indicator when logging out
             ],
             SizedBox(height: 20),
             // Privacy Policy Button

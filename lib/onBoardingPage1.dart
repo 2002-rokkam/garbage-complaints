@@ -45,11 +45,10 @@ class _Onboard1State extends State<OnboardingScreen>
     // Navigate to next screen after 8 seconds
     Future.delayed(const Duration(seconds: 5), () {
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) =>PhoneInputScreen()));
-          
-          //  LanguageSelectionScreen(
-          //           changeLanguage: widget.changeLanguage,
-          //         )));
+          context, MaterialPageRoute(builder: (context) =>
+           LanguageSelectionScreen(
+                    changeLanguage: widget.changeLanguage,
+                  )));
     });
 
     // Delay the text change and animation

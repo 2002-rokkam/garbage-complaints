@@ -188,7 +188,13 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
                   _buildInputField('Password', _passwordController, true),
                   SizedBox(height: 30),
                   _isLoading
-                      ? CircularProgressIndicator()
+                      ? Center(
+                          child: Image.asset(
+                            'assets/images/Loder.gif',
+                            width: 200,
+                            height: 200,
+                          ),
+                        )
                       : ElevatedButton(
                           onPressed: _submitLogin,
                           style: ElevatedButton.styleFrom(

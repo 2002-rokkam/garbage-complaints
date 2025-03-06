@@ -247,7 +247,13 @@ class _VDORCCCalendarActivityScreenState
           Container(
             height: 80,
             child: _isLoading
-                ? Center(child: CircularProgressIndicator())
+                ? Center(
+                    child: Image.asset(
+                      'assets/images/Loder.gif',
+                      width: 200,
+                      height: 200,
+                    ),
+                  )
                 : TabBarView(
                     controller: _tabController,
                     children: [

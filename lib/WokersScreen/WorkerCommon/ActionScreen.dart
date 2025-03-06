@@ -127,7 +127,13 @@ class _ActionScreenState extends State<ActionScreen> {
         padding: EdgeInsets.all(16),
         child: Column(
           children: isLoading
-              ? [Center(child: CircularProgressIndicator())]
+              ? [Center(
+                    child: Image.asset(
+                      'assets/images/Loder.gif',
+                      width: 200,
+                      height: 200,
+                    ),
+                  )]
               : beforeAfterContainers.isNotEmpty
                   ? beforeAfterContainers
                   : [

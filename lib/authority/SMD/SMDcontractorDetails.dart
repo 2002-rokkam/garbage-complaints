@@ -55,7 +55,13 @@ class _ContractordetailsState extends State<Contractordetails> {
         future: contractorDetails,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(
+              child: Image.asset(
+                'assets/images/Loder.gif',
+                width: 200,
+                height: 200,
+              ),
+            );
           }
           if (snapshot.hasError) {
             return Center(child: Text("No contractor details found!"));

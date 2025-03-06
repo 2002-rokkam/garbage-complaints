@@ -202,7 +202,11 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
                 ),
                 isLoading
                     ? Center(
-                        child: CircularProgressIndicator(),
+                        child: Image.asset(
+                          'assets/images/Loder.gif',
+                          width: 200,
+                          height: 200,
+                        ),
                       )
                     : Expanded(
                         child: ListView.builder(

@@ -186,6 +186,14 @@ class _VDOScreenState extends State<VDOScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    Row(
+                      children: [
+                        Image.asset(
+                          'assets/images/Group.png',
+                          color: Colors.white,
+                          width: 24,
+                          height: 24,
+                        ),
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Text(
@@ -196,7 +204,7 @@ class _VDOScreenState extends State<VDOScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
+                    ),]),
                     IconButton(
                       icon: Icon(Icons.settings, color: Colors.white),
                       onPressed: () {

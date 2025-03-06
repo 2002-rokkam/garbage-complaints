@@ -267,7 +267,13 @@ class _SchoolCampusSectionScreenState extends State<SchoolCampusSectionScreen>
 
   Widget _buildBeforeAfterTab() {
     return isLoading
-        ? const Center(child: CircularProgressIndicator())
+        ? Center(
+            child: Image.asset(
+              'assets/images/Loder.gif',
+              width: 200,
+              height: 200,
+            ),
+          )
         : SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -285,7 +291,13 @@ class _SchoolCampusSectionScreenState extends State<SchoolCampusSectionScreen>
 
   Widget _SchoolToiletBeforeAfterTab() {
     return isLoading
-        ? const Center(child: CircularProgressIndicator())
+        ? Center(
+            child: Image.asset(
+              'assets/images/Loder.gif',
+              width: 200,
+              height: 200,
+            ),
+          )
         : SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: Column(

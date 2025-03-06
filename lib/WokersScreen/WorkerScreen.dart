@@ -384,7 +384,13 @@ class _WorkerScreenState extends State<WorkerScreen> {
           future: _getGramPanchayat(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Scaffold(body: Center(child: CircularProgressIndicator()));
+              return Scaffold(body: Center(
+                child: Image.asset(
+                  'assets/images/Loder.gif',
+                  width: 200,
+                  height: 200,
+                ),
+              ));
             }
             if (snapshot.hasError) {
               return Scaffold(body: Center(child: Text("Error loading data")));

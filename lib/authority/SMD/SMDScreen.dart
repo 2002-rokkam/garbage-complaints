@@ -210,6 +210,14 @@ class _SMDScreenState extends State<SMDScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                     Row(
+                      children: [
+                        Image.asset(
+                          'assets/images/Group.png',
+                          color: Colors.white,
+                          width: 24,
+                          height: 24,
+                        ), 
                     GestureDetector(
                       onTap: () async {
                         bool? shouldReload = await showDialog(
@@ -250,7 +258,7 @@ class _SMDScreenState extends State<SMDScreen> {
                           ),
                         ),
                       ),
-                    ),
+                    ),]),
                     IconButton(
                       icon: Icon(Icons.settings, color: Colors.white),
                       onPressed: () {

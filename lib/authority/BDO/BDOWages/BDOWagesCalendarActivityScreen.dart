@@ -216,7 +216,13 @@ class _BDOWagesCalendarActivityScreenState
         ],
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? Center(
+              child: Image.asset(
+                'assets/images/Loder.gif',
+                width: 200,
+                height: 200,
+              ),
+            )
           : _activities.isEmpty
               ? Center(child: Text('No activities for the selected month.'))
               : ListView.builder(

@@ -524,7 +524,12 @@ class _AnimalScreenBeforeAfterContainerState
                                     if (snapshot.connectionState ==
                                         ConnectionState.waiting) {
                                       return Center(
-                                          child: CircularProgressIndicator());
+                                        child: Image.asset(
+                                          'assets/images/Loder.gif',
+                                          width: 200,
+                                          height: 200,
+                                        ),
+                                      );
                                     } else if (snapshot.hasError) {
                                       return Center(
                                           child: Text(
@@ -601,7 +606,12 @@ class _AnimalScreenBeforeAfterContainerState
                                 if (snapshot.connectionState ==
                                     ConnectionState.waiting) {
                                   return Center(
-                                      child: CircularProgressIndicator());
+                                    child: Image.asset(
+                                      'assets/images/Loder.gif',
+                                      width: 200,
+                                      height: 200,
+                                    ),
+                                  );
                                 } else if (snapshot.hasError) {
                                   return Center(
                                       child: Text(
@@ -643,7 +653,11 @@ class _AnimalScreenBeforeAfterContainerState
               height: 50.0,
               child: _isLoading
                   ? Center(
-                      child: CircularProgressIndicator(),
+                      child: Image.asset(
+                        'assets/images/Loder.gif',
+                        width: 200,
+                        height: 200,
+                      ),
                     )
                   : SliderButton(
                       action: () async {
@@ -681,7 +695,11 @@ class _AnimalScreenBeforeAfterContainerState
               height: 50.0,
               child: _isLoading
                   ? Center(
-                      child: CircularProgressIndicator(),
+                      child: Image.asset(
+                        'assets/images/Loder.gif',
+                        width: 200,
+                        height: 200,
+                      ),
                     )
                   : SliderButton(
                       action: () async {

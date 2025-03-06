@@ -163,7 +163,13 @@ class _SchoolCampusActivityScreenState extends State<SchoolCampusActivityScreen>
   @override
   Widget build(BuildContext context) {
     if (workerId == null) {
-      return Center(child: CircularProgressIndicator());
+      return Center(
+        child: Image.asset(
+          'assets/images/Loder.gif',
+          width: 200,
+          height: 200,
+        ),
+      );
     }
 
     final selectedActivities = getActivitiesForSelectedDate();

@@ -461,18 +461,13 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
                                       return child;
                                     } else {
                                       return Center(
-                                        child: CircularProgressIndicator(
-                                          value: loadingProgress
-                                                      .expectedTotalBytes !=
-                                                  null
-                                              ? loadingProgress
-                                                      .cumulativeBytesLoaded /
-                                                  (loadingProgress
-                                                          .expectedTotalBytes ??
-                                                      1)
-                                              : null,
+                                          child: Center(
+                                        child: Image.asset(
+                                          'assets/images/cleaning.gif',
+                                          width: 200,
+                                          height: 200,
                                         ),
-                                      );
+                                      ));
                                     }
                                   },
                                   errorBuilder: (BuildContext context,
@@ -490,7 +485,13 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
                                     if (snapshot.connectionState ==
                                         ConnectionState.waiting) {
                                       return Center(
-                                          child: CircularProgressIndicator());
+                                          child: Center(
+                                        child: Image.asset(
+                                          'assets/images/cleaning.gif',
+                                          width: 200,
+                                          height: 200,
+                                        ),
+                                      ));
                                     } else if (snapshot.hasError) {
                                       return Center(
                                           child: Text(
@@ -567,7 +568,13 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
                                 if (snapshot.connectionState ==
                                     ConnectionState.waiting) {
                                   return Center(
-                                      child: CircularProgressIndicator());
+                                      child: Center(
+                                    child: Image.asset(
+                                      'assets/images/cleaning.gif',
+                                      width: 200,
+                                      height: 200,
+                                    ),
+                                  ));
                                 } else if (snapshot.hasError) {
                                   return Center(
                                       child: Text(
@@ -609,7 +616,13 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
               height: 50.0,
               child: _isLoading
                   ? Center(
-                      child: CircularProgressIndicator(),
+                      child: Center(
+                        child: Image.asset(
+                          'assets/images/Loder.gif',
+                          width: 200,
+                          height: 200,
+                        ),
+                      ),
                     )
                   : SliderButton(
                       action: () async {
@@ -635,7 +648,11 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
                         localizations.slideToConfirmBefore,
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
-                      icon: Icon(Icons.check, color: Colors.white),
+                      icon: Image.asset(
+                        'assets/images/Icon.png', // Replace with your image path
+                        width: 40, // Adjust the size as needed
+                        height: 40,
+                      ),
                       width: MediaQuery.of(context).size.width * 0.8,
                       backgroundColor: Color(0xFF5C964A),
                       buttonColor: Colors.white,
@@ -647,7 +664,13 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
               height: 50.0,
               child: _isLoading
                   ? Center(
-                      child: CircularProgressIndicator(),
+                      child: Center(
+                        child: Image.asset(
+                          'assets/images/Loder.gif',
+                          width: 200,
+                          height: 200,
+                        ),
+                      ),
                     )
                   : SliderButton(
                       action: () async {
@@ -668,7 +691,11 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
                         localizations.slideToConfirmAfter,
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
-                      icon: Icon(Icons.check, color: Colors.white),
+                      icon: Image.asset(
+                        'assets/images/Icon.png', // Replace with your image path
+                        width: 40, // Adjust the size as needed
+                        height: 40,
+                      ),
                       width: MediaQuery.of(context).size.width * 0.8,
                       backgroundColor: Color(0xFF5C964A),
                       buttonColor: Colors.white,

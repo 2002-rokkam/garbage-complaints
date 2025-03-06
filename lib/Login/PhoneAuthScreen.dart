@@ -201,7 +201,13 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
               top: screenHeight * 0.55,
               right: 16,
               child: _isLoading
-                  ? const Center(child: CircularProgressIndicator())
+                  ? Center(
+                      child: Image.asset(
+                        'assets/images/Loder.gif',
+                        width: 200,
+                        height: 200,
+                      ),
+                    )
                   : ElevatedButton(
                       onPressed: _sendOTP,
                       style: ElevatedButton.styleFrom(

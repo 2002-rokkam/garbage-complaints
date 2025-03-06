@@ -8,7 +8,7 @@ import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart'; // For kIsWeb
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../../RotatingTrashBinLoader.dart';
+import '../../Loaders/RotatingTrashBinLoader.dart';
 import 'ComplaintRegisterScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -208,7 +208,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
 
     if (confirmDelete == true) {
       setState(() {
-        imageData.removeAt(index); // Remove the image from the list
+        imageData.removeAt(index); 
       });
     }
   }
@@ -228,19 +228,17 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
         return StatefulBuilder(
           builder: (context, setModalState) {
             return DraggableScrollableSheet(
-              initialChildSize: 0.7, // Starts at 50% of the screen height
-              minChildSize: 0.7, // Minimum size is 50% of the screen height
-              maxChildSize: 0.7, // Maximum size is 90% of the screen height
+              initialChildSize: 0.7, 
+              minChildSize: 0.7, 
+              maxChildSize: 0.7,
               expand: false,
               builder: (_, controller) => Column(
                 children: [
-                  // Sheet Header
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12.0),
                     child: Text(
                       title,
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style:TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),
                   Divider(),
@@ -292,7 +290,6 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
   }
 
   List<String> districts = [];
-
   List<String> gramPanchayats = [];
 
   final String districtsUrl = "https://sbmgrajasthan.com/api/getDistricts";

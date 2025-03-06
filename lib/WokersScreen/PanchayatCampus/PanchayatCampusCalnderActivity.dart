@@ -165,7 +165,13 @@ class _PanchayatCampusActivityScreenState
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     if (workerId == null) {
-      return Center(child: CircularProgressIndicator());
+      return Center(
+        child: Image.asset(
+          'assets/images/Loder.gif',
+          width: 200,
+          height: 200,
+        ),
+      );
     }
 
     final selectedActivities = getActivitiesForSelectedDate();

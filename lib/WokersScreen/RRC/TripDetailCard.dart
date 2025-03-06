@@ -294,8 +294,12 @@ class _TripDetailCardState extends State<TripDetailCard> {
         ),
         if (isLoading)
           Center(
-            child: CircularProgressIndicator(),
-          ),
+                child: Image.asset(
+                  'assets/images/Loder.gif',
+                  width: 200, 
+                  height: 200,
+                ),
+              )
       ],
     );
   }

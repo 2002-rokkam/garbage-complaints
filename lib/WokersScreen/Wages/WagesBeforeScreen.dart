@@ -358,7 +358,11 @@ class _WagesBeforeScreenState extends State<WagesBeforeScreen> {
               height: 50.0,
               child: _isLoading
                   ? Center(
-                      child: CircularProgressIndicator(),
+                      child: Image.asset(
+                        'assets/images/Loder.gif',
+                        width: 200,
+                        height: 200,
+                      ),
                     )
                   : ElevatedButton(
                       onPressed: () async {

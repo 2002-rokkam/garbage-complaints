@@ -191,7 +191,11 @@ class _RegionSelectorState extends State<RegionSelector> {
                 ),
                 isLoading
                     ? Center(
-                        child: CircularProgressIndicator(),
+                        child: Image.asset(
+                          'assets/images/Loder.gif',
+                          width: 200,
+                          height: 200,
+                        ),
                       )
                     : Expanded(
                         child: ListView.builder(
@@ -288,7 +292,13 @@ class _RegionSelectorState extends State<RegionSelector> {
                     context: context,
                     barrierDismissible: false,
                     builder: (context) {
-                      return Center(child: CircularProgressIndicator());
+                      return Center(
+                        child: Image.asset(
+                          'assets/images/Loder.gif',
+                          width: 200,
+                          height: 200,
+                        ),
+                      );
                     },
                   );
                   await fetchGramPanchayats(selectedDistrict!, selectedBlock!);

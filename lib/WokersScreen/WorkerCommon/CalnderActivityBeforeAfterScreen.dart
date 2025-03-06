@@ -1,10 +1,5 @@
 // WokersScreen/WorkerCommon/CalnderActivityBeforeAfterScreen.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:table_calendar/table_calendar.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class CalnderActivityBeforeAfterScreen extends StatelessWidget {
   final List activities;
@@ -49,6 +44,18 @@ class CalnderActivityBeforeAfterScreen extends StatelessWidget {
                         child: Image.network(
                           imageUrl,
                           fit: BoxFit.contain,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child;
+                            }
+                            return Center(
+                              child: Image.asset(
+                                'assets/images/Loder.gif',
+                                width: 200,
+                                height: 200,
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ),
@@ -223,14 +230,24 @@ class CalnderActivityBeforeAfterScreen extends StatelessWidget {
                                 Container(
                                   width: 150.10,
                                   height: 99.52,
-                                  decoration: ShapeDecoration(
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                          '${activity['before_image']}'),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(6),
+                                    child: Image.network(
+                                      '${activity['before_image']}',
                                       fit: BoxFit.cover,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(6),
+                                      loadingBuilder:
+                                          (context, child, loadingProgress) {
+                                        if (loadingProgress == null) {
+                                          return child;
+                                        }
+                                        return Center(
+                                          child: Image.asset(
+                                            'assets/images/Loder.gif',
+                                            width: 200,
+                                            height: 200,
+                                          ),
+                                        );
+                                      },
                                     ),
                                   ),
                                 ),
@@ -255,46 +272,72 @@ class CalnderActivityBeforeAfterScreen extends StatelessWidget {
                           ),
                           GestureDetector(
                             onTap: () {
-                              _showFullScreenImage(
-                                context,
-                                activity['after_image'],
-                                activity['latitude_after'] ?? 0.0,
-                                activity['longitude_after'] ?? 0.0,
-                                updated_attime,
-                              );
+                              if (activity['after_image'] != null) {
+                                _showFullScreenImage(
+                                  context,
+                                  activity['after_image'],
+                                  activity['latitude_after'] ?? 0.0,
+                                  activity['longitude_after'] ?? 0.0,
+                                  updated_attime,
+                                );
+                              }
                             },
                             child: Stack(
                               children: [
                                 Container(
                                   width: 150.10,
                                   height: 99.52,
-                                  decoration: ShapeDecoration(
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                          '${activity['after_image']}'),
-                                      fit: BoxFit.cover,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(6),
-                                    ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(6),
+                                    child: activity['after_image'] != null
+                                        ? Image.network(
+                                            '${activity['after_image']}',
+                                            fit: BoxFit.cover,
+                                            loadingBuilder: (context, child,
+                                                loadingProgress) {
+                                              if (loadingProgress == null) {
+                                                return child;
+                                              }
+                                              return Center(
+                                                child: Image.asset(
+                                                  'assets/images/Loder.gif',
+                                                  width: 200,
+                                                  height: 200,
+                                                ),
+                                              );
+                                            },
+                                          )
+                                        : Container(
+                                            color: Colors.grey[300],
+                                            child: Center(
+                                              child: Text(
+                                                '',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
                                   ),
                                 ),
-                                Positioned(
-                                  bottom: 5,
-                                  right: 5,
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 6, vertical: 3),
-                                    color: Colors.black54,
-                                    child: Text(
-                                      '${DateTime.parse(activity['updated_at']).toLocal().hour}:${DateTime.parse(activity['updated_at']).toLocal().minute}:${DateTime.parse(activity['created_at']).toLocal().second}',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12,
+                                if (activity['after_image'] != null)
+                                  Positioned(
+                                    bottom: 5,
+                                    right: 5,
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 6, vertical: 3),
+                                      color: Colors.black54,
+                                      child: Text(
+                                        '${DateTime.parse(activity['updated_at']).toLocal().hour}:${DateTime.parse(activity['updated_at']).toLocal().minute}:${DateTime.parse(activity['created_at']).toLocal().second}',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
                               ],
                             ),
                           ),
