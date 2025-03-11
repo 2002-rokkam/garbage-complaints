@@ -8,6 +8,7 @@ import 'CitizensScreen/CitizensScreen.dart';
 import 'WokersScreen/WorkerScreen.dart';
 import 'authority/BDO/BDOScreen.dart';
 import 'authority/CEO/CEOScreen.dart';
+import 'authority/SMD/SMDScreen.dart';
 import 'authority/VDO/VDOScreen.dart';
 import 'onBoardingPage1.dart';
 import 'firebase_options.dart';
@@ -109,6 +110,8 @@ class _MyAppState extends State<MyApp> {
         return CEOScreen();
       case 'Aceo':
         return CEOScreen();
+      case 'Smd':
+        return SMDScreen();
       default:
         return OnboardingScreen(changeLanguage: _changeLanguage);
     }
