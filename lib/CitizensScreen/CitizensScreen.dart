@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_application_2/PoweredByBikaji.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../ContactUsPage.dart';
 import '../customerLogout.dart';
 import 'ComplaintsScreen/ComplaintScreen.dart';
@@ -55,9 +56,20 @@ class _CitizensScreenState extends State<CitizensScreen> {
     },
   ];
 
+  late Locale _locale;
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    _loadLanguagePreference();
   }
 
   void _onItemTapped(int index) {
@@ -82,7 +94,8 @@ class _CitizensScreenState extends State<CitizensScreen> {
   Widget _buildCitizenScreenContent() {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-
+    final localizations = AppLocalizations.of(context)!;
+    
     return Column(
       children: [
         // Fixed image slider
@@ -129,7 +142,7 @@ class _CitizensScreenState extends State<CitizensScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Home',
+                AppLocalizations.of(context)!.home,
                 style: TextStyle(
                   fontSize: screenWidth < 600 ? 16 : 18,
                   fontWeight: FontWeight.bold,
@@ -201,7 +214,7 @@ class _CitizensScreenState extends State<CitizensScreen> {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      'Complaints',
+                      localizations.complaints,
                       style: TextStyle(
                         fontSize: screenWidth < 600 ? 16 : 18,
                         fontWeight: FontWeight.bold,
@@ -326,7 +339,7 @@ class _CitizensScreenState extends State<CitizensScreen> {
                             ),
                             const SizedBox(height: 10),
                             Text(
-                              'Complaints',
+                              localizations.complaints,
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 16,
@@ -356,6 +369,8 @@ class _CitizensScreenState extends State<CitizensScreen> {
   String appBarTitle = 'SBMG Rajasthan';
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return WillPopScope(
       onWillPop: () async {
         return false;
@@ -379,18 +394,18 @@ class _CitizensScreenState extends State<CitizensScreen> {
           onTap: _onItemTapped,
           selectedItemColor: Color(0xFF5C964A),
           unselectedItemColor: Colors.grey,
-          items: const [
+          items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
-              label: 'Home',
+              label: localizations.home,
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.list),
-              label: 'Complaints',
+              label: localizations.complaints,
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.settings),
-              label: 'Settings',
+              label: localizations.settings,
             ),
           ],
         ),

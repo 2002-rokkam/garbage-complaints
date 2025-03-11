@@ -23,6 +23,22 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
 
   bool _isLoading = false;
 
+  late Locale _locale;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLanguagePreference();
+  }
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
+  }
+
   Future<void> _submitLogin() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -127,6 +143,7 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Color(0xFFEFEFEF),
       body: Center(
@@ -138,7 +155,7 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
               child: Column(
                 children: [
                   Text(
-                    'Log in',
+                    localizations.login,
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 32,
@@ -149,18 +166,9 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
                   SizedBox(height: 20),
                   Text.rich(
                     TextSpan(
-                      children: [
+                      children: [                    
                         TextSpan(
-                          text: 'Enter ',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                            fontFamily: 'Nunito Sans',
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        TextSpan(
-                          text: 'Email address',
+                          text: localizations.emailAddress,
                           style: TextStyle(
                             color: Color(0xFF5C964A),
                             fontSize: 20,
@@ -173,7 +181,7 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
                   ),
                   SizedBox(height: 10),
                   Text(
-                    'This information is not shared with anyone',
+                    localizations.info_not_shared,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.black.withOpacity(0.6),
@@ -205,7 +213,7 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
                             ),
                           ),
                           child: Text(
-                            'Submit',
+                            localizations.submit,
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -224,7 +232,7 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
                       );
                     },
                     child: Text(
-                      'Login as Citizen',
+                      localizations.login_citizen,
                       style: TextStyle(
                         color: Color(0xFF5C964A),
                         fontSize: 16,

@@ -195,6 +195,7 @@ class _BDOScreenState extends State<BDOScreen> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
+    final localizations = AppLocalizations.of(context)!;
     return WillPopScope(
       onWillPop: () async {
         // Disable back button
@@ -335,7 +336,7 @@ class _BDOScreenState extends State<BDOScreen> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Action',
+                  localizations.action,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -383,7 +384,7 @@ class _BDOScreenState extends State<BDOScreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    'Total Complaints',
+                                    localizations.totalComplaints,
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 16,
@@ -520,7 +521,7 @@ class _BDOScreenState extends State<BDOScreen> {
                                   ),
                                   const SizedBox(height: 5),
                                   Text(
-                                    'Pending ',
+                                    localizations.pending,
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 16,
@@ -628,7 +629,7 @@ class _BDOScreenState extends State<BDOScreen> {
                                   const SizedBox(
                                       height: 5), // Adjust spacing as needed
                                   Text(
-                                    'Resolved ',
+                                    localizations.resolved,
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 16,
@@ -651,7 +652,7 @@ class _BDOScreenState extends State<BDOScreen> {
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'Home',
+                          localizations.home,
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,

@@ -20,12 +20,6 @@ ngrok.exe http 8000
 
   late Locale _locale;
   
-  @override
-  void initState() {
-    super.initState();
-    _loadLanguagePreference();
-  }
- 
   void _loadLanguagePreference() async {
     final prefs = await SharedPreferences.getInstance();
     String? languageCode = prefs.getString('language') ?? 'en';
@@ -34,9 +28,15 @@ ngrok.exe http 8000
     });
   }
  
-
+  @override
+  void initState() {
+    super.initState();
+    _loadLanguagePreference();
+  }
+ 
       final localizations = AppLocalizations.of(context)!;
-
+     
+     localizations.info_not_shared
 
       Center(
                 child: Image.asset(

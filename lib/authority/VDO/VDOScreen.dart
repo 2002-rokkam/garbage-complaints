@@ -29,16 +29,26 @@ class _VDOScreenState extends State<VDOScreen> {
   int resolvedComplaints = 0;
   String? vdgramPanchayat;
   Map<String, int> activityCounts = {};
+  late Locale _locale;
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     fetchData();
     fetchActivityCounts();
-     SharedPreferences.getInstance().then((prefs) {
+    _loadLanguagePreference();
+
+    SharedPreferences.getInstance().then((prefs) {
       setState(() {
-        vdgramPanchayat =
-            prefs.getString('gram_panchayat');
+        vdgramPanchayat = prefs.getString('gram_panchayat');
       });
     });
   }
@@ -170,6 +180,8 @@ class _VDOScreenState extends State<VDOScreen> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
+    final localizations = AppLocalizations.of(context)!;
+
     return WillPopScope(
       onWillPop: () async {
         return false;
@@ -186,25 +198,25 @@ class _VDOScreenState extends State<VDOScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        Image.asset(
-                          'assets/images/Group.png',
-                          color: Colors.white,
-                          width: 24,
-                          height: 24,
-                        ),
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                       vdgramPanchayat!,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                    Row(children: [
+                      Image.asset(
+                        'assets/images/Group.png',
+                        color: Colors.white,
+                        width: 24,
+                        height: 24,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          vdgramPanchayat!,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),]),
+                    ]),
                     IconButton(
                       icon: Icon(Icons.settings, color: Colors.white),
                       onPressed: () {
@@ -277,7 +289,7 @@ class _VDOScreenState extends State<VDOScreen> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Action',
+                  localizations.action,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -325,7 +337,7 @@ class _VDOScreenState extends State<VDOScreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    'Total Complaints',
+                                    localizations.totalComplaints,
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 16,
@@ -432,7 +444,7 @@ class _VDOScreenState extends State<VDOScreen> {
                                   ),
                                   const SizedBox(height: 5),
                                   Text(
-                                    'Pending ',
+                                    localizations.pending,
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 16,
@@ -508,7 +520,7 @@ class _VDOScreenState extends State<VDOScreen> {
                                   ),
                                   const SizedBox(height: 5),
                                   Text(
-                                    'Resolved ',
+                                    localizations.resolved,
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 16,
@@ -531,7 +543,7 @@ class _VDOScreenState extends State<VDOScreen> {
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'Home',
+                          localizations.home,
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,

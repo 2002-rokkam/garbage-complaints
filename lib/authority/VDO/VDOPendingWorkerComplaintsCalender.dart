@@ -77,18 +77,17 @@ class _VDOPendingWorkerComplaintsCalenderState
     }).toList();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     final normalizedSelectedDay =
         DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day);
     int complaintCount = complaintCounts[normalizedSelectedDay] ?? 0;
-
+    final localizations = AppLocalizations.of(context)!;
+    
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Complaints',
+          localizations.complaints,
           style: TextStyle(
             color: Colors.white,
             fontSize: 20,
@@ -98,14 +97,14 @@ class _VDOPendingWorkerComplaintsCalenderState
         backgroundColor: Color(0xFF5C964A),
         toolbarHeight: 80.0,
         leading: IconButton(
-        icon: Icon(Icons.arrow_back, color: Colors.white),
-        onPressed: () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => VDOScreen()), 
-        );
-      },
-      ),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => VDOScreen()),
+            );
+          },
+        ),
       ),
       backgroundColor: Color.fromRGBO(239, 239, 239, 1),
       body: Column(
@@ -131,7 +130,7 @@ class _VDOPendingWorkerComplaintsCalenderState
                     ),
                   ),
                 );
-              } 
+              }
             },
             calendarStyle: CalendarStyle(
               selectedDecoration: BoxDecoration(

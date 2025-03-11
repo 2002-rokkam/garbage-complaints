@@ -201,7 +201,7 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             subtitle: Text(
-              complaint['caption'] ?? 'No description provided',
+              utf8.decode(complaint['caption'].toString().codeUnits) ?? 'No description provided',
             ),
             trailing: Text(formattedDate),
           ),

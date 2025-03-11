@@ -9,7 +9,7 @@ class ComplaintRegisterScreen extends StatelessWidget {
     // Get screen size
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-
+    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -57,7 +57,7 @@ class ComplaintRegisterScreen extends StatelessWidget {
                     SizedBox(width: 16),
                     Expanded(
                       child: Text(
-                        'Complaints',
+                        localizations.complaints,
                         style: TextStyle(
                           color: Color(0xFFF5EFF7),
                           fontSize: 22,

@@ -181,7 +181,7 @@ class _SMDScreenState extends State<SMDScreen> {
         'route': 'AnimalBodytransport',
         'number': activityCounts['Animal Transport']?.toString() ?? '0'
       },
-        {
+      {
         'label': localizations.contractor_details,
         'imageUrl': 'assets/images/Contractors.png',
         'route': 'ContractorDetailsScreen',
@@ -193,6 +193,7 @@ class _SMDScreenState extends State<SMDScreen> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
+    final localizations = AppLocalizations.of(context)!;
     return WillPopScope(
       onWillPop: () async {
         // Disable back button
@@ -210,55 +211,55 @@ class _SMDScreenState extends State<SMDScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                     Row(
-                      children: [
-                        Image.asset(
-                          'assets/images/Group.png',
-                          color: Colors.white,
-                          width: 24,
-                          height: 24,
-                        ), 
-                    GestureDetector(
-                      onTap: () async {
-                        bool? shouldReload = await showDialog(
-                          context: context,
-                          builder: (context) => Dialog(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.0),
+                    Row(children: [
+                      Image.asset(
+                        'assets/images/Group.png',
+                        color: Colors.white,
+                        width: 24,
+                        height: 24,
+                      ),
+                      GestureDetector(
+                        onTap: () async {
+                          bool? shouldReload = await showDialog(
+                            context: context,
+                            builder: (context) => Dialog(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                              child: Container(
+                                height: 400, // Adjust height as needed
+                                padding: EdgeInsets.all(16.0),
+                                child:
+                                    SMDselectRegion(), // Show your region selection screen inside the popup
+                              ),
                             ),
-                            child: Container(
-                              height: 400, // Adjust height as needed
-                              padding: EdgeInsets.all(16.0),
-                              child:
-                                  SMDselectRegion(), // Show your region selection screen inside the popup
+                          );
+                          if (shouldReload == true) {
+                            setState(() {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SMDScreen()),
+                              );
+                            });
+                          }
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            appbarselectedGramPanchayat == null ||
+                                    appbarselectedGramPanchayat!.isEmpty
+                                ? District ?? ''
+                                : appbarselectedGramPanchayat!,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
                             ),
-                          ),
-                        );
-                        if (shouldReload == true) {
-                          setState(() {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SMDScreen()),
-                            );
-                          });
-                        }
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          appbarselectedGramPanchayat == null ||
-                                  appbarselectedGramPanchayat!.isEmpty
-                              ? District ?? ''
-                              : appbarselectedGramPanchayat!,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
-                    ),]),
+                    ]),
                     IconButton(
                       icon: Icon(Icons.settings, color: Colors.white),
                       onPressed: () {
@@ -335,7 +336,7 @@ class _SMDScreenState extends State<SMDScreen> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Action',
+                  localizations.action,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -385,7 +386,7 @@ class _SMDScreenState extends State<SMDScreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    'Total Complaints',
+                                    localizations.totalComplaints,
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 16,
@@ -523,7 +524,7 @@ class _SMDScreenState extends State<SMDScreen> {
                                   ),
                                   const SizedBox(height: 5),
                                   Text(
-                                    'Pending ',
+                                    localizations.pending,
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 16,
@@ -631,7 +632,7 @@ class _SMDScreenState extends State<SMDScreen> {
                                   const SizedBox(
                                       height: 5), // Adjust spacing as needed
                                   Text(
-                                    'Resolved ',
+                                    localizations.resolved,
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 16,
@@ -654,7 +655,7 @@ class _SMDScreenState extends State<SMDScreen> {
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'Home',
+                          localizations.home,
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,

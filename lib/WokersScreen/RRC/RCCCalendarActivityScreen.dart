@@ -1,6 +1,7 @@
 // WokersScreen/RRC/RCCCalendarActivityScreen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -319,7 +320,8 @@ class TripDetailsScreen extends StatelessWidget {
                             '${trip['segregated_non_degradable']} kg'),
                         _buildDetailRow('Segregated Plastic',
                             '${trip['segregated_plastic']} kg'),
-                        _buildDetailRow('Date', trip['date_time']),
+                        _buildDetailRow(
+                            'Date', _formatLocalTime(trip['date_time'])),
                       ],
                     ),
                   ),
@@ -329,6 +331,16 @@ class TripDetailsScreen extends StatelessWidget {
     );
   }
 
+  String _formatLocalTime(String dateTimeString) {
+    try {
+      DateTime utcTime = DateTime.parse(dateTimeString).toUtc();
+      DateTime localTime = utcTime.toLocal();
+      return DateFormat('yyyy-MM-dd hh:mm a').format(localTime);
+    } catch (e) {
+      return 'Invalid Date';
+    }
+  }
+  
   Widget _buildDetailRow(String title, String value) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),

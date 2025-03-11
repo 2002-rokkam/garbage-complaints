@@ -89,15 +89,20 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
     return workerId;
   }
 
-  Future<String> _getAddressFromLatLong(
-      double latitude, double longitude) async {
+  Future<String> _getAddressFromLatLong(double latitude, double longitude) async {
+     final String url =
+        "https://nominatim.openstreetmap.org/reverse?format=json&lat=$latitude&lon=$longitude";
+
     try {
-      List<Placemark> placemarks =
-          await placemarkFromCoordinates(latitude, longitude);
-      if (placemarks.isNotEmpty) {
-        Placemark place = placemarks.first;
-        return '${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
+      final response =
+          await http.get(Uri.parse(url), headers: {"User-Agent": "FlutterApp"});
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        String fetchedAddress = data["display_name"] ?? "No address found";
+        return fetchedAddress;        
       } else {
+        print("Failed to fetch address: ${response.statusCode}");
         return "No address found";
       }
     } catch (e) {

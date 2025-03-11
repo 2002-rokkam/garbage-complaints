@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:async';
+import 'dart:convert';
 import 'package:geocoding/geocoding.dart';
 import 'package:http/http.dart' as http;
 import 'package:carousel_slider/carousel_slider.dart';
@@ -90,7 +91,6 @@ class _ComplaintCardState extends State<ComplaintCard> {
       _locale = Locale(languageCode);
     });
   }
-
   @override
   void initState() {
     super.initState();
@@ -100,38 +100,31 @@ class _ComplaintCardState extends State<ComplaintCard> {
   }
 
   Future<void> _fetchAddress() async {
-    try {
-      final photos = widget.complaint['photos'];
-      if (photos.isNotEmpty) {
+        final photos = widget.complaint['photos'];
         final firstPhoto = photos[0];
         final latitude = firstPhoto['latitude'];
         final longitude = firstPhoto['longitude'];
+     final String url =
+        "https://nominatim.openstreetmap.org/reverse?format=json&lat=$latitude&lon=$longitude";
 
-        if (latitude != null && longitude != null) {
-          List<Placemark> placemarks =
-              await placemarkFromCoordinates(latitude, longitude);
-          if (placemarks.isNotEmpty) {
-            Placemark place = placemarks.first;
-            String address =
-                '${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
-            setState(() {
-              _address = address;
-            });
-          } else {
-            setState(() {
-              _address = "No address found";
-            });
-          }
-        }
-      } else {
+    try {
+      final response = await http.get(Uri.parse(url), headers: {
+        "User-Agent": "FlutterApp" // Required to avoid getting blocked
+      });
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        String fetchedAddress = data["display_name"] ?? "No address found";
+        print("Address: $fetchedAddress");
         setState(() {
-          _address = "No coordinates available";
+          _address = fetchedAddress;
         });
+        print("Address: $_address");
+      } else {
+        print("Failed to fetch address: ${response.statusCode}");
       }
     } catch (e) {
-      setState(() {
-        _address = "Error: ${e.toString()}";
-      });
+      print("Error fetching address: $e");
     }
   }
 
@@ -500,10 +493,11 @@ class _ComplaintCardState extends State<ComplaintCard> {
     final images = widget.complaint['photos'];
     final status = widget.complaint['status'];
     final createdAt = DateTime.parse(widget.complaint['created_at']).toLocal();
-    final caption = widget.complaint['caption'];
+    final caption = utf8.decode(widget.complaint['caption'].toString().codeUnits);
     final resolvedPhoto = widget.complaint['resolved_photo'];
     final dirlatitude = widget.complaint['photos'][0]['latitude'];
     final dirlongitude = widget.complaint['photos'][0]['longitude'];
+    print(widget.complaint);
 
     String time = '${createdAt.hour}:${createdAt.minute}:${createdAt.second}';
 
