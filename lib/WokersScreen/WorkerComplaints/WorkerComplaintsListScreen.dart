@@ -1,4 +1,5 @@
 // WokersScreen/WorkerComplaints/WorkerComplaintsListScreen.dart
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:async';
@@ -76,21 +77,16 @@ class ComplaintCard extends StatefulWidget {
 }
 
 class _ComplaintCardState extends State<ComplaintCard> {
-  String _address = "Fetching address...";
-  File? _imageFile;
+String _address = "Fetching address...";
+  Uint8List? _imageBytes; // Used for Web
+  File? _imageFile; // Used for Mobile
   double? _latitude;
   double? _longitude;
   late String workerId;
   String _workerEmail = '';
   late Locale _locale;
+  final ImagePicker _picker = ImagePicker();
 
-  void _loadLanguagePreference() async {
-    final prefs = await SharedPreferences.getInstance();
-    String? languageCode = prefs.getString('language') ?? 'en';
-    setState(() {
-      _locale = Locale(languageCode);
-    });
-  }
   @override
   void initState() {
     super.initState();
@@ -99,27 +95,32 @@ class _ComplaintCardState extends State<ComplaintCard> {
     _loadLanguagePreference();
   }
 
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
+  }
+
   Future<void> _fetchAddress() async {
-        final photos = widget.complaint['photos'];
-        final firstPhoto = photos[0];
-        final latitude = firstPhoto['latitude'];
-        final longitude = firstPhoto['longitude'];
-     final String url =
+    final photos = widget.complaint['photos'];
+    final firstPhoto = photos[0];
+    final latitude = firstPhoto['latitude'];
+    final longitude = firstPhoto['longitude'];
+
+    final String url =
         "https://nominatim.openstreetmap.org/reverse?format=json&lat=$latitude&lon=$longitude";
 
     try {
-      final response = await http.get(Uri.parse(url), headers: {
-        "User-Agent": "FlutterApp" // Required to avoid getting blocked
-      });
+      final response =
+          await http.get(Uri.parse(url), headers: {"User-Agent": "FlutterApp"});
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        String fetchedAddress = data["display_name"] ?? "No address found";
-        print("Address: $fetchedAddress");
         setState(() {
-          _address = fetchedAddress;
+          _address = data["display_name"] ?? "No address found";
         });
-        print("Address: $_address");
       } else {
         print("Failed to fetch address: ${response.statusCode}");
       }
@@ -129,13 +130,21 @@ class _ComplaintCardState extends State<ComplaintCard> {
   }
 
   Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.camera);
+    final XFile? pickedFile =
+        await _picker.pickImage(source: ImageSource.camera);
 
     if (pickedFile != null) {
-      setState(() {
-        _imageFile = File(pickedFile.path);
-      });
+      if (kIsWeb) {
+        final bytes = await pickedFile.readAsBytes();
+        setState(() {
+          _imageBytes = bytes; // Web: Use Uint8List
+        });
+      } else {
+        setState(() {
+          _imageFile = File(pickedFile.path); // Mobile: Use File
+        });
+      }
+
       _getLocation();
       _showImagePopup();
     }
@@ -144,11 +153,10 @@ class _ComplaintCardState extends State<ComplaintCard> {
   Future<void> _getLocation() async {
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
+
     setState(() {
       _latitude = position.latitude;
       _longitude = position.longitude;
-      print(_latitude);
-      print(_longitude);
     });
   }
 
@@ -163,7 +171,14 @@ class _ComplaintCardState extends State<ComplaintCard> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (_imageFile != null)
+              if (kIsWeb && _imageBytes != null)
+                Image.memory(
+                  _imageBytes!,
+                  height: 200,
+                  width: 200,
+                  fit: BoxFit.cover,
+                )
+              else if (!kIsWeb && _imageFile != null)
                 Image.file(
                   _imageFile!,
                   height: 200,
@@ -188,6 +203,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                     onPressed: () {
                       Navigator.of(context).pop();
                       setState(() {
+                        _imageBytes = null;
                         _imageFile = null;
                       });
                     },
@@ -205,23 +221,24 @@ class _ComplaintCardState extends State<ComplaintCard> {
     );
   }
 
-  Future<String> getWorkerId() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String workerId = prefs.getString('worker_id') ?? "";
-    return workerId;
-  }
-
   Future<void> _loadWorkerDetails() async {
     workerId = await getWorkerId();
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       _workerEmail = prefs.getString('email') ?? '';
     });
   }
 
+  Future<String> getWorkerId() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('worker_id') ?? "";
+  }
+
   Future<void> _submitFormData() async {
-    if (_imageFile == null || _latitude == null || _longitude == null) {
+    if ((kIsWeb && _imageBytes == null) ||
+        (!kIsWeb && _imageFile == null) ||
+        _latitude == null ||
+        _longitude == null) {
       _showErrorDialog('Please select an image and allow location access');
       return;
     }
@@ -233,6 +250,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
       _showErrorDialog('Complaint location data is missing');
       return;
     }
+
     double distance = await Geolocator.distanceBetween(
       complaintLatitude,
       complaintLongitude,
@@ -242,7 +260,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
 
     if (distance > 40) {
       _showErrorDialog(
-          'You must be within 10 meters of the complaint location to submit a reply.');
+          'You must be within 20 meters of the complaint location to submit a reply.');
       return;
     }
 
@@ -250,15 +268,26 @@ class _ComplaintCardState extends State<ComplaintCard> {
     String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
     String uniqueFilename = 'solved_complaint_image_$timestamp.jpg';
 
-    FormData formData = FormData.fromMap({
-      'solved_image': await MultipartFile.fromFile(
-        _imageFile!.path,
-        filename: uniqueFilename,
-      ),
-      'solved_lat': _latitude,
-      'solved_long': _longitude,
-      'worker_id': workerId,
-    });
+    FormData formData = FormData();
+
+    if (kIsWeb) {
+      formData.files.add(MapEntry(
+        'solved_image',
+        MultipartFile.fromBytes(_imageBytes!, filename: uniqueFilename),
+      ));
+    } else {
+      formData.files.add(MapEntry(
+        'solved_image',
+        await MultipartFile.fromFile(_imageFile!.path,
+            filename: uniqueFilename),
+      ));
+    }
+
+    formData.fields.addAll([
+      MapEntry('solved_lat', _latitude.toString()),
+      MapEntry('solved_long', _longitude.toString()),
+      MapEntry('worker_id', workerId),
+    ]);
 
     try {
       Response response = await dio.post(
@@ -284,48 +313,9 @@ class _ComplaintCardState extends State<ComplaintCard> {
     }
   }
 
-  void _showErrorDialog(String message) {
-    final localizations = AppLocalizations.of(context)!;
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                message,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.green,
-                ),
-                child: Text(localizations.ok),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
   void _showResolvedPhoto(Map<String, dynamic>? resolvedPhoto) {
     if (resolvedPhoto != null && resolvedPhoto['image'] != null) {
       final imageUrl = '${resolvedPhoto['image']}';
-
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -471,6 +461,44 @@ class _ComplaintCardState extends State<ComplaintCard> {
                     ),
                   ),
                 ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+   void _showErrorDialog(String message) {
+    final localizations = AppLocalizations.of(context)!;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                message,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.green,
+                ),
+                child: Text(localizations.ok),
               ),
             ],
           ),

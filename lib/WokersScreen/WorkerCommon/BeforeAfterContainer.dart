@@ -208,6 +208,32 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
     });
   }
 
+   Future<Position> _getCurrentLocation() async {
+    if (kIsWeb) {
+      return Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+    } else if (Platform.isAndroid || Platform.isIOS) {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        throw 'Location services are disabled.';
+      }
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          throw 'Location permissions are denied.';
+        }
+      }
+
+      return await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+    } else {
+      throw 'Platform not supported for geolocation.';
+    }
+  }
+
+
   Future<void> _submitAfterImage() async {
     print(
         "Submitting after image... _afterImage: $_afterImage, activityId: $activityId");
@@ -345,31 +371,6 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error: $e")),
       );
-    }
-  }
-
-  Future<Position> _getCurrentLocation() async {
-    if (kIsWeb) {
-      return Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
-    } else if (Platform.isAndroid || Platform.isIOS) {
-      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
-        throw 'Location services are disabled.';
-      }
-
-      LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          throw 'Location permissions are denied.';
-        }
-      }
-
-      return await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
-    } else {
-      throw 'Platform not supported for geolocation.';
     }
   }
 
@@ -518,8 +519,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                                 )
                               : // PWA platform check
                               FutureBuilder<Uint8List>(
-                                  future: _loadImageBytes(
-                                      _beforeImage!['imagePath']!),
+                                  future: _loadImageBytes(_beforeImage!['imagePath']!),
                                   builder: (context, snapshot) {
                                     if (snapshot.connectionState ==
                                         ConnectionState.waiting) {
@@ -533,8 +533,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                                       ));
                                     } else if (snapshot.hasError) {
                                       return Center(
-                                          child: Text(
-                                              localizations.failedToLoadImage));
+                                          child: Text(localizations.failedToLoadImage));
                                     } else if (snapshot.hasData) {
                                       return Image.memory(
                                         snapshot.data!,
@@ -542,8 +541,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                                         errorBuilder:
                                             (context, error, stackTrace) {
                                           return Center(
-                                              child: Text(localizations
-                                                  .failedToLoadImage));
+                                              child: Text(localizations.failedToLoadImage));
                                         },
                                       );
                                     } else {
