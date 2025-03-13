@@ -399,7 +399,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
     double distance = await Geolocator.distanceBetween(
         beforeLatitude, beforeLongitude, afterLatitude, afterLongitude);
 
-    return distance <= 20.0;
+    return distance <= 30.0;
   }
 
   void _showPopup(String message) {

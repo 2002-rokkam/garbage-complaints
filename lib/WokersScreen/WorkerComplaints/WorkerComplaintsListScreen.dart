@@ -240,7 +240,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
       _longitude!,
     );
 
-    if (distance > 15) {
+    if (distance > 40) {
       _showErrorDialog(
           'You must be within 10 meters of the complaint location to submit a reply.');
       return;

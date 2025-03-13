@@ -11,7 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:slider_button/slider_button.dart';
-import 'package:flutter/foundation.dart' show kIsWeb; // Import kIsWeb
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class AnimalScreenBeforeAfterContainer extends StatefulWidget {
   final String section;
@@ -386,43 +386,6 @@ class _AnimalScreenBeforeAfterContainerState
     });
   }
 
-  Future<bool> _isAfterImageWithinRadius() async {
-    if (_beforeImage == null || _afterImage == null) {
-      return false;
-    }
-
-    double beforeLatitude = _beforeImage!['latitude'];
-    double beforeLongitude = _beforeImage!['longitude'];
-
-    double afterLatitude = _afterImage!['latitude'];
-    double afterLongitude = _afterImage!['longitude'];
-
-    double distance = await Geolocator.distanceBetween(
-        beforeLatitude, beforeLongitude, afterLatitude, afterLongitude);
-
-    return distance <= 20.0;
-  }
-
-  void _showPopup(String message) {
-    final localizations = AppLocalizations.of(context)!;
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(localizations.error),
-        content: Text(message),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              widget.onReload();
-            },
-            child: Text(localizations.ok),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
@@ -712,14 +675,8 @@ class _AnimalScreenBeforeAfterContainerState
                         setState(() {
                           _isLoading = true;
                         });
-                        try {
-                          bool isWithinRadius =
-                              await _isAfterImageWithinRadius();
-                          if (isWithinRadius) {
-                            await _submitAfterImage();
-                          } else {
-                            _showPopup(localizations.errorImageTooFar);
-                          }
+                        try {                                          
+                            await _submitAfterImage();                                            
                         } catch (e) {
                           print("Error in slider action: $e");
                         } finally {
