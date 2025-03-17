@@ -219,73 +219,81 @@ class _TripDetailCardState extends State<TripDetailCard> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-
     double cardWidth = screenWidth * 0.85;
-    double cardHeight = screenHeight * 0.78;
     double containerWidth = screenWidth * 0.85;
     double textFieldHeight = 48.0;
 
     return Stack(
       children: [
         SingleChildScrollView(
-          child: Container(
-            width: cardWidth,
-            height: cardHeight,
-            decoration: ShapeDecoration(
-              color: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
+          child: Center(
+            // Ensures content is centered
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildDetailContainer(
-                    title: 'Trips',
-                    child: _buildTextField(tripsController),
-                    containerWidth: containerWidth,
-                    textFieldHeight: textFieldHeight,
-                    isValid: tripsValid,
-                  ),
-                  SizedBox(height: 16),
-                  _buildDetailContainer(
-                    title: 'Quantity of Waste',
-                    child: _buildTextField(quantityWasteController),
-                    containerWidth: containerWidth,
-                    textFieldHeight: textFieldHeight,
-                    isValid: quantityWasteValid,
-                  ),
-                  SizedBox(height: 16),
-                  _buildDetailContainer(
-                    title: 'Segregated Degradable Waste',
-                    child: _buildTextField(segregatedDegradableController),
-                    containerWidth: containerWidth,
-                    textFieldHeight: textFieldHeight,
-                    isValid: segregatedDegradableValid,
-                  ),
-                  SizedBox(height: 16),
-                  _buildDetailContainer(
-                    title: 'Segregated Non-Degradable Waste',
-                    child: _buildTextField(segregatedNonDegradableController),
-                    containerWidth: containerWidth,
-                    textFieldHeight: textFieldHeight,
-                    isValid: segregatedNonDegradableValid,
-                  ),
-                  SizedBox(height: 16),
-                  _buildDetailContainer(
-                    title: 'Segregated Plastic Waste',
-                    child: _buildTextField(segregatedPlasticController),
-                    containerWidth: containerWidth,
-                    textFieldHeight: textFieldHeight,
-                    isValid: segregatedPlasticValid,
-                  ),
-                  SizedBox(height: 16),
-                  GestureDetector(
-                    onTap: _handleSubmit,
-                    child: _buildSubmitButton(containerWidth),
+                  Container(
+                    width: cardWidth,
+                    decoration: ShapeDecoration(
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildDetailContainer(
+                            title: 'Trips',
+                            child: _buildTextField(tripsController),
+                            containerWidth: containerWidth,
+                            textFieldHeight: textFieldHeight,
+                            isValid: tripsValid,
+                          ),
+                          SizedBox(height: 16),
+                          _buildDetailContainer(
+                            title: 'Quantity of Waste',
+                            child: _buildTextField(quantityWasteController),
+                            containerWidth: containerWidth,
+                            textFieldHeight: textFieldHeight,
+                            isValid: quantityWasteValid,
+                          ),
+                          SizedBox(height: 16),
+                          _buildDetailContainer(
+                            title: 'Segregated Degradable Waste',
+                            child:
+                                _buildTextField(segregatedDegradableController),
+                            containerWidth: containerWidth,
+                            textFieldHeight: textFieldHeight,
+                            isValid: segregatedDegradableValid,
+                          ),
+                          SizedBox(height: 16),
+                          _buildDetailContainer(
+                            title: 'Segregated Non-Degradable Waste',
+                            child: _buildTextField(
+                                segregatedNonDegradableController),
+                            containerWidth: containerWidth,
+                            textFieldHeight: textFieldHeight,
+                            isValid: segregatedNonDegradableValid,
+                          ),
+                          SizedBox(height: 16),
+                          _buildDetailContainer(
+                            title: 'Segregated Plastic Waste',
+                            child: _buildTextField(segregatedPlasticController),
+                            containerWidth: containerWidth,
+                            textFieldHeight: textFieldHeight,
+                            isValid: segregatedPlasticValid,
+                          ),
+                          SizedBox(height: 16),
+                          GestureDetector(
+                            onTap: _handleSubmit,
+                            child: _buildSubmitButton(containerWidth),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -294,12 +302,12 @@ class _TripDetailCardState extends State<TripDetailCard> {
         ),
         if (isLoading)
           Center(
-                child: Image.asset(
-                  'assets/images/Loder.gif',
-                  width: 200, 
-                  height: 200,
-                ),
-              )
+            child: Image.asset(
+              'assets/images/Loder.gif',
+              width: 200,
+              height: 200,
+            ),
+          ),
       ],
     );
   }

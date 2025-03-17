@@ -101,6 +101,8 @@ class _BDOSchoolCampusCalnderActivityScreenState
       }
     } catch (e) {
       print(e);
+    } finally {
+      setState(() => _isLoading = false);
     }
   }
 
@@ -168,8 +170,6 @@ class _BDOSchoolCampusCalnderActivityScreenState
   @override
   Widget build(BuildContext context) {
     final isBeforeAfterTab = _tabController.index == 0;
-    final selectedActivities = getActivitiesForSelectedDate();
-    final PanchayatActivities = getPanchayatActivitiesForSelectedDate();
     final localizations = AppLocalizations.of(context)!;
 
     return Scaffold(
@@ -207,24 +207,24 @@ class _BDOSchoolCampusCalnderActivityScreenState
               setState(() {
                 _selectedDate = selectedDay;
               });
-              if (_tabController.index == 0 && selectedActivities.isNotEmpty) {
+              if (_tabController.index == 0 && getActivitiesForSelectedDate().isNotEmpty) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => BDOSelectedDateActivitiesScreen(
                       selectedDate: _selectedDate,
-                      activities: selectedActivities,
+                      activities: getActivitiesForSelectedDate(),
                     ),
                   ),
                 );
               } else if (_tabController.index == 1 &&
-                  PanchayatActivities.isNotEmpty) {
+                  getPanchayatActivitiesForSelectedDate().isNotEmpty) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => BDOSelectedDateActivitiesScreen(
                       selectedDate: _selectedDate,
-                      activities: PanchayatActivities,
+                      activities: getPanchayatActivitiesForSelectedDate(),
                     ),
                   ),
                 );
@@ -275,9 +275,9 @@ class _BDOSchoolCampusCalnderActivityScreenState
           Padding(
             padding: const EdgeInsets.all(8.0),
             child:
-                (_tabController.index == 0 && selectedActivities.isNotEmpty) ||
+                (_tabController.index == 0 && getActivitiesForSelectedDate().isNotEmpty) ||
                         (_tabController.index == 1 &&
-                            PanchayatActivities.isNotEmpty)
+                            getPanchayatActivitiesForSelectedDate().isNotEmpty)
                     ? Container()
                     : Center(
                         child: Padding(

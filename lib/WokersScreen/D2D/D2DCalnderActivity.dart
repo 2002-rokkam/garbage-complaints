@@ -137,7 +137,19 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
   }
 
   List getActivitiesForSelectedDate() {
-    return _activities
+    return  _activities
+        .where((activity) =>
+            DateTime.parse(activity['date_time']).toLocal().day ==
+                _selectedDate.day &&
+            DateTime.parse(activity['date_time']).toLocal().month ==
+                _selectedDate.month &&
+            DateTime.parse(activity['date_time']).toLocal().year ==
+                _selectedDate.year)
+        .toList();
+  }
+
+  List getTripDetailsForSelectedDate() {
+    return _tripDetails
         .where((activity) =>
             DateTime.parse(activity['date_time']).toLocal().day ==
                 _selectedDate.day &&
@@ -158,7 +170,6 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
                 ));
     }
     final localizations = AppLocalizations.of(context)!;
-    final selectedActivities = getActivitiesForSelectedDate();
     final isBeforeAfterTab = _tabController.index == 0;
 
     return Scaffold(
@@ -229,7 +240,7 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
                       MaterialPageRoute(
                         builder: (context) => QRDetailsScreen(
                           selectedDate: _selectedDate,
-                          tripDetails: _tripDetails,
+                          tripDetails: getTripDetailsForSelectedDate(),
                         ),
                       ),
                     );
@@ -280,7 +291,7 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: (_tabController.index == 0 && selectedActivities.isEmpty)
+            child: (_tabController.index == 0 && getActivitiesForSelectedDate().isEmpty)
                 ? Center(
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
@@ -290,7 +301,7 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
                       ),
                     ),
                   )
-                : (_tabController.index == 1 && _tripDetails.isEmpty)
+                : (_tabController.index == 1 && getTripDetailsForSelectedDate().isEmpty)
                     ? Center(
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),

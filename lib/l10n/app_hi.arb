@@ -9,7 +9,7 @@
   "verification_failed": "सत्यापन विफल। कृपया पुनः प्रयास करें।",
   "auto_retrieval_timeout": "स्वतः पुनर्प्राप्ति की समय सीमा समाप्त। कृपया मैन्युअल रूप से ओटीपी दर्ज करें।",
   "login_admin": "प्रशासन के रूप में लॉगिन करें",
-  "login_citizen":"नागरिक के रूप में लॉगिन करें",
+  "login_citizen":"Login as Citizen",
   "error": "त्रुटि",
   "ok": "ठीक है",
   "app_title":"hi",

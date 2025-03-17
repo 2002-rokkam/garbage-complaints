@@ -171,12 +171,7 @@ class _SchoolCampusActivityScreenState extends State<SchoolCampusActivityScreen>
         ),
       );
     }
-
-    final selectedActivities = getActivitiesForSelectedDate();
-    final PanchayatActivities = getPanchayatActivitiesForSelectedDate();
-
     final isBeforeAfterTab = _tabController.index == 0;
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -213,24 +208,24 @@ class _SchoolCampusActivityScreenState extends State<SchoolCampusActivityScreen>
                 _selectedDate = selectedDay;
                 _isLoading = true;
               });
-              if (_tabController.index == 0 && selectedActivities.isNotEmpty) {
+              if (_tabController.index == 0 && getActivitiesForSelectedDate().isNotEmpty) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => CalnderActivityBeforeAfterScreen(
                       selectedDate: _selectedDate,
-                      activities: selectedActivities,
+                      activities: getActivitiesForSelectedDate(),
                     ),
                   ),
                 );
               } else if (_tabController.index == 1 &&
-                  PanchayatActivities.isNotEmpty) {
+                  getPanchayatActivitiesForSelectedDate().isNotEmpty) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => CalnderActivityBeforeAfterScreen(
                       selectedDate: _selectedDate,
-                      activities: PanchayatActivities,
+                      activities: getPanchayatActivitiesForSelectedDate(),
                     ),
                   ),
                 );
@@ -282,9 +277,9 @@ class _SchoolCampusActivityScreenState extends State<SchoolCampusActivityScreen>
           Padding(
             padding: const EdgeInsets.all(8.0),
             child:
-                (_tabController.index == 0 && selectedActivities.isNotEmpty) ||
+                (_tabController.index == 0 && getActivitiesForSelectedDate().isNotEmpty) ||
                         (_tabController.index == 1 &&
-                            PanchayatActivities.isNotEmpty)
+                            getPanchayatActivitiesForSelectedDate().isNotEmpty)
                     ? Container()
                     : Center(
                         child: Padding(

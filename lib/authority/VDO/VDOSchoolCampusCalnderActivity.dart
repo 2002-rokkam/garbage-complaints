@@ -150,8 +150,6 @@ class _VDOSchoolCampusCalnderActivityState
 
   @override
   Widget build(BuildContext context) {
-    final selectedActivities = getActivitiesForSelectedDate();
-    final PanchayatActivities = getPanchayatActivitiesForSelectedDate();
     final isBeforeAfterTab = _tabController.index == 0;
 
     return Scaffold(
@@ -169,7 +167,7 @@ class _VDOSchoolCampusCalnderActivityState
             Tab(text: 'Toilet'),
           ],
         ),
-      ),
+      ), 
       body: Column(
         children: [
           TableCalendar(
@@ -182,22 +180,22 @@ class _VDOSchoolCampusCalnderActivityState
               setState(() {
                 _selectedDate = selectedDay;
               });
-              if (_tabController.index == 0 && selectedActivities.isNotEmpty) {
+              if (_tabController.index == 0 && getActivitiesForSelectedDate().isNotEmpty) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => VDOBeforeAfterScreen(
-                      activities: selectedActivities,
+                      activities: getActivitiesForSelectedDate(),
                     ),
                   ),
                 );
               } else if (_tabController.index == 1 &&
-                  PanchayatActivities.isNotEmpty) {
+                  getPanchayatActivitiesForSelectedDate().isNotEmpty) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => VDOBeforeAfterScreen(
-                      activities: PanchayatActivities,
+                      activities: getPanchayatActivitiesForSelectedDate(),
                     ),
                   ),
                 );

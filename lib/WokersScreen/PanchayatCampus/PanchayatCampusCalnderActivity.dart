@@ -174,7 +174,6 @@ class _PanchayatCampusActivityScreenState
       );
     }
 
-    final selectedActivities = getActivitiesForSelectedDate();
     final PanchayatActivities = getPanchayatActivitiesForSelectedDate();
 
     final isBeforeAfterTab = _tabController.index == 0;
@@ -215,13 +214,13 @@ class _PanchayatCampusActivityScreenState
                 _selectedDate = selectedDay;
                 _isLoading = true;
               });
-              if (_tabController.index == 0 && selectedActivities.isNotEmpty) {
+              if (_tabController.index == 0 && getActivitiesForSelectedDate().isNotEmpty) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => CalnderActivityBeforeAfterScreen(
                       selectedDate: _selectedDate,
-                      activities: selectedActivities,
+                      activities: getActivitiesForSelectedDate(),
                     ),
                   ),
                 );
@@ -284,7 +283,7 @@ class _PanchayatCampusActivityScreenState
           Padding(
             padding: const EdgeInsets.all(8.0),
             child:
-                (_tabController.index == 0 && selectedActivities.isNotEmpty) ||
+                (_tabController.index == 0 && getActivitiesForSelectedDate().isNotEmpty) ||
                         (_tabController.index == 1 &&
                             PanchayatActivities.isNotEmpty)
                     ? Container()

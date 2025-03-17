@@ -101,6 +101,8 @@ class _BDOPanchayatCampusCalnderActivityScreenState
       }
     } catch (e) {
       print(e);
+    } finally {
+      setState(() => _isLoading = false);
     }
   }
 
@@ -168,8 +170,6 @@ class _BDOPanchayatCampusCalnderActivityScreenState
   @override
   Widget build(BuildContext context) {
     final isBeforeAfterTab = _tabController.index == 0;
-    final selectedActivities = getActivitiesForSelectedDate();
-    final PanchayatActivities = getPanchayatActivitiesForSelectedDate();
     final localizations = AppLocalizations.of(context)!;
 
     return Scaffold(
@@ -207,27 +207,37 @@ class _BDOPanchayatCampusCalnderActivityScreenState
               setState(() {
                 _selectedDate = selectedDay;
               });
-              if (_tabController.index == 0 && selectedActivities.isNotEmpty) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BDOSelectedDateActivitiesScreen(
-                      selectedDate: _selectedDate,
-                      activities: selectedActivities,
-                    ),
-                  ),
-                );
-              } else if (_tabController.index == 1 &&
-                  PanchayatActivities.isNotEmpty) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BDOSelectedDateActivitiesScreen(
-                      selectedDate: _selectedDate,
-                      activities: PanchayatActivities,
-                    ),
-                  ),
-                );
+              if (_tabController.index == 0) {
+                fetchActivities().then((_) {
+                  final selectedActivities = getActivitiesForSelectedDate();
+                  if (selectedActivities.isNotEmpty) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BDOSelectedDateActivitiesScreen(
+                          selectedDate: _selectedDate,
+                          activities: selectedActivities,
+                        ),
+                      ),
+                    );
+                  }
+                });
+              } else {
+                fetchTripDetails().then((_) {
+                  final PanchayatActivities =
+                      getPanchayatActivitiesForSelectedDate();
+                  if (PanchayatActivities.isNotEmpty) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BDOSelectedDateActivitiesScreen(
+                          selectedDate: _selectedDate,
+                          activities: PanchayatActivities,
+                        ),
+                      ),
+                    );
+                  }
+                });
               }
             },
             calendarStyle: CalendarStyle(
@@ -275,9 +285,9 @@ class _BDOPanchayatCampusCalnderActivityScreenState
           Padding(
             padding: const EdgeInsets.all(8.0),
             child:
-                (_tabController.index == 0 && selectedActivities.isNotEmpty) ||
+                (_tabController.index == 0 && getActivitiesForSelectedDate().isNotEmpty) ||
                         (_tabController.index == 1 &&
-                            PanchayatActivities.isNotEmpty)
+                            getPanchayatActivitiesForSelectedDate().isNotEmpty)
                     ? Container()
                     : Center(
                         child: Padding(
