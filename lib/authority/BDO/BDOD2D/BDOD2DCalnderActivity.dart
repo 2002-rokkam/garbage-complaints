@@ -104,7 +104,7 @@ class _BDOD2DCalnderActivityScreenState
         setState(() {
           _activities = sectionActivities;
           activityCounts = counts;
-          _isLoading = false; 
+          _isLoading = false;
         });
       } else {
         throw Exception('Failed to load activities');

@@ -214,7 +214,8 @@ class _PanchayatCampusActivityScreenState
                 _selectedDate = selectedDay;
                 _isLoading = true;
               });
-              if (_tabController.index == 0 && getActivitiesForSelectedDate().isNotEmpty) {
+              if (_tabController.index == 0 &&
+                  getActivitiesForSelectedDate().isNotEmpty) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -282,20 +283,20 @@ class _PanchayatCampusActivityScreenState
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child:
-                (_tabController.index == 0 && getActivitiesForSelectedDate().isNotEmpty) ||
-                        (_tabController.index == 1 &&
-                            PanchayatActivities.isNotEmpty)
-                    ? Container()
-                    : Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text(
-                            'No activities available',
-                            style: TextStyle(fontSize: 16, color: Colors.grey),
-                          ),
-                        ),
+            child: (_tabController.index == 0 &&
+                        getActivitiesForSelectedDate().isNotEmpty) ||
+                    (_tabController.index == 1 &&
+                        PanchayatActivities.isNotEmpty)
+                ? Container()
+                : Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        'No activities available',
+                        style: TextStyle(fontSize: 16, color: Colors.grey),
                       ),
+                    ),
+                  ),
           ),
         ],
       ),

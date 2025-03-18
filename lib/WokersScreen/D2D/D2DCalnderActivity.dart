@@ -137,7 +137,7 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
   }
 
   List getActivitiesForSelectedDate() {
-    return  _activities
+    return _activities
         .where((activity) =>
             DateTime.parse(activity['date_time']).toLocal().day ==
                 _selectedDate.day &&
@@ -163,11 +163,12 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
   @override
   Widget build(BuildContext context) {
     if (workerId == null) {
-      return Center(child: Image.asset(
-                  'assets/images/Loder.gif', 
-                  width: 200, 
-                  height: 200,
-                ));
+      return Center(
+          child: Image.asset(
+        'assets/images/Loder.gif',
+        width: 200,
+        height: 200,
+      ));
     }
     final localizations = AppLocalizations.of(context)!;
     final isBeforeAfterTab = _tabController.index == 0;
@@ -204,118 +205,126 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
               ),
             )
           : Column(
-        children: [
-          TableCalendar(
-            focusedDay: _selectedDate,
-            firstDay: DateTime(2000),
-            lastDay: DateTime(2100),
-            calendarFormat: CalendarFormat.month,
-            selectedDayPredicate: (day) => isSameDay(day, _selectedDate),
-            onDaySelected: (selectedDay, focusedDay) {
-              setState(() {
-                _selectedDate = selectedDay;
-              });
+              children: [
+                TableCalendar(
+                  focusedDay: _selectedDate,
+                  firstDay: DateTime(2000),
+                  lastDay: DateTime(2100),
+                  calendarFormat: CalendarFormat.month,
+                  selectedDayPredicate: (day) => isSameDay(day, _selectedDate),
+                  onDaySelected: (selectedDay, focusedDay) {
+                    setState(() {
+                      _selectedDate = selectedDay;
+                    });
 
-              final selectedDateKey = DateTime(
-                  selectedDay.year, selectedDay.month, selectedDay.day);
-              final count = _tabController.index == 0
-                  ? activityCounts[selectedDateKey] ?? 0
-                  : qrCounts[selectedDateKey] ?? 0;
+                    final selectedDateKey = DateTime(
+                        selectedDay.year, selectedDay.month, selectedDay.day);
+                    final count = _tabController.index == 0
+                        ? activityCounts[selectedDateKey] ?? 0
+                        : qrCounts[selectedDateKey] ?? 0;
 
-              if (count > 0) {
-                Future.delayed(Duration(milliseconds: 300), () {
-                  if (_tabController.index == 0) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CalnderActivityBeforeAfterScreen(
-                          selectedDate: _selectedDate,
-                          activities: getActivitiesForSelectedDate(),
-                        ),
-                      ),
-                    );
-                  } else {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => QRDetailsScreen(
-                          selectedDate: _selectedDate,
-                          tripDetails: getTripDetailsForSelectedDate(),
-                        ),
-                      ),
-                    );
-                  }
-                });
-              }
-            },
-            calendarStyle: CalendarStyle(
-              selectedDecoration: BoxDecoration(
-                color: Color(0xFF5C964A),
-                shape: BoxShape.circle,
-              ),
-              todayDecoration: BoxDecoration(
-                color: Color(0xFFFFA726),
-                shape: BoxShape.circle,
-              ),
-            ),
-            calendarBuilders: CalendarBuilders(
-              markerBuilder: (context, date, _) {
-                final count = isBeforeAfterTab
-                    ? activityCounts[
-                            DateTime(date.year, date.month, date.day)] ??
-                        0
-                    : qrCounts[DateTime(date.year, date.month, date.day)] ?? 0;
-
-                if (count > 0) {
-                  return Positioned(
-                    bottom: 1,
-                    child: Container(
-                      width: 16,
-                      height: 16,
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: Text(
-                          '$count',
-                          style: TextStyle(color: Colors.white, fontSize: 10),
-                        ),
-                      ),
+                    if (count > 0) {
+                      Future.delayed(Duration(milliseconds: 300), () {
+                        if (_tabController.index == 0) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  CalnderActivityBeforeAfterScreen(
+                                selectedDate: _selectedDate,
+                                activities: getActivitiesForSelectedDate(),
+                              ),
+                            ),
+                          );
+                        } else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => QRDetailsScreen(
+                                selectedDate: _selectedDate,
+                                tripDetails: getTripDetailsForSelectedDate(),
+                              ),
+                            ),
+                          );
+                        }
+                      });
+                    }
+                  },
+                  calendarStyle: CalendarStyle(
+                    selectedDecoration: BoxDecoration(
+                      color: Color(0xFF5C964A),
+                      shape: BoxShape.circle,
                     ),
-                  );
-                }
-                return null;
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: (_tabController.index == 0 && getActivitiesForSelectedDate().isEmpty)
-                ? Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        localizations.noActivities,
-                        style: TextStyle(fontSize: 16, color: Colors.grey),
-                      ),
+                    todayDecoration: BoxDecoration(
+                      color: Color(0xFFFFA726),
+                      shape: BoxShape.circle,
                     ),
-                  )
-                : (_tabController.index == 1 && getTripDetailsForSelectedDate().isEmpty)
-                    ? Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text(
-                            localizations
-                                .noActivities, // Use localization for consistency
-                            style: TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                  calendarBuilders: CalendarBuilders(
+                    markerBuilder: (context, date, _) {
+                      final count = isBeforeAfterTab
+                          ? activityCounts[
+                                  DateTime(date.year, date.month, date.day)] ??
+                              0
+                          : qrCounts[
+                                  DateTime(date.year, date.month, date.day)] ??
+                              0;
+
+                      if (count > 0) {
+                        return Positioned(
+                          bottom: 1,
+                          child: Container(
+                            width: 16,
+                            height: 16,
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Center(
+                              child: Text(
+                                '$count',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 10),
+                              ),
+                            ),
                           ),
-                        ),
-                      )
-                    : Container(),
-          ),
-        ],
-      ),
+                        );
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: (_tabController.index == 0 &&
+                          getActivitiesForSelectedDate().isEmpty)
+                      ? Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Text(
+                              localizations.noActivities,
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.grey),
+                            ),
+                          ),
+                        )
+                      : (_tabController.index == 1 &&
+                              getTripDetailsForSelectedDate().isEmpty)
+                          ? Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Text(
+                                  localizations
+                                      .noActivities, // Use localization for consistency
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.grey),
+                                ),
+                              ),
+                            )
+                          : Container(),
+                ),
+              ],
+            ),
     );
   }
 }

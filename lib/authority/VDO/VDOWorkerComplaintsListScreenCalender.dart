@@ -89,12 +89,12 @@ class _ComplaintCardState extends State<ComplaintCard> {
     _loadWorkerDetails();
   }
 
-     Future<void> _fetchAddress() async {
-        final photos = widget.complaint['photos'];
-        final firstPhoto = photos[0];
-        final latitude = firstPhoto['latitude'];
-        final longitude = firstPhoto['longitude'];
-     final String url =
+  Future<void> _fetchAddress() async {
+    final photos = widget.complaint['photos'];
+    final firstPhoto = photos[0];
+    final latitude = firstPhoto['latitude'];
+    final longitude = firstPhoto['longitude'];
+    final String url =
         "https://nominatim.openstreetmap.org/reverse?format=json&lat=$latitude&lon=$longitude";
 
     try {
@@ -675,7 +675,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                      ),                
+                      ),
                     ),
                   ],
                 ),

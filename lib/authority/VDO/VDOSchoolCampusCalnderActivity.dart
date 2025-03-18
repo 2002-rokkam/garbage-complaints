@@ -167,7 +167,7 @@ class _VDOSchoolCampusCalnderActivityState
             Tab(text: 'Toilet'),
           ],
         ),
-      ), 
+      ),
       body: Column(
         children: [
           TableCalendar(
@@ -180,7 +180,8 @@ class _VDOSchoolCampusCalnderActivityState
               setState(() {
                 _selectedDate = selectedDay;
               });
-              if (_tabController.index == 0 && getActivitiesForSelectedDate().isNotEmpty) {
+              if (_tabController.index == 0 &&
+                  getActivitiesForSelectedDate().isNotEmpty) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(

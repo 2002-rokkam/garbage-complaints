@@ -83,7 +83,7 @@ class _VDOPendingWorkerComplaintsCalenderState
         DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day);
     int complaintCount = complaintCounts[normalizedSelectedDay] ?? 0;
     final localizations = AppLocalizations.of(context)!;
-    
+
     return Scaffold(
       appBar: AppBar(
         title: Text(

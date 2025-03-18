@@ -89,8 +89,9 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
     return workerId;
   }
 
-  Future<String> _getAddressFromLatLong(double latitude, double longitude) async {
-     final String url =
+  Future<String> _getAddressFromLatLong(
+      double latitude, double longitude) async {
+    final String url =
         "https://nominatim.openstreetmap.org/reverse?format=json&lat=$latitude&lon=$longitude";
 
     try {
@@ -100,7 +101,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         String fetchedAddress = data["display_name"] ?? "No address found";
-        return fetchedAddress;        
+        return fetchedAddress;
       } else {
         print("Failed to fetch address: ${response.statusCode}");
         return "No address found";
@@ -208,7 +209,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
     });
   }
 
-   Future<Position> _getCurrentLocation() async {
+  Future<Position> _getCurrentLocation() async {
     if (kIsWeb) {
       return Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
@@ -232,7 +233,6 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
       throw 'Platform not supported for geolocation.';
     }
   }
-
 
   Future<void> _submitAfterImage() async {
     print(
@@ -519,7 +519,8 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                                 )
                               : // PWA platform check
                               FutureBuilder<Uint8List>(
-                                  future: _loadImageBytes(_beforeImage!['imagePath']!),
+                                  future: _loadImageBytes(
+                                      _beforeImage!['imagePath']!),
                                   builder: (context, snapshot) {
                                     if (snapshot.connectionState ==
                                         ConnectionState.waiting) {
@@ -533,7 +534,8 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                                       ));
                                     } else if (snapshot.hasError) {
                                       return Center(
-                                          child: Text(localizations.failedToLoadImage));
+                                          child: Text(
+                                              localizations.failedToLoadImage));
                                     } else if (snapshot.hasData) {
                                       return Image.memory(
                                         snapshot.data!,
@@ -541,7 +543,8 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                                         errorBuilder:
                                             (context, error, stackTrace) {
                                           return Center(
-                                              child: Text(localizations.failedToLoadImage));
+                                              child: Text(localizations
+                                                  .failedToLoadImage));
                                         },
                                       );
                                     } else {

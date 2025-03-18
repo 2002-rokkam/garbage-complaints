@@ -166,7 +166,7 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
                   SizedBox(height: 20),
                   Text.rich(
                     TextSpan(
-                      children: [                    
+                      children: [
                         TextSpan(
                           text: localizations.emailAddress,
                           style: TextStyle(

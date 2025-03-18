@@ -93,12 +93,12 @@ class _ComplaintCardState extends State<ComplaintCard> {
     final firstPhoto = photos[0];
     final latitude = firstPhoto['latitude'];
     final longitude = firstPhoto['longitude'];
-    final String url = "https://nominatim.openstreetmap.org/reverse?format=json&lat=$latitude&lon=$longitude";
+    final String url =
+        "https://nominatim.openstreetmap.org/reverse?format=json&lat=$latitude&lon=$longitude";
 
     try {
-      final response = await http.get(Uri.parse(url), headers: {
-        "User-Agent": "FlutterApp"
-      });
+      final response =
+          await http.get(Uri.parse(url), headers: {"User-Agent": "FlutterApp"});
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -419,7 +419,8 @@ class _ComplaintCardState extends State<ComplaintCard> {
     final images = widget.complaint['photos'];
     final status = widget.complaint['status'];
     final createdAt = DateTime.parse(widget.complaint['created_at']).toLocal();
-    final caption = utf8.decode(widget.complaint['caption'].toString().codeUnits);
+    final caption =
+        utf8.decode(widget.complaint['caption'].toString().codeUnits);
     final resolvedPhoto = widget.complaint['resolved_photo'];
     final dirlatitude = widget.complaint['photos'][0]['latitude'];
     final dirlongitude = widget.complaint['photos'][0]['longitude'];
@@ -593,7 +594,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                      ),  
+                      ),
                     ),
                   ],
                 ),

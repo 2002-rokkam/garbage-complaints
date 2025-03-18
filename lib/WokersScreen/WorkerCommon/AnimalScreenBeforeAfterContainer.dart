@@ -675,8 +675,8 @@ class _AnimalScreenBeforeAfterContainerState
                         setState(() {
                           _isLoading = true;
                         });
-                        try {                                          
-                            await _submitAfterImage();                                            
+                        try {
+                          await _submitAfterImage();
                         } catch (e) {
                           print("Error in slider action: $e");
                         } finally {

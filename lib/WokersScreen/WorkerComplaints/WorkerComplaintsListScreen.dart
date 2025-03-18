@@ -77,7 +77,7 @@ class ComplaintCard extends StatefulWidget {
 }
 
 class _ComplaintCardState extends State<ComplaintCard> {
-String _address = "Fetching address...";
+  String _address = "Fetching address...";
   Uint8List? _imageBytes; // Used for Web
   File? _imageFile; // Used for Mobile
   double? _latitude;
@@ -469,7 +469,7 @@ String _address = "Fetching address...";
     );
   }
 
-   void _showErrorDialog(String message) {
+  void _showErrorDialog(String message) {
     final localizations = AppLocalizations.of(context)!;
     showDialog(
       context: context,
@@ -521,7 +521,8 @@ String _address = "Fetching address...";
     final images = widget.complaint['photos'];
     final status = widget.complaint['status'];
     final createdAt = DateTime.parse(widget.complaint['created_at']).toLocal();
-    final caption = utf8.decode(widget.complaint['caption'].toString().codeUnits);
+    final caption =
+        utf8.decode(widget.complaint['caption'].toString().codeUnits);
     final resolvedPhoto = widget.complaint['resolved_photo'];
     final dirlatitude = widget.complaint['photos'][0]['latitude'];
     final dirlongitude = widget.complaint['photos'][0]['longitude'];
@@ -695,7 +696,7 @@ String _address = "Fetching address...";
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                      ),  
+                      ),
                     ),
                   ],
                 ),

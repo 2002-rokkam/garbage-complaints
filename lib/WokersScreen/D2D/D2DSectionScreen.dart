@@ -195,7 +195,7 @@ class _D2DSectionScreenState extends State<D2DSectionScreen>
 
   Widget _buildBeforeAfterTab() {
     return isLoading
-        ?  Center(
+        ? Center(
             child: Image.asset(
               'assets/images/Loder.gif',
               width: 200,

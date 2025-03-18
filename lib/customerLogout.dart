@@ -122,16 +122,15 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<void> logout(BuildContext context) async {
     showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => Center(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => Center(
               child: Image.asset(
                 'assets/images/Loder.gif',
                 width: 200,
                 height: 200,
               ),
-            )
-    );
+            ));
     try {
       String logoutUrl = 'https://sbmgrajasthan.com/api/logout';
       SharedPreferences prefs = await SharedPreferences.getInstance();

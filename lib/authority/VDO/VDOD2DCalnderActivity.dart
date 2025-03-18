@@ -154,6 +154,18 @@ class _VDOD2DCalnderActivityScreenState
         .toList();
   }
 
+  List getTripDetailsForSelectedDate() {
+    return _tripDetails
+        .where((activity) =>
+            DateTime.parse(activity['date_time']).toLocal().day ==
+                _selectedDate.day &&
+            DateTime.parse(activity['date_time']).toLocal().month ==
+                _selectedDate.month &&
+            DateTime.parse(activity['date_time']).toLocal().year ==
+                _selectedDate.year)
+        .toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     final isBeforeAfterTab = _tabController.index == 0;
@@ -209,7 +221,7 @@ class _VDOD2DCalnderActivityScreenState
                       context,
                       MaterialPageRoute(
                         builder: (context) => QRDetailsScreen(
-                          tripDetails: _tripDetails,
+                          tripDetails: getTripDetailsForSelectedDate(),
                         ),
                       ),
                     );

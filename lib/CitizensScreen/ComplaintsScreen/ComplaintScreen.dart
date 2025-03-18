@@ -208,7 +208,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
 
     if (confirmDelete == true) {
       setState(() {
-        imageData.removeAt(index); 
+        imageData.removeAt(index);
       });
     }
   }
@@ -228,8 +228,8 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
         return StatefulBuilder(
           builder: (context, setModalState) {
             return DraggableScrollableSheet(
-              initialChildSize: 0.7, 
-              minChildSize: 0.7, 
+              initialChildSize: 0.7,
+              minChildSize: 0.7,
               maxChildSize: 0.7,
               expand: false,
               builder: (_, controller) => Column(
@@ -238,7 +238,8 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 12.0),
                     child: Text(
                       title,
-                      style:TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),
                   Divider(),
