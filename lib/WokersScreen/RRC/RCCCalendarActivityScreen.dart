@@ -493,14 +493,6 @@ class BeforeAfterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final createdAt = DateTime.parse(activities[0]['created_at']).toLocal();
-    String createdAttime =
-        '${createdAt.hour}:${createdAt.minute}:${createdAt.second}';
-
-    final updated_at = DateTime.parse(activities[0]['updated_at']).toLocal();
-    String updated_attime =
-        '${updated_at.hour}:${updated_at.minute}:${updated_at.second}';
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Before & After'),
@@ -590,7 +582,7 @@ class BeforeAfterScreen extends StatelessWidget {
                                 activity['before_image'],
                                 activity['latitude_before'] ?? 0.0,
                                 activity['longitude_before'] ?? 0.0,
-                                createdAttime,
+                                '${DateTime.parse(activity['created_at']).toLocal().hour}:${DateTime.parse(activity['created_at']).toLocal().minute}:${DateTime.parse(activity['created_at']).toLocal().second}',
                               );
                             },
                             child: Stack(
@@ -635,7 +627,7 @@ class BeforeAfterScreen extends StatelessWidget {
                                 activity['after_image'],
                                 activity['latitude_after'] ?? 0.0,
                                 activity['longitude_after'] ?? 0.0,
-                                updated_attime,
+                                '${DateTime.parse(activity['updated_at']).toLocal().hour}:${DateTime.parse(activity['updated_at']).toLocal().minute}:${DateTime.parse(activity['updated_at']).toLocal().second}',
                               );
                             },
                             child: Stack(
@@ -662,7 +654,7 @@ class BeforeAfterScreen extends StatelessWidget {
                                         horizontal: 6, vertical: 3),
                                     color: Colors.black54,
                                     child: Text(
-                                      '${DateTime.parse(activity['updated_at']).toLocal().hour}:${DateTime.parse(activity['updated_at']).toLocal().minute}:${DateTime.parse(activity['created_at']).toLocal().second}',
+                                      '${DateTime.parse(activity['updated_at']).toLocal().hour}:${DateTime.parse(activity['updated_at']).toLocal().minute}:${DateTime.parse(activity['updated_at']).toLocal().second}',
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 12,

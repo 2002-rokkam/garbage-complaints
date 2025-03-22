@@ -76,9 +76,16 @@ class _RegionSelectorState extends State<RegionSelector> {
 
   Future<void> fetchGramPanchayats(
       String selectedDistrict, String selectedBlock) async {
+        print("District: $selectedDistrict, Block: $selectedBlock");
+
+        String formattedBlock = selectedBlock.replaceAllMapped(RegExp(r' (\w)'), (match) {
+          return ' ${match.group(1)?.toUpperCase()}';
+        });
+
+      print("Formatted Block: $formattedBlock");
     try {
       final response = await http.get(
-          Uri.parse('$gpUrl?district=$selectedDistrict&block=$selectedBlock'));
+          Uri.parse('$gpUrl?district=$selectedDistrict&block=$formattedBlock'));
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
         if (data['district'] == selectedDistrict) {

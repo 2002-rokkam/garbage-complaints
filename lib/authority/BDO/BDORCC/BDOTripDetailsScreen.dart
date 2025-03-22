@@ -1,12 +1,23 @@
 // authority/BDO/BDORCC/BDOTripDetailsScreen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
 
 class BDOTripDetailsScreen extends StatelessWidget {
   final List tripDetails;
 
   const BDOTripDetailsScreen({Key? key, required this.tripDetails})
       : super(key: key);
+
+  String _formatLocalTime(String dateTimeString) {
+    try {
+      DateTime utcTime = DateTime.parse(dateTimeString).toUtc();
+      DateTime localTime = utcTime.toLocal();
+      return DateFormat('yyyy-MM-dd hh:mm a').format(localTime);
+    } catch (e) {
+      return 'Invalid Date';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,8 +88,8 @@ class BDOTripDetailsScreen extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: 8),
-                          Text(
-                            'Date: ${trip['date_time']}',
+                          Text(                         
+                            'Date: ${_formatLocalTime(trip['date_time'])}', 
                             style: TextStyle(
                               color: Color(0xFF252525),
                               fontSize: 14,

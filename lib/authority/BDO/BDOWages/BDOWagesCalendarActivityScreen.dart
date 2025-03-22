@@ -256,7 +256,7 @@ class _BDOWagesCalendarActivityScreenState
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    DateFormat('HH:mm:ss, d/M/yyyy').format(
+                                    DateFormat('HH:mm:ss, dd/MM/yyyy').format(
                                         DateTime.parse(activity['date_time'])),
                                     style: TextStyle(
                                       color: Color(0xFF252525),

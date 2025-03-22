@@ -1,5 +1,6 @@
 // main.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/OnboardingAnimation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -79,7 +80,7 @@ class _MyAppState extends State<MyApp> {
     } else if (widget.userId != null && widget.position != null) {
       home = determinePageBasedOnPosition(widget.position);
     } else {
-      home = OnboardingScreen(changeLanguage: _changeLanguage);
+      home = OnboardingAnimation(changeLanguage: _changeLanguage);
     }
 
     return MaterialApp(
@@ -113,7 +114,7 @@ class _MyAppState extends State<MyApp> {
       case 'Smd':
         return SMDScreen();
       default:
-        return OnboardingScreen(changeLanguage: _changeLanguage);
+        return OnboardingAnimation(changeLanguage: _changeLanguage);
     }
   }
 }

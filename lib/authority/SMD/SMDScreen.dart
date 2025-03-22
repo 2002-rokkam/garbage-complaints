@@ -97,7 +97,7 @@ class _SMDScreenState extends State<SMDScreen> {
     if (appbarselectedGramPanchayat == null ||
         appbarselectedGramPanchayat.isEmpty) {
       apiUrl =
-          'https://sbmgrajasthan.com/api/district-activity-count/?district=$district';
+          'https://sbmgrajasthan.com/api/state-activity-count/';
     } else {
       apiUrl =
           'https://sbmgrajasthan.com/api/gp-activity-count/?district=$district&gp=$appbarselectedGramPanchayat';
