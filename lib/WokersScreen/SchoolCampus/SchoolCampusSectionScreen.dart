@@ -143,6 +143,24 @@ class _SchoolCampusSectionScreenState extends State<SchoolCampusSectionScreen>
   }
 
   void addNewContainer() {
+    // Check if any container has initialData = null
+    bool hasEmptyContainer = beforeAfterContainers.any((container) {
+      if (container is BeforeAfterContainer) {
+        return container.initialData == null;
+      }
+      return false;
+    });
+
+    if (hasEmptyContainer) {
+      // Show a message or prevent adding a new container
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Cannot add a new container while one is incomplete.'),
+        ),
+      );
+      return;
+    }
+
     setState(() {
       beforeAfterContainers.add(BeforeAfterContainer(
         section: widget.section,
@@ -151,6 +169,16 @@ class _SchoolCampusSectionScreenState extends State<SchoolCampusSectionScreen>
       ));
     });
   }
+
+  // void addNewContainer() {
+  //   setState(() {
+  //     beforeAfterContainers.add(BeforeAfterContainer(
+  //       section: widget.section,
+  //       initialData: null,
+  //       onReload: _fetchActivities,
+  //     ));
+  //   });
+  // }
 
   void addToiletContainer() {
     setState(() {

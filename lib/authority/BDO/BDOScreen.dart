@@ -32,11 +32,26 @@ class _BDOScreenState extends State<BDOScreen> {
   Map<String, int> activityCounts = {};
   String? appbarselectedGramPanchayat;
   String? District;
+  late PageController _pageController;
+  late Timer _timer;
 
   @override
   void initState() {
     _loadLanguagePreference();
     super.initState();
+
+     _pageController = PageController(initialPage: 0);
+    _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
+      if (_pageController.hasClients) {
+        int nextPage = (_pageController.page!.toInt() + 1) % 3;
+        _pageController.animateToPage(
+          nextPage,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+
     fetchData();
     fetchActivityCounts();
     SharedPreferences.getInstance().then((prefs) {
@@ -46,6 +61,13 @@ class _BDOScreenState extends State<BDOScreen> {
         District = prefs.getString('District');
       });
     });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    _pageController.dispose();
+    super.dispose();
   }
 
   void _loadLanguagePreference() async {
@@ -230,7 +252,7 @@ class _BDOScreenState extends State<BDOScreen> {
                                   borderRadius: BorderRadius.circular(12.0),
                                 ),
                                 child: Container(
-                                  height: 400,
+                                  height: 500,
                                   padding: EdgeInsets.all(16.0),
                                   child: RegionSelector(),
                                 ),
@@ -315,12 +337,26 @@ class _BDOScreenState extends State<BDOScreen> {
                         child: Padding(
                           padding: const EdgeInsets.only(top: 16.0),
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(16),
-                            child: Image.asset(
-                              'assets/images/mainimage.png',
+                            borderRadius: BorderRadius.circular(
+                                16), // Rounded corners for the carousel
+                            child: SizedBox(
                               width: MediaQuery.of(context).size.width * 0.9,
                               height: 150,
-                              fit: BoxFit.cover,
+                              child: PageView.builder(
+                                controller: _pageController,
+                                itemCount: 3, // Number of images
+                                itemBuilder: (context, index) {
+                                  final images = [
+                                    'assets/images/m1.png',
+                                    'assets/images/m2.png',
+                                    'assets/images/m3.png',
+                                  ];
+                                  return Image.asset(
+                                    images[index],
+                                    fit: BoxFit.cover,
+                                  );
+                                },
+                              ),
                             ),
                           ),
                         ),
@@ -445,7 +481,7 @@ class _BDOScreenState extends State<BDOScreen> {
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
                                   child: Container(
-                                    height: 400,
+                                    height: 500,
                                     padding: EdgeInsets.all(16.0),
                                     child: RegionSelector(),
                                   ),
@@ -552,7 +588,7 @@ class _BDOScreenState extends State<BDOScreen> {
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
                                   child: Container(
-                                    height: 400, // Adjust height as needed
+                                    height: 500, // Adjust height as needed
                                     padding: EdgeInsets.all(16.0),
                                     child: RegionSelector(),
                                   ),
@@ -689,20 +725,8 @@ class _BDOScreenState extends State<BDOScreen> {
     );
   }
 
-  Widget _buildImageContainer(String imageUrl) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      child: Image.asset(
-        imageUrl,
-        fit: BoxFit.cover,
-      ),
+ 
 
-      height: MediaQuery.of(context).size.height *
-          0.3, // Adjust height based on screen size
-      width: MediaQuery.of(context).size.width *
-          0.8, // Adjust width based on screen size
-    );
-  }
 
   void _navigateToPage(String routeName, BuildContext context) async {
     Widget page = await _getPage(routeName, context);
@@ -803,7 +827,7 @@ class _BDOScreenState extends State<BDOScreen> {
             borderRadius: BorderRadius.circular(12.0),
           ),
           child: Container(
-            height: 400, // Adjust height as needed
+            height: 500, // Adjust height as needed
             padding: EdgeInsets.all(16.0),
             child: RegionSelector(),
           ),

@@ -96,7 +96,25 @@ class _D2DSectionScreenState extends State<D2DSectionScreen>
     }
   }
 
-  void addNewContainer() {
+void addNewContainer() {
+    // Check if any container has initialData = null
+    bool hasEmptyContainer = beforeAfterContainers.any((container) {
+      if (container is D2DBeforeAfterContainer) {
+        return container.initialData == null;
+      }
+      return false;
+    });
+
+    if (hasEmptyContainer) {
+      // Show a message or prevent adding a new container
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Cannot add a new container while one is incomplete.'),
+        ),
+      );
+      return;
+    }
+
     setState(() {
       beforeAfterContainers.add(D2DBeforeAfterContainer(
         section: widget.section,
@@ -105,6 +123,16 @@ class _D2DSectionScreenState extends State<D2DSectionScreen>
       ));
     });
   }
+
+  // void addNewContainer() {
+  //   setState(() {
+  //     beforeAfterContainers.add(D2DBeforeAfterContainer(
+  //       section: widget.section,
+  //       initialData: null,
+  //       onReload: _fetchActivities,
+  //     ));
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {

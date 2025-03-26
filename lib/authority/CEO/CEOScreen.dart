@@ -32,10 +32,24 @@ class _CEOScreenState extends State<CEOScreen> {
   late Locale _locale;
   String? appbarselectedGramPanchayat;
   String? District;
+  late PageController _pageController;
+  late Timer _timer;
 
   @override
   void initState() {
     super.initState();
+     _pageController = PageController(initialPage: 0);
+    _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
+      if (_pageController.hasClients) {
+        int nextPage = (_pageController.page!.toInt() + 1) % 3;
+        _pageController.animateToPage(
+          nextPage,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+
     fetchData();
     fetchActivityCounts();
     _loadLanguagePreference();
@@ -48,6 +62,12 @@ class _CEOScreenState extends State<CEOScreen> {
     });
   }
 
+@override
+  void dispose() {
+    _timer.cancel();
+    _pageController.dispose();
+    super.dispose();
+  }
   void _loadLanguagePreference() async {
     final prefs = await SharedPreferences.getInstance();
     String? languageCode = prefs.getString('language') ?? 'en';
@@ -311,12 +331,26 @@ class _CEOScreenState extends State<CEOScreen> {
                         child: Padding(
                           padding: const EdgeInsets.only(top: 16.0),
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(16),
-                            child: Image.asset(
-                              'assets/images/mainimage.png',
+                            borderRadius: BorderRadius.circular(
+                                16), // Rounded corners for the carousel
+                            child: SizedBox(
                               width: MediaQuery.of(context).size.width * 0.9,
                               height: 150,
-                              fit: BoxFit.cover,
+                              child: PageView.builder(
+                                controller: _pageController,
+                                itemCount: 3, // Number of images
+                                itemBuilder: (context, index) {
+                                  final images = [
+                                    'assets/images/m1.png',
+                                    'assets/images/m2.png',
+                                    'assets/images/m3.png',
+                                  ];
+                                  return Image.asset(
+                                    images[index],
+                                    fit: BoxFit.cover,
+                                  );
+                                },
+                              ),
                             ),
                           ),
                         ),
@@ -695,20 +729,6 @@ class _CEOScreenState extends State<CEOScreen> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildImageContainer(String imageUrl) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      child: Image.asset(
-        imageUrl,
-        fit: BoxFit.cover,
-      ),
-      height: MediaQuery.of(context).size.height *
-          0.3, // Adjust height based on screen size
-      width: MediaQuery.of(context).size.width *
-          0.8, // Adjust width based on screen size
     );
   }
 

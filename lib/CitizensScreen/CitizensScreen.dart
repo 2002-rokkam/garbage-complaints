@@ -1,4 +1,6 @@
 // CitizensScreen/CitizensScreen.dart
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_application_2/PoweredByBikaji.dart';
@@ -66,10 +68,31 @@ class _CitizensScreenState extends State<CitizensScreen> {
     });
   }
 
+    late PageController _pageController;
+    late Timer _timer;
   @override
   void initState() {
     super.initState();
+     _pageController = PageController(initialPage: 0);
+    _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
+      if (_pageController.hasClients) {
+        int nextPage = (_pageController.page!.toInt() + 1) % 3;
+        _pageController.animateToPage(
+          nextPage,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+
     _loadLanguagePreference();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    _pageController.dispose();
+    super.dispose();
   }
 
   void _onItemTapped(int index) {
@@ -121,12 +144,25 @@ class _CitizensScreenState extends State<CitizensScreen> {
                       padding: const EdgeInsets.only(top: 16.0),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(
-                            16), // Rounded corners for the image
-                        child: Image.asset(
-                          'assets/images/mainimage.png', // Path to your asset image
+                            16), // Rounded corners for the carousel
+                        child: SizedBox(
                           width: MediaQuery.of(context).size.width * 0.9,
                           height: 150,
-                          fit: BoxFit.cover,
+                          child: PageView.builder(
+                            controller: _pageController,
+                            itemCount: 3, // Number of images
+                            itemBuilder: (context, index) {
+                              final images = [
+                                'assets/images/m1.png',
+                                'assets/images/m2.png',
+                                'assets/images/m3.png',
+                              ];
+                              return Image.asset(
+                                images[index],
+                                fit: BoxFit.cover,
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ),
@@ -413,16 +449,7 @@ class _CitizensScreenState extends State<CitizensScreen> {
     );
   }
 
-  Widget _buildImageContainer(String imageUrl) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      child: Image.asset(
-        imageUrl,
-        fit: BoxFit.cover,
-      ),
-    );
-  }
-
+ 
   Widget _buildButton(String label, String imageUrl, String routeName,
       String number, BuildContext context) {
     return Container(

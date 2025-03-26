@@ -69,6 +69,24 @@ class _AnimalScreenState extends State<AnimalScreen> {
   }
 
   void addNewContainer() {
+    // Check if any container has initialData = null
+    bool hasEmptyContainer = beforeAfterContainers.any((container) {
+      if (container is AnimalScreenBeforeAfterContainer) {
+        return container.initialData == null;
+      }
+      return false;
+    });
+
+    if (hasEmptyContainer) {
+      // Show a message or prevent adding a new container
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Cannot add a new container while one is incomplete.'),
+        ),
+      );
+      return;
+    }
+
     setState(() {
       beforeAfterContainers.add(AnimalScreenBeforeAfterContainer(
         section: widget.section,
@@ -77,6 +95,16 @@ class _AnimalScreenState extends State<AnimalScreen> {
       ));
     });
   }
+
+  // void addNewContainer() {
+  //   setState(() {
+  //     beforeAfterContainers.add(AnimalScreenBeforeAfterContainer(
+  //       section: widget.section,
+  //       initialData: null,
+  //       onReload: _fetchActivities,
+  //     ));
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {

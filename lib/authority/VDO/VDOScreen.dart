@@ -39,9 +39,32 @@ class _VDOScreenState extends State<VDOScreen> {
     });
   }
 
+    late PageController _pageController;
+    late Timer _timer;
+
+
   @override
   void initState() {
     super.initState();
+    _pageController = PageController(initialPage: 0);
+    _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
+      if (_pageController.hasClients) {
+        int nextPage = (_pageController.page!.toInt() + 1) % 3;
+        _pageController.animateToPage(
+          nextPage,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+
+    @override
+    void dispose() {
+      _timer.cancel();
+      _pageController.dispose();
+      super.dispose();
+    }
+
     fetchData();
     fetchActivityCounts();
     _loadLanguagePreference();
@@ -264,16 +287,31 @@ class _VDOScreenState extends State<VDOScreen> {
                   ),
                   Column(
                     children: [
+                    
                       Center(
                         child: Padding(
                           padding: const EdgeInsets.only(top: 16.0),
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(16),
-                            child: Image.asset(
-                              'assets/images/mainimage.png',
+                            borderRadius: BorderRadius.circular(
+                                16), // Rounded corners for the carousel
+                            child: SizedBox(
                               width: MediaQuery.of(context).size.width * 0.9,
                               height: 150,
-                              fit: BoxFit.cover,
+                              child: PageView.builder(
+                                controller: _pageController,
+                                itemCount: 3, // Number of images
+                                itemBuilder: (context, index) {
+                                  final images = [
+                                    'assets/images/m1.png',
+                                    'assets/images/m2.png',
+                                    'assets/images/m3.png',
+                                  ];
+                                  return Image.asset(
+                                    images[index],
+                                    fit: BoxFit.cover,
+                                  );
+                                },
+                              ),
                             ),
                           ),
                         ),
@@ -580,18 +618,7 @@ class _VDOScreenState extends State<VDOScreen> {
     );
   }
 
-  Widget _buildImageContainer(String imageUrl) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      child: Image.asset(
-        imageUrl,
-        fit: BoxFit.cover,
-      ),
-      height: MediaQuery.of(context).size.height * 0.3,
-      width: MediaQuery.of(context).size.width * 0.8,
-    );
-  }
-
+ 
   Widget _buildButton(String label, String imageUrl, String routeName,
       String number, BuildContext context) {
     return GestureDetector(

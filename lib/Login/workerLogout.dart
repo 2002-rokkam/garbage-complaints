@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart'; // Import url_launcher package
 
+import '../OnboardingAnimation.dart';
 import '../onBoardingPage1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -133,7 +134,7 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        OnboardingScreen(changeLanguage: (Locale locale) {})),
+                        OnboardingAnimation(changeLanguage: (Locale locale) {})),
                 (Route<dynamic> route) => false, // Prevent going back
               );
             },
