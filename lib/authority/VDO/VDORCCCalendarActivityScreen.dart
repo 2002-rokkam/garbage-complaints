@@ -129,7 +129,7 @@ class _VDORCCCalendarActivityScreenState
   Widget build(BuildContext context) {
     final selectedActivities = getActivitiesForSelectedDate();
     final selectedTrips = getTripDetailsForSelectedDate();
-
+    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -148,7 +148,7 @@ class _VDORCCCalendarActivityScreenState
           indicatorColor: Color.fromRGBO(255, 210, 98, 1),
           indicatorWeight: 3.0,
           tabs: [
-            Tab(text: 'Before & After'),
+            Tab(text: localizations.beforeAfter),
             Tab(text: 'Trip Details'),
           ],
         ),
@@ -279,7 +279,7 @@ class TripDetailsScreen extends StatelessWidget {
   const TripDetailsScreen({Key? key, required this.tripDetails})
       : super(key: key);
 
-   String _formatLocalTime(String dateTimeString) {
+  String _formatLocalTime(String dateTimeString) {
     try {
       DateTime utcTime = DateTime.parse(dateTimeString).toUtc();
       DateTime localTime = utcTime.toLocal();

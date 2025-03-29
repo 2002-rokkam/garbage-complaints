@@ -126,9 +126,10 @@ class VDOBeforeAfterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   return Scaffold(
+    final localizations = AppLocalizations.of(context)!;
+    return Scaffold(
       appBar: AppBar(
-        title: Text('Before & After'),
+        title: Text(localizations.beforeAfter),
         backgroundColor: Color(0xFF5C964A),
       ),
       body: SingleChildScrollView(
@@ -248,7 +249,7 @@ class VDOBeforeAfterScreen extends StatelessWidget {
                                 activity['after_image'],
                                 activity['latitude_after'] ?? 0.0,
                                 activity['longitude_after'] ?? 0.0,
-                                 '${DateTime.parse(activity['updated_at']).toLocal().hour}:${DateTime.parse(activity['updated_at']).toLocal().minute}:${DateTime.parse(activity['updated_at']).toLocal().second}',
+                                '${DateTime.parse(activity['updated_at']).toLocal().hour}:${DateTime.parse(activity['updated_at']).toLocal().minute}:${DateTime.parse(activity['updated_at']).toLocal().second}',
                               );
                             },
                             child: Stack(

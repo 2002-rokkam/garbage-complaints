@@ -119,7 +119,7 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
   Widget build(BuildContext context) {
     final selectedActivities = getActivitiesForSelectedDate();
     final selectedTrips = getTripDetailsForSelectedDate();
-
+    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -138,7 +138,7 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
           indicatorColor: Color.fromRGBO(255, 210, 98, 1),
           indicatorWeight: 3.0,
           tabs: [
-            Tab(text: 'Before & After'),
+            Tab(text: localizations.beforeAfter),
             Tab(text: 'Trip Details'),
           ],
         ),
@@ -493,9 +493,10 @@ class BeforeAfterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Before & After'),
+        title: Text(localizations.beforeAfter),
         backgroundColor: Color(0xFF5C964A),
       ),
       body: SingleChildScrollView(

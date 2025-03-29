@@ -161,6 +161,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
   }
 
   void _showImagePopup() {
+    final localizations = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -210,7 +211,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                     style: ElevatedButton.styleFrom(
                       primary: Colors.green,
                     ),
-                    child: Text('Cancel'),
+                    child: Text(localizations.cancel),
                   ),
                 ],
               ),
@@ -686,7 +687,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                         }
                       },
                       child: Text(
-                        'Open Map',
+                        localizations.openMap,
                         style: TextStyle(
                             color: Color.fromRGBO(56, 102, 51, 1),
                             fontSize: 16),

@@ -24,12 +24,22 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
   final ImagePicker _picker = ImagePicker();
   final List<Map<String, dynamic>> imageData = [];
   bool isLoading = false; // Added loading state
+  late Locale _locale;
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     _loadTokenFromSharedPrefs();
     fetchDistricts();
+    _loadLanguagePreference();
   }
 
   Future<void> _loadTokenFromSharedPrefs() async {
@@ -155,7 +165,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
   Future<void> _pickImage() async {
     if (imageData.length >= 3) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("You can only capture up to 3 images.")),
+        const SnackBar(content: Text("You can only capture up to 2 images.")),
       );
       return;
     }
@@ -184,22 +194,22 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
     }
   }
 
-// 2. Delete Image with Confirmation Dialog
   Future<void> _deleteImage(int index) async {
     bool? confirmDelete = await showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
+        final localizations = AppLocalizations.of(context)!;
         return AlertDialog(
-          title: const Text('Confirm Deletion'),
-          content: const Text('Are you sure you want to delete this image?'),
+          title: Text(localizations.confirmDeletion),
+          content: Text(localizations.deleteImage),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('Cancel'),
+              child: Text(localizations.cancel),
             ),
             TextButton(
               onPressed: () => Navigator.pop(context, true),
-              child: const Text('Delete'),
+              child: Text(localizations.delete),
             ),
           ],
         );
@@ -217,7 +227,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
       String title, List<String> options, Function(String) onSelect) {
     TextEditingController searchController = TextEditingController();
     List<String> filteredOptions = List.from(options);
-
+     final localizations = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -248,7 +258,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                     child: TextField(
                       controller: searchController,
                       decoration: InputDecoration(
-                        hintText: "Search $title",
+                        hintText: "${localizations.search} $title",
                         prefixIcon: Icon(Icons.search),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -338,7 +348,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-
+    final localizations = AppLocalizations.of(context)!;
     return LayoutBuilder(
       builder: (context, constraints) {
         return Scaffold(
@@ -370,9 +380,9 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                         Navigator.pop(context);
                       },
                     ),
-                    const Expanded(
+                    Expanded(
                       child: Text(
-                        "      Click & Complaints",
+                        localizations.clickAndComplaints,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
@@ -392,7 +402,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'District',
+                    localizations.district,
                     style: TextStyle(
                       fontSize: constraints.maxWidth * 0.04,
                       fontWeight: FontWeight.w400,
@@ -402,7 +412,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                   const SizedBox(height: 8),
                   GestureDetector(
                     onTap: () => _showSheet(
-                      "Select District",
+                      localizations.selectDistrict,
                       districts,
                       (district) => setState(() {
                         selectedDistrict = district;
@@ -451,7 +461,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    'Gram Panchayat',
+                    localizations.gramPanchayat,
                     style: TextStyle(
                       fontSize: constraints.maxWidth * 0.04,
                       fontWeight: FontWeight.w400,
@@ -461,7 +471,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                   const SizedBox(height: 10),
                   GestureDetector(
                     onTap: () => _showSheet(
-                      "Select Gram Panchayat",
+                     localizations.selectGramPanchayat,
                       gramPanchayats,
                       (gp) => setState(() => selectedGP = gp),
                     ),
@@ -510,7 +520,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Description',
+                           localizations.description,
                           style: TextStyle(
                             fontSize: constraints.maxWidth * 0.04,
                             fontWeight: FontWeight.w400,
@@ -549,7 +559,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                                 borderSide: const BorderSide(
                                     color: Colors.grey, width: 1.0),
                               ),
-                              hintText: 'Add a description',
+                              hintText: localizations.addDescription,
                               hintStyle: TextStyle(
                                 color: const Color(0xFFA4A4A4),
                                 fontSize: constraints.maxWidth * 0.04,
@@ -596,8 +606,8 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                                 ),
                               ),
                               const SizedBox(height: 18),
-                              const Text(
-                                'Click and Complaints',
+                              Text(
+                                localizations.clickAndComplaints,
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 14,
@@ -616,8 +626,8 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         if (imageData.isNotEmpty) ...[
-                          const Text(
-                            "Preview Photos:",
+                          Text(
+                            localizations.previewPhotos,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 16),
                           ),
@@ -721,8 +731,8 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                                 vertical: 14, horizontal: 24),
                           ),
                           onPressed: submitComplaint,
-                          child: const Text(
-                            "Submit Complaint",
+                          child: Text(
+                            localizations.submitComplaint,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 14,

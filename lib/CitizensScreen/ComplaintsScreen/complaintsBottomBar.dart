@@ -1,24 +1,44 @@
 // CitizensScreen/ComplaintsScreen/complaintsBottomBar.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'ComplaintScreen.dart';
 import 'ViewComplaintsScreen.dart';
 
-class complaintsBottomBar extends StatelessWidget {
+class complaintsBottomBar extends StatefulWidget {
+  @override
+  _ComplaintsBottomBarState createState() => _ComplaintsBottomBarState();
+}
+
+class _ComplaintsBottomBarState extends State<complaintsBottomBar> {
+  late Locale _locale;
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLanguagePreference();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Color.fromRGBO(239, 239, 239, 1),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          // Added Padding to move "File Complaint" section down
           Padding(
-            padding:
-                const EdgeInsets.only(top: 30.0), // Adjust this value as needed
+            padding: const EdgeInsets.only(top: 30.0),
             child: GestureDetector(
               onTap: () {
-                // Navigate to the "File Complaint" screen
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => ComplaintScreen()),
@@ -41,13 +61,13 @@ class complaintsBottomBar extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Image.asset(
-                      'assets/images/camera-icn.png', // Replace with the correct path of your image
-                      width: 16, // Adjust size as needed
-                      height: 16, // Adjust size as needed
+                      'assets/images/camera-icn.png',
+                      width: 16,
+                      height: 16,
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      'File a Complaint',
+                      localizations.fileComplaint,
                       style: TextStyle(
                         color: Color(0xFF252525),
                         fontSize: 16,
@@ -90,7 +110,7 @@ class complaintsBottomBar extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    'Previous Complaint',
+                    localizations.previousComplaint,
                     style: TextStyle(
                       color: Color(0xFF252525),
                       fontSize: 16,

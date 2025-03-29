@@ -162,7 +162,7 @@ class _workerComplaintsScreenState extends State<workerComplaintsScreen> {
               : Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
-                    "No complaints available",
+                    localizations.noComplaints,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),

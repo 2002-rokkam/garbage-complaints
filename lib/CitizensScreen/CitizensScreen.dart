@@ -19,44 +19,47 @@ class CitizensScreen extends StatefulWidget {
 class _CitizensScreenState extends State<CitizensScreen> {
   int _selectedIndex = 0;
 
-  final List<Map<String, String>> buttonItems = [
+  List<Map<String, dynamic>> buttonItems(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    return [
     {
-      'label': 'Villages Cleaned',
+      'label': localizations.villagesCleaned,
       'imageUrl': 'assets/images/villages_cleaned.png',
       'route': 'DoorToDoorScreen',
       'number': '345'
     },
     {
-      'label': 'Swachhta Mitra',
+      'label': localizations.swachhtaMitra,
       'imageUrl': 'assets/images/group-discussion 1.png',
       'route': 'RoadSweepingScreen',
       'number': '150'
     },
     {
-      'label': 'Homes and Shops Cleaned',
+      'label': localizations.homesShopsCleaned,
       'imageUrl': 'assets/images/shop.png',
       'route': 'DrainCleaningScreen',
       'number': '200'
     },
     {
-      'label': 'Roads Cleaned',
+      'label': localizations.roadsCleaned,
       'imageUrl': 'assets/images/road_sweeping.png',
       'route': 'CSCScreen',
       'number': '120'
     },
     {
-      'label': 'Dumping Yard',
+      'label': localizations.dumpingYard,
       'imageUrl': 'assets/images/Dumping-Yard.png',
       'route': 'RRCScreen',
       'number': '95'
     },
     {
-      'label': 'Garbage Dumped',
+      'label': localizations.garbageDumped,
       'imageUrl': 'assets/images/Garbage_Dumped.png',
       'route': 'WagesScreen',
       'number': '75'
     },
   ];
+  }
 
   late Locale _locale;
 
@@ -207,7 +210,7 @@ class _CitizensScreenState extends State<CitizensScreen> {
                       Transform.translate(
                         offset: Offset(0, -8),
                         child: Text(
-                          'Click and Complaints',
+                          localizations.clickAndComplaints,
                           style: TextStyle(
                             fontSize: screenWidth < 600 ? 10 : 12,
                             fontWeight: FontWeight.bold,
@@ -232,7 +235,7 @@ class _CitizensScreenState extends State<CitizensScreen> {
                   child: Wrap(
                     spacing: 1,
                     runSpacing: 16,
-                    children: buttonItems.map((item) {
+                    children: buttonItems(context).map((item) {
                       return _buildButton(
                         item['label']!,
                         item['imageUrl']!,
@@ -312,7 +315,7 @@ class _CitizensScreenState extends State<CitizensScreen> {
                             ),
                             const SizedBox(height: 10),
                             Text(
-                              ' Help line ',
+                              localizations.helpLine,
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 16,
@@ -402,11 +405,11 @@ class _CitizensScreenState extends State<CitizensScreen> {
     );
   }
 
-  String appBarTitle = 'SBMG Rajasthan';
+ 
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-
+    String appBarTitle = localizations.sbmgRajasthan;
     return WillPopScope(
       onWillPop: () async {
         return false;

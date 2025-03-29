@@ -81,12 +81,22 @@ class _ComplaintCardState extends State<ComplaintCard> {
   double? _latitude;
   double? _longitude;
   late String workerId;
+  late Locale _locale;
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     _fetchAddress();
     _loadWorkerDetails();
+    _loadLanguagePreference();
   }
 
   Future<void> _fetchAddress() async {
@@ -141,6 +151,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
   }
 
   void _showImagePopup() {
+    final localizations = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -176,7 +187,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                         _imageFile = null; // Clear the image
                       });
                     },
-                    child: Text('Cancel'),
+                    child: Text(localizations.cancel),
                   ),
                 ],
               ),
@@ -245,7 +256,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
   void _showResolvedPhoto(Map<String, dynamic>? resolvedPhoto) {
     if (resolvedPhoto != null && resolvedPhoto['image'] != null) {
       final imageUrl = '${resolvedPhoto['image']}';
-
+      final localizations = AppLocalizations.of(context)!;
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -412,6 +423,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
   }
 
   void _showVerifyConfirmation(String complaintId) {
+    final localizations = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -505,7 +517,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
     final dirlatitude = widget.complaint['photos'][0]['latitude'];
     final dirlongitude = widget.complaint['photos'][0]['longitude'];
     String time = '${createdAt.hour}:${createdAt.minute}:${createdAt.second}';
-
+    final localizations = AppLocalizations.of(context)!;
     int activeIndex = 0;
     final PageController _pageController = PageController();
 
@@ -665,7 +677,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                         }
                       },
                       child: Text(
-                        'Open Map',
+                        localizations.openMap,
                         style: TextStyle(
                             color: Color.fromRGBO(56, 102, 51, 1),
                             fontSize: 16),
@@ -708,7 +720,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                           child: TextButton(
                             onPressed: () => _showResolvedPhoto(resolvedPhoto),
                             child: Text(
-                              'View Reply',
+                              localizations.viewReply,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 14,

@@ -1,7 +1,6 @@
 // OnboardingAnimation.dart
 import 'package:flutter/material.dart';
-import 'Login/PhoneAuthScreen.dart';
-
+import 'package:flutter_application_2/LanguageSelectionScreen.dart';
 
 class OnboardingAnimation extends StatefulWidget {
   final Function(Locale) changeLanguage;
@@ -61,10 +60,10 @@ class _OnboardingAnimationState extends State<OnboardingAnimation> with TickerPr
     Future.delayed(const Duration(seconds: 6), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const PhoneInputScreen()),
-        //  LanguageSelectionScreen(
-        //           changeLanguage: widget.changeLanguage,
-        //         )));
+        MaterialPageRoute(builder: (context) =>
+         LanguageSelectionScreen(
+                  changeLanguage: widget.changeLanguage,
+                ))
       );
     });
 

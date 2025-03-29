@@ -18,9 +18,25 @@ class WorkerSettingsPage extends StatefulWidget {
 
 class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
   bool isLoggingOut = false;
+  late Locale _locale;
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLanguagePreference();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -107,6 +123,7 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
 
   // Show confirmation dialog
   void showLogoutConfirmationDialog(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -117,7 +134,7 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
             onPressed: () {
               Navigator.pop(context); // Close the dialog without logging out
             },
-            child: Text('Cancel'),
+            child: Text(localizations.cancel),
           ),
           TextButton(
             onPressed: () async {
@@ -133,8 +150,8 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        OnboardingAnimation(changeLanguage: (Locale locale) {})),
+                    builder: (context) => OnboardingAnimation(
+                        changeLanguage: (Locale locale) {})),
                 (Route<dynamic> route) => false, // Prevent going back
               );
             },

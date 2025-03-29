@@ -36,7 +36,9 @@ ngrok.exe http 8000
  
       final localizations = AppLocalizations.of(context)!;
      
-     localizations.info_not_shared
+     localizations.viewReply
+
+
 
       Center(
                 child: Image.asset(

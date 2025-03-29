@@ -80,12 +80,22 @@ class _ComplaintCardState extends State<ComplaintCard> {
   double? _latitude;
   double? _longitude;
   late String workerId;
+  late Locale _locale;
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     _fetchAddress();
     _loadWorkerDetails();
+    _loadLanguagePreference();
   }
 
   Future<void> _fetchAddress() async {
@@ -221,7 +231,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
     print(formData);
     try {
       Response response = await dio.post(
-        'https://sbmgrajasthan.com/api/update-complaint/${widget.complaint['complaint_id']}',
+        'https://6f15-122-172-86-114.ngrok-free.app/api/update-complaint/${widget.complaint['complaint_id']}',
         data: formData,
       );
 
@@ -364,7 +374,6 @@ class _ComplaintCardState extends State<ComplaintCard> {
                       ],
                     ),
                   ),
-                  // Location (Latitude & Longitude) below the time
                   Container(
                     width: 370,
                     height: 45,
@@ -424,7 +433,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
     final resolvedPhoto = widget.complaint['resolved_photo'];
     final dirlatitude = widget.complaint['photos'][0]['latitude'];
     final dirlongitude = widget.complaint['photos'][0]['longitude'];
-
+    final localizations = AppLocalizations.of(context)!;
     String time = '${createdAt.hour}:${createdAt.minute}:${createdAt.second}';
     int activeIndex = 0;
     final PageController _pageController = PageController();
@@ -549,7 +558,6 @@ class _ComplaintCardState extends State<ComplaintCard> {
             ),
           ),
           SizedBox(height: 8),
-          // Location and Caption
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 12.0),
             child: Column(
@@ -570,7 +578,6 @@ class _ComplaintCardState extends State<ComplaintCard> {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    // Location Redirect Icon
                     TextButton(
                       onPressed: () {
                         if (dirlatitude != null && dirlongitude != null) {
@@ -584,7 +591,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                         }
                       },
                       child: Text(
-                        'Open Map',
+                        localizations.openMap,
                         style: TextStyle(
                             color: Color.fromRGBO(56, 102, 51, 1),
                             fontSize: 16),
@@ -626,7 +633,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                     child: TextButton(
                       onPressed: () => _showResolvedPhoto(resolvedPhoto),
                       child: Text(
-                        'View Reply',
+                        localizations.viewReply,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 14,

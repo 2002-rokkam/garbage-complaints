@@ -1,9 +1,31 @@
 // CitizensScreen/ComplaintsScreen/ComplaintRegisterScreen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../CitizensScreen.dart';
 
-class ComplaintRegisterScreen extends StatelessWidget {
+class ComplaintRegisterScreen extends StatefulWidget {
+  @override
+  _ComplaintRegisterScreenState createState() =>
+      _ComplaintRegisterScreenState();
+}
+
+class _ComplaintRegisterScreenState extends State<ComplaintRegisterScreen> {
+  late Locale _locale;
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLanguagePreference();
+  }
   @override
   Widget build(BuildContext context) {
     // Get screen size
@@ -109,7 +131,7 @@ class ComplaintRegisterScreen extends StatelessWidget {
               child: SizedBox(
                 width: 244,
                 child: Text(
-                  'Your complaint has been filed',
+                  localizations.complaintFiled,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.black.withOpacity(0.6),
@@ -163,7 +185,7 @@ class ComplaintRegisterScreen extends StatelessWidget {
                   ),
                   child: Center(
                     child: Text(
-                      'Back',
+                      localizations.back,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.white,

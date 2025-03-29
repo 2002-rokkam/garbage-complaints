@@ -22,12 +22,22 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
   List<dynamic> resolvedComplaints = [];
   late TabController _tabController;
   late String _idToken;
+  late Locale _locale;
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     _loadTokenFromSharedPrefs();
     _tabController = TabController(length: 2, vsync: this);
+    _loadLanguagePreference();
   }
 
   Future<void> _loadTokenFromSharedPrefs() async {
@@ -89,6 +99,7 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -101,9 +112,9 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
             unselectedLabelColor: Colors.white,
             indicatorColor: Color.fromRGBO(255, 210, 98, 1),
             indicatorWeight: 3.0,
-            tabs: const [
-              Tab(text: 'Pending'),
-              Tab(text: 'Resolved'),
+            tabs: [
+              Tab(text: localizations.pending),
+              Tab(text: localizations.resolved),
             ],
           ),
         ),
@@ -128,9 +139,10 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
   }
 
   Widget buildComplaintsList(List complaints) {
+    final localizations = AppLocalizations.of(context)!;
     if (complaints.isEmpty) {
       return Center(
-        child: Text('No complaints available.'),
+        child: Text(localizations.noComplaints),
       );
     }
     return ListView.builder(
@@ -146,7 +158,8 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
         .format(DateTime.parse(complaint['created_at']));
     List<dynamic> images = complaint['photos'];
     final PageController _pageController = PageController();
-
+    final localizations = AppLocalizations.of(context)!;
+    
     return Card(
       margin: EdgeInsets.all(10),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -210,7 +223,7 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
             TextButton(
               onPressed: () => _showResolvedPopup(complaint),
               child: Text(
-                'View Reply',
+                localizations.viewReply,
                 style: TextStyle(
                   color: Color(0xFF5C964A),
                   fontWeight: FontWeight.bold,

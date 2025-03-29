@@ -169,7 +169,7 @@ class _VDOD2DCalnderActivityScreenState
   @override
   Widget build(BuildContext context) {
     final isBeforeAfterTab = _tabController.index == 0;
-
+    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.section),
@@ -181,7 +181,7 @@ class _VDOD2DCalnderActivityScreenState
           indicatorColor: Color.fromRGBO(255, 210, 98, 1),
           indicatorWeight: 3.0,
           tabs: [
-            Tab(text: 'Before & After'),
+            Tab(text: localizations.beforeAfter),
             Tab(text: 'Scan QR'),
           ],
         ),
