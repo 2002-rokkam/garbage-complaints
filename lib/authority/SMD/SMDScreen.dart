@@ -30,6 +30,8 @@ class _SMDScreenState extends State<SMDScreen> {
   Map<String, int> activityCounts = {};
   late Locale _locale;
   String? appbarselectedGramPanchayat;
+  String? appbarselectedBlock;
+  String? appbarselectedDistrict;
   String? District;
   late PageController _pageController;
   late Timer _timer;
@@ -56,6 +58,8 @@ class _SMDScreenState extends State<SMDScreen> {
       setState(() {
         appbarselectedGramPanchayat =
             prefs.getString('appbarselectedGramPanchayat');
+        appbarselectedBlock = prefs.getString('appbarselectedBlock');
+        appbarselectedDistrict = prefs.getString('appbarselectedDistrict');
         District = prefs.getString('District');
       });
     });
@@ -77,22 +81,34 @@ class _SMDScreenState extends State<SMDScreen> {
 
   Future<void> fetchData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? District = prefs.getString('District');
-    String? appbarselectedGramPanchayat =
-        prefs.getString('appbarselectedGramPanchayat');
+    String? appbarselectedGramPanchayat = prefs.getString('appbarselectedGramPanchayat');
+    String? appbarselectedBlock = prefs.getString('appbarselectedBlock');
+    String? appbarselectedDistrict = prefs.getString('appbarselectedDistrict');
+    print("data");
+    print(appbarselectedGramPanchayat);
+    print(appbarselectedBlock);
+    print(appbarselectedDistrict);
     String apiUrl;
 
-    if (appbarselectedGramPanchayat == null ||
-        appbarselectedGramPanchayat.isEmpty) {
-      apiUrl =
-          'https://sbmgrajasthan.com/api/complaints-by-state/';
+    if ((appbarselectedGramPanchayat == null || appbarselectedGramPanchayat.isEmpty) &&
+        (appbarselectedBlock == null || appbarselectedBlock.isEmpty) &&
+        (appbarselectedDistrict == null || appbarselectedDistrict.isEmpty)) {
+      apiUrl = 'https://sbmgrajasthan.com/api/complaints-by-state/';
+      print("1");
+    } else if ((appbarselectedGramPanchayat == null || appbarselectedGramPanchayat.isEmpty) &&
+               (appbarselectedBlock == null || appbarselectedBlock.isEmpty)) {
+      apiUrl = 'https://sbmgrajasthan.com/api/complaints-by-district/?district=$appbarselectedDistrict';
+      print("2");
+    } else if (appbarselectedGramPanchayat == null || appbarselectedGramPanchayat.isEmpty) {
+      apiUrl = 'https://sbmgrajasthan.com/api/complaints-by-block/?district=$appbarselectedDistrict&block=$appbarselectedBlock';
+      print("3");
     } else {
-      apiUrl =
-          'https://sbmgrajasthan.com/api/complaints-by-gram-panchayat/?gram_panchayat=$appbarselectedGramPanchayat';
+      apiUrl = 'https://sbmgrajasthan.com/api/complaints-by-gram-panchayat/?gram_panchayat=$appbarselectedGramPanchayat';
+      print("4");
     }
 
     final response = await http.get(Uri.parse(apiUrl));
-
+    print(response.statusCode);
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       print('API Response: $data');
@@ -108,20 +124,38 @@ class _SMDScreenState extends State<SMDScreen> {
 
   Future<void> fetchActivityCounts() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? district = prefs.getString('District');
-    String? appbarselectedGramPanchayat =
-        prefs.getString('appbarselectedGramPanchayat');
+    String? appbarselectedGramPanchayat = prefs.getString('appbarselectedGramPanchayat');
+        String? appbarselectedBlock = prefs.getString('appbarselectedBlock');
+    String? appbarselectedDistrict = prefs.getString('appbarselectedDistrict');
+    print("cunt");
     print(appbarselectedGramPanchayat);
+    print(appbarselectedBlock);
+    print(appbarselectedDistrict);
     String apiUrl;
 
-    if (appbarselectedGramPanchayat == null ||
+     if ((appbarselectedGramPanchayat == null ||
+            appbarselectedGramPanchayat.isEmpty) &&
+        (appbarselectedBlock == null || appbarselectedBlock.isEmpty) &&
+        (appbarselectedDistrict == null || appbarselectedDistrict.isEmpty)) {
+      apiUrl = 'https://sbmgrajasthan.com/api/state-activity-count/';
+      print("1");
+    } else if ((appbarselectedGramPanchayat == null || appbarselectedGramPanchayat.isEmpty) &&
+               (appbarselectedBlock == null || appbarselectedBlock.isEmpty)){
+      apiUrl =
+          'https://sbmgrajasthan.com/api/district-activity-count/?district=$appbarselectedDistrict';
+      print("2");
+    } else if (appbarselectedGramPanchayat == null ||
         appbarselectedGramPanchayat.isEmpty) {
       apiUrl =
-          'https://sbmgrajasthan.com/api/state-activity-count/';
+          'https://sbmgrajasthan.com/api/block-activity-count/?district=$appbarselectedDistrict&block=$appbarselectedBlock';
+      print("3");
     } else {
       apiUrl =
-          'https://sbmgrajasthan.com/api/gp-activity-count/?district=$district&gp=$appbarselectedGramPanchayat';
+          'https://sbmgrajasthan.com/api/gp-activity-count/?district=$appbarselectedDistrict&gp=$appbarselectedGramPanchayat';
+      print("4");
     }
+
+    print(apiUrl);
     final response = await http.get(Uri.parse(apiUrl));
 
     if (response.statusCode == 200) {
@@ -247,7 +281,7 @@ class _SMDScreenState extends State<SMDScreen> {
                                 borderRadius: BorderRadius.circular(12.0),
                               ),
                               child: Container(
-                                height: 400, // Adjust height as needed
+                                height: 500, // Adjust height as needed
                                 padding: EdgeInsets.all(16.0),
                                 child:
                                     SMDselectRegion(), // Show your region selection screen inside the popup
@@ -481,7 +515,7 @@ class _SMDScreenState extends State<SMDScreen> {
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
                                   child: Container(
-                                    height: 400, // Adjust height as needed
+                                    height: 500, // Adjust height as needed
                                     padding: EdgeInsets.all(16.0),
                                     child: SMDselectRegion(),
                                   ),
@@ -588,7 +622,7 @@ class _SMDScreenState extends State<SMDScreen> {
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
                                   child: Container(
-                                    height: 400, // Adjust height as needed
+                                    height: 500, // Adjust height as needed
                                     padding: EdgeInsets.all(16.0),
                                     child: SMDselectRegion(),
                                   ),
@@ -824,7 +858,7 @@ class _SMDScreenState extends State<SMDScreen> {
             borderRadius: BorderRadius.circular(12.0),
           ),
           child: Container(
-            height: 400,
+            height: 500,
             padding: EdgeInsets.all(16.0),
             child: SMDselectRegion(),
           ),

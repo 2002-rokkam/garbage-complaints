@@ -88,6 +88,13 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
 
   Future<void> fetchGramPanchayats(
       String selectedDistrict, String selectedBlock) async {
+        String formattedBlock = selectedBlock?.replaceAll(' ', '_') ?? "";
+        formattedBlock = formattedBlock.replaceAllMapped(RegExp(r'_(.)'), (match) {
+      return '_${match.group(1)?.toLowerCase()}';
+    });
+    
+    print(selectedBlock);
+    print(formattedBlock);
     try {
       final response = await http.get(
           Uri.parse('$gpUrl?district=$selectedDistrict&block=$selectedBlock'));
@@ -110,13 +117,10 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
   }
 
   Future<void> submitSelection() async {
-    if (selectedDistrict != null &&
-        selectedBlock != null &&
-        selectedGramPanchayat != null) {
+
       String formattedDistrict = selectedDistrict!.replaceAll(' ', '_');
-      String formattedBlock = selectedBlock!.replaceAll(' ', '_');
-      String formattedGramPanchayat =
-          selectedGramPanchayat!.replaceAll(' ', '_');
+      String formattedBlock = selectedBlock?.replaceAll(' ', '_') ?? "";
+      String formattedGramPanchayat =selectedGramPanchayat?.replaceAll(' ', '_') ?? "";
 
       formattedDistrict =
           formattedDistrict.replaceAllMapped(RegExp(r'_(.)'), (match) {
@@ -139,25 +143,6 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
       await prefs.setString(
           'appbarselectedGramPanchayat', formattedGramPanchayat);
       Navigator.pop(context, true);
-    } else {
-      final localizations = AppLocalizations.of(context)!;
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            content: Text('Please select all fields before submitting.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text(localizations.ok),
-              ),
-            ],
-          );
-        },
-      );
-    }
   }
 
   @override
@@ -295,8 +280,10 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
                         SharedPreferences prefs =
                             await SharedPreferences.getInstance();
                         await prefs.remove('appbarselectedGramPanchayat');
+                        await prefs.remove('appbarselectedBlock');
                         setState(() {
                           selectedGramPanchayat = null;
+                          selectedBlock = null;
                         });
                         Navigator.pop(context, true);
                       },

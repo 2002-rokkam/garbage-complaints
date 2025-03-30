@@ -105,13 +105,12 @@ class _RegionSelectorState extends State<RegionSelector> {
   }
 
   Future<void> submitSelection() async {
-    if (selectedDistrict != null &&
-        selectedBlock != null &&
-        selectedGramPanchayat != null) {
+    // if (selectedDistrict != null &&
+    //     selectedBlock != null &&
+    //     selectedGramPanchayat != null) {
       String formattedDistrict = selectedDistrict!.replaceAll(' ', '_');
       String formattedBlock = selectedBlock!.replaceAll(' ', '_');
-      String formattedGramPanchayat =
-          selectedGramPanchayat!.replaceAll(' ', '_');
+      String formattedGramPanchayat = selectedGramPanchayat?.replaceAll(' ', '_') ?? '';
 
       formattedDistrict =
           formattedDistrict.replaceAllMapped(RegExp(r'_(.)'), (match) {
@@ -134,25 +133,25 @@ class _RegionSelectorState extends State<RegionSelector> {
       await prefs.setString(
           'appbarselectedGramPanchayat', formattedGramPanchayat);
       Navigator.pop(context, true);
-    } else {
-      final localizations = AppLocalizations.of(context)!;
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            content: Text('Please select all fields before submitting.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text(localizations.ok),
-              ),
-            ],
-          );
-        },
-      );
-    }
+    // } else {
+    //   final localizations = AppLocalizations.of(context)!;
+    //   showDialog(
+    //     context: context,
+    //     builder: (context) {
+    //       return AlertDialog(
+    //         content: Text('Please select all fields before submitting.'),
+    //         actions: [
+    //           TextButton(
+    //             onPressed: () {
+    //               Navigator.pop(context);
+    //             },
+    //             child: Text(localizations.ok),
+    //           ),
+    //         ],
+    //       );
+    //     },
+    //   );
+    // }
   }
 
   @override

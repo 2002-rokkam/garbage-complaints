@@ -81,6 +81,7 @@ class _BDOScreenState extends State<BDOScreen> {
   Future<void> fetchData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? District = prefs.getString('District');
+    String? Bdo = prefs.getString('Bdo');
     String? appbarselectedGramPanchayat =
         prefs.getString('appbarselectedGramPanchayat');
     String apiUrl;
@@ -88,7 +89,7 @@ class _BDOScreenState extends State<BDOScreen> {
     if (appbarselectedGramPanchayat == null ||
         appbarselectedGramPanchayat.isEmpty) {
       apiUrl =
-          'https://sbmgrajasthan.com/api/complaints-by-district/?district=$District';
+          'https://sbmgrajasthan.com/api/complaints-by-block/?district=$District&block=$Bdo';
     } else {
       apiUrl =
           'https://sbmgrajasthan.com/api/complaints-by-gram-panchayat/?gram_panchayat=$appbarselectedGramPanchayat';
@@ -111,16 +112,18 @@ class _BDOScreenState extends State<BDOScreen> {
 
   Future<void> fetchActivityCounts() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? Bdo = prefs.getString('Bdo');
     String? district = prefs.getString('District');
     String? appbarselectedGramPanchayat =
         prefs.getString('appbarselectedGramPanchayat');
     print(appbarselectedGramPanchayat);
+    print(Bdo);
     String apiUrl;
 
     if (appbarselectedGramPanchayat == null ||
         appbarselectedGramPanchayat.isEmpty) {
       apiUrl =
-          'https://sbmgrajasthan.com/api/district-activity-count/?district=$district';
+          'https://sbmgrajasthan.com/api/block-activity-count/?district=$district&block=$Bdo';
     } else {
       apiUrl =
           'https://sbmgrajasthan.com/api/gp-activity-count/?district=$district&gp=$appbarselectedGramPanchayat';

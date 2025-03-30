@@ -67,7 +67,7 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
           await prefs.setString('position', user['Position']);
           await prefs.setString('gram_panchayat', user['gp']);
           await prefs.setString('District', user['District']);
-          await prefs.setString('Bdo', user['gp']);
+          await prefs.setString('Bdo', user['gp']);      
 
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Login successful!')),

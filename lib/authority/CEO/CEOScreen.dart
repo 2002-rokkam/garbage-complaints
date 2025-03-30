@@ -81,16 +81,24 @@ class _CEOScreenState extends State<CEOScreen> {
     String? District = prefs.getString('District');
     String? appbarselectedGramPanchayat =
         prefs.getString('appbarselectedGramPanchayat');
+    String? appbarselectedBlock =
+        prefs.getString('appbarselectedBlock');
+
     String apiUrl;
 
     if (appbarselectedGramPanchayat == null ||
-        appbarselectedGramPanchayat.isEmpty) {
+        appbarselectedGramPanchayat.isEmpty && appbarselectedBlock == null ||
+        appbarselectedBlock!.isEmpty) {
       apiUrl =
           'https://sbmgrajasthan.com/api/complaints-by-district/?district=$District';
-    } else {
+    
+    } else if (appbarselectedGramPanchayat.isEmpty) {
+        apiUrl =
+          'https://sbmgrajasthan.com/api/complaints-by-block/?district=$District&block=$appbarselectedBlock';
+       } else {
       apiUrl =
           'https://sbmgrajasthan.com/api/complaints-by-gram-panchayat/?gram_panchayat=$appbarselectedGramPanchayat';
-    }
+      }
 
     final response = await http.get(Uri.parse(apiUrl));
 
@@ -110,18 +118,19 @@ class _CEOScreenState extends State<CEOScreen> {
   Future<void> fetchActivityCounts() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? district = prefs.getString('District');
-    String? appbarselectedGramPanchayat =
-        prefs.getString('appbarselectedGramPanchayat');
+    String? appbarselectedGramPanchayat =prefs.getString('appbarselectedGramPanchayat');
+    String? appbarselectedBlock = prefs.getString('appbarselectedBlock');
     print(appbarselectedGramPanchayat);
     String apiUrl;
 
-    if (appbarselectedGramPanchayat == null ||
-        appbarselectedGramPanchayat.isEmpty) {
-      apiUrl =
-          'https://sbmgrajasthan.com/api/district-activity-count/?district=$district';
+    if (appbarselectedGramPanchayat == null || appbarselectedGramPanchayat.isEmpty
+     && appbarselectedBlock == null || appbarselectedBlock!.isEmpty) {
+      apiUrl ='https://sbmgrajasthan.com/api/district-activity-count/?district=$district';
+
+    } else if (appbarselectedGramPanchayat == null || appbarselectedGramPanchayat.isEmpty) {
+      apiUrl = 'https://sbmgrajasthan.com/api/block-activity-count/?district=$district&block=$appbarselectedBlock';
     } else {
-      apiUrl =
-          'https://sbmgrajasthan.com/api/gp-activity-count/?district=$district&gp=$appbarselectedGramPanchayat';
+      apiUrl ='https://sbmgrajasthan.com/api/gp-activity-count/?district=$district&gp=$appbarselectedGramPanchayat';
     }
     final response = await http.get(Uri.parse(apiUrl));
 
@@ -248,7 +257,7 @@ class _CEOScreenState extends State<CEOScreen> {
                                 borderRadius: BorderRadius.circular(12.0),
                               ),
                               child: Container(
-                                height: 400,
+                                height: 500,
                                 padding: EdgeInsets.all(16.0),
                                 child: CEOselectRegion(),
                               ),
@@ -485,7 +494,7 @@ class _CEOScreenState extends State<CEOScreen> {
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
                                   child: Container(
-                                    height: 400, // Adjust height as needed
+                                    height: 500, // Adjust height as needed
                                     padding: EdgeInsets.all(16.0),
                                     child: CEOselectRegion(),
                                   ),
@@ -593,7 +602,7 @@ class _CEOScreenState extends State<CEOScreen> {
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
                                   child: Container(
-                                    height: 400, // Adjust height as needed
+                                    height: 500, // Adjust height as needed
                                     padding: EdgeInsets.all(16.0),
                                     child: CEOselectRegion(),
                                   ),
@@ -830,7 +839,7 @@ class _CEOScreenState extends State<CEOScreen> {
             borderRadius: BorderRadius.circular(12.0),
           ),
           child: Container(
-            height: 400,
+            height: 500,
             padding: EdgeInsets.all(16.0),
             child: CEOselectRegion(),
           ),

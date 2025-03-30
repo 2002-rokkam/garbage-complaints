@@ -76,6 +76,7 @@ class _SMDselectRegionState extends State<SMDselectRegion> {
 
   Future<void> fetchGramPanchayats(
       String selectedDistrict, String selectedBlock) async {
+        
     try {
       final response = await http.get(
           Uri.parse('$gpUrl?district=$selectedDistrict&block=$selectedBlock'));
@@ -99,13 +100,9 @@ class _SMDselectRegionState extends State<SMDselectRegion> {
   }
 
   Future<void> submitSelection() async {
-    if (selectedDistrict != null &&
-        selectedBlock != null &&
-        selectedGramPanchayat != null) {
-      String formattedDistrict = selectedDistrict!.replaceAll(' ', '_');
-      String formattedBlock = selectedBlock!.replaceAll(' ', '_');
-      String formattedGramPanchayat =
-          selectedGramPanchayat!.replaceAll(' ', '_');
+      String formattedDistrict = selectedDistrict?.replaceAll(' ', '_') ?? "";
+      String formattedBlock = selectedBlock?.replaceAll(' ', '_') ?? "";
+      String formattedGramPanchayat = selectedGramPanchayat?.replaceAll(' ', '_') ?? "";
 
       formattedDistrict =
           formattedDistrict.replaceAllMapped(RegExp(r'_(.)'), (match) {
@@ -125,28 +122,8 @@ class _SMDselectRegionState extends State<SMDselectRegion> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('appbarselectedDistrict', formattedDistrict);
       await prefs.setString('appbarselectedBlock', formattedBlock);
-      await prefs.setString(
-          'appbarselectedGramPanchayat', formattedGramPanchayat);
+      await prefs.setString('appbarselectedGramPanchayat', formattedGramPanchayat);
       Navigator.pop(context, true);
-    } else {
-      final localizations = AppLocalizations.of(context)!;
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            content: Text('Please select all fields before submitting.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text(localizations.ok),
-              ),
-            ],
-          );
-        },
-      );
-    }
   }
 
   Future<void> loadSavedSelections() async {
@@ -157,7 +134,6 @@ class _SMDselectRegionState extends State<SMDselectRegion> {
       selectedGramPanchayat = prefs.getString('appbarselectedGramPanchayat');
     });
 
-    // Load blocks and gram panchayats based on saved selections
     if (selectedDistrict != null) {
       fetchBlocks(selectedDistrict!);
     }
@@ -286,8 +262,12 @@ class _SMDselectRegionState extends State<SMDselectRegion> {
                         SharedPreferences prefs =
                             await SharedPreferences.getInstance();
                         await prefs.remove('appbarselectedGramPanchayat');
+                        await prefs.remove('appbarselectedBlock');
+                        await prefs.remove('appbarselectedDistrict');
                         setState(() {
                           selectedGramPanchayat = null;
+                          selectedBlock = null;
+                          selectedDistrict = null;
                         });
                         Navigator.pop(context, true);
                       },
