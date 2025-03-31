@@ -55,10 +55,8 @@ class _WagesActionScreenState extends State<WagesActionScreen> {
 
       if (response.statusCode == 200) {
       } else {
-        print("Error fetching activities: ${response.data['message']}");
       }
     } catch (e) {
-      print("Error fetching activities: $e");
     } finally {
       setState(() {
         isLoading = false;

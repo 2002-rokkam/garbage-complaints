@@ -91,10 +91,8 @@ class _PanchayatCampusSectionScreenState
               .toList();
         });
       } else {
-        print("Error fetching activities: ${response.data['message']}");
       }
     } catch (e) {
-      print("Error fetching activities: $e");
     } finally {
       setState(() {
         isLoading = false;
@@ -134,10 +132,8 @@ class _PanchayatCampusSectionScreenState
               .toList();
         });
       } else {
-        print("Error fetching activities: ${response.data['message']}");
       }
     } catch (e) {
-      print("Error fetching activities: $e");
     } finally {
       setState(() {
         isLoading = false;

@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
-import 'onBoardingPage1.dart';
 import 'package:flutter_application_2/OnboardingAnimation.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -164,8 +163,6 @@ class _SettingsPageState extends State<SettingsPage> {
 
       if (response.statusCode == 200) {
         await prefs.clear();
-        print("Logout successful");
-
         await Future.delayed(Duration(seconds: 1));
 
         if (context.mounted) {

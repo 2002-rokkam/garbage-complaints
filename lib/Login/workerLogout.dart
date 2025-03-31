@@ -4,9 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart'; // Import url_launcher package
-
 import '../OnboardingAnimation.dart';
-import '../onBoardingPage1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class WorkerSettingsPage extends StatefulWidget {
@@ -196,7 +194,6 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
       // Check if the response is successful (200 OK)
       if (response.statusCode == 200) {
         await prefs.clear();
-        print("Logout successful!");
       } else {
         throw Exception('Failed to log out');
       }

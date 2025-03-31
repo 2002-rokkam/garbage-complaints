@@ -104,11 +104,9 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
         String fetchedAddress = data["display_name"] ?? "No address found";
         return fetchedAddress;
       } else {
-        print("Failed to fetch address: ${response.statusCode}");
         return "No address found";
       }
     } catch (e) {
-      print("Error fetching address: $e");
       return "Error fetching address";
     }
   }
@@ -119,7 +117,6 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
 
       String workerId = await getWorkerId();
       if (workerId.isEmpty) {
-        print("Error: worker_id not found in SharedPreferences.");
         return;
       }
 
@@ -163,14 +160,10 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
           activityId = jsonResponse['data']['record_id'].toString();
         });
         widget.onReload();
-
-        print("Activity created successfully!");
       } else {
         final errorData = await response.stream.bytesToString();
-        print("Error response: $errorData");
       }
     } catch (e) {
-      print("Error submitting before image: $e");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error: $e")),
       );
@@ -215,7 +208,6 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
 
   Future<void> _submitAfterImage() async {
     if (_afterImage == null || activityId.isEmpty) {
-      print("Error: After image data or activity ID is missing.");
       return;
     }
 
@@ -248,7 +240,6 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
       if (response.statusCode == 200) {
         final responseData = await response.stream.bytesToString();
         final jsonResponse = jsonDecode(responseData);
-        print("After image submitted successfully!");
         showDialog(
           context: context,
           barrierDismissible: false,
@@ -340,11 +331,9 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
         );
       } else {
         final errorData = await response.stream.bytesToString();
-        print("Error response: $errorData");
         throw 'Failed to submit activity. Try again later.';
       }
     } catch (e) {
-      print("Error submitting after image: $e");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error: $e")),
       );
@@ -643,7 +632,6 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
                             _isAfterSliderEnabled = true;
                           });
                         } catch (e) {
-                          print("Error in slider action: $e");
                         } finally {
                           setState(() {
                             _isLoading = false;
@@ -686,7 +674,6 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
                         try {
                           await _submitAfterImage();
                         } catch (e) {
-                          print("Error in slider action: $e");
                         } finally {
                           setState(() {
                             _isLoading = false;

@@ -77,12 +77,10 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
       UserCredential userCredential =
           await _auth.signInWithCredential(credential);
       String? idToken = await userCredential.user?.getIdToken(true);
-      print(idToken);
 
       if (idToken != null) {
         final response = await _sendTokenToBackend(idToken);
-        print("Response Code: ${response.statusCode}");
-        print("Response:${response.body}");
+      
         if (response.statusCode == 200) {
           Navigator.pushReplacement(
             context,
@@ -90,11 +88,9 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
           );
         } else {
           _setBorderColor(Colors.red);
-          print("err Code: ${response.statusCode}");
         }
       }
     } catch (e) {
-      print("Error during verification: $e");
       _setBorderColor(Colors.red);
     } finally {
       setState(() => _isLoading = false);
@@ -109,9 +105,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
   }
 
   Future<http.Response> _sendTokenToBackend(String idToken) async {
-    print("step1");
     final url = Uri.parse("https://sbmgrajasthan.com/api/customer-login");
-    print("step1");
 
     final response = await http.post(
       url,
@@ -120,20 +114,15 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
         "Content-Type": "application/json",
       },
     );
-    print("Authorization Bearer $idToken");
-    print(idToken);
-    print("Response Code: ${response.statusCode}");
-    print("Response:${response.body}");
+
     if (response.statusCode == 200) {
       final responseData = jsonDecode(response.body);
       final token = responseData['data']['token'];
 
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('id_token', token);
-      print(token);
     } else {
       throw 'Failed to login. Status code: ${response.statusCode}';
-      print("err Code: ${response.statusCode}");
     }
     return response;
   }

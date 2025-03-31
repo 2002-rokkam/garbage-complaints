@@ -61,7 +61,6 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
         throw Exception('Failed to load districts');
       }
     } catch (e) {
-      print('Error fetching districts: $e');
     }
   }
 
@@ -82,7 +81,6 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
         throw Exception('Failed to load blocks');
       }
     } catch (e) {
-      print('Error fetching blocks: $e');
     }
   }
 
@@ -92,9 +90,6 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
         formattedBlock = formattedBlock.replaceAllMapped(RegExp(r'_(.)'), (match) {
       return '_${match.group(1)?.toLowerCase()}';
     });
-    
-    print(selectedBlock);
-    print(formattedBlock);
     try {
       final response = await http.get(
           Uri.parse('$gpUrl?district=$selectedDistrict&block=$selectedBlock'));
@@ -112,7 +107,6 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
         throw Exception('Failed to load gram panchayats');
       }
     } catch (e) {
-      print('Error fetching gram panchayats: $e');
     }
   }
 

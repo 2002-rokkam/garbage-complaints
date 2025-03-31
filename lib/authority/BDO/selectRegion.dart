@@ -47,7 +47,6 @@ class _RegionSelectorState extends State<RegionSelector> {
     String? bdo = prefs.getString('Bdo');
     if (bdo != null) {
       selectedBlock = bdo.replaceAll('_', ' ');
-      print("BDO: $bdo");
     }
   }
 
@@ -70,20 +69,16 @@ class _RegionSelectorState extends State<RegionSelector> {
         throw Exception('Failed to load districts');
       }
     } catch (e) {
-      print('Error fetching districts: $e');
     }
   }
 
   Future<void> fetchGramPanchayats(
       String selectedDistrict, String selectedBlock) async {
-    print("District: $selectedDistrict, Block: $selectedBlock");
-
     String formattedBlock =
         selectedBlock.replaceAllMapped(RegExp(r' (\w)'), (match) {
       return ' ${match.group(1)?.toUpperCase()}';
     });
 
-    print("Formatted Block: $formattedBlock");
     try {
       final response = await http.get(
           Uri.parse('$gpUrl?district=$selectedDistrict&block=$formattedBlock'));
@@ -100,14 +95,10 @@ class _RegionSelectorState extends State<RegionSelector> {
         throw Exception('Failed to load gram panchayats');
       }
     } catch (e) {
-      print('Error fetching gram panchayats: $e');
     }
   }
 
   Future<void> submitSelection() async {
-    // if (selectedDistrict != null &&
-    //     selectedBlock != null &&
-    //     selectedGramPanchayat != null) {
       String formattedDistrict = selectedDistrict!.replaceAll(' ', '_');
       String formattedBlock = selectedBlock!.replaceAll(' ', '_');
       String formattedGramPanchayat = selectedGramPanchayat?.replaceAll(' ', '_') ?? '';

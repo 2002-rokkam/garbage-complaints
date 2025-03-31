@@ -113,16 +113,12 @@ class _ComplaintCardState extends State<ComplaintCard> {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         String fetchedAddress = data["display_name"] ?? "No address found";
-        print("Address: $fetchedAddress");
         setState(() {
           _address = fetchedAddress;
         });
-        print("Address: $_address");
       } else {
-        print("Failed to fetch address: ${response.statusCode}");
       }
     } catch (e) {
-      print("Error fetching address: $e");
     }
   }
 
@@ -145,8 +141,6 @@ class _ComplaintCardState extends State<ComplaintCard> {
     setState(() {
       _latitude = position.latitude;
       _longitude = position.longitude;
-      print(_latitude);
-      print(_longitude);
     });
   }
 
@@ -228,7 +222,6 @@ class _ComplaintCardState extends State<ComplaintCard> {
       'solved_long': _longitude,
       'worker_id': workerId,
     });
-    print(formData);
     try {
       Response response = await dio.post(
         'https://6f15-122-172-86-114.ngrok-free.app/api/update-complaint/${widget.complaint['complaint_id']}',

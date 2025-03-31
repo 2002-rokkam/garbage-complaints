@@ -90,24 +90,18 @@ class _SMDScreenState extends State<SMDScreen> {
         (appbarselectedBlock == null || appbarselectedBlock.isEmpty) &&
         (appbarselectedDistrict == null || appbarselectedDistrict.isEmpty)) {
       apiUrl = 'https://sbmgrajasthan.com/api/complaints-by-state/';
-      print("1");
     } else if ((appbarselectedGramPanchayat == null || appbarselectedGramPanchayat.isEmpty) &&
                (appbarselectedBlock == null || appbarselectedBlock.isEmpty)) {
       apiUrl = 'https://sbmgrajasthan.com/api/complaints-by-district/?district=$appbarselectedDistrict';
-      print("2");
     } else if (appbarselectedGramPanchayat == null || appbarselectedGramPanchayat.isEmpty) {
       apiUrl = 'https://sbmgrajasthan.com/api/complaints-by-block/?district=$appbarselectedDistrict&block=$appbarselectedBlock';
-      print("3");
     } else {
       apiUrl = 'https://sbmgrajasthan.com/api/complaints-by-gram-panchayat/?gram_panchayat=$appbarselectedGramPanchayat';
-      print("4");
     }
 
     final response = await http.get(Uri.parse(apiUrl));
-    print(response.statusCode);
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      print('API Response: $data');
       setState(() {
         totalComplaints = data['total_complaints'];
         pendingComplaints = data['pending_complaints'];
@@ -122,11 +116,7 @@ class _SMDScreenState extends State<SMDScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? appbarselectedGramPanchayat = prefs.getString('appbarselectedGramPanchayat');
         String? appbarselectedBlock = prefs.getString('appbarselectedBlock');
-    String? appbarselectedDistrict = prefs.getString('appbarselectedDistrict');
-    print("cunt");
-    print(appbarselectedGramPanchayat);
-    print(appbarselectedBlock);
-    print(appbarselectedDistrict);
+    String? appbarselectedDistrict = prefs.getString('appbarselectedDistrict');    
     String apiUrl;
 
      if ((appbarselectedGramPanchayat == null ||
@@ -134,24 +124,19 @@ class _SMDScreenState extends State<SMDScreen> {
         (appbarselectedBlock == null || appbarselectedBlock.isEmpty) &&
         (appbarselectedDistrict == null || appbarselectedDistrict.isEmpty)) {
       apiUrl = 'https://sbmgrajasthan.com/api/state-activity-count/';
-      print("1");
     } else if ((appbarselectedGramPanchayat == null || appbarselectedGramPanchayat.isEmpty) &&
                (appbarselectedBlock == null || appbarselectedBlock.isEmpty)){
       apiUrl =
           'https://sbmgrajasthan.com/api/district-activity-count/?district=$appbarselectedDistrict';
-      print("2");
     } else if (appbarselectedGramPanchayat == null ||
         appbarselectedGramPanchayat.isEmpty) {
       apiUrl =
           'https://sbmgrajasthan.com/api/block-activity-count/?district=$appbarselectedDistrict&block=$appbarselectedBlock';
-      print("3");
     } else {
       apiUrl =
           'https://sbmgrajasthan.com/api/gp-activity-count/?district=$appbarselectedDistrict&gp=$appbarselectedGramPanchayat';
-      print("4");
     }
 
-    print(apiUrl);
     final response = await http.get(Uri.parse(apiUrl));
 
     if (response.statusCode == 200) {

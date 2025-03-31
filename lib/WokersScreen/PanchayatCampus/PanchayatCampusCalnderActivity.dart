@@ -99,7 +99,6 @@ class _PanchayatCampusActivityScreenState
         throw Exception('Failed to load activities');
       }
     } catch (e) {
-      print(e);
     }
   }
 
@@ -135,7 +134,6 @@ class _PanchayatCampusActivityScreenState
         throw Exception('Failed to load activities');
       }
     } catch (e) {
-      print(e);
     }
   }
 

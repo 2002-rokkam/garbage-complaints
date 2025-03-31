@@ -64,11 +64,9 @@ class _WagesBeforeScreenState extends State<WagesBeforeScreen> {
         String fetchedAddress = data["display_name"] ?? "No address found";
         return fetchedAddress;
       } else {
-        print("Failed to fetch address: ${response.statusCode}");
         return "No address found";
       }
     } catch (e) {
-      print("Error fetching address: $e");
       return "Error fetching address";
     }
   }
@@ -79,7 +77,6 @@ class _WagesBeforeScreenState extends State<WagesBeforeScreen> {
 
       String workerId = await getWorkerId();
       if (workerId == "") {
-        print("Error: worker_id not found in SharedPreferences.");
         return;
       }
 
@@ -112,10 +109,8 @@ class _WagesBeforeScreenState extends State<WagesBeforeScreen> {
         widget.onReload();
         _showSuccessDialog();
       } else {
-        print("Error: ${response.data['message']}");
       }
     } catch (e) {
-      print("Error submitting before image: $e");
     }
   }
 
@@ -381,7 +376,6 @@ class _WagesBeforeScreenState extends State<WagesBeforeScreen> {
                         try {
                           await _submitBeforeImage();
                         } catch (e) {
-                          print("Error in button action: $e");
                         } finally {
                           setState(() {
                             _isLoading = false;

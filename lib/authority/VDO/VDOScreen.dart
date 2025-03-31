@@ -79,7 +79,6 @@ class _VDOScreenState extends State<VDOScreen> {
   Future<void> fetchData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? gramPanchayat = prefs.getString('gram_panchayat');
-    print(gramPanchayat);
     if (gramPanchayat != null) {
       final response = await http.get(Uri.parse(
               'https://sbmgrajasthan.com/api/complaints-by-gram-panchayat/')
@@ -87,11 +86,8 @@ class _VDOScreenState extends State<VDOScreen> {
         'gram_panchayat': gramPanchayat,
       }));
 
-      print('Status Code: ${response.statusCode}');
-
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        print('API Response: $data');
         setState(() {
           totalComplaints = data['total_complaints'];
           pendingComplaints = data['pending_complaints'];

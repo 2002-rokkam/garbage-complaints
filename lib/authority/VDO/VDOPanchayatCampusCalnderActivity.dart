@@ -90,7 +90,6 @@ class _VDOPanchayatCampusCalnderActivityState
         throw Exception('Failed to load activities');
       }
     } catch (e) {
-      print(e);
     }
   }
 
@@ -125,7 +124,6 @@ class _VDOPanchayatCampusCalnderActivityState
         throw Exception('Failed to load trip details');
       }
     } catch (e) {
-      print('Error: $e');
     }
   }
 

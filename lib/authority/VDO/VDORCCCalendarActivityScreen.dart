@@ -80,7 +80,6 @@ class _VDORCCCalendarActivityScreenState
         });
       }
     } catch (e) {
-      print(e);
     } finally {
       setState(() => _isLoading = false);
     }
@@ -105,7 +104,6 @@ class _VDORCCCalendarActivityScreenState
         });
       }
     } catch (e) {
-      print(e);
     } finally {
       setState(() => _isLoading = false);
     }

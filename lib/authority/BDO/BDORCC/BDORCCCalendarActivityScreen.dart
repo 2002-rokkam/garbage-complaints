@@ -91,7 +91,6 @@ class _BDORCCCalendarActivityScreenState
         });
       }
     } catch (e) {
-      print(e);
     } finally {
       setState(() => _isLoading = false);
     }
@@ -118,7 +117,6 @@ class _BDORCCCalendarActivityScreenState
         });
       }
     } catch (e) {
-      print(e);
     } finally {
       setState(() => _isLoading = false);
     }

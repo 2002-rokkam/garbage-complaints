@@ -81,10 +81,8 @@ class _RRCScreenState extends State<RRCScreen>
               .toList();
         });
       } else {
-        print("Error fetching activities: ${response.data['message']}");
       }
     } catch (e) {
-      print("Error fetching activities: $e");
     } finally {
       setState(() {
         isLoading = false;

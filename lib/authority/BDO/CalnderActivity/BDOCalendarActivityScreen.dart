@@ -84,7 +84,6 @@ class _BDOCalendarActivityScreenState extends State<BDOCalendarActivityScreen> {
         throw Exception('Failed to load activities');
       }
     } catch (e) {
-      print(e);
     } finally {
       setState(() {});
     }

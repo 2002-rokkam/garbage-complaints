@@ -47,7 +47,6 @@ class _SMDselectRegionState extends State<SMDselectRegion> {
         throw Exception('Failed to load districts');
       }
     } catch (e) {
-      print('Error fetching districts: $e');
     }
   }
 
@@ -70,7 +69,6 @@ class _SMDselectRegionState extends State<SMDselectRegion> {
         throw Exception('Failed to load blocks');
       }
     } catch (e) {
-      print('Error fetching blocks: $e');
     }
   }
 
@@ -95,7 +93,6 @@ class _SMDselectRegionState extends State<SMDselectRegion> {
         throw Exception('Failed to load gram panchayats');
       }
     } catch (e) {
-      print('Error fetching gram panchayats: $e');
     }
   }
 

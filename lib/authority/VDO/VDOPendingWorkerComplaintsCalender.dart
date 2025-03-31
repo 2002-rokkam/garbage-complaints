@@ -60,7 +60,6 @@ class _VDOPendingWorkerComplaintsCalenderState
         throw Exception('Failed to load complaints');
       }
     } catch (e) {
-      print('Error fetching complaints: $e');
     } finally {
       setState(() {
         _isLoading = false;

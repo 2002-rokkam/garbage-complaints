@@ -86,14 +86,12 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
         setState(() {
           isLoading = false;
         });
-        print(
-            "Failed to fetch complaints. Status code: ${response.statusCode}");
+
       }
     } catch (e) {
       setState(() {
         isLoading = false;
       });
-      print("Error fetching complaints: $e");
     }
   }
 

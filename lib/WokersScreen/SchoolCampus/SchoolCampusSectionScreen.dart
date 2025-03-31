@@ -88,10 +88,8 @@ class _SchoolCampusSectionScreenState extends State<SchoolCampusSectionScreen>
               .toList();
         });
       } else {
-        print("Error fetching activities: ${response.data['message']}");
       }
     } catch (e) {
-      print("Error fetching activities: $e");
     } finally {
       setState(() {
         isLoading = false;
@@ -131,10 +129,8 @@ class _SchoolCampusSectionScreenState extends State<SchoolCampusSectionScreen>
               .toList();
         });
       } else {
-        print("Error fetching activities: ${response.data['message']}");
       }
     } catch (e) {
-      print("Error fetching activities: $e");
     } finally {
       setState(() {
         isLoading = false;

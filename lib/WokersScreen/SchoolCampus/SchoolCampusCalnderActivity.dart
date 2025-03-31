@@ -98,7 +98,6 @@ class _SchoolCampusActivityScreenState extends State<SchoolCampusActivityScreen>
         throw Exception('Failed to load activities');
       }
     } catch (e) {
-      print(e);
     }
   }
 
@@ -134,7 +133,6 @@ class _SchoolCampusActivityScreenState extends State<SchoolCampusActivityScreen>
         throw Exception('Failed to load activities');
       }
     } catch (e) {
-      print(e);
     }
   }
 

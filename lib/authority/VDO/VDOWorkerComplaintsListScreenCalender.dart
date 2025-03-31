@@ -115,16 +115,12 @@ class _ComplaintCardState extends State<ComplaintCard> {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         String fetchedAddress = data["display_name"] ?? "No address found";
-        print("Address: $fetchedAddress");
         setState(() {
           _address = fetchedAddress;
         });
-        print("Address: $_address");
       } else {
-        print("Failed to fetch address: ${response.statusCode}");
       }
     } catch (e) {
-      print("Error fetching address: $e");
     }
   }
 
@@ -476,8 +472,6 @@ class _ComplaintCardState extends State<ComplaintCard> {
   Future<void> _verifyComplaint(String complaintId) async {
     final url = Uri.parse(
         'https://sbmgrajasthan.com/api/complaint/$complaintId/verify');
-    print(complaintId);
-    print(workerId);
     try {
       final response = await http.patch(
         url,
@@ -509,7 +503,6 @@ class _ComplaintCardState extends State<ComplaintCard> {
   Widget build(BuildContext context) {
     final images = widget.complaint['photos'];
     final status = widget.complaint['status'];
-    print(widget.complaint);
     final createdAt = DateTime.parse(widget.complaint['created_at']).toLocal();
     final caption =
         utf8.decode(widget.complaint['caption'].toString().codeUnits);

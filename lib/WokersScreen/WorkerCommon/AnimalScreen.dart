@@ -57,10 +57,8 @@ class _AnimalScreenState extends State<AnimalScreen> {
               .toList();
         });
       } else {
-        print("Error fetching activities: ${response.data['message']}");
       }
     } catch (e) {
-      print("Error fetching activities: $e");
     } finally {
       setState(() {
         isLoading = false;

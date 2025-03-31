@@ -74,7 +74,6 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
         });
       }
     } catch (e) {
-      print(e);
     } finally {
       setState(() => _isLoading = false);
     }
@@ -95,7 +94,6 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
         });
       }
     } catch (e) {
-      print('Error: $e');
     } finally {
       setState(() => _isLoading = false);
     }

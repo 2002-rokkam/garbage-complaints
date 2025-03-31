@@ -318,7 +318,6 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
         throw Exception('Failed to load districts');
       }
     } catch (e) {
-      print('Error fetching districts: $e');
     }
   }
 
@@ -340,7 +339,6 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
         throw Exception('Failed to load gram panchayats');
       }
     } catch (e) {
-      print('Error fetching gram panchayats: $e');
     }
   }
 

@@ -68,7 +68,6 @@ class _TripDetailCardState extends State<TripDetailCard> {
         final workerId = await getWorkerId();
 
         if (workerId.isEmpty) {
-          print("Error: worker_id not found in SharedPreferences.");
           setState(() {
             isLoading = false;
           });
@@ -104,10 +103,8 @@ class _TripDetailCardState extends State<TripDetailCard> {
         if (response.statusCode == 201) {
           _showSuccessDialog(context);
         } else {
-          print("Error: ${response.statusCode} - ${response.data}");
         }
       } catch (e) {
-        print("Error occurred while submitting form: $e");
       } finally {
         setState(() {
           isLoading = false; // Stop loading
@@ -117,7 +114,6 @@ class _TripDetailCardState extends State<TripDetailCard> {
       setState(() {
         isLoading = false; // Stop loading even if validation fails
       });
-      print("Please fill all fields.");
     }
   }
 

@@ -98,7 +98,6 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
         throw Exception('Failed to load activities');
       }
     } catch (e) {
-      print(e);
     }
   }
 
@@ -129,7 +128,6 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
         throw Exception('Failed to load QR details');
       }
     } catch (e) {
-      print('Error: $e');
       setState(() {
         _isLoading = false;
       });

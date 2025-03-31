@@ -62,7 +62,6 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
         throw Exception('Failed to load activities');
       }
     } catch (e) {
-      print(e);
     } finally {
       setState(() => _isLoading = false);
     }
@@ -95,7 +94,6 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
         throw Exception('Failed to load complaints');
       }
     } catch (e) {
-      print('Error fetching complaints: $e');
     }
   }
 
@@ -346,7 +344,6 @@ class SelectedDateActivitiesScreen extends StatelessWidget {
           : SingleChildScrollView(
               child: Column(
                 children: activities.map((activity) {
-                  print(activity);
                   return Card(
                     child: Container(
                       width: 370,

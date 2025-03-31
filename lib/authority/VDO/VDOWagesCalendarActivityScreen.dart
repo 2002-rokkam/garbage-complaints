@@ -64,7 +64,6 @@ class _VDOWagesCalendarActivityScreenState
         throw Exception('Failed to load activities');
       }
     } catch (e) {
-      print(e);
     } finally {
       setState(() {
         _isLoading = false;

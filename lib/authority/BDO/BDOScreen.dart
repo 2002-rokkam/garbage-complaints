@@ -101,7 +101,6 @@ class _BDOScreenState extends State<BDOScreen> {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      print('API Response: $data');
       setState(() {
         totalComplaints = data['total_complaints'];
         pendingComplaints = data['pending_complaints'];
@@ -118,8 +117,6 @@ class _BDOScreenState extends State<BDOScreen> {
     String? district = prefs.getString('District');
     String? appbarselectedGramPanchayat =
         prefs.getString('appbarselectedGramPanchayat');
-    print(appbarselectedGramPanchayat);
-    print(Bdo);
     String apiUrl;
 
     if (appbarselectedGramPanchayat == null ||

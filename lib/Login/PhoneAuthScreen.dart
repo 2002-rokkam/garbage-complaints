@@ -72,7 +72,6 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
           setState(() {
             _isLoading = false;
           });
-          print("Auto-retrieval timed out. Enter OTP manually.");
         },
       );
     } catch (e) {

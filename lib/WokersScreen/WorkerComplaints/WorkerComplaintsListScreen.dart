@@ -122,10 +122,8 @@ class _ComplaintCardState extends State<ComplaintCard> {
           _address = data["display_name"] ?? "No address found";
         });
       } else {
-        print("Failed to fetch address: ${response.statusCode}");
       }
     } catch (e) {
-      print("Error fetching address: $e");
     }
   }
 
@@ -527,7 +525,6 @@ class _ComplaintCardState extends State<ComplaintCard> {
     final resolvedPhoto = widget.complaint['resolved_photo'];
     final dirlatitude = widget.complaint['photos'][0]['latitude'];
     final dirlongitude = widget.complaint['photos'][0]['longitude'];
-    print(widget.complaint);
 
     String time = '${createdAt.hour}:${createdAt.minute}:${createdAt.second}';
 
