@@ -32,6 +32,7 @@ class _CEOScreenState extends State<CEOScreen> {
   late Locale _locale;
   String? appbarselectedGramPanchayat;
   String? District;
+  String? appbarselectedBlock;
   late PageController _pageController;
   late Timer _timer;
 
@@ -55,9 +56,9 @@ class _CEOScreenState extends State<CEOScreen> {
     _loadLanguagePreference();
     SharedPreferences.getInstance().then((prefs) {
       setState(() {
-        appbarselectedGramPanchayat =
-            prefs.getString('appbarselectedGramPanchayat');
+        appbarselectedGramPanchayat =prefs.getString('appbarselectedGramPanchayat');
         District = prefs.getString('District');
+        appbarselectedBlock = prefs.getString('appbarselectedBlock');
       });
     });
   }
@@ -276,13 +277,14 @@ class _CEOScreenState extends State<CEOScreen> {
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Text(
-                            appbarselectedGramPanchayat == null ||
-                                    appbarselectedGramPanchayat!.isEmpty
-                                ? District ?? ''
-                                : appbarselectedGramPanchayat!,
+                            appbarselectedGramPanchayat == null || appbarselectedGramPanchayat!.isEmpty
+                              ? (appbarselectedBlock == null || appbarselectedBlock!.isEmpty
+                                ? "District: " + District!
+                                : "Block: " +  appbarselectedBlock!)
+                              : "Gram Panchayat: " + appbarselectedGramPanchayat!,
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 18,
+                              fontSize: 14,
                               fontWeight: FontWeight.bold,
                             ),
                           ),

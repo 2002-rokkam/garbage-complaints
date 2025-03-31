@@ -138,5 +138,9 @@
   "close": "Close",
   "errorImageTooFar": "Error: After image is too far from the before image",
   "transportation": "Transportation",
-  "disposal": "Disposal"
+  "disposal": "Disposal",
+  "email": "Email",
+  "password": "Password",
+  "enterEmail": "Enter your Email",
+  "pleaseEnterPassword": "Please enter your Password"
 }

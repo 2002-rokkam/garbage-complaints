@@ -207,26 +207,27 @@ class _SMDselectRegionState extends State<SMDselectRegion> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
+            if (selectedDistrict != null || selectedBlock != null || selectedGramPanchayat != null)
+              Container(
               width: double.infinity,
               padding: const EdgeInsets.all(16),
               decoration: ShapeDecoration(
                 color: Colors.white,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
+                  borderRadius: BorderRadius.circular(8)),
                 shadows: [
-                  BoxShadow(
-                    color: Color(0x14000000),
-                    blurRadius: 4,
-                    offset: Offset(0, 2),
-                    spreadRadius: 0,
-                  ),
-                  BoxShadow(
-                    color: Color(0x05000000),
-                    blurRadius: 6,
-                    offset: Offset(0, 0),
-                    spreadRadius: 0,
-                  )
+                BoxShadow(
+                  color: Color(0x14000000),
+                  blurRadius: 4,
+                  offset: Offset(0, 2),
+                  spreadRadius: 0,
+                ),
+                BoxShadow(
+                  color: Color(0x05000000),
+                  blurRadius: 6,
+                  offset: Offset(0, 0),
+                  spreadRadius: 0,
+                )
                 ],
               ),
               child: Row(
@@ -234,66 +235,75 @@ class _SMDselectRegionState extends State<SMDselectRegion> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
-                    width: 125,
-                    child: Text(
-                      'Currently, you are viewing Gram Panchayat-level data. Reset to view block level data.',
+                SizedBox(
+                  width: 125,
+                  child: Text(
+                   selectedGramPanchayat != null && selectedGramPanchayat!.isNotEmpty &&
+                                selectedBlock != null &&
+                                selectedBlock!.isNotEmpty && selectedDistrict != null &&
+                                selectedDistrict!.isNotEmpty
+                            ? 'Currently, you are viewing Gram Panchayat-level data. Reset to view state level data.'
+                            : selectedBlock != null && selectedBlock!.isNotEmpty && selectedDistrict != null && selectedDistrict!.isNotEmpty  
+                                ? 'Currently, you are viewing block-level data. Reset to view state level data.'
+                                : selectedDistrict != null && selectedDistrict!.isNotEmpty
+                                    ? 'Currently, you are viewing district-level data. Reset to view state level data.'
+                                    : 'No selection made',  
+                  style: TextStyle(
+                    color: const Color(0xFF49454F),
+                    fontSize: 8,
+                    fontFamily: 'Nunito Sans',
+                    fontWeight: FontWeight.w500,
+                    height: 1.43,
+                    letterSpacing: 0.14,
+                  ),
+                  ),
+                ),
+                Container(
+                  padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  decoration: ShapeDecoration(
+                  color: const Color(0xFFFEF4F1),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(83),
+                  ),
+                  ),
+                  child: GestureDetector(
+                  onTap: () async {
+                    SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                    await prefs.remove('appbarselectedGramPanchayat');
+                    await prefs.remove('appbarselectedBlock');
+                    await prefs.remove('appbarselectedDistrict');
+                    setState(() {
+                    selectedGramPanchayat = null;
+                    selectedBlock = null;
+                    selectedDistrict = null;
+                    });
+                    Navigator.pop(context, true);
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                    Text(
+                      'Reset',
                       style: TextStyle(
-                        color: const Color(0xFF49454F),
-                        fontSize: 8,
-                        fontFamily: 'Nunito Sans',
-                        fontWeight: FontWeight.w500,
-                        height: 1.43,
-                        letterSpacing: 0.14,
+                      color: const Color(0xFFB3261E),
+                      fontSize: 14,
+                      fontFamily: 'Nunito Sans',
+                      fontWeight: FontWeight.w500,
+                      height: 1.43,
+                      letterSpacing: 0.14,
                       ),
                     ),
+                    ],
                   ),
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                    decoration: ShapeDecoration(
-                      color: const Color(0xFFFEF4F1),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(83),
-                      ),
-                    ),
-                    child: GestureDetector(
-                      onTap: () async {
-                        SharedPreferences prefs =
-                            await SharedPreferences.getInstance();
-                        await prefs.remove('appbarselectedGramPanchayat');
-                        await prefs.remove('appbarselectedBlock');
-                        await prefs.remove('appbarselectedDistrict');
-                        setState(() {
-                          selectedGramPanchayat = null;
-                          selectedBlock = null;
-                          selectedDistrict = null;
-                        });
-                        Navigator.pop(context, true);
-                      },
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Reset',
-                            style: TextStyle(
-                              color: const Color(0xFFB3261E),
-                              fontSize: 14,
-                              fontFamily: 'Nunito Sans',
-                              fontWeight: FontWeight.w500,
-                              height: 1.43,
-                              letterSpacing: 0.14,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
                   ),
+                ),
                 ],
               ),
-            ),
+              ),
             SizedBox(height: 16),
             Text('District', style: TextStyle(fontSize: 16)),
             GestureDetector(

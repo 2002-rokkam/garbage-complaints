@@ -9,7 +9,7 @@
   "verification_failed": "सत्यापन विफल। कृपया पुनः प्रयास करें।",
   "auto_retrieval_timeout": "स्वतः पुनर्प्राप्ति की समय सीमा समाप्त। कृपया मैन्युअल रूप से ओटीपी दर्ज करें।",
   "login_admin": "प्रशासन के रूप में लॉगिन करें",
-  "login_citizen":"Login as Citizen",
+  "login_citizen": "नागरिक के रूप में लॉगिन करें",
   "error": "त्रुटि",
   "ok": "ठीक है",
   "app_title":"hi",
@@ -139,5 +139,9 @@
   "close": "बंद करें",
   "errorImageTooFar": "त्रुटि: बाद की छवि पहले की छवि से बहुत दूर है",
   "transportation": "परिवहन",
-  "disposal": "निपटान"
+  "disposal": "निपटान",
+  "email": "ईमेल",
+  "password": "पासवर्ड",
+  "enterEmail": "अपना ईमेल दर्ज करें",
+  "pleaseEnterPassword": "कृपया अपना पासवर्ड दर्ज करें"
 }

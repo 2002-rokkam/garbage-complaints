@@ -85,7 +85,7 @@ class _WorkerScreenState extends State<WorkerScreen> {
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Text(
-                        DateFormat('dd/MM/yyyy').format(DateTime.now()),
+                        localizations.sbmgRajasthan,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,

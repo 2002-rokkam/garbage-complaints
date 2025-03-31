@@ -36,7 +36,7 @@ ngrok.exe http 8000
  
       final localizations = AppLocalizations.of(context)!;
      
-     localizations.viewReply
+     localizations.qrDetails
 
 
 
@@ -50,3 +50,5 @@ ngrok.exe http 8000
 
 
 CircularProgressIndicator()
+
+cnvert t  hindi fr app localicatin

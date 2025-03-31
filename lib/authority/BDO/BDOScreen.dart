@@ -32,6 +32,7 @@ class _BDOScreenState extends State<BDOScreen> {
   Map<String, int> activityCounts = {};
   String? appbarselectedGramPanchayat;
   String? District;
+  String? Bdo;
   late PageController _pageController;
   late Timer _timer;
 
@@ -59,6 +60,7 @@ class _BDOScreenState extends State<BDOScreen> {
         appbarselectedGramPanchayat =
             prefs.getString('appbarselectedGramPanchayat');
         District = prefs.getString('District');
+         Bdo = prefs.getString('Bdo');
       });
     });
   }
@@ -277,11 +279,11 @@ class _BDOScreenState extends State<BDOScreen> {
                             child: Text(
                               appbarselectedGramPanchayat == null ||
                                       appbarselectedGramPanchayat!.isEmpty
-                                  ? District ?? ''
-                                  : appbarselectedGramPanchayat!,
+                                  ? "Block: " + (Bdo ?? '')
+                                  : "Gram Panchayat: " + appbarselectedGramPanchayat!,
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 18,
+                                fontSize: 14,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),

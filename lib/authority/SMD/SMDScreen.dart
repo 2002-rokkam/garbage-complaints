@@ -84,10 +84,6 @@ class _SMDScreenState extends State<SMDScreen> {
     String? appbarselectedGramPanchayat = prefs.getString('appbarselectedGramPanchayat');
     String? appbarselectedBlock = prefs.getString('appbarselectedBlock');
     String? appbarselectedDistrict = prefs.getString('appbarselectedDistrict');
-    print("data");
-    print(appbarselectedGramPanchayat);
-    print(appbarselectedBlock);
-    print(appbarselectedDistrict);
     String apiUrl;
 
     if ((appbarselectedGramPanchayat == null || appbarselectedGramPanchayat.isEmpty) &&
@@ -301,10 +297,14 @@ class _SMDScreenState extends State<SMDScreen> {
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Text(
-                            appbarselectedGramPanchayat == null ||
-                                    appbarselectedGramPanchayat!.isEmpty
-                                ? District ?? ''
-                                : appbarselectedGramPanchayat!,
+                             appbarselectedDistrict == null || appbarselectedDistrict!.isEmpty
+                             ? "State: " + District!
+                             : (appbarselectedGramPanchayat == null || appbarselectedGramPanchayat!.isEmpty 
+                             ? (appbarselectedBlock == null || appbarselectedBlock!.isEmpty
+                             ? "District: " + appbarselectedDistrict!
+                             : "Block: " + appbarselectedBlock!)
+                             : "Gram Panchayat: " +
+                                appbarselectedGramPanchayat!),
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 18,

@@ -191,9 +191,11 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
                     ),
                   ),
                   SizedBox(height: 20),
-                  _buildInputField('Email', _emailController, false),
+                  _buildInputField(
+                      localizations.email, _emailController, false),
                   SizedBox(height: 20),
-                  _buildInputField('Password', _passwordController, true),
+                  _buildInputField(
+                      localizations.password, _passwordController, true),
                   SizedBox(height: 30),
                   _isLoading
                       ? Center(
@@ -252,6 +254,7 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
 
   Widget _buildInputField(
       String label, TextEditingController controller, bool obscureText) {
+        final localizations = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -269,7 +272,7 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
           controller: controller,
           obscureText: obscureText,
           decoration: InputDecoration(
-            hintText: 'Enter your $label',
+            hintText:  localizations.enterEmail,
             filled: true,
             fillColor: Colors.white,
             border: OutlineInputBorder(
@@ -279,7 +282,7 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'Please enter your $label';
+              return localizations.pleaseEnterPassword;
             }
             return null;
           },

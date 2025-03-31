@@ -1,28 +1,51 @@
 // authority/BDO/BDOD2D/QRDetailsScreen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class QRDetailsScreen extends StatelessWidget {
+class QRDetailsScreen extends StatefulWidget {
   final List tripDetails;
 
   const QRDetailsScreen({Key? key, required this.tripDetails})
       : super(key: key);
 
   @override
+  _QRDetailsScreenState createState() => _QRDetailsScreenState();
+}
+
+class _QRDetailsScreenState extends State<QRDetailsScreen> {
+   late Locale _locale;
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language') ?? 'en';
+    setState(() {
+      _locale = Locale(languageCode);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLanguagePreference();
+  }
+  
+  @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: Text('QR Details'),
+        title: Text(localizations.qrDetails),
         backgroundColor: Color(0xFF5C964A),
       ),
       backgroundColor: Color.fromRGBO(239, 239, 239, 1),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
-        child: tripDetails.isEmpty
+        child: widget.tripDetails.isEmpty
             ? Center(
                 child: Text('No trip details available for selected date.'))
             : Column(
-                children: tripDetails.map((trip) {
+                children: widget.tripDetails.map((trip) {
                   return Card(
                     elevation: 4,
                     shape: RoundedRectangleBorder(
