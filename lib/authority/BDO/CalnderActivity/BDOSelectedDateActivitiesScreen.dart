@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class BDOSelectedDateActivitiesScreen extends StatelessWidget {
+class BDOSelectedDateActivitiesScreen extends StatefulWidget {
   final DateTime selectedDate;
   final List activities;
 
@@ -13,9 +13,17 @@ class BDOSelectedDateActivitiesScreen extends StatelessWidget {
     required this.activities,
   }) : super(key: key);
 
+  @override
+  _BDOSelectedDateActivitiesScreenState createState() =>
+      _BDOSelectedDateActivitiesScreenState();
+}
+
+class _BDOSelectedDateActivitiesScreenState
+    extends State<BDOSelectedDateActivitiesScreen> {
   void _showFullScreenImage(BuildContext context, String imageUrl,
       double dirlatitude, double dirlongitude, String time) async {
-    String location = 'Lat: ${dirlatitude.toStringAsFixed(6)}, Long: ${dirlongitude.toStringAsFixed(6)}';
+    String location =
+        'Lat: ${dirlatitude.toStringAsFixed(6)}, Long: ${dirlongitude.toStringAsFixed(6)}';
 
     showDialog(
       context: context,
@@ -133,7 +141,7 @@ class BDOSelectedDateActivitiesScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Activities on ${selectedDate.toLocal().toString().split(' ')[0]}',
+          'Activities on ${widget.selectedDate.toLocal().toString().split(' ')[0]}',
           style: TextStyle(
             color: Colors.white,
             fontSize: 20,
@@ -142,11 +150,11 @@ class BDOSelectedDateActivitiesScreen extends StatelessWidget {
         ),
         backgroundColor: Color(0xFF5C964A),
       ),
-      body: activities.isEmpty
+      body: widget.activities.isEmpty
           ? Center(child: Text('No activities for selected date.'))
           : SingleChildScrollView(
               child: Column(
-                children: activities.map((activity) {
+                children: widget.activities.map((activity) {
                   return Card(
                     child: Container(
                       decoration: BoxDecoration(
@@ -266,7 +274,7 @@ class BDOSelectedDateActivitiesScreen extends StatelessWidget {
                                       activity['after_image'],
                                       activity['latitude_after'] ?? 0.0,
                                       activity['longitude_after'] ?? 0.0,
-                                       '${DateTime.parse(activity['updated_at']).toLocal().hour}:${DateTime.parse(activity['updated_at']).toLocal().minute}:${DateTime.parse(activity['updated_at']).toLocal().second}',
+                                      '${DateTime.parse(activity['updated_at']).toLocal().hour}:${DateTime.parse(activity['updated_at']).toLocal().minute}:${DateTime.parse(activity['updated_at']).toLocal().second}',
                                     );
                                   },
                                   child: Stack(

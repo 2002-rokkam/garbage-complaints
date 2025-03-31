@@ -15,7 +15,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'dart:convert';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class VDOWorkerComplaintsListScreenCalender extends StatelessWidget {
+class VDOWorkerComplaintsListScreenCalender extends StatefulWidget {
   final DateTime date;
   final List<dynamic> complaints;
   final VoidCallback onUpdate;
@@ -24,18 +24,25 @@ class VDOWorkerComplaintsListScreenCalender extends StatelessWidget {
       {required this.date, required this.complaints, required this.onUpdate});
 
   @override
+  _VDOWorkerComplaintsListScreenCalenderState createState() =>
+      _VDOWorkerComplaintsListScreenCalenderState();
+}
+
+class _VDOWorkerComplaintsListScreenCalenderState
+    extends State<VDOWorkerComplaintsListScreenCalender> {
+  @override
   Widget build(BuildContext context) {
-    final selectedDateComplaints = complaints.where((complaint) {
+    final selectedDateComplaints = widget.complaints.where((complaint) {
       final complaintDate = DateTime.parse(complaint['created_at']).toLocal();
-      return complaintDate.year == date.year &&
-          complaintDate.month == date.month &&
-          complaintDate.day == date.day;
+      return complaintDate.year == widget.date.year &&
+          complaintDate.month == widget.date.month &&
+          complaintDate.day == widget.date.day;
     }).toList();
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Complaints on ${date.toLocal()}'.split(' ')[0],
+          'Complaints on ${widget.date.toLocal()}'.split(' ')[0],
           style: TextStyle(
             color: Colors.white, // White text color
             fontSize: 20, // Optional: Adjust font size
@@ -57,7 +64,7 @@ class VDOWorkerComplaintsListScreenCalender extends StatelessWidget {
                 final complaint = selectedDateComplaints[index];
                 return ComplaintCard(
                   complaint: complaint,
-                  onUpdate: onUpdate, // Pass the callback
+                  onUpdate: widget.onUpdate, // Pass the callback
                 );
               },
             ),
@@ -118,10 +125,8 @@ class _ComplaintCardState extends State<ComplaintCard> {
         setState(() {
           _address = fetchedAddress;
         });
-      } else {
-      }
-    } catch (e) {
-    }
+      } else {}
+    } catch (e) {}
   }
 
   Future<void> _pickImage() async {

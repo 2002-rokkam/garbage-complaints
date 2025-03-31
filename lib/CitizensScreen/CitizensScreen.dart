@@ -22,43 +22,43 @@ class _CitizensScreenState extends State<CitizensScreen> {
   List<Map<String, dynamic>> buttonItems(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     return [
-      {
-        'label': localizations.villagesCleaned,
-        'imageUrl': 'assets/images/villages_cleaned.png',
-        'route': 'DoorToDoorScreen',
-        'number': '345'
-      },
-      {
-        'label': localizations.swachhtaMitra,
-        'imageUrl': 'assets/images/group-discussion 1.png',
-        'route': 'RoadSweepingScreen',
-        'number': '150'
-      },
-      {
-        'label': localizations.homesShopsCleaned,
-        'imageUrl': 'assets/images/shop.png',
-        'route': 'DrainCleaningScreen',
-        'number': '200'
-      },
-      {
-        'label': localizations.roadsCleaned,
-        'imageUrl': 'assets/images/road_sweeping.png',
-        'route': 'CSCScreen',
-        'number': '120'
-      },
-      {
-        'label': localizations.dumpingYard,
-        'imageUrl': 'assets/images/Dumping-Yard.png',
-        'route': 'RRCScreen',
-        'number': '95'
-      },
-      {
-        'label': localizations.garbageDumped,
-        'imageUrl': 'assets/images/Garbage_Dumped.png',
-        'route': 'WagesScreen',
-        'number': '75'
-      },
-    ];
+    {
+      'label': localizations.villagesCleaned,
+      'imageUrl': 'assets/images/villages_cleaned.png',
+      'route': 'DoorToDoorScreen',
+      'number': '345'
+    },
+    {
+      'label': localizations.swachhtaMitra,
+      'imageUrl': 'assets/images/group-discussion 1.png',
+      'route': 'RoadSweepingScreen',
+      'number': '150'
+    },
+    {
+      'label': localizations.homesShopsCleaned,
+      'imageUrl': 'assets/images/shop.png',
+      'route': 'DrainCleaningScreen',
+      'number': '200'
+    },
+    {
+      'label': localizations.roadsCleaned,
+      'imageUrl': 'assets/images/road_sweeping.png',
+      'route': 'CSCScreen',
+      'number': '120'
+    },
+    {
+      'label': localizations.dumpingYard,
+      'imageUrl': 'assets/images/Dumping-Yard.png',
+      'route': 'RRCScreen',
+      'number': '95'
+    },
+    {
+      'label': localizations.garbageDumped,
+      'imageUrl': 'assets/images/Garbage_Dumped.png',
+      'route': 'WagesScreen',
+      'number': '75'
+    },
+  ];
   }
 
   late Locale _locale;
@@ -71,12 +71,12 @@ class _CitizensScreenState extends State<CitizensScreen> {
     });
   }
 
-  late PageController _pageController;
-  late Timer _timer;
+    late PageController _pageController;
+    late Timer _timer;
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(initialPage: 0);
+     _pageController = PageController(initialPage: 0);
     _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
       if (_pageController.hasClients) {
         int nextPage = (_pageController.page!.toInt() + 1) % 3;
@@ -121,7 +121,7 @@ class _CitizensScreenState extends State<CitizensScreen> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     final localizations = AppLocalizations.of(context)!;
-
+    
     return Column(
       children: [
         // Fixed image slider
@@ -405,6 +405,7 @@ class _CitizensScreenState extends State<CitizensScreen> {
     );
   }
 
+ 
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
@@ -416,7 +417,6 @@ class _CitizensScreenState extends State<CitizensScreen> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xFF5C964A),
-          automaticallyImplyLeading: false, // Removes the back arrow
           title: Text(
             appBarTitle,
             style: TextStyle(
@@ -452,6 +452,7 @@ class _CitizensScreenState extends State<CitizensScreen> {
     );
   }
 
+ 
   Widget _buildButton(String label, String imageUrl, String routeName,
       String number, BuildContext context) {
     return Container(

@@ -7,7 +7,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'authority/BDO/BDOD2D/QRDetailsScreen.dart';
 import 'authority/BDO/CalnderActivity/BDOSelectedDateActivitiesScreen.dart';
 
-class D2DCalendarActivityBody extends StatelessWidget {
+class D2DCalendarActivityBody extends StatefulWidget {
   final DateTime selectedDate;
   final List activities;
   final List tripDetails;
@@ -26,20 +26,26 @@ class D2DCalendarActivityBody extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _D2DCalendarActivityBodyState createState() =>
+      _D2DCalendarActivityBodyState();
+}
+
+class _D2DCalendarActivityBodyState extends State<D2DCalendarActivityBody> {
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         TableCalendar(
-          focusedDay: selectedDate,
+          focusedDay: widget.selectedDate,
           firstDay: DateTime(2000),
           lastDay: DateTime(2100),
           calendarFormat: CalendarFormat.month,
-          selectedDayPredicate: (day) => isSameDay(day, selectedDate),
+          selectedDayPredicate: (day) => isSameDay(day, widget.selectedDate),
           onDaySelected: (selectedDay, focusedDay) =>
-              onDateSelected(selectedDay),
+              widget.onDateSelected(selectedDay),
         ),
         Expanded(
-          child: isLoading
+          child: widget.isLoading
               ? Center(
                   child: Image.asset(
                     'assets/images/Loder.gif',
@@ -48,20 +54,20 @@ class D2DCalendarActivityBody extends StatelessWidget {
                   ),
                 )
               : TabBarView(
-                  controller: tabController,
+                  controller: widget.tabController,
                   children: [
                     _buildActivityCard(
                         context,
                         'Total Activities',
-                        activities.length,
+                        widget.activities.length,
                         BDOSelectedDateActivitiesScreen(
-                            selectedDate: selectedDate,
-                            activities: activities)),
+                            selectedDate: widget.selectedDate,
+                            activities: widget.activities)),
                     _buildActivityCard(
                         context,
                         'Total QR Scans',
-                        tripDetails.length,
-                        QRDetailsScreen(tripDetails: tripDetails)),
+                        widget.tripDetails.length,
+                        QRDetailsScreen(tripDetails: widget.tripDetails)),
                   ],
                 ),
         ),

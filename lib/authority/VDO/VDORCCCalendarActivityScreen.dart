@@ -271,12 +271,17 @@ class _VDORCCCalendarActivityScreenState
   }
 }
 
-class TripDetailsScreen extends StatelessWidget {
+class TripDetailsScreen extends StatefulWidget {
   final List tripDetails;
 
   const TripDetailsScreen({Key? key, required this.tripDetails})
       : super(key: key);
 
+  @override
+  _TripDetailsScreenState createState() => _TripDetailsScreenState();
+}
+
+class _TripDetailsScreenState extends State<TripDetailsScreen> {
   String _formatLocalTime(String dateTimeString) {
     try {
       DateTime utcTime = DateTime.parse(dateTimeString).toUtc();
@@ -294,12 +299,12 @@ class TripDetailsScreen extends StatelessWidget {
         title: Text('Trip Details'),
         backgroundColor: Color(0xFF5C964A),
       ),
-      body: tripDetails.isEmpty
+      body: widget.tripDetails.isEmpty
           ? Center(
               child: Text('No trip details available for the selected date.'))
           : SingleChildScrollView(
               child: Column(
-                children: tripDetails.map((trip) {
+                children: widget.tripDetails.map((trip) {
                   return Card(
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),

@@ -16,7 +16,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class WorkerComplaintsListScreen extends StatelessWidget {
+class WorkerComplaintsListScreen extends StatefulWidget {
   final DateTime date;
   final List<dynamic> complaints;
   final VoidCallback onUpdate;
@@ -25,18 +25,25 @@ class WorkerComplaintsListScreen extends StatelessWidget {
       {required this.date, required this.complaints, required this.onUpdate});
 
   @override
+  _WorkerComplaintsListScreenState createState() =>
+      _WorkerComplaintsListScreenState();
+}
+
+class _WorkerComplaintsListScreenState
+    extends State<WorkerComplaintsListScreen> {
+  @override
   Widget build(BuildContext context) {
-    final selectedDateComplaints = complaints.where((complaint) {
+    final selectedDateComplaints = widget.complaints.where((complaint) {
       final complaintDate = DateTime.parse(complaint['created_at']).toLocal();
-      return complaintDate.year == date.year &&
-          complaintDate.month == date.month &&
-          complaintDate.day == date.day;
+      return complaintDate.year == widget.date.year &&
+          complaintDate.month == widget.date.month &&
+          complaintDate.day == widget.date.day;
     }).toList();
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Complaints on ${date.toLocal()}'.split(' ')[0],
+          'Complaints on ${widget.date.toLocal()}'.split(' ')[0],
           style: TextStyle(
             color: Colors.white,
             fontSize: 20,
@@ -58,7 +65,7 @@ class WorkerComplaintsListScreen extends StatelessWidget {
                 final complaint = selectedDateComplaints[index];
                 return ComplaintCard(
                   complaint: complaint,
-                  onUpdate: onUpdate,
+                  onUpdate: widget.onUpdate,
                 );
               },
             ),
@@ -121,10 +128,8 @@ class _ComplaintCardState extends State<ComplaintCard> {
         setState(() {
           _address = data["display_name"] ?? "No address found";
         });
-      } else {
-      }
-    } catch (e) {
-    }
+      } else {}
+    } catch (e) {}
   }
 
   Future<void> _pickImage() async {

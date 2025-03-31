@@ -274,12 +274,16 @@ class _VDOD2DCalnderActivityScreenState
   }
 }
 
-class QRDetailsScreen extends StatelessWidget {
+class QRDetailsScreen extends StatefulWidget {
   final List tripDetails;
 
-  const QRDetailsScreen({Key? key, required this.tripDetails})
-      : super(key: key);
+  const QRDetailsScreen({Key? key, required this.tripDetails}) : super(key: key);
 
+  @override
+  _QRDetailsScreenState createState() => _QRDetailsScreenState();
+}
+
+class _QRDetailsScreenState extends State<QRDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -289,11 +293,11 @@ class QRDetailsScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
-        child: tripDetails.isEmpty
+        child: widget.tripDetails.isEmpty
             ? Center(
                 child: Text('No trip details available for selected date.'))
             : Column(
-                children: tripDetails.map((trip) {
+                children: widget.tripDetails.map((trip) {
                   return Card(
                     elevation: 4,
                     shape: RoundedRectangleBorder(

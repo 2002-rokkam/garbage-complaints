@@ -1,7 +1,7 @@
 // WokersScreen/WorkerCommon/CalnderActivityBeforeAfterScreen.dart
 import 'package:flutter/material.dart';
 
-class CalnderActivityBeforeAfterScreen extends StatelessWidget {
+class CalnderActivityBeforeAfterScreen extends StatefulWidget {
   final List activities;
   final DateTime selectedDate;
 
@@ -9,6 +9,13 @@ class CalnderActivityBeforeAfterScreen extends StatelessWidget {
       {Key? key, required this.activities, required this.selectedDate})
       : super(key: key);
 
+  @override
+  _CalnderActivityBeforeAfterScreenState createState() =>
+      _CalnderActivityBeforeAfterScreenState();
+}
+
+class _CalnderActivityBeforeAfterScreenState
+    extends State<CalnderActivityBeforeAfterScreen> {
   void _showFullScreenImage(BuildContext context, String imageUrl,
       double dirlatitude, double dirlongitude, String time) async {
     String location =
@@ -127,14 +134,14 @@ class CalnderActivityBeforeAfterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-      return Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: Text('Before After Details'),
         backgroundColor: Color(0xFF5C964A),
       ),
       body: SingleChildScrollView(
         child: Column(
-          children: activities.map((activity) {
+          children: widget.activities.map((activity) {
             return Card(
               child: Container(
                 decoration: BoxDecoration(
@@ -270,7 +277,7 @@ class CalnderActivityBeforeAfterScreen extends StatelessWidget {
                                   activity['after_image'],
                                   activity['latitude_after'] ?? 0.0,
                                   activity['longitude_after'] ?? 0.0,
-                                   '${DateTime.parse(activity['updated_at']).toLocal().hour}:${DateTime.parse(activity['updated_at']).toLocal().minute}:${DateTime.parse(activity['updated_at']).toLocal().second}',
+                                  '${DateTime.parse(activity['updated_at']).toLocal().hour}:${DateTime.parse(activity['updated_at']).toLocal().minute}:${DateTime.parse(activity['updated_at']).toLocal().second}',
                                 );
                               }
                             },

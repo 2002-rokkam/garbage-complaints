@@ -2,11 +2,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class VDOBeforeAfterScreen extends StatelessWidget {
+class VDOBeforeAfterScreen extends StatefulWidget {
   final List activities;
   const VDOBeforeAfterScreen({Key? key, required this.activities})
       : super(key: key);
 
+  @override
+  _VDOBeforeAfterScreenState createState() => _VDOBeforeAfterScreenState();
+}
+
+class _VDOBeforeAfterScreenState extends State<VDOBeforeAfterScreen> {
   void _showFullScreenImage(BuildContext context, String imageUrl,
       double dirlatitude, double dirlongitude, String time) async {
     String location =
@@ -133,7 +138,7 @@ class VDOBeforeAfterScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Column(
-          children: activities.map((activity) {
+          children: widget.activities.map((activity) {
             return Card(
               child: Container(
                 decoration: BoxDecoration(

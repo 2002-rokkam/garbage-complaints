@@ -263,12 +263,17 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
   }
 }
 
-class TripDetailsScreen extends StatelessWidget {
+class TripDetailsScreen extends StatefulWidget {
   final List tripDetails;
 
   const TripDetailsScreen({Key? key, required this.tripDetails})
       : super(key: key);
 
+  @override
+  _TripDetailsScreenState createState() => _TripDetailsScreenState();
+}
+
+class _TripDetailsScreenState extends State<TripDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -278,7 +283,7 @@ class TripDetailsScreen extends StatelessWidget {
         title: Text('Trip Details'),
         backgroundColor: Color(0xFF5C964A),
       ),
-      body: tripDetails.isEmpty
+      body: widget.tripDetails.isEmpty
           ? Center(
               child: Text(
                 'No trip details available for the selected date.',
@@ -287,9 +292,9 @@ class TripDetailsScreen extends StatelessWidget {
             )
           : ListView.builder(
               padding: EdgeInsets.all(16),
-              itemCount: tripDetails.length,
+              itemCount: widget.tripDetails.length,
               itemBuilder: (context, index) {
-                final trip = tripDetails[index];
+                final trip = widget.tripDetails[index];
                 return Card(
                   elevation: 3,
                   shape: RoundedRectangleBorder(
@@ -367,12 +372,17 @@ class TripDetailsScreen extends StatelessWidget {
   }
 }
 
-class BeforeAfterScreen extends StatelessWidget {
+class BeforeAfterScreen extends StatefulWidget {
   final List activities;
 
   const BeforeAfterScreen({Key? key, required this.activities})
       : super(key: key);
 
+  @override
+  _BeforeAfterScreenState createState() => _BeforeAfterScreenState();
+}
+
+class _BeforeAfterScreenState extends State<BeforeAfterScreen> {
   void _showFullScreenImage(BuildContext context, String imageUrl,
       double dirlatitude, double dirlongitude, String time) async {
     String location =
@@ -499,7 +509,7 @@ class BeforeAfterScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Column(
-          children: activities.map((activity) {
+          children: widget.activities.map((activity) {
             return Card(
               child: Container(
                 decoration: BoxDecoration(

@@ -93,8 +93,7 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
       } else {
         throw Exception('Failed to load complaints');
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   List getActivitiesForSelectedDate() {
@@ -205,7 +204,7 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
   }
 }
 
-class SelectedDateActivitiesScreen extends StatelessWidget {
+class SelectedDateActivitiesScreen extends StatefulWidget {
   final DateTime selectedDate;
   final List activities;
 
@@ -215,6 +214,13 @@ class SelectedDateActivitiesScreen extends StatelessWidget {
     required this.activities,
   }) : super(key: key);
 
+  @override
+  _SelectedDateActivitiesScreenState createState() =>
+      _SelectedDateActivitiesScreenState();
+}
+
+class _SelectedDateActivitiesScreenState
+    extends State<SelectedDateActivitiesScreen> {
   void _showFullScreenImage(BuildContext context, String imageUrl,
       double dirlatitude, double dirlongitude, String time) async {
     String location =
@@ -336,14 +342,14 @@ class SelectedDateActivitiesScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            'Activities on ${selectedDate.toLocal().toString().split(' ')[0]}'),
+            'Activities on ${widget.selectedDate.toLocal().toString().split(' ')[0]}'),
         backgroundColor: Color(0xFF5C964A),
       ),
-      body: activities.isEmpty
+      body: widget.activities.isEmpty
           ? Center(child: Text('No activities for selected date.'))
           : SingleChildScrollView(
               child: Column(
-                children: activities.map((activity) {
+                children: widget.activities.map((activity) {
                   return Card(
                     child: Container(
                       width: 370,

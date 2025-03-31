@@ -3,12 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
-class BDOTripDetailsScreen extends StatelessWidget {
+class BDOTripDetailsScreen extends StatefulWidget {
   final List tripDetails;
 
   const BDOTripDetailsScreen({Key? key, required this.tripDetails})
       : super(key: key);
 
+  @override
+  _BDOTripDetailsScreenState createState() => _BDOTripDetailsScreenState();
+}
+
+class _BDOTripDetailsScreenState extends State<BDOTripDetailsScreen> {
   String _formatLocalTime(String dateTimeString) {
     try {
       DateTime utcTime = DateTime.parse(dateTimeString).toUtc();
@@ -26,12 +31,12 @@ class BDOTripDetailsScreen extends StatelessWidget {
         title: Text('Trip Details'),
         backgroundColor: Color(0xFF5C964A),
       ),
-      body: tripDetails.isEmpty
+      body: widget.tripDetails.isEmpty
           ? Center(
               child: Text('No trip details available for the selected date.'))
           : SingleChildScrollView(
               child: Column(
-                children: tripDetails.map((trip) {
+                children: widget.tripDetails.map((trip) {
                   return Card(
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -88,8 +93,8 @@ class BDOTripDetailsScreen extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: 8),
-                          Text(                         
-                            'Date: ${_formatLocalTime(trip['date_time'])}', 
+                          Text(
+                            'Date: ${_formatLocalTime(trip['date_time'])}',
                             style: TextStyle(
                               color: Color(0xFF252525),
                               fontSize: 14,

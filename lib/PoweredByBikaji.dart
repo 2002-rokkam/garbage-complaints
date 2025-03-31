@@ -2,7 +2,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class PoweredByBikaji extends StatelessWidget {
+class PoweredByBikaji extends StatefulWidget {
+  @override
+  _PoweredByBikajiState createState() => _PoweredByBikajiState();
+}
+
+class _PoweredByBikajiState extends State<PoweredByBikaji> {
   @override
   Widget build(BuildContext context) {
     return Container(

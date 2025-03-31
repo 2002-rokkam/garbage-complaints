@@ -4,17 +4,23 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Login/PhoneAuthScreen.dart';
 
-class LanguageSelectionScreen extends StatelessWidget {
+class LanguageSelectionScreen extends StatefulWidget {
   final Function(Locale) changeLanguage;
 
   const LanguageSelectionScreen({Key? key, required this.changeLanguage})
       : super(key: key);
 
+  @override
+  _LanguageSelectionScreenState createState() =>
+      _LanguageSelectionScreenState();
+}
+
+class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
   Future<void> _setLanguage(Locale locale, BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('language', locale.languageCode);
 
-    changeLanguage(locale);
+    widget.changeLanguage(locale);
 
     Navigator.pushReplacement(
       context,
@@ -24,22 +30,38 @@ class LanguageSelectionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       body: Container(
-        width: 402,
-        height: 874,
+        width: screenWidth,
+        height: screenHeight,
         decoration: const BoxDecoration(color: Color(0xFFEFEFEF)),
         child: Stack(
           children: [
             Positioned(
-              left: 93.11,
-              top: 370,
+              left: -screenWidth * 0.0, // 5% from left
+              top: screenHeight * 0.180, // 52% from top
+              child: SizedBox(
+                child: Image.asset(
+                  'assets/images/GreenLogo.png',
+                  height: 140,
+                ),
+              ),
+            ),
+            Positioned(
+              left: screenWidth * 0.22, // Adjust proportionally
+              top: screenHeight * 0.42, // Adjust proportionally
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const SizedBox(width: 13),
+                  const Icon(
+                    Icons.language_sharp,
+                    color: Colors.black,
+                    size: 26,
+                  ),
+                  const SizedBox(width: 8),
                   Text.rich(
                     TextSpan(
                       children: [
@@ -68,16 +90,16 @@ class LanguageSelectionScreen extends StatelessWidget {
               ),
             ),
             Positioned(
-              left: 16,
-              top: 452,
+              left: screenWidth * 0.05, // 5% from left
+              top: screenHeight * 0.52, // 52% from top
               child: LanguageButton(
                 text: 'हिन्दी',
                 onTap: () => _setLanguage(const Locale('hi'), context),
               ),
             ),
             Positioned(
-              left: 16,
-              top: 520,
+              left: screenWidth * 0.05,
+              top: screenHeight * 0.6, // 60% from top
               child: LanguageButton(
                 text: 'English',
                 onTap: () => _setLanguage(const Locale('en'), context),
@@ -102,7 +124,8 @@ class LanguageButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 370,
+        width:
+            MediaQuery.of(context).size.width * 0.9, // Adjust width dynamically
         height: 50,
         padding: const EdgeInsets.all(10),
         decoration: ShapeDecoration(
