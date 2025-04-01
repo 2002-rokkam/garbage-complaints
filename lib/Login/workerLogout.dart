@@ -37,8 +37,8 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
     final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Logout',
+        title: Text(
+          localizations.settings, // Localized 'Settings'
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Color(0xFF5C964A),
@@ -55,8 +55,71 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            SizedBox(height: 20),
+            Container(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () async {
+                  const url =
+                      'https://drive.google.com/file/d/1ixu-1KI-XLGCnW7oxVnY6TcqM7vl52CN/view?usp=sharing';
+                  if (await canLaunchUrl(Uri.parse(url))) {
+                    await launchUrl(Uri.parse(url),
+                        mode: LaunchMode.externalApplication);
+                  } else {
+                    throw 'Could not launch $url';
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  padding: EdgeInsets.symmetric(vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: Text(
+                  localizations.ordersCirculars, // Localized 'Orders/Circulars'
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            // FAQs Button
+            Container(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () async {
+                  const url =
+                      'https://docs.google.com/document/d/1yjxBOrK9Rs-o54HqJh2g957sO2xF3AmOkVePmO2Q2AE/edit?usp=sharing';
+                  if (await canLaunchUrl(Uri.parse(url))) {
+                    await launchUrl(Uri.parse(url),
+                        mode: LaunchMode.externalApplication);
+                  } else {
+                    throw 'Could not launch $url';
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  padding: EdgeInsets.symmetric(vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: Text(
+                  localizations.faqs, // Localized 'FAQs'
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
             // Title
-            SizedBox(height: 50),
+            SizedBox(height: 20),
             // Wide Logout Button
             Container(
               width: double.infinity, // Makes the button take the full width
@@ -73,7 +136,7 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
                   ),
                 ),
                 child: Text(
-                  'Logout',
+                  localizations.logout, // Localized 'Logout'
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -105,7 +168,7 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
                 }
               },
               child: Text(
-                'Privacy Policy',
+                localizations.privacyPolicy, // Localized 'Privacy Policy'
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.blueAccent,
@@ -113,26 +176,27 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
                 ),
               ),
             ),
+            SizedBox(height: 20),
           ],
         ),
       ),
     );
   }
 
-  // Show confirmation dialog
   void showLogoutConfirmationDialog(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Logout'),
-        content: Text('Are you sure you want to log out?'),
+        title: Text(localizations.logout), // Localized 'Logout'
+        content: Text(
+            localizations.logoutConfirmation), // Localized confirmation message
         actions: [
           TextButton(
             onPressed: () {
               Navigator.pop(context); // Close the dialog without logging out
             },
-            child: Text(localizations.cancel),
+            child: Text(localizations.cancel), // Localized 'Cancel'
           ),
           TextButton(
             onPressed: () async {
@@ -153,7 +217,7 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
                 (Route<dynamic> route) => false, // Prevent going back
               );
             },
-            child: Text('Logout'),
+            child: Text(localizations.logout), // Localized 'Logout'
           ),
         ],
       ),

@@ -39,7 +39,7 @@ class _SMDScreenState extends State<SMDScreen> {
   @override
   void initState() {
     super.initState();
-     _pageController = PageController(initialPage: 0);
+    _pageController = PageController(initialPage: 0);
     _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
       if (_pageController.hasClients) {
         int nextPage = (_pageController.page!.toInt() + 1) % 3;
@@ -65,12 +65,13 @@ class _SMDScreenState extends State<SMDScreen> {
     });
   }
 
- @override
+  @override
   void dispose() {
     _timer.cancel();
     _pageController.dispose();
     super.dispose();
   }
+
   void _loadLanguagePreference() async {
     final prefs = await SharedPreferences.getInstance();
     String? languageCode = prefs.getString('language') ?? 'en';
@@ -81,22 +82,29 @@ class _SMDScreenState extends State<SMDScreen> {
 
   Future<void> fetchData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? appbarselectedGramPanchayat = prefs.getString('appbarselectedGramPanchayat');
+    String? appbarselectedGramPanchayat =
+        prefs.getString('appbarselectedGramPanchayat');
     String? appbarselectedBlock = prefs.getString('appbarselectedBlock');
     String? appbarselectedDistrict = prefs.getString('appbarselectedDistrict');
     String apiUrl;
 
-    if ((appbarselectedGramPanchayat == null || appbarselectedGramPanchayat.isEmpty) &&
+    if ((appbarselectedGramPanchayat == null ||
+            appbarselectedGramPanchayat.isEmpty) &&
         (appbarselectedBlock == null || appbarselectedBlock.isEmpty) &&
         (appbarselectedDistrict == null || appbarselectedDistrict.isEmpty)) {
       apiUrl = 'https://sbmgrajasthan.com/api/complaints-by-state/';
-    } else if ((appbarselectedGramPanchayat == null || appbarselectedGramPanchayat.isEmpty) &&
-               (appbarselectedBlock == null || appbarselectedBlock.isEmpty)) {
-      apiUrl = 'https://sbmgrajasthan.com/api/complaints-by-district/?district=$appbarselectedDistrict';
-    } else if (appbarselectedGramPanchayat == null || appbarselectedGramPanchayat.isEmpty) {
-      apiUrl = 'https://sbmgrajasthan.com/api/complaints-by-block/?district=$appbarselectedDistrict&block=$appbarselectedBlock';
+    } else if ((appbarselectedGramPanchayat == null ||
+            appbarselectedGramPanchayat.isEmpty) &&
+        (appbarselectedBlock == null || appbarselectedBlock.isEmpty)) {
+      apiUrl =
+          'https://sbmgrajasthan.com/api/complaints-by-district/?district=$appbarselectedDistrict';
+    } else if (appbarselectedGramPanchayat == null ||
+        appbarselectedGramPanchayat.isEmpty) {
+      apiUrl =
+          'https://sbmgrajasthan.com/api/complaints-by-block/?district=$appbarselectedDistrict&block=$appbarselectedBlock';
     } else {
-      apiUrl = 'https://sbmgrajasthan.com/api/complaints-by-gram-panchayat/?gram_panchayat=$appbarselectedGramPanchayat';
+      apiUrl =
+          'https://sbmgrajasthan.com/api/complaints-by-gram-panchayat/?gram_panchayat=$appbarselectedGramPanchayat';
     }
 
     final response = await http.get(Uri.parse(apiUrl));
@@ -114,18 +122,20 @@ class _SMDScreenState extends State<SMDScreen> {
 
   Future<void> fetchActivityCounts() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? appbarselectedGramPanchayat = prefs.getString('appbarselectedGramPanchayat');
-        String? appbarselectedBlock = prefs.getString('appbarselectedBlock');
-    String? appbarselectedDistrict = prefs.getString('appbarselectedDistrict');    
+    String? appbarselectedGramPanchayat =
+        prefs.getString('appbarselectedGramPanchayat');
+    String? appbarselectedBlock = prefs.getString('appbarselectedBlock');
+    String? appbarselectedDistrict = prefs.getString('appbarselectedDistrict');
     String apiUrl;
 
-     if ((appbarselectedGramPanchayat == null ||
+    if ((appbarselectedGramPanchayat == null ||
             appbarselectedGramPanchayat.isEmpty) &&
         (appbarselectedBlock == null || appbarselectedBlock.isEmpty) &&
         (appbarselectedDistrict == null || appbarselectedDistrict.isEmpty)) {
       apiUrl = 'https://sbmgrajasthan.com/api/state-activity-count/';
-    } else if ((appbarselectedGramPanchayat == null || appbarselectedGramPanchayat.isEmpty) &&
-               (appbarselectedBlock == null || appbarselectedBlock.isEmpty)){
+    } else if ((appbarselectedGramPanchayat == null ||
+            appbarselectedGramPanchayat.isEmpty) &&
+        (appbarselectedBlock == null || appbarselectedBlock.isEmpty)) {
       apiUrl =
           'https://sbmgrajasthan.com/api/district-activity-count/?district=$appbarselectedDistrict';
     } else if (appbarselectedGramPanchayat == null ||
@@ -282,14 +292,16 @@ class _SMDScreenState extends State<SMDScreen> {
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Text(
-                             appbarselectedDistrict == null || appbarselectedDistrict!.isEmpty
-                             ? "State: " + District!
-                             : (appbarselectedGramPanchayat == null || appbarselectedGramPanchayat!.isEmpty 
-                             ? (appbarselectedBlock == null || appbarselectedBlock!.isEmpty
-                             ? "District: " + appbarselectedDistrict!
-                             : "Block: " + appbarselectedBlock!)
-                             : "Gram Panchayat: " +
-                                appbarselectedGramPanchayat!),
+                            appbarselectedDistrict == null ||
+                                    appbarselectedDistrict!.isEmpty
+                                ? "${localizations.state}: $District"
+                                : (appbarselectedGramPanchayat == null ||
+                                        appbarselectedGramPanchayat!.isEmpty
+                                    ? (appbarselectedBlock == null ||
+                                            appbarselectedBlock!.isEmpty
+                                        ? "${localizations.district}: $appbarselectedDistrict"
+                                        : "${localizations.block}: $appbarselectedBlock")
+                                    : "${localizations.gramPanchayat}: $appbarselectedGramPanchayat"),
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 18,
@@ -744,7 +756,6 @@ class _SMDScreenState extends State<SMDScreen> {
     );
   }
 
- 
   void _navigateToPage(String routeName, BuildContext context) async {
     Widget page = await _getPage(routeName, context);
 

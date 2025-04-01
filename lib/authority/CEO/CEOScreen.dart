@@ -39,7 +39,7 @@ class _CEOScreenState extends State<CEOScreen> {
   @override
   void initState() {
     super.initState();
-     _pageController = PageController(initialPage: 0);
+    _pageController = PageController(initialPage: 0);
     _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
       if (_pageController.hasClients) {
         int nextPage = (_pageController.page!.toInt() + 1) % 3;
@@ -56,19 +56,21 @@ class _CEOScreenState extends State<CEOScreen> {
     _loadLanguagePreference();
     SharedPreferences.getInstance().then((prefs) {
       setState(() {
-        appbarselectedGramPanchayat =prefs.getString('appbarselectedGramPanchayat');
+        appbarselectedGramPanchayat =
+            prefs.getString('appbarselectedGramPanchayat');
         District = prefs.getString('District');
         appbarselectedBlock = prefs.getString('appbarselectedBlock');
       });
     });
   }
 
-@override
+  @override
   void dispose() {
     _timer.cancel();
     _pageController.dispose();
     super.dispose();
   }
+
   void _loadLanguagePreference() async {
     final prefs = await SharedPreferences.getInstance();
     String? languageCode = prefs.getString('language') ?? 'en';
@@ -82,8 +84,7 @@ class _CEOScreenState extends State<CEOScreen> {
     String? District = prefs.getString('District');
     String? appbarselectedGramPanchayat =
         prefs.getString('appbarselectedGramPanchayat');
-    String? appbarselectedBlock =
-        prefs.getString('appbarselectedBlock');
+    String? appbarselectedBlock = prefs.getString('appbarselectedBlock');
 
     String apiUrl;
 
@@ -92,14 +93,13 @@ class _CEOScreenState extends State<CEOScreen> {
         appbarselectedBlock!.isEmpty) {
       apiUrl =
           'https://sbmgrajasthan.com/api/complaints-by-district/?district=$District';
-    
     } else if (appbarselectedGramPanchayat.isEmpty) {
-        apiUrl =
+      apiUrl =
           'https://sbmgrajasthan.com/api/complaints-by-block/?district=$District&block=$appbarselectedBlock';
-       } else {
+    } else {
       apiUrl =
           'https://sbmgrajasthan.com/api/complaints-by-gram-panchayat/?gram_panchayat=$appbarselectedGramPanchayat';
-      }
+    }
 
     final response = await http.get(Uri.parse(apiUrl));
 
@@ -111,25 +111,30 @@ class _CEOScreenState extends State<CEOScreen> {
         resolvedComplaints = data['resolved_complaints'];
       });
     } else {
-      throw Exception('Failed to load data');
+      throw Exception(AppLocalizations.of(context)!.failedToLoadData);
     }
   }
 
   Future<void> fetchActivityCounts() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? district = prefs.getString('District');
-    String? appbarselectedGramPanchayat =prefs.getString('appbarselectedGramPanchayat');
+    String? appbarselectedGramPanchayat =
+        prefs.getString('appbarselectedGramPanchayat');
     String? appbarselectedBlock = prefs.getString('appbarselectedBlock');
     String apiUrl;
 
-    if (appbarselectedGramPanchayat == null || appbarselectedGramPanchayat.isEmpty
-     && appbarselectedBlock == null || appbarselectedBlock!.isEmpty) {
-      apiUrl ='https://sbmgrajasthan.com/api/district-activity-count/?district=$district';
-
-    } else if (appbarselectedGramPanchayat == null || appbarselectedGramPanchayat.isEmpty) {
-      apiUrl = 'https://sbmgrajasthan.com/api/block-activity-count/?district=$district&block=$appbarselectedBlock';
+    if (appbarselectedGramPanchayat == null ||
+        appbarselectedGramPanchayat.isEmpty && appbarselectedBlock == null ||
+        appbarselectedBlock!.isEmpty) {
+      apiUrl =
+          'https://sbmgrajasthan.com/api/district-activity-count/?district=$district';
+    } else if (appbarselectedGramPanchayat == null ||
+        appbarselectedGramPanchayat.isEmpty) {
+      apiUrl =
+          'https://sbmgrajasthan.com/api/block-activity-count/?district=$district&block=$appbarselectedBlock';
     } else {
-      apiUrl ='https://sbmgrajasthan.com/api/gp-activity-count/?district=$district&gp=$appbarselectedGramPanchayat';
+      apiUrl =
+          'https://sbmgrajasthan.com/api/gp-activity-count/?district=$district&gp=$appbarselectedGramPanchayat';
     }
     final response = await http.get(Uri.parse(apiUrl));
 
@@ -149,7 +154,7 @@ class _CEOScreenState extends State<CEOScreen> {
         };
       });
     } else {
-      throw Exception('Failed to load activity data');
+      throw Exception(AppLocalizations.of(context)!.failedToLoadData);
     }
   }
 
@@ -275,11 +280,15 @@ class _CEOScreenState extends State<CEOScreen> {
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Text(
-                            appbarselectedGramPanchayat == null || appbarselectedGramPanchayat!.isEmpty
-                              ? (appbarselectedBlock == null || appbarselectedBlock!.isEmpty
-                                ? "District: " + District!
-                                : "Block: " +  appbarselectedBlock!)
-                              : "Gram Panchayat: " + appbarselectedGramPanchayat!,
+                            appbarselectedGramPanchayat == null ||
+                                    appbarselectedGramPanchayat!.isEmpty
+                                ? (appbarselectedBlock == null ||
+                                        appbarselectedBlock!.isEmpty
+                                    ? "${localizations.district}: " + District!
+                                    : "${localizations.block}: " +
+                                        appbarselectedBlock!)
+                                : "${localizations.gramPanchayat}: " +
+                                    appbarselectedGramPanchayat!,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 14,

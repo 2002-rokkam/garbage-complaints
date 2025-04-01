@@ -160,7 +160,7 @@ class _BDORCCCalendarActivityScreenState
           indicatorWeight: 3.0,
           tabs: [
             Tab(text: localizations.beforeAfter),
-            Tab(text: 'Trip Details'),
+            Tab(text: localizations.tripDetails),
           ],
         ),
       ),
@@ -270,10 +270,10 @@ class _BDORCCCalendarActivityScreenState
                     controller: _tabController,
                     children: [
                       selectedActivities.isEmpty
-                          ? Center(child: Text('No Activities Available'))
+                          ? Center(child: Text(localizations.noActivities))
                           : Container(),
                       selectedTrips.isEmpty
-                          ? Center(child: Text('No Trip Details Available'))
+                          ? Center(child: Text(localizations.noTripDetails))
                           : Container(),
                     ],
                   ),

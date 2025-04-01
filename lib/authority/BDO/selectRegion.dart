@@ -68,8 +68,7 @@ class _RegionSelectorState extends State<RegionSelector> {
       } else {
         throw Exception('Failed to load districts');
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<void> fetchGramPanchayats(
@@ -94,55 +93,35 @@ class _RegionSelectorState extends State<RegionSelector> {
       } else {
         throw Exception('Failed to load gram panchayats');
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<void> submitSelection() async {
-      String formattedDistrict = selectedDistrict!.replaceAll(' ', '_');
-      String formattedBlock = selectedBlock!.replaceAll(' ', '_');
-      String formattedGramPanchayat = selectedGramPanchayat?.replaceAll(' ', '_') ?? '';
+    String formattedDistrict = selectedDistrict!.replaceAll(' ', '_');
+    String formattedBlock = selectedBlock!.replaceAll(' ', '_');
+    String formattedGramPanchayat =
+        selectedGramPanchayat?.replaceAll(' ', '_') ?? '';
 
-      formattedDistrict =
-          formattedDistrict.replaceAllMapped(RegExp(r'_(.)'), (match) {
-        return '_${match.group(1)?.toLowerCase()}';
-      });
+    formattedDistrict =
+        formattedDistrict.replaceAllMapped(RegExp(r'_(.)'), (match) {
+      return '_${match.group(1)?.toLowerCase()}';
+    });
 
-      formattedBlock =
-          formattedBlock.replaceAllMapped(RegExp(r'_(.)'), (match) {
-        return '_${match.group(1)?.toLowerCase()}';
-      });
+    formattedBlock = formattedBlock.replaceAllMapped(RegExp(r'_(.)'), (match) {
+      return '_${match.group(1)?.toLowerCase()}';
+    });
 
-      formattedGramPanchayat =
-          formattedGramPanchayat.replaceAllMapped(RegExp(r'_(.)'), (match) {
-        return '_${match.group(1)?.toLowerCase()}';
-      });
+    formattedGramPanchayat =
+        formattedGramPanchayat.replaceAllMapped(RegExp(r'_(.)'), (match) {
+      return '_${match.group(1)?.toLowerCase()}';
+    });
 
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString('appbarselectedDistrict', formattedDistrict);
-      await prefs.setString('appbarselectedBlock', formattedBlock);
-      await prefs.setString(
-          'appbarselectedGramPanchayat', formattedGramPanchayat);
-      Navigator.pop(context, true);
-    // } else {
-    //   final localizations = AppLocalizations.of(context)!;
-    //   showDialog(
-    //     context: context,
-    //     builder: (context) {
-    //       return AlertDialog(
-    //         content: Text('Please select all fields before submitting.'),
-    //         actions: [
-    //           TextButton(
-    //             onPressed: () {
-    //               Navigator.pop(context);
-    //             },
-    //             child: Text(localizations.ok),
-    //           ),
-    //         ],
-    //       );
-    //     },
-    //   );
-    // }
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('appbarselectedDistrict', formattedDistrict);
+    await prefs.setString('appbarselectedBlock', formattedBlock);
+    await prefs.setString(
+        'appbarselectedGramPanchayat', formattedGramPanchayat);
+    Navigator.pop(context, true);
   }
 
   @override
@@ -258,7 +237,7 @@ class _RegionSelectorState extends State<RegionSelector> {
                         SizedBox(
                           width: 125,
                           child: Text(
-                            'Currently, you are viewing Gram Panchayat-level data. Reset to view block level data.',
+                            localizations.currentlyViewingGramPanchayat,
                             style: TextStyle(
                               color: const Color(0xFF49454F),
                               fontSize: 8,
@@ -294,7 +273,7 @@ class _RegionSelectorState extends State<RegionSelector> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  'Reset',
+                                  localizations.reset,
                                   style: TextStyle(
                                     color: const Color(0xFFB3261E),
                                     fontSize: 14,
@@ -313,7 +292,7 @@ class _RegionSelectorState extends State<RegionSelector> {
                   )
                 : SizedBox.shrink(),
             SizedBox(height: 16),
-            Text('District', style: TextStyle(fontSize: 16)),
+            Text(localizations.district, style: TextStyle(fontSize: 16)),
             GestureDetector(
               onTap: () {
                 if (selectedDistrict == null) {
@@ -339,14 +318,14 @@ class _RegionSelectorState extends State<RegionSelector> {
                       Icons.location_pin,
                       color: Colors.grey,
                     ),
-                    Text(selectedDistrict ?? 'Select District'),
+                    Text(selectedDistrict ?? localizations.selectDistrict),
                     Icon(Icons.arrow_drop_down),
                   ],
                 ),
               ),
             ),
             SizedBox(height: 16),
-            Text('Block', style: TextStyle(fontSize: 16)),
+            Text(localizations.block, style: TextStyle(fontSize: 16)),
             GestureDetector(
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
@@ -361,14 +340,14 @@ class _RegionSelectorState extends State<RegionSelector> {
                       Icons.location_pin,
                       color: Colors.grey,
                     ),
-                    Text(selectedBlock ?? 'Select Block'),
+                    Text(selectedBlock ?? localizations.selectBlock),
                     Icon(Icons.arrow_drop_down),
                   ],
                 ),
               ),
             ),
             SizedBox(height: 16),
-            Text('Gram Panchayat', style: TextStyle(fontSize: 16)),
+            Text(localizations.gramPanchayat, style: TextStyle(fontSize: 16)),
             GestureDetector(
               onTap: () async {
                 if (selectedBlock != null) {
@@ -399,9 +378,8 @@ class _RegionSelectorState extends State<RegionSelector> {
                       context: context,
                       builder: (context) {
                         return AlertDialog(
-                          title: Text('No Data Available'),
-                          content: Text(
-                              'No Gram Panchayats found for the selected Block.'),
+                          title: Text(localizations.noDataAvailable),
+                          content: Text(localizations.noGramPanchayat),
                           actions: [
                             TextButton(
                               onPressed: () {
@@ -429,7 +407,8 @@ class _RegionSelectorState extends State<RegionSelector> {
                       Icons.location_pin,
                       color: Colors.grey,
                     ),
-                    Text(selectedGramPanchayat ?? 'Select Gram Panchayat'),
+                    Text(selectedGramPanchayat ??
+                        localizations.selectGramPanchayat),
                     Icon(Icons.arrow_drop_down),
                   ],
                 ),
@@ -450,7 +429,7 @@ class _RegionSelectorState extends State<RegionSelector> {
                   padding: EdgeInsets.symmetric(vertical: 16),
                 ),
                 child: Text(
-                  'Submit',
+                  localizations.submit,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,

@@ -42,7 +42,8 @@ class _VDOWorkerComplaintsListScreenCalenderState
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Complaints on ${widget.date.toLocal()}'.split(' ')[0],
+          '${AppLocalizations.of(context)!.complaints} ${widget.date.toLocal()}'
+              .split(' ')[0],
           style: TextStyle(
             color: Colors.white, // White text color
             fontSize: 20, // Optional: Adjust font size
@@ -55,7 +56,7 @@ class _VDOWorkerComplaintsListScreenCalenderState
       backgroundColor: Color.fromRGBO(239, 239, 239, 1),
       body: selectedDateComplaints.isEmpty
           ? Center(
-              child: Text('No complaints found for this date.'),
+              child: Text(AppLocalizations.of(context)!.noComplaintsForDate),
             )
           : ListView.builder(
               padding: EdgeInsets.all(16.0),
@@ -179,7 +180,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                       Navigator.of(context).pop(); // Close the dialog
                       _submitFormData(); // Submit the image
                     },
-                    child: Text('Submit'),
+                    child: Text(AppLocalizations.of(context)!.submit),
                   ),
                   ElevatedButton(
                     onPressed: () {
@@ -215,7 +216,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
   Future<void> _submitFormData() async {
     if (_imageFile == null || _latitude == null || _longitude == null) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Please select an image and allow location access'),
+        content: Text(AppLocalizations.of(context)!.selectImageLocation),
       ));
       return;
     }
@@ -466,7 +467,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                 Navigator.of(context).pop();
                 _verifyComplaint(complaintId);
               },
-              child: Text("Yes, Verify"),
+              child: Text(AppLocalizations.of(context)!.verify),
             ),
           ],
         );
@@ -745,7 +746,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                                     widget.complaint['complaint_id']);
                               },
                               child: Text(
-                                'Verify',
+                                AppLocalizations.of(context)!.verify,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 14,

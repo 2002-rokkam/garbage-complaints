@@ -40,9 +40,11 @@ class _ContractordetailsState extends State<Contractordetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Contractor Details',
-            style: TextStyle(color: Colors.white)),
-        backgroundColor: Color(0xFF5C964A),
+        title: Text(
+          AppLocalizations.of(context)!.contractorDetails,
+          style: const TextStyle(color: Colors.white),
+        ),
+        backgroundColor: const Color(0xFF5C964A),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -64,10 +66,16 @@ class _ContractordetailsState extends State<Contractordetails> {
             );
           }
           if (snapshot.hasError) {
-            return Center(child: Text("No contractor details found!"));
+            return Center(
+              child:
+                  Text(AppLocalizations.of(context)!.noContractorDetailsFound),
+            );
           }
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text("No contractor details found!"));
+            return Center(
+              child:
+                  Text(AppLocalizations.of(context)!.noContractorDetailsFound),
+            );
           }
           final contractors = snapshot.data;
           return ListView.builder(

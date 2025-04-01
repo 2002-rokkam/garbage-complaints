@@ -148,8 +148,7 @@ class _BDOD2DCalnderActivityScreenState
       } else {
         throw Exception('Failed to load trip details');
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   List getActivitiesForSelectedDate() {
@@ -192,7 +191,7 @@ class _BDOD2DCalnderActivityScreenState
           indicatorWeight: 3.0,
           tabs: [
             Tab(text: localizations.beforeAfter),
-            Tab(text: 'Scan QR'),
+            Tab(text: localizations.scanQR), 
           ],
         ),
       ),

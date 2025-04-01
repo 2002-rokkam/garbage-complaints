@@ -34,13 +34,22 @@
   "qrData": "QR Data",
   "totalActivities": "Total Activities: {count}",
   "viewAll": "View All",
-  "noActivities": "No activities for selected date.",
+  "noActivities": "No activities for the selected month.",
+  "@noActivities": {
+    "description": "Message displayed when no activities are available for the selected month"
+  },
   "totalQRScans": "Total QR Scans: {count}",
   "noQRScans": "No QR scans for selected date.",
   "qrDetails": "QR Details",
   "noTripDetails": "No trip details available for selected date.",
+  "@noTripDetails": {
+    "description": "Message displayed when no trip details are available"
+  },
   "totalTripDetails": "Total Trip Details: {count}",
   "tripDetails": "Trip Details",
+  "@tripDetails": {
+    "description": "Label for the Trip Details tab"
+  },
   "workerEmail": "Worker Email:",
   "trips": "Trips:",
   "quantityWaste": "Quantity of Waste:",
@@ -49,13 +58,24 @@
   "segregatedPlastic": "Segregated Plastic:",
   "date": "Date:",
   "selectMonth": "Select Month",
+  "@selectMonth": {
+    "description": "Label for selecting a month"
+  },
   "totalComplaints": "Total Complaints",
   "pending": "Pending",
   "resolved": "Resolved",
   "noComplaints": "No complaints available",
+  "noComplaintsForDate": "No complaints for this date.",
+  "@noComplaintsForDate": {
+    "description": "Message displayed when no complaints are available for the selected date"
+  },
+  "failedToLoadComplaints": "Failed to load complaints.",
+  "@failedToLoadComplaints": {
+    "description": "Error message when complaints fail to load"
+  },
   "submit": "Submit",
   "cancel": "Cancel",
-  "selectImageLocation": "Please select an image and allow location access",
+  "selectImageLocation": "Please select an image and allow location access.",
   "openMap": "Open Map",
   "viewReply": "View Reply",
   "contractorDetails": "Contractor Details",
@@ -63,18 +83,30 @@
   "ok": "OK",
   "search": "Search",
   "district": "District",
+  "state": "State",
+  "block": "Block",
+  "gramPanchayat": "Gram Panchayat",
   "selectDistrict": "Select District",
   "block": "Block",
-  "selectBlock": "Select Block",
   "gramPanchayat": "Gram Panchayat",
-  "noDataAvailable": "No Data Available",
-  "noGramPanchayat": "No Gram Panchayats found for the selected Block.",
+  "failedToLoadData": "Failed to load data.",
+  "@failedToLoadData": {
+    "description": "Error message when data fails to load"
+  },
+  "errorSavingData": "Error saving data.",
+  "tryAgain": "Try Again",
+  "selectBlock": "Select Block",
   "selectGramPanchayat": "Select Gram Panchayat",
+  "noDataAvailable": "No data available.",
+  "noGramPanchayat": "No Gram Panchayat found.",
+  "@noGramPanchayat": {
+    "description": "Message displayed when no Gram Panchayat is found"
+  },
+  "noGramPanchayat": "No Gram Panchayats found for the selected Block.",
   "success": "Success!",
   "contractorSubmitted": "Contractor details have been submitted successfully.",
   "oops": "Oops!",
   "contractorFailed": "Failed to submit contractor details. Please try again later.",
-  "tryAgain": "Try Again",
   "companyName": "Company Name",
   "enterCompanyName": "Enter company name",
   "pleaseEnterCompanyName": "Please enter company name",
@@ -118,16 +150,27 @@
   "helpLine": "Help Line",
   "sbmgRajasthan": "SBMG Rajasthan",
   "settings": "Settings",
+  "ordersCirculars": "Orders/Circulars",
+  "faqs": "FAQs",
+  "logout": "Logout",
+  "logoutConfirmation": "Are you sure you want to log out?",
+  "privacyPolicy": "Privacy Policy",
   "panchayatCampus": "Panchayat Campus",
   "panchayatToilet": "Panchayat Toilet",
   "panchayatDetails": "Panchayat Details",
   "campus": "Campus",
+  "@campus": {
+    "description": "Label for the Campus tab"
+  },
   "toilet": "Toilet",
+  "@toilet": {
+    "description": "Label for the Toilet tab"
+  },
   "schoolDetails": "School Details",
   "gps": "GPS",
   "addMore": "Add More",
   "beforeAfterDetails": "Before & After Details",
-  "qrScannedData": "QR Scanned Data:",
+  "qrScannedData": "QR Scanned Data: {QRAddress}",
   "before":"Before",
   "after":"After",
   "slideToConfirmBefore": "Slide to confirm 'Before'",
@@ -142,5 +185,62 @@
   "email": "Email",
   "password": "Password",
   "enterEmail": "Enter your Email",
-  "pleaseEnterPassword": "Please enter your Password"
+  "pleaseEnterPassword": "Please enter your Password",
+  "scanQR": "Scan QR",
+  "@scanQR": {
+    "description": "Label for the Scan QR tab"
+  },
+  "sectionTitle": "{section}",
+  "@sectionTitle": {
+    "description": "Title for the section in the app bar"
+  },
+  "view": "View",
+  "@view": {
+    "description": "Label for the View button"
+  },
+  "workedBy": "Worked by",
+  "capitalizeFirstLetter": "{text}",
+  "@capitalizeFirstLetter": {
+    "description": "Capitalizes the first letter of each word in the text"
+  },
+  "latitude": "Latitude",
+  "longitude": "Longitude",
+  "january": "January",
+  "february": "February",
+  "march": "March",
+  "april": "April",
+  "may": "May",
+  "june": "June",
+  "july": "July",
+  "august": "August",
+  "september": "September",
+  "october": "October",
+  "november": "November",
+  "december": "December",
+  "@january": { "description": "Month name January" },
+  "@february": { "description": "Month name February" },
+  "@march": { "description": "Month name March" },
+  "@april": { "description": "Month name April" },
+  "@may": { "description": "Month name May" },
+  "@june": { "description": "Month name June" },
+  "@july": { "description": "Month name July" },
+  "@august": { "description": "Month name August" },
+  "@september": { "description": "Month name September" },
+  "@october": { "description": "Month name October" },
+  "@november": { "description": "Month name November" },
+  "@december": { "description": "Month name December" },
+  "reset": "Reset",
+  "currentlyViewing": "Currently, you are viewing district-level data. Reset to view state level data.",
+  "currentlyViewingGramPanchayat": "Currently, you are viewing Gram Panchayat-level data. Reset to view block level data.",
+  "currentlyViewingBlock": "Currently, you are viewing block-level data. Reset to view district level data.",
+  "noSelectionMade": "No selection made",
+  "noContractorDetailsFound": "No contractor details found!",
+  "@noContractorDetailsFound": {
+    "description": "Message displayed when no contractor details are found"
+  },
+  "contactUs": "Contact Us",
+  "queryOrComplaint": "For any query or complaint, reach out to us at:",
+  "companyName": "Vysion Technology",
+  "contactNumber": "Contact: +91 9251433780/ +91 8078693503",
+  "emailAddress1": "Email: admin@techvysion.com"
 }

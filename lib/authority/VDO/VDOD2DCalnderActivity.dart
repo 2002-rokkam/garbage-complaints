@@ -136,8 +136,7 @@ class _VDOD2DCalnderActivityScreenState
       } else {
         throw Exception('Failed to load trip details');
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   List getActivitiesForSelectedDate() {
@@ -180,7 +179,7 @@ class _VDOD2DCalnderActivityScreenState
           indicatorWeight: 3.0,
           tabs: [
             Tab(text: localizations.beforeAfter),
-            Tab(text: 'Scan QR'),
+            Tab(text: localizations.scanQR),
           ],
         ),
       ),
@@ -277,7 +276,8 @@ class _VDOD2DCalnderActivityScreenState
 class QRDetailsScreen extends StatefulWidget {
   final List tripDetails;
 
-  const QRDetailsScreen({Key? key, required this.tripDetails}) : super(key: key);
+  const QRDetailsScreen({Key? key, required this.tripDetails})
+      : super(key: key);
 
   @override
   _QRDetailsScreenState createState() => _QRDetailsScreenState();
@@ -286,16 +286,16 @@ class QRDetailsScreen extends StatefulWidget {
 class _QRDetailsScreenState extends State<QRDetailsScreen> {
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: Text('QR Details'),
+        title: Text(localizations.qrDetails),
         backgroundColor: Color(0xFF5C964A),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: widget.tripDetails.isEmpty
-            ? Center(
-                child: Text('No trip details available for selected date.'))
+            ? Center(child: Text(localizations.noTripDetails))
             : Column(
                 children: widget.tripDetails.map((trip) {
                   return Card(
@@ -331,7 +331,7 @@ class _QRDetailsScreenState extends State<QRDetailsScreen> {
                               Icon(Icons.calendar_today, color: Colors.grey),
                               SizedBox(width: 8),
                               Text(
-                                '${trip['date_time']}',
+                                '${localizations.date}: ${trip['date_time']}',
                                 style: TextStyle(
                                   color: Colors.black87,
                                   fontSize: 14,

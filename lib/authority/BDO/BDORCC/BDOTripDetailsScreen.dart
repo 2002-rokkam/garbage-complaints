@@ -28,12 +28,13 @@ class _BDOTripDetailsScreenState extends State<BDOTripDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Trip Details'),
+        title: Text(AppLocalizations.of(context)!.tripDetails),
         backgroundColor: Color(0xFF5C964A),
       ),
       body: widget.tripDetails.isEmpty
           ? Center(
-              child: Text('No trip details available for the selected date.'))
+              child: Text(AppLocalizations.of(context)!.noTripDetails),
+            )
           : SingleChildScrollView(
               child: Column(
                 children: widget.tripDetails.map((trip) {
@@ -44,7 +45,7 @@ class _BDOTripDetailsScreenState extends State<BDOTripDetailsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Worker Email: ${trip['worker_name']}',
+                            '${AppLocalizations.of(context)!.workerEmail} ${trip['worker_name']}',
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 16,
@@ -53,7 +54,7 @@ class _BDOTripDetailsScreenState extends State<BDOTripDetailsScreen> {
                           ),
                           SizedBox(height: 8),
                           Text(
-                            'Trips: ${trip['trips']}',
+                            '${AppLocalizations.of(context)!.trips} ${trip['trips']}',
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 16,
@@ -62,7 +63,7 @@ class _BDOTripDetailsScreenState extends State<BDOTripDetailsScreen> {
                           ),
                           SizedBox(height: 8),
                           Text(
-                            'Quantity of Waste: ${trip['quantity_waste']} kg',
+                            '${AppLocalizations.of(context)!.quantityWaste} ${trip['quantity_waste']} kg',
                             style: TextStyle(
                               color: Color(0xFF252525),
                               fontSize: 14,
@@ -70,7 +71,7 @@ class _BDOTripDetailsScreenState extends State<BDOTripDetailsScreen> {
                           ),
                           SizedBox(height: 8),
                           Text(
-                            'Segregated Degradable: ${trip['segregated_degradable']} kg',
+                            '${AppLocalizations.of(context)!.segregatedDegradable} ${trip['segregated_degradable']} kg',
                             style: TextStyle(
                               color: Color(0xFF252525),
                               fontSize: 14,
@@ -78,7 +79,7 @@ class _BDOTripDetailsScreenState extends State<BDOTripDetailsScreen> {
                           ),
                           SizedBox(height: 8),
                           Text(
-                            'Segregated Non-Degradable: ${trip['segregated_non_degradable']} kg',
+                            '${AppLocalizations.of(context)!.segregatedNonDegradable} ${trip['segregated_non_degradable']} kg',
                             style: TextStyle(
                               color: Color(0xFF252525),
                               fontSize: 14,
@@ -86,7 +87,7 @@ class _BDOTripDetailsScreenState extends State<BDOTripDetailsScreen> {
                           ),
                           SizedBox(height: 8),
                           Text(
-                            'Segregated Plastic: ${trip['segregated_plastic']} kg',
+                            '${AppLocalizations.of(context)!.segregatedPlastic} ${trip['segregated_plastic']} kg',
                             style: TextStyle(
                               color: Color(0xFF252525),
                               fontSize: 14,
@@ -94,7 +95,7 @@ class _BDOTripDetailsScreenState extends State<BDOTripDetailsScreen> {
                           ),
                           SizedBox(height: 8),
                           Text(
-                            'Date: ${_formatLocalTime(trip['date_time'])}',
+                            '${AppLocalizations.of(context)!.date} ${_formatLocalTime(trip['date_time'])}',
                             style: TextStyle(
                               color: Color(0xFF252525),
                               fontSize: 14,

@@ -36,7 +36,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Contact Us'),
+        title: Text(AppLocalizations.of(context)!.contactUs),
         backgroundColor: Colors.green,
       ),
       body: Padding(
@@ -44,39 +44,39 @@ class _ContactUsPageState extends State<ContactUsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'For any query or complaint, reach out to us at:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Text(
+              AppLocalizations.of(context)!.queryOrComplaint,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Rajasthan Sampark',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            Text(
+              AppLocalizations.of(context)!.companyName,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             GestureDetector(
-              onTap: () => _makePhoneCall('181'),
+              onTap: () => _makePhoneCall('+91 9251433780'),
               child: Row(
-                children: const [
-                  Icon(Icons.phone, color: Colors.green),
-                  SizedBox(width: 8),
+                children: [
+                  const Icon(Icons.phone, color: Colors.green),
+                  const SizedBox(width: 8),
                   Text(
-                    'Toll free: 181',
-                    style: TextStyle(fontSize: 16, color: Colors.blue),
+                    AppLocalizations.of(context)!.contactNumber,
+                    style: const TextStyle(fontSize: 16, color: Colors.blue),
                   ),
                 ],
               ),
             ),
             const SizedBox(height: 8),
             GestureDetector(
-              onTap: () => _sendEmail('rajsampark@rajasthan.gov.in'),
+              onTap: () => _sendEmail('admin@techvysion.com'),
               child: Row(
-                children: const [
-                  Icon(Icons.email, color: Colors.red),
-                  SizedBox(width: 8),
+                children: [
+                  const Icon(Icons.email, color: Colors.red),
+                  const SizedBox(width: 8),
                   Text(
-                    'Email: rajsampark@rajasthan.gov.in',
-                    style: TextStyle(fontSize: 16, color: Colors.blue),
+                    AppLocalizations.of(context)!.emailAddress1,
+                    style: const TextStyle(fontSize: 16, color: Colors.blue),
                   ),
                 ],
               ),

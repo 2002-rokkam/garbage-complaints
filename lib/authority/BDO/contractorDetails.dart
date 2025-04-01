@@ -51,9 +51,11 @@ class _ContractordetailsState extends State<Contractordetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Contractor Details',
-            style: TextStyle(color: Colors.white)),
-        backgroundColor: Color(0xFF5C964A),
+        title: Text(
+          AppLocalizations.of(context)!.contractorDetails,
+          style: const TextStyle(color: Colors.white),
+        ),
+        backgroundColor: const Color(0xFF5C964A),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -75,17 +77,21 @@ class _ContractordetailsState extends State<Contractordetails> {
             );
           }
           if (snapshot.hasError) {
-            return Center(child: Text("${snapshot.error}"));
+            return Center(
+              child: Text(AppLocalizations.of(context)!.failedToLoadData),
+            );
           }
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text("No contractor details found!"));
+            return Center(
+              child: Text(AppLocalizations.of(context)!.noDataAvailable),
+            );
           }
           final contractors = snapshot.data;
           return ListView.builder(
             padding: const EdgeInsets.all(16),
             itemCount: contractors!.length,
             itemBuilder: (context, index) {
-              return _buildContractorsCard(contractors[index]);
+              return _buildContractorsCard(context, contractors[index]);
             },
           );
         },
@@ -103,7 +109,7 @@ String capitalizeFirstLetter(String text) {
   }).join(' ');
 }
 
-Widget _buildContractorsCard(Map<String, dynamic> contractor) {
+Widget _buildContractorsCard(BuildContext context, Map<String, dynamic> contractor) {
   return Container(
     margin: const EdgeInsets.only(bottom: 16),
     padding: const EdgeInsets.all(16),
@@ -127,13 +133,14 @@ Widget _buildContractorsCard(Map<String, dynamic> contractor) {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                capitalizeFirstLetter(entry.key.replaceAll('_', ' ')),
-                style: TextStyle(
+                AppLocalizations.of(context)!
+                    .capitalizeFirstLetter(entry.key.replaceAll('_', ' ')),
+                style:  TextStyle(
                     fontSize: 16, color: Color.fromRGBO(107, 107, 107, 0.5)),
               ),
               Text(
                 entry.value.toString(),
-                style: TextStyle(
+                style: const TextStyle(
                     fontSize: 16, color: Color.fromRGBO(107, 107, 107, 1)),
               ),
             ],

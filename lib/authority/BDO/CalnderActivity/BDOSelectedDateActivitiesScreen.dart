@@ -151,7 +151,7 @@ class _BDOSelectedDateActivitiesScreenState
         backgroundColor: Color(0xFF5C964A),
       ),
       body: widget.activities.isEmpty
-          ? Center(child: Text('No activities for selected date.'))
+          ? Center(child: Text(AppLocalizations.of(context)!.noActivities))
           : SingleChildScrollView(
               child: Column(
                 children: widget.activities.map((activity) {
@@ -319,7 +319,7 @@ class _BDOSelectedDateActivitiesScreenState
                             Wrap(
                               children: [
                                 Text(
-                                  '${activity['address']} \nWorked by: ${activity['worker_name']}',
+                                  '${activity['address']} \n${AppLocalizations.of(context)!.workedBy}: ${activity['worker_name']}',
                                   style: TextStyle(
                                     color: Color(0xFF252525),
                                     fontSize: 14,

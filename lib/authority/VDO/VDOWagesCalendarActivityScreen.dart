@@ -73,18 +73,18 @@ class _VDOWagesCalendarActivityScreenState
 
   void _showMonthPicker() async {
     final months = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December'
+      AppLocalizations.of(context)!.january,
+      AppLocalizations.of(context)!.february,
+      AppLocalizations.of(context)!.march,
+      AppLocalizations.of(context)!.april,
+      AppLocalizations.of(context)!.may,
+      AppLocalizations.of(context)!.june,
+      AppLocalizations.of(context)!.july,
+      AppLocalizations.of(context)!.august,
+      AppLocalizations.of(context)!.september,
+      AppLocalizations.of(context)!.october,
+      AppLocalizations.of(context)!.november,
+      AppLocalizations.of(context)!.december,
     ];
     final selectedMonthIndex = await showDialog<int>(
       context: context,
@@ -99,7 +99,7 @@ class _VDOWagesCalendarActivityScreenState
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Select Month',
+                  AppLocalizations.of(context)!.selectMonth,
                   style: TextStyle(
                     color: Color(0xFF5C964A),
                     fontSize: 18,
@@ -203,7 +203,9 @@ class _VDOWagesCalendarActivityScreenState
               ),
             )
           : _activities.isEmpty
-              ? Center(child: Text('No activities for the selected month.'))
+              ? Center(
+                  child: Text(AppLocalizations.of(context)!.noActivities),
+                )
               : ListView.builder(
                   itemCount: _activities.length,
                   itemBuilder: (context, index) {
@@ -253,7 +255,7 @@ class _VDOWagesCalendarActivityScreenState
                                 _showImageFullscreen(activity['before_image']);
                               },
                               child: Text(
-                                'View',
+                                AppLocalizations.of(context)!.view,
                                 style: TextStyle(
                                   color: Color(
                                       0xFF5C964A), // Change to your preferred color

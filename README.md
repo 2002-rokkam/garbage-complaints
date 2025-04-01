@@ -52,3 +52,5 @@ ngrok.exe http 8000
 CircularProgressIndicator()
 
 cnvert t  hindi fr app localicatin
+
+cnvert the text whuch is nt cnverted to localisation . use frm hi.arb and en.erb if nt there add it in them

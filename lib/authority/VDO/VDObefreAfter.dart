@@ -15,7 +15,7 @@ class _VDOBeforeAfterScreenState extends State<VDOBeforeAfterScreen> {
   void _showFullScreenImage(BuildContext context, String imageUrl,
       double dirlatitude, double dirlongitude, String time) async {
     String location =
-        'Lat: ${dirlatitude.toStringAsFixed(6)}, Long: ${dirlongitude.toStringAsFixed(6)}';
+        '${AppLocalizations.of(context)!.latitude}: ${dirlatitude.toStringAsFixed(6)}, ${AppLocalizations.of(context)!.longitude}: ${dirlongitude.toStringAsFixed(6)}';
 
     showDialog(
       context: context,
@@ -297,7 +297,7 @@ class _VDOBeforeAfterScreenState extends State<VDOBeforeAfterScreen> {
                       Wrap(
                         children: [
                           Text(
-                            '${activity['address']} \nWorked by: ${activity['worker_name']}',
+                            '${activity['address']} \n${localizations.workedBy}: ${activity['worker_name']}',
                             style: TextStyle(
                               color: Color(0xFF252525),
                               fontSize: 14,

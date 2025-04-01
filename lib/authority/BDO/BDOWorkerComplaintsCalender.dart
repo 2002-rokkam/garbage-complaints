@@ -87,6 +87,7 @@ class _BDOWorkerComplaintsCalenderState
 
   void _onViewPressed() {
     final selectedComplaints = getComplaintsForSelectedDate();
+    final localizations = AppLocalizations.of(context)!;
     if (selectedComplaints.isNotEmpty) {
       Navigator.push(
         context,
@@ -100,7 +101,7 @@ class _BDOWorkerComplaintsCalenderState
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("No complaints for this date.")),
+        SnackBar(content: Text(localizations.noComplaintsForDate)),
       );
     }
   }
@@ -187,10 +188,11 @@ class _BDOWorkerComplaintsCalenderState
                   ),
                   child: ListTile(
                     contentPadding: EdgeInsets.all(16),
-                    title: Text('Total Complaints: $complaintCount'),
+                    title: Text(
+                        '${localizations.totalComplaints}: $complaintCount'),
                     trailing: ElevatedButton(
                       onPressed: _onViewPressed,
-                      child: Text('View'),
+                      child: Text(localizations.view),
                       style: ElevatedButton.styleFrom(
                         primary: Color(0xFF5C964A),
                         shape: RoundedRectangleBorder(

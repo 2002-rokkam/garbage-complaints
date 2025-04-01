@@ -41,7 +41,7 @@ class _BDOScreenState extends State<BDOScreen> {
     _loadLanguagePreference();
     super.initState();
 
-     _pageController = PageController(initialPage: 0);
+    _pageController = PageController(initialPage: 0);
     _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
       if (_pageController.hasClients) {
         int nextPage = (_pageController.page!.toInt() + 1) % 3;
@@ -60,7 +60,7 @@ class _BDOScreenState extends State<BDOScreen> {
         appbarselectedGramPanchayat =
             prefs.getString('appbarselectedGramPanchayat');
         District = prefs.getString('District');
-         Bdo = prefs.getString('Bdo');
+        Bdo = prefs.getString('Bdo');
       });
     });
   }
@@ -107,7 +107,7 @@ class _BDOScreenState extends State<BDOScreen> {
         resolvedComplaints = data['resolved_complaints'];
       });
     } else {
-      throw Exception('Failed to load data');
+      throw Exception(AppLocalizations.of(context)!.failedToLoadData);
     }
   }
 
@@ -276,8 +276,9 @@ class _BDOScreenState extends State<BDOScreen> {
                             child: Text(
                               appbarselectedGramPanchayat == null ||
                                       appbarselectedGramPanchayat!.isEmpty
-                                  ? "Block: " + (Bdo ?? '')
-                                  : "Gram Panchayat: " + appbarselectedGramPanchayat!,
+                                  ? "${localizations.block}: " + (Bdo ?? '')
+                                  : "${localizations.gramPanchayat}: " +
+                                      appbarselectedGramPanchayat!,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 14,
@@ -726,9 +727,6 @@ class _BDOScreenState extends State<BDOScreen> {
       ),
     );
   }
-
- 
-
 
   void _navigateToPage(String routeName, BuildContext context) async {
     Widget page = await _getPage(routeName, context);

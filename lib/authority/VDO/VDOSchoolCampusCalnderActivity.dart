@@ -87,8 +87,7 @@ class _VDOSchoolCampusCalnderActivityState
       } else {
         throw Exception('Failed to load activities');
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<void> fetchTripDetails(String workerId) async {
@@ -118,8 +117,7 @@ class _VDOSchoolCampusCalnderActivityState
       } else {
         throw Exception('Failed to load trip details');
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   List getPanchayatActivitiesForSelectedDate() {
@@ -161,8 +159,8 @@ class _VDOSchoolCampusCalnderActivityState
           indicatorColor: Color.fromRGBO(255, 210, 98, 1),
           indicatorWeight: 3.0,
           tabs: [
-            Tab(text: 'Campus'),
-            Tab(text: 'Toilet'),
+            Tab(text: AppLocalizations.of(context)!.campus),
+            Tab(text: AppLocalizations.of(context)!.toilet),
           ],
         ),
       ),

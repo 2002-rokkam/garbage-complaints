@@ -35,13 +35,22 @@
   "qrData": "QR डेटा",
   "totalActivities": "कुल गतिविधियाँ: {count}",
   "viewAll": "सभी देखें",
-  "noActivities": "चयनित तिथि के लिए कोई गतिविधियाँ नहीं।",
+  "noActivities": "चयनित महीने के लिए कोई गतिविधियाँ नहीं।",
+  "@noActivities": {
+    "description": "Message displayed when no activities are available for the selected month"
+  },
   "totalQRScans": "कुल QR स्कैन: {count}",
   "noQRScans": "चयनित तिथि के लिए कोई QR स्कैन नहीं।",
-  "qrDetails": "QR विवरण",
+  "qrDetails": "क्यूआर विवरण",
   "noTripDetails": "चयनित तिथि के लिए कोई यात्रा विवरण उपलब्ध नहीं।",
+  "@noTripDetails": {
+    "description": "Message displayed when no trip details are available"
+  },
   "totalTripDetails": "कुल यात्रा विवरण: {count}",
   "tripDetails": "यात्रा विवरण",
+  "@tripDetails": {
+    "description": "Label for the Trip Details tab"
+  },
   "workerEmail": "कार्यकर्ता ईमेल:",
   "trips": "यात्राएँ:",
   "quantityWaste": "कचरे की मात्रा:",
@@ -50,13 +59,20 @@
   "segregatedPlastic": "विभाजित प्लास्टिक:",
   "date": "तारीख:",
   "selectMonth": "महीना चुनें",
+  "@selectMonth": {
+    "description": "Label for selecting a month"
+  },
   "totalComplaints": "कुल शिकायतें",
   "pending": "लंबित",
   "resolved": "सुलझाई गई",
   "noComplaints": "कोई शिकायत उपलब्ध नहीं",
+  "noComplaintsForDate": "इस तिथि के लिए कोई शिकायत नहीं।",
+  "@noComplaintsForDate": {
+    "description": "Message displayed when no complaints are available for the selected date"
+  },
   "submit": "प्रस्तुत करें",
   "cancel": "रद्द करें",
-  "selectImageLocation": "कृपया छवि चुनें और स्थान पहुंच की अनुमति दें",
+  "selectImageLocation": "कृपया छवि चुनें और स्थान पहुंच की अनुमति दें।",
   "openMap": "नक्शा खोलें",
   "viewReply": "उत्तर देखें",
   "contractorDetails": "ठेकेदार विवरण",
@@ -68,8 +84,12 @@
   "block": "ब्लॉक",
   "selectBlock": "ब्लॉक चुनें",
   "gramPanchayat": "ग्राम पंचायत",
-  "noDataAvailable": "कोई डेटा उपलब्ध नहीं",
-  "noGramPanchayat": "चयनित ब्लॉक के लिए कोई ग्राम पंचायत नहीं मिली।",
+  "state": "राज्य",
+  "noDataAvailable": "कोई डेटा उपलब्ध नहीं।",
+  "noGramPanchayat": "कोई ग्राम पंचायत नहीं मिली।",
+  "@noGramPanchayat": {
+    "description": "Message displayed when no Gram Panchayat is found"
+  },
   "selectGramPanchayat": "ग्राम पंचायत चुनें",
   "success": "सफलता!",
   "contractorSubmitted": "ठेकेदार विवरण सफलतापूर्वक जमा कर दिया गया।",
@@ -119,29 +139,105 @@
   "helpLine": "सहायता लाइन",
   "sbmgRajasthan": "एसबीएमजी राजस्थान",
   "settings": "सेटिंग्स",
+  "ordersCirculars": "आदेश/परिपत्र",
+  "faqs": "सामान्य प्रश्न",
+  "logout": "लॉगआउट",
+  "logoutConfirmation": "क्या आप वाकई लॉगआउट करना चाहते हैं?",
+  "privacyPolicy": "गोपनीयता नीति",
   "panchayatCampus": "पंचायत परिसर",
   "panchayatToilet": "पंचायत शौचालय",
   "panchayatDetails": "पंचायत विवरण",
   "campus": "परिसर",
+  "@campus": {
+    "description": "Label for the Campus tab"
+  },
   "toilet": "शौचालय",
+  "@toilet": {
+    "description": "Label for the Toilet tab"
+  },
   "schoolDetails": "स्कूल विवरण",
   "gps": "जीपीएस",
   "addMore": "अधिक जोड़ें",
   "beforeAfterDetails": "पहले और बाद के विवरण",
-  "qrScannedData": "स्कैन किया गया क्यूआर डेटा",
+  "qrScannedData": "क्यूआर स्कैन किया गया डेटा: {QRAddress}",
   "before":"पहले",
   "after":"बाद",
   "slideToConfirmBefore": "'पहले' की पुष्टि के लिए स्लाइड करें",
   "slideToConfirmAfter": "'बाद' की पुष्टि के लिए स्लाइड करें",
   "failedToLoadImage": "छवि लोड करने में विफल",
+  "failedToLoadData": "डेटा लोड करने में विफल।",
+  "@failedToLoadData": {
+    "description": "Error message when data fails to load"
+  },
+  "failedToLoadComplaints": "शिकायतें लोड करने में विफल।",
+  "@failedToLoadComplaints": {
+    "description": "Error message when complaints fail to load"
+  },
   "noImageData": "कोई छवि डेटा नहीं",
   "successfullySubmitted": "सफलतापूर्वक सबमिट किया गया!",
   "close": "बंद करें",
   "errorImageTooFar": "त्रुटि: बाद की छवि पहले की छवि से बहुत दूर है",
   "transportation": "परिवहन",
   "disposal": "निपटान",
-  "email": "ईमेल",
+  "email": "ईमेल", 
   "password": "पासवर्ड",
   "enterEmail": "अपना ईमेल दर्ज करें",
-  "pleaseEnterPassword": "कृपया अपना पासवर्ड दर्ज करें"
+  "pleaseEnterPassword": "कृपया अपना पासवर्ड दर्ज करें",
+  "scanQR": "क्यूआर स्कैन करें",
+  "@scanQR": {
+    "description": "Label for the Scan QR tab"
+  },
+  "sectionTitle": "{section}",
+  "@sectionTitle": {
+    "description": "Title for the section in the app bar"
+  },
+  "view": "देखें",
+  "@view": {
+    "description": "Label for the View button"
+  },
+  "workedBy": "द्वारा कार्य किया गया",
+  "capitalizeFirstLetter": "{text}",
+  "@capitalizeFirstLetter": {
+    "description": "Capitalizes the first letter of each word in the text"
+  },
+  "january": "जनवरी",
+  "february": "फरवरी",
+  "march": "मार्च",
+  "april": "अप्रैल",
+  "may": "मई",
+  "june": "जून",
+  "july": "जुलाई",
+  "august": "अगस्त",
+  "september": "सितंबर",
+  "october": "अक्टूबर",
+  "november": "नवंबर",
+  "december": "दिसंबर",
+  "@january": { "description": "Month name January" },
+  "@february": { "description": "Month name February" },
+  "@march": { "description": "Month name March" },
+  "@april": { "description": "Month name April" },
+  "@may": { "description": "Month name May" },
+  "@june": { "description": "Month name June" },
+  "@july": { "description": "Month name July" },
+  "@august": { "description": "Month name August" },
+  "@september": { "description": "Month name September" },
+  "@october": { "description": "Month name October" },
+  "@november": { "description": "Month name November" },
+  "@december": { "description": "Month name December" },
+  "reset": "रीसेट करें",
+  "currentlyViewing": "वर्तमान में, आप जिला स्तर का डेटा देख रहे हैं। राज्य स्तर का डेटा देखने के लिए रीसेट करें।",
+  "currentlyViewingGramPanchayat": "वर्तमान में, आप ग्राम पंचायत स्तर का डेटा देख रहे हैं। ब्लॉक स्तर का डेटा देखने के लिए रीसेट करें।",
+  "currentlyViewingBlock": "वर्तमान में, आप ब्लॉक स्तर का डेटा देख रहे हैं। जिला स्तर का डेटा देखने के लिए रीसेट करें।",
+  "noContractorDetailsFound": "कोई ठेकेदार विवरण नहीं मिला!",
+  "@noContractorDetailsFound": {
+    "description": "Message displayed when no contractor details are found"
+  },
+  "noSelectionMade": "कोई चयन नहीं किया गया",
+  "latitude": "अक्षांश",
+  "longitude": "देशांतर",
+  "contactUs": "संपर्क करें",
+  "queryOrComplaint": "किसी भी प्रश्न या शिकायत के लिए, हमसे संपर्क करें:",
+  "companyName": "विजन टेक्नोलॉजी",
+  "contactNumber": "संपर्क: +91 9251433780/ +91 8078693503",
+  "emailAddress1": "ईमेल: admin@techvysion.com"
 }

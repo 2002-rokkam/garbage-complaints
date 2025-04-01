@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../commonActvityCalnder.dart';
 import '../BDO/CalnderActivity/BDOSelectedDateActivitiesScreen.dart';
 
@@ -62,8 +63,7 @@ class _VDOCalendarActivityScreenState extends State<VDOCalendarActivityScreen> {
       } else {
         throw Exception('Failed to load activities');
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   List getActivitiesForSelectedDate() {
@@ -109,6 +109,12 @@ class _VDOCalendarActivityScreenState extends State<VDOCalendarActivityScreen> {
                   selectedDate: _selectedDate,
                   activities: getActivitiesForSelectedDate(),
                 ),
+              ),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(AppLocalizations.of(context)!.noActivities),
               ),
             );
           }

@@ -46,8 +46,7 @@ class _SMDselectRegionState extends State<SMDselectRegion> {
       } else {
         throw Exception('Failed to load districts');
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<void> fetchBlocks(String selectedDistrict) async {
@@ -68,13 +67,11 @@ class _SMDselectRegionState extends State<SMDselectRegion> {
       } else {
         throw Exception('Failed to load blocks');
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<void> fetchGramPanchayats(
       String selectedDistrict, String selectedBlock) async {
-        
     try {
       final response = await http.get(
           Uri.parse('$gpUrl?district=$selectedDistrict&block=$selectedBlock'));
@@ -92,35 +89,35 @@ class _SMDselectRegionState extends State<SMDselectRegion> {
       } else {
         throw Exception('Failed to load gram panchayats');
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<void> submitSelection() async {
-      String formattedDistrict = selectedDistrict?.replaceAll(' ', '_') ?? "";
-      String formattedBlock = selectedBlock?.replaceAll(' ', '_') ?? "";
-      String formattedGramPanchayat = selectedGramPanchayat?.replaceAll(' ', '_') ?? "";
+    String formattedDistrict = selectedDistrict?.replaceAll(' ', '_') ?? "";
+    String formattedBlock = selectedBlock?.replaceAll(' ', '_') ?? "";
+    String formattedGramPanchayat =
+        selectedGramPanchayat?.replaceAll(' ', '_') ?? "";
 
-      formattedDistrict =
-          formattedDistrict.replaceAllMapped(RegExp(r'_(.)'), (match) {
-        return '_${match.group(1)?.toLowerCase()}';
-      });
+    formattedDistrict =
+        formattedDistrict.replaceAllMapped(RegExp(r'_(.)'), (match) {
+      return '_${match.group(1)?.toLowerCase()}';
+    });
 
-      formattedBlock =
-          formattedBlock.replaceAllMapped(RegExp(r'_(.)'), (match) {
-        return '_${match.group(1)?.toLowerCase()}';
-      });
+    formattedBlock = formattedBlock.replaceAllMapped(RegExp(r'_(.)'), (match) {
+      return '_${match.group(1)?.toLowerCase()}';
+    });
 
-      formattedGramPanchayat =
-          formattedGramPanchayat.replaceAllMapped(RegExp(r'_(.)'), (match) {
-        return '_${match.group(1)?.toLowerCase()}';
-      });
+    formattedGramPanchayat =
+        formattedGramPanchayat.replaceAllMapped(RegExp(r'_(.)'), (match) {
+      return '_${match.group(1)?.toLowerCase()}';
+    });
 
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString('appbarselectedDistrict', formattedDistrict);
-      await prefs.setString('appbarselectedBlock', formattedBlock);
-      await prefs.setString('appbarselectedGramPanchayat', formattedGramPanchayat);
-      Navigator.pop(context, true);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('appbarselectedDistrict', formattedDistrict);
+    await prefs.setString('appbarselectedBlock', formattedBlock);
+    await prefs.setString(
+        'appbarselectedGramPanchayat', formattedGramPanchayat);
+    Navigator.pop(context, true);
   }
 
   Future<void> loadSavedSelections() async {
@@ -153,13 +150,14 @@ class _SMDselectRegionState extends State<SMDselectRegion> {
     showModalBottomSheet(
       context: context,
       builder: (context) {
+        final localizations = AppLocalizations.of(context)!;
         return Column(
           children: [
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: TextField(
                 decoration: InputDecoration(
-                  hintText: 'Search',
+                  hintText: localizations.search,
                   prefixIcon: Icon(Icons.search),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(50)),
@@ -204,105 +202,113 @@ class _SMDselectRegionState extends State<SMDselectRegion> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (selectedDistrict != null || selectedBlock != null || selectedGramPanchayat != null)
+            if (selectedDistrict != null ||
+                selectedBlock != null ||
+                selectedGramPanchayat != null)
               Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              decoration: ShapeDecoration(
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)),
-                shadows: [
-                BoxShadow(
-                  color: Color(0x14000000),
-                  blurRadius: 4,
-                  offset: Offset(0, 2),
-                  spreadRadius: 0,
-                ),
-                BoxShadow(
-                  color: Color(0x05000000),
-                  blurRadius: 6,
-                  offset: Offset(0, 0),
-                  spreadRadius: 0,
-                )
-                ],
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                SizedBox(
-                  width: 125,
-                  child: Text(
-                   selectedGramPanchayat != null && selectedGramPanchayat!.isNotEmpty &&
-                                selectedBlock != null &&
-                                selectedBlock!.isNotEmpty && selectedDistrict != null &&
-                                selectedDistrict!.isNotEmpty
-                            ? 'Currently, you are viewing Gram Panchayat-level data. Reset to view state level data.'
-                            : selectedBlock != null && selectedBlock!.isNotEmpty && selectedDistrict != null && selectedDistrict!.isNotEmpty  
-                                ? 'Currently, you are viewing block-level data. Reset to view state level data.'
-                                : selectedDistrict != null && selectedDistrict!.isNotEmpty
-                                    ? 'Currently, you are viewing district-level data. Reset to view state level data.'
-                                    : 'No selection made',  
-                  style: TextStyle(
-                    color: const Color(0xFF49454F),
-                    fontSize: 8,
-                    fontFamily: 'Nunito Sans',
-                    fontWeight: FontWeight.w500,
-                    height: 1.43,
-                    letterSpacing: 0.14,
-                  ),
-                  ),
-                ),
-                Container(
-                  padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                  decoration: ShapeDecoration(
-                  color: const Color(0xFFFEF4F1),
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: ShapeDecoration(
+                  color: Colors.white,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(83),
-                  ),
-                  ),
-                  child: GestureDetector(
-                  onTap: () async {
-                    SharedPreferences prefs =
-                      await SharedPreferences.getInstance();
-                    await prefs.remove('appbarselectedGramPanchayat');
-                    await prefs.remove('appbarselectedBlock');
-                    await prefs.remove('appbarselectedDistrict');
-                    setState(() {
-                    selectedGramPanchayat = null;
-                    selectedBlock = null;
-                    selectedDistrict = null;
-                    });
-                    Navigator.pop(context, true);
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                    Text(
-                      'Reset',
-                      style: TextStyle(
-                      color: const Color(0xFFB3261E),
-                      fontSize: 14,
-                      fontFamily: 'Nunito Sans',
-                      fontWeight: FontWeight.w500,
-                      height: 1.43,
-                      letterSpacing: 0.14,
+                      borderRadius: BorderRadius.circular(8)),
+                  shadows: [
+                    BoxShadow(
+                      color: Color(0x14000000),
+                      blurRadius: 4,
+                      offset: Offset(0, 2),
+                      spreadRadius: 0,
+                    ),
+                    BoxShadow(
+                      color: Color(0x05000000),
+                      blurRadius: 6,
+                      offset: Offset(0, 0),
+                      spreadRadius: 0,
+                    )
+                  ],
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 125,
+                      child: Text(
+                        selectedGramPanchayat != null &&
+                                selectedGramPanchayat!.isNotEmpty &&
+                                selectedBlock != null &&
+                                selectedBlock!.isNotEmpty &&
+                                selectedDistrict != null &&
+                                selectedDistrict!.isNotEmpty
+                            ? localizations.currentlyViewingGramPanchayat
+                            : selectedBlock != null &&
+                                    selectedBlock!.isNotEmpty &&
+                                    selectedDistrict != null &&
+                                    selectedDistrict!.isNotEmpty
+                                ? localizations.currentlyViewingBlock
+                                : selectedDistrict != null &&
+                                        selectedDistrict!.isNotEmpty
+                                    ? localizations.currentlyViewing
+                                    : localizations.noSelectionMade,
+                        style: TextStyle(
+                          color: const Color(0xFF49454F),
+                          fontSize: 8,
+                          fontFamily: 'Nunito Sans',
+                          fontWeight: FontWeight.w500,
+                          height: 1.43,
+                          letterSpacing: 0.14,
+                        ),
                       ),
                     ),
-                    ],
-                  ),
-                  ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 4),
+                      decoration: ShapeDecoration(
+                        color: const Color(0xFFFEF4F1),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(83),
+                        ),
+                      ),
+                      child: GestureDetector(
+                        onTap: () async {
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          await prefs.remove('appbarselectedGramPanchayat');
+                          await prefs.remove('appbarselectedBlock');
+                          await prefs.remove('appbarselectedDistrict');
+                          setState(() {
+                            selectedGramPanchayat = null;
+                            selectedBlock = null;
+                            selectedDistrict = null;
+                          });
+                          Navigator.pop(context, true);
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              localizations.reset,
+                              style: TextStyle(
+                                color: const Color(0xFFB3261E),
+                                fontSize: 14,
+                                fontFamily: 'Nunito Sans',
+                                fontWeight: FontWeight.w500,
+                                height: 1.43,
+                                letterSpacing: 0.14,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                ],
-              ),
               ),
             SizedBox(height: 16),
-            Text('District', style: TextStyle(fontSize: 16)),
+            Text(localizations.district, style: TextStyle(fontSize: 16)),
             GestureDetector(
               onTap: () {
                 showOptions(context, districts, (value) {
@@ -327,14 +333,14 @@ class _SMDselectRegionState extends State<SMDselectRegion> {
                       Icons.location_pin,
                       color: Colors.grey,
                     ),
-                    Text(selectedDistrict ?? 'Select District'),
+                    Text(selectedDistrict ?? localizations.selectDistrict),
                     Icon(Icons.arrow_drop_down),
                   ],
                 ),
               ),
             ),
             SizedBox(height: 16),
-            Text('Block', style: TextStyle(fontSize: 16)),
+            Text(localizations.block, style: TextStyle(fontSize: 16)),
             GestureDetector(
               onTap: () {
                 if (selectedDistrict != null) {
@@ -360,14 +366,14 @@ class _SMDselectRegionState extends State<SMDselectRegion> {
                       Icons.location_pin,
                       color: Colors.grey,
                     ),
-                    Text(selectedBlock ?? 'Select Block'),
+                    Text(selectedBlock ?? localizations.selectBlock),
                     Icon(Icons.arrow_drop_down),
                   ],
                 ),
               ),
             ),
             SizedBox(height: 16),
-            Text('Gram Panchayat', style: TextStyle(fontSize: 16)),
+            Text(localizations.gramPanchayat, style: TextStyle(fontSize: 16)),
             GestureDetector(
               onTap: () {
                 if (selectedBlock != null) {
@@ -391,7 +397,8 @@ class _SMDselectRegionState extends State<SMDselectRegion> {
                       Icons.location_pin,
                       color: Colors.grey,
                     ),
-                    Text(selectedGramPanchayat ?? 'Select Gram Panchayat'),
+                    Text(selectedGramPanchayat ??
+                        localizations.selectGramPanchayat),
                     Icon(Icons.arrow_drop_down),
                   ],
                 ),
@@ -412,7 +419,7 @@ class _SMDselectRegionState extends State<SMDselectRegion> {
                   padding: EdgeInsets.symmetric(vertical: 16),
                 ),
                 child: Text(
-                  'Submit',
+                  localizations.submit,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,

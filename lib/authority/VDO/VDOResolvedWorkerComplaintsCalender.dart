@@ -38,6 +38,8 @@ class _VDOResolvedWorkerComplaintsCalenderState
     final url =
         'https://sbmgrajasthan.com/api/resolved-complaints/?gram_panchayat=$gramPanchayat';
 
+    final localizations = AppLocalizations.of(context)!;
+
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
@@ -59,6 +61,9 @@ class _VDOResolvedWorkerComplaintsCalenderState
         throw Exception('Failed to load complaints');
       }
     } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(localizations.failedToLoadData)),
+      );
     } finally {
       setState(() {
         _isLoading = false;
@@ -77,6 +82,8 @@ class _VDOResolvedWorkerComplaintsCalenderState
 
   void _onViewPressed() {
     final selectedComplaints = getComplaintsForSelectedDate();
+    final localizations = AppLocalizations.of(context)!;
+
     if (selectedComplaints.isNotEmpty) {
       Navigator.push(
         context,
@@ -90,7 +97,7 @@ class _VDOResolvedWorkerComplaintsCalenderState
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("No complaints for this date.")),
+        SnackBar(content: Text(localizations.noComplaintsForDate)),
       );
     }
   }

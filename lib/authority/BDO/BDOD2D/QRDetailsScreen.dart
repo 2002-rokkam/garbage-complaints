@@ -14,7 +14,7 @@ class QRDetailsScreen extends StatefulWidget {
 }
 
 class _QRDetailsScreenState extends State<QRDetailsScreen> {
-   late Locale _locale;
+  late Locale _locale;
 
   void _loadLanguagePreference() async {
     final prefs = await SharedPreferences.getInstance();
@@ -29,7 +29,7 @@ class _QRDetailsScreenState extends State<QRDetailsScreen> {
     super.initState();
     _loadLanguagePreference();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
@@ -43,7 +43,8 @@ class _QRDetailsScreenState extends State<QRDetailsScreen> {
         padding: const EdgeInsets.all(16.0),
         child: widget.tripDetails.isEmpty
             ? Center(
-                child: Text('No trip details available for selected date.'))
+                child: Text(localizations.noTripDetails),
+              )
             : Column(
                 children: widget.tripDetails.map((trip) {
                   return Card(
@@ -63,7 +64,7 @@ class _QRDetailsScreenState extends State<QRDetailsScreen> {
                               SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  'QR Scanned Data: ${trip['QRAddress']}',
+                                  '${localizations.qrScannedData} ${trip['QRAddress']}',
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 16,

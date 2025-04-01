@@ -147,7 +147,7 @@ class _VDORCCCalendarActivityScreenState
           indicatorWeight: 3.0,
           tabs: [
             Tab(text: localizations.beforeAfter),
-            Tab(text: 'Trip Details'),
+            Tab(text: localizations.tripDetails),
           ],
         ),
       ),
@@ -257,10 +257,10 @@ class _VDORCCCalendarActivityScreenState
                     controller: _tabController,
                     children: [
                       selectedActivities.isEmpty
-                          ? Center(child: Text('No Activities Available'))
+                          ? Center(child: Text(localizations.noActivities))
                           : Container(),
                       selectedTrips.isEmpty
-                          ? Center(child: Text('No Trip Details Available'))
+                          ? Center(child: Text(localizations.noTripDetails))
                           : Container(),
                     ],
                   ),
@@ -294,14 +294,16 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Trip Details'),
+        title: Text(localizations.tripDetails),
         backgroundColor: Color(0xFF5C964A),
       ),
       body: widget.tripDetails.isEmpty
           ? Center(
-              child: Text('No trip details available for the selected date.'))
+              child: Text(localizations.noTripDetails),
+            )
           : SingleChildScrollView(
               child: Column(
                 children: widget.tripDetails.map((trip) {
@@ -312,7 +314,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Worker Email: ${trip['worker_name']}',
+                            '${localizations.workerEmail} ${trip['worker_name']}',
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 16,
@@ -321,7 +323,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                           ),
                           SizedBox(height: 8),
                           Text(
-                            'Trips: ${trip['trips']}',
+                            '${localizations.trips} ${trip['trips']}',
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 16,
@@ -330,7 +332,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                           ),
                           SizedBox(height: 8),
                           Text(
-                            'Quantity of Waste: ${trip['quantity_waste']} kg',
+                            '${localizations.quantityWaste} ${trip['quantity_waste']} kg',
                             style: TextStyle(
                               color: Color(0xFF252525),
                               fontSize: 14,
@@ -338,7 +340,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                           ),
                           SizedBox(height: 8),
                           Text(
-                            'Segregated Degradable: ${trip['segregated_degradable']} kg',
+                            '${localizations.segregatedDegradable} ${trip['segregated_degradable']} kg',
                             style: TextStyle(
                               color: Color(0xFF252525),
                               fontSize: 14,
@@ -346,7 +348,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                           ),
                           SizedBox(height: 8),
                           Text(
-                            'Segregated Non-Degradable: ${trip['segregated_non_degradable']} kg',
+                            '${localizations.segregatedNonDegradable} ${trip['segregated_non_degradable']} kg',
                             style: TextStyle(
                               color: Color(0xFF252525),
                               fontSize: 14,
@@ -354,7 +356,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                           ),
                           SizedBox(height: 8),
                           Text(
-                            'Segregated Plastic: ${trip['segregated_plastic']} kg',
+                            '${localizations.segregatedPlastic} ${trip['segregated_plastic']} kg',
                             style: TextStyle(
                               color: Color(0xFF252525),
                               fontSize: 14,
@@ -362,7 +364,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                           ),
                           SizedBox(height: 8),
                           Text(
-                            'Date: ${_formatLocalTime(trip['date_time'])}',
+                            '${localizations.date} ${_formatLocalTime(trip['date_time'])}',
                             style: TextStyle(
                               color: Color(0xFF252525),
                               fontSize: 14,

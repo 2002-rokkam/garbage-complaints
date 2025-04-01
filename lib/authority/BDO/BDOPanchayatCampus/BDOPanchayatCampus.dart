@@ -137,8 +137,7 @@ class _BDOPanchayatCampusCalnderActivityScreenState
       } else {
         throw Exception('Failed to load trip details');
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   List getPanchayatActivitiesForSelectedDate() {
@@ -188,8 +187,8 @@ class _BDOPanchayatCampusCalnderActivityScreenState
           indicatorColor: Color.fromRGBO(255, 210, 98, 1),
           indicatorWeight: 3.0,
           tabs: [
-            Tab(text: 'Campus'),
-            Tab(text: 'Toilet'),
+            Tab(text: localizations.campus),
+            Tab(text: localizations.toilet),
           ],
         ),
       ),
@@ -291,7 +290,7 @@ class _BDOPanchayatCampusCalnderActivityScreenState
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Text(
-                        'No activities available',
+                        localizations.noActivities,
                         style: TextStyle(fontSize: 16, color: Colors.grey),
                       ),
                     ),

@@ -39,9 +39,8 @@ class _VDOScreenState extends State<VDOScreen> {
     });
   }
 
-    late PageController _pageController;
-    late Timer _timer;
-
+  late PageController _pageController;
+  late Timer _timer;
 
   @override
   void initState() {
@@ -227,7 +226,7 @@ class _VDOScreenState extends State<VDOScreen> {
                       Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Text(
-                          vdgramPanchayat!,
+                          vdgramPanchayat ?? localizations.noGramPanchayat,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 18,
@@ -283,7 +282,6 @@ class _VDOScreenState extends State<VDOScreen> {
                   ),
                   Column(
                     children: [
-                    
                       Center(
                         child: Padding(
                           padding: const EdgeInsets.only(top: 16.0),
@@ -614,7 +612,6 @@ class _VDOScreenState extends State<VDOScreen> {
     );
   }
 
- 
   Widget _buildButton(String label, String imageUrl, String routeName,
       String number, BuildContext context) {
     return GestureDetector(

@@ -41,7 +41,8 @@ class _BDOWorkerComplaintsListScreenCalenderState
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Complaints on ${widget.date.toLocal()}'.split(' ')[0],
+          '${AppLocalizations.of(context)!.complaints} ${widget.date.toLocal()}'
+              .split(' ')[0],
           style: TextStyle(
             color: Colors.white, // White text color
             fontSize: 20, // Optional: Adjust font size
@@ -54,7 +55,7 @@ class _BDOWorkerComplaintsListScreenCalenderState
       backgroundColor: Color.fromRGBO(239, 239, 239, 1),
       body: selectedDateComplaints.isEmpty
           ? Center(
-              child: Text('No complaints found for this date.'),
+              child: Text(AppLocalizations.of(context)!.noComplaintsForDate),
             )
           : ListView.builder(
               padding: EdgeInsets.all(16.0),
@@ -212,7 +213,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
   Future<void> _submitFormData() async {
     if (_imageFile == null || _latitude == null || _longitude == null) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Please select an image and allow location access'),
+        content: Text(AppLocalizations.of(context)!.selectImageLocation),
       ));
       return;
     }
@@ -241,7 +242,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
         Navigator.pop(context, true); // Notify parent to refresh data
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Failed to update complaint'),
+          content: Text(AppLocalizations.of(context)!.failedToLoadData),
         ));
       }
     } catch (e) {

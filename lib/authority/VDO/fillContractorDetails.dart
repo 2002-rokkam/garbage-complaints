@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FillContractorDetailsScreen extends StatefulWidget {
   @override
@@ -66,12 +67,12 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text('Failed to load data: ${response.statusCode}')),
+              content: Text(AppLocalizations.of(context)!.failedToLoadData)),
         );
       }
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error loading data: $error')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.errorSavingData)),
       );
       setState(() {
         // If there is an error, allow the user to fill the form manually
@@ -133,8 +134,7 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-                content:
-                    Text('Failed to save details: ${response.statusCode}')),
+                content: Text(AppLocalizations.of(context)!.errorSavingData)),
           );
         }
       } catch (error) {
@@ -142,7 +142,8 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
           _isSubmitting = false;
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error saving data: $error')),
+          SnackBar(
+              content: Text(AppLocalizations.of(context)!.errorSavingData)),
         );
         // Show failure dialog
         _showFailureDialog();
@@ -178,9 +179,9 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
               ),
               const SizedBox(height: 20.0),
               // Title
-              const Text(
-                'Success!',
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(context)!.success,
+                style: const TextStyle(
                   fontSize: 22.0,
                   fontWeight: FontWeight.bold,
                   color: Colors.green,
@@ -188,10 +189,10 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
               ),
               const SizedBox(height: 10.0),
               // Content
-              const Text(
-                'Contractor details have been submitted successfully.',
+              Text(
+                AppLocalizations.of(context)!.contractorSubmitted,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 16.0,
                   color: Colors.black87,
                 ),
@@ -215,10 +216,7 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
                     vertical: 10.0,
                   ),
                 ),
-                child: const Text(
-                  'OK',
-                  style: TextStyle(fontSize: 16.0, color: Colors.white),
-                ),
+                child: Text(AppLocalizations.of(context)!.ok),
               ),
             ],
           ),
@@ -255,9 +253,9 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
               ),
               const SizedBox(height: 20.0),
               // Title
-              const Text(
-                'Oops!',
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(context)!.oops,
+                style: const TextStyle(
                   fontSize: 22.0,
                   fontWeight: FontWeight.bold,
                   color: Colors.red,
@@ -265,10 +263,10 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
               ),
               const SizedBox(height: 10.0),
               // Content
-              const Text(
-                'Failed to submit contractor details. Please try again later.',
+              Text(
+                AppLocalizations.of(context)!.contractorFailed,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 16.0,
                   color: Colors.black87,
                 ),
@@ -289,10 +287,7 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
                     vertical: 10.0,
                   ),
                 ),
-                child: const Text(
-                  'Try Again',
-                  style: TextStyle(fontSize: 16.0, color: Colors.white),
-                ),
+                child: Text(AppLocalizations.of(context)!.tryAgain),
               ),
             ],
           ),
@@ -325,9 +320,9 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Contractor Details',
-            style: TextStyle(color: Colors.white)),
-        backgroundColor: Color(0xFF5C964A),
+        title: Text(AppLocalizations.of(context)!.contractorDetails,
+            style: const TextStyle(color: Colors.white)),
+        backgroundColor: const Color(0xFF5C964A),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -361,17 +356,18 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
               children: [
                 _buildTextField(
                   controller: _companyNameController,
-                  label: 'Company Name',
-                  hint: 'Enter company name',
+                  label: AppLocalizations.of(context)!.companyName,
+                  hint: AppLocalizations.of(context)!.enterCompanyName,
                   icon: Icons.business,
                   enabled: _isEditable,
-                  validator: (value) =>
-                      value!.isEmpty ? 'Please enter company name' : null,
+                  validator: (value) => value!.isEmpty
+                      ? AppLocalizations.of(context)!.enterCompanyName
+                      : null,
                 ),
                 const SizedBox(height: 16.0),
                 _buildTextField(
                   controller: _gstNoController,
-                  label: 'GST No',
+                  label: AppLocalizations.of(context)!.gstNo,
                   hint: 'Enter GST number',
                   icon: Icons.info,
                   enabled: _isEditable,
@@ -388,16 +384,16 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
                 const SizedBox(height: 16.0),
                 _buildTextField(
                   controller: _emailController,
-                  label: 'Email Address',
+                  label: AppLocalizations.of(context)!.emailAddress,
                   hint: 'Enter email address',
                   icon: Icons.email,
                   enabled: _isEditable,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter email address';
+                      return 'Enter email address';
                     }
                     if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                      return 'Please enter a valid email address';
+                      return 'Enter vaid email address';
                     }
                     return null;
                   },
@@ -405,7 +401,7 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
                 const SizedBox(height: 16.0),
                 _buildTextField(
                   controller: _contactNoController,
-                  label: 'Contact No',
+                  label: AppLocalizations.of(context)!.contactNo,
                   hint: 'Enter contact number',
                   icon: Icons.phone,
                   enabled: _isEditable,
@@ -436,7 +432,9 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
                           valueColor:
                               AlwaysStoppedAnimation<Color>(Colors.white),
                         )
-                      : Text(_isEditing ? 'Update' : 'Save'),
+                      : Text(_isEditing
+                          ? AppLocalizations.of(context)!.update
+                          : AppLocalizations.of(context)!.save),
                 ),
               ],
             ),
@@ -473,11 +471,11 @@ class _ContractorDetailsScreenState extends State<FillContractorDetailsScreen> {
           enabled: enabled, // Toggle editable state here
           style: TextStyle(
               color: enabled
-                  ? Color.fromARGB(255, 50, 50, 50)
-                  : Color.fromARGB(255, 106, 105, 105)),
+                  ? const Color.fromARGB(255, 50, 50, 50)
+                  : const Color.fromARGB(255, 106, 105, 105)),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: TextStyle(color: Colors.grey),
+            hintStyle: const TextStyle(color: Colors.grey),
             prefixIcon: Icon(icon, color: Colors.grey),
             filled: true,
             fillColor: Colors.white,
