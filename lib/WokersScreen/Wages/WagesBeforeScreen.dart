@@ -108,10 +108,8 @@ class _WagesBeforeScreenState extends State<WagesBeforeScreen> {
         });
         widget.onReload();
         _showSuccessDialog();
-      } else {
-      }
-    } catch (e) {
-    }
+      } else {}
+    } catch (e) {}
   }
 
   Future<void> _showImageSourceDialog() async {

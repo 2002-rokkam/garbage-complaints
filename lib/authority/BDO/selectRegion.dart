@@ -46,7 +46,7 @@ class _RegionSelectorState extends State<RegionSelector> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? bdo = prefs.getString('Bdo');
     if (bdo != null) {
-      selectedBlock = bdo.replaceAll('_', ' ');
+      selectedBlock = bdo;
     }
   }
 
@@ -73,14 +73,9 @@ class _RegionSelectorState extends State<RegionSelector> {
 
   Future<void> fetchGramPanchayats(
       String selectedDistrict, String selectedBlock) async {
-    String formattedBlock =
-        selectedBlock.replaceAllMapped(RegExp(r' (\w)'), (match) {
-      return ' ${match.group(1)?.toUpperCase()}';
-    });
-
     try {
       final response = await http.get(
-          Uri.parse('$gpUrl?district=$selectedDistrict&block=$formattedBlock'));
+          Uri.parse('$gpUrl?district=$selectedDistrict&block=$selectedBlock'));
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
         if (data['district'] == selectedDistrict) {
@@ -97,24 +92,9 @@ class _RegionSelectorState extends State<RegionSelector> {
   }
 
   Future<void> submitSelection() async {
-    String formattedDistrict = selectedDistrict!.replaceAll(' ', '_');
-    String formattedBlock = selectedBlock!.replaceAll(' ', '_');
-    String formattedGramPanchayat =
-        selectedGramPanchayat?.replaceAll(' ', '_') ?? '';
-
-    formattedDistrict =
-        formattedDistrict.replaceAllMapped(RegExp(r'_(.)'), (match) {
-      return '_${match.group(1)?.toLowerCase()}';
-    });
-
-    formattedBlock = formattedBlock.replaceAllMapped(RegExp(r'_(.)'), (match) {
-      return '_${match.group(1)?.toLowerCase()}';
-    });
-
-    formattedGramPanchayat =
-        formattedGramPanchayat.replaceAllMapped(RegExp(r'_(.)'), (match) {
-      return '_${match.group(1)?.toLowerCase()}';
-    });
+    String formattedDistrict = selectedDistrict!;
+    String formattedBlock = selectedBlock!;
+    String formattedGramPanchayat = selectedGramPanchayat ?? '';
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('appbarselectedDistrict', formattedDistrict);

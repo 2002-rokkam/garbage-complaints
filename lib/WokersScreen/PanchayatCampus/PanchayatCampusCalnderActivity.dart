@@ -98,8 +98,7 @@ class _PanchayatCampusActivityScreenState
       } else {
         throw Exception('Failed to load activities');
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<void> fetchPanchayatActivities() async {
@@ -133,8 +132,7 @@ class _PanchayatCampusActivityScreenState
       } else {
         throw Exception('Failed to load activities');
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   List getPanchayatActivitiesForSelectedDate() {

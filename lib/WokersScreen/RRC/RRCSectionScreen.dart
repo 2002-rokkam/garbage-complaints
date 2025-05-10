@@ -80,8 +80,7 @@ class _RRCScreenState extends State<RRCScreen>
                   ))
               .toList();
         });
-      } else {
-      }
+      } else {}
     } catch (e) {
     } finally {
       setState(() {

@@ -97,8 +97,7 @@ class _SchoolCampusActivityScreenState extends State<SchoolCampusActivityScreen>
       } else {
         throw Exception('Failed to load activities');
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<void> fetchPanchayatActivities() async {
@@ -132,8 +131,7 @@ class _SchoolCampusActivityScreenState extends State<SchoolCampusActivityScreen>
       } else {
         throw Exception('Failed to load activities');
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   List getPanchayatActivitiesForSelectedDate() {

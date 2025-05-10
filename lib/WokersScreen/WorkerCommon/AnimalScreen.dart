@@ -56,8 +56,7 @@ class _AnimalScreenState extends State<AnimalScreen> {
                   ))
               .toList();
         });
-      } else {
-      }
+      } else {}
     } catch (e) {
     } finally {
       setState(() {

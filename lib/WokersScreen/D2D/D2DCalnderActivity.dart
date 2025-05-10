@@ -97,8 +97,7 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
       } else {
         throw Exception('Failed to load activities');
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<void> fetchQRDetails(String workerId) async {

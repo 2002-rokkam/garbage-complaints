@@ -109,7 +109,8 @@ String capitalizeFirstLetter(String text) {
   }).join(' ');
 }
 
-Widget _buildContractorsCard(BuildContext context, Map<String, dynamic> contractor) {
+Widget _buildContractorsCard(
+    BuildContext context, Map<String, dynamic> contractor) {
   return Container(
     margin: const EdgeInsets.only(bottom: 16),
     padding: const EdgeInsets.all(16),
@@ -135,7 +136,7 @@ Widget _buildContractorsCard(BuildContext context, Map<String, dynamic> contract
               Text(
                 AppLocalizations.of(context)!
                     .capitalizeFirstLetter(entry.key.replaceAll('_', ' ')),
-                style:  TextStyle(
+                style: TextStyle(
                     fontSize: 16, color: Color.fromRGBO(107, 107, 107, 0.5)),
               ),
               Text(

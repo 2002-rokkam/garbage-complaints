@@ -64,17 +64,8 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
         isLoading = true;
       });
 
-      String formattedDistrict = selectedDistrict!.replaceAll(' ', '_');
-      String formattedGramPanchayat = selectedGP!.replaceAll(' ', '_');
-      formattedDistrict =
-          formattedDistrict.replaceAllMapped(RegExp(r'_(.)'), (match) {
-        return '_${match.group(1)?.toLowerCase()}';
-      });
-
-      formattedGramPanchayat =
-          formattedGramPanchayat.replaceAllMapped(RegExp(r'_(.)'), (match) {
-        return '_${match.group(1)?.toLowerCase()}';
-      });
+      String formattedDistrict = selectedDistrict!;
+      String formattedGramPanchayat = selectedGP!;
 
       try {
         var uri =
@@ -227,7 +218,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
       String title, List<String> options, Function(String) onSelect) {
     TextEditingController searchController = TextEditingController();
     List<String> filteredOptions = List.from(options);
-     final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -317,8 +308,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
       } else {
         throw Exception('Failed to load districts');
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<void> fetchGramPanchayats(String selectedDistrict) async {
@@ -338,8 +328,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
       } else {
         throw Exception('Failed to load gram panchayats');
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   @override
@@ -469,7 +458,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                   const SizedBox(height: 10),
                   GestureDetector(
                     onTap: () => _showSheet(
-                     localizations.selectGramPanchayat,
+                      localizations.selectGramPanchayat,
                       gramPanchayats,
                       (gp) => setState(() => selectedGP = gp),
                     ),
@@ -518,7 +507,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                           localizations.description,
+                          localizations.description,
                           style: TextStyle(
                             fontSize: constraints.maxWidth * 0.04,
                             fontWeight: FontWeight.w400,

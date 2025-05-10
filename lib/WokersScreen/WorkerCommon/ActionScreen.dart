@@ -56,8 +56,7 @@ class _ActionScreenState extends State<ActionScreen> {
                   ))
               .toList();
         });
-      } else {
-      }
+      } else {}
     } catch (e) {
     } finally {
       setState(() {

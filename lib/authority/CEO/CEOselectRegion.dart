@@ -84,10 +84,6 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
 
   Future<void> fetchGramPanchayats(
       String selectedDistrict, String selectedBlock) async {
-    String formattedBlock = selectedBlock?.replaceAll(' ', '_') ?? "";
-    formattedBlock = formattedBlock.replaceAllMapped(RegExp(r'_(.)'), (match) {
-      return '_${match.group(1)?.toLowerCase()}';
-    });
     try {
       final response = await http.get(
           Uri.parse('$gpUrl?district=$selectedDistrict&block=$selectedBlock'));
@@ -108,24 +104,9 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
   }
 
   Future<void> submitSelection() async {
-    String formattedDistrict = selectedDistrict!.replaceAll(' ', '_');
-    String formattedBlock = selectedBlock?.replaceAll(' ', '_') ?? "";
-    String formattedGramPanchayat =
-        selectedGramPanchayat?.replaceAll(' ', '_') ?? "";
-
-    formattedDistrict =
-        formattedDistrict.replaceAllMapped(RegExp(r'_(.)'), (match) {
-      return '_${match.group(1)?.toLowerCase()}';
-    });
-
-    formattedBlock = formattedBlock.replaceAllMapped(RegExp(r'_(.)'), (match) {
-      return '_${match.group(1)?.toLowerCase()}';
-    });
-
-    formattedGramPanchayat =
-        formattedGramPanchayat.replaceAllMapped(RegExp(r'_(.)'), (match) {
-      return '_${match.group(1)?.toLowerCase()}';
-    });
+    String formattedDistrict = selectedDistrict!;
+    String formattedBlock = selectedBlock ?? "";
+    String formattedGramPanchayat = selectedGramPanchayat ?? "";
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('appbarselectedDistrict', formattedDistrict);

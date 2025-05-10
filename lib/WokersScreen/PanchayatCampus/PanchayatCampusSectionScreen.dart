@@ -90,8 +90,7 @@ class _PanchayatCampusSectionScreenState
                   ))
               .toList();
         });
-      } else {
-      }
+      } else {}
     } catch (e) {
     } finally {
       setState(() {
@@ -131,8 +130,7 @@ class _PanchayatCampusSectionScreenState
                   ))
               .toList();
         });
-      } else {
-      }
+      } else {}
     } catch (e) {
     } finally {
       setState(() {
@@ -168,7 +166,6 @@ class _PanchayatCampusSectionScreenState
       ));
     });
   }
-  
 
   // void addNewContainer() {
   //   setState(() {

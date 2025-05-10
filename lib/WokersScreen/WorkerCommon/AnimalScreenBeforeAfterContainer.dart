@@ -161,7 +161,6 @@ class _AnimalScreenBeforeAfterContainerState
           activityId = jsonResponse['data']['record_id'].toString();
         });
         widget.onReload();
-
       } else {
         final errorData = await response.stream.bytesToString();
       }

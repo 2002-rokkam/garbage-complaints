@@ -121,10 +121,8 @@ class _ComplaintCardState extends State<ComplaintCard> {
         setState(() {
           _address = data["display_name"] ?? "No address found";
         });
-      } else {
-      }
-    } catch (e) {
-    }
+      } else {}
+    } catch (e) {}
   }
 
   Future<void> _pickImage() async {

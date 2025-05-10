@@ -87,8 +87,7 @@ class _SchoolCampusSectionScreenState extends State<SchoolCampusSectionScreen>
                   ))
               .toList();
         });
-      } else {
-      }
+      } else {}
     } catch (e) {
     } finally {
       setState(() {
@@ -128,8 +127,7 @@ class _SchoolCampusSectionScreenState extends State<SchoolCampusSectionScreen>
                   ))
               .toList();
         });
-      } else {
-      }
+      } else {}
     } catch (e) {
     } finally {
       setState(() {

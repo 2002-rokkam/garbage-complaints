@@ -159,7 +159,6 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
           activityId = jsonResponse['data']['record_id'].toString();
         });
         widget.onReload();
-
       } else {
         final errorData = await response.stream.bytesToString();
       }

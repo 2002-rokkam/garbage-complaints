@@ -67,7 +67,7 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
           await prefs.setString('position', user['Position']);
           await prefs.setString('gram_panchayat', user['gp']);
           await prefs.setString('District', user['District']);
-          await prefs.setString('Bdo', user['gp']);      
+          await prefs.setString('Bdo', user['gp']);
 
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Login successful!')),
@@ -254,7 +254,7 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
 
   Widget _buildInputField(
       String label, TextEditingController controller, bool obscureText) {
-        final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -272,7 +272,7 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
           controller: controller,
           obscureText: obscureText,
           decoration: InputDecoration(
-            hintText:  localizations.enterEmail,
+            hintText: localizations.enterEmail,
             filled: true,
             fillColor: Colors.white,
             border: OutlineInputBorder(

@@ -102,8 +102,7 @@ class _TripDetailCardState extends State<TripDetailCard> {
 
         if (response.statusCode == 201) {
           _showSuccessDialog(context);
-        } else {
-        }
+        } else {}
       } catch (e) {
       } finally {
         setState(() {
@@ -289,12 +288,12 @@ class _TripDetailCardState extends State<TripDetailCard> {
         ),
         if (isLoading)
           Center(
-                child: Image.asset(
-                  'assets/images/Loder.gif',
-                  width: 200, 
-                  height: 200,
-                ),
-              )
+            child: Image.asset(
+              'assets/images/Loder.gif',
+              width: 200,
+              height: 200,
+            ),
+          )
       ],
     );
   }

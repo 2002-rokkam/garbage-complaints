@@ -54,8 +54,7 @@ class _WagesActionScreenState extends State<WagesActionScreen> {
           'https://sbmgrajasthan.com/api/worker/$workerId/section/${widget.section}');
 
       if (response.statusCode == 200) {
-      } else {
-      }
+      } else {}
     } catch (e) {
     } finally {
       setState(() {

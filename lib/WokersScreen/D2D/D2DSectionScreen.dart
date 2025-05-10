@@ -84,8 +84,7 @@ class _D2DSectionScreenState extends State<D2DSectionScreen>
                   ))
               .toList();
         });
-      } else {
-      }
+      } else {}
     } catch (e) {
     } finally {
       setState(() {
@@ -94,7 +93,7 @@ class _D2DSectionScreenState extends State<D2DSectionScreen>
     }
   }
 
-void addNewContainer() {
+  void addNewContainer() {
     // Check if any container has initialData = null
     bool hasEmptyContainer = beforeAfterContainers.any((container) {
       if (container is D2DBeforeAfterContainer) {

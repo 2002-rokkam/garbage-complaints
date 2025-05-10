@@ -191,7 +191,7 @@ class _BDOD2DCalnderActivityScreenState
           indicatorWeight: 3.0,
           tabs: [
             Tab(text: localizations.beforeAfter),
-            Tab(text: localizations.scanQR), 
+            Tab(text: localizations.scanQR),
           ],
         ),
       ),

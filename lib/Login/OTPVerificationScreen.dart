@@ -80,7 +80,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
 
       if (idToken != null) {
         final response = await _sendTokenToBackend(idToken);
-      
+
         if (response.statusCode == 200) {
           Navigator.pushReplacement(
             context,

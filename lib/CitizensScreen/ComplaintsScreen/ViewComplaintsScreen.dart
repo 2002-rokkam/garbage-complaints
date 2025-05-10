@@ -86,7 +86,6 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
         setState(() {
           isLoading = false;
         });
-
       }
     } catch (e) {
       setState(() {
@@ -157,7 +156,7 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
     List<dynamic> images = complaint['photos'];
     final PageController _pageController = PageController();
     final localizations = AppLocalizations.of(context)!;
-    
+
     return Card(
       margin: EdgeInsets.all(10),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
