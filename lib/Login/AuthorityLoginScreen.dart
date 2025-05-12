@@ -272,7 +272,6 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
           controller: controller,
           obscureText: obscureText,
           decoration: InputDecoration(
-            hintText: localizations.enterEmail,
             filled: true,
             fillColor: Colors.white,
             border: OutlineInputBorder(
