@@ -318,7 +318,7 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
                     onPressed: () => Navigator.of(context).pop(),
                     child: Text('Close'),
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.green,
+                      backgroundColor: Colors.green,
                     ),
                   ),
                 ],

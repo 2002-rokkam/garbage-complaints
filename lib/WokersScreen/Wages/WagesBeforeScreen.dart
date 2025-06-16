@@ -381,8 +381,7 @@ class _WagesBeforeScreenState extends State<WagesBeforeScreen> {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        primary: Color(0xFF5C964A),
-                        onPrimary: Colors.white,
+                        foregroundColor: Colors.white, backgroundColor: Color(0xFF5C964A),
                         minimumSize:
                             Size(MediaQuery.of(context).size.width * 0.8, 50),
                         shape: RoundedRectangleBorder(

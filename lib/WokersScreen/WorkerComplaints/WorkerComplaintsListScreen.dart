@@ -192,7 +192,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                       _submitFormData();
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.green,
+                      backgroundColor: Colors.green,
                     ),
                     child: Text('Submit'),
                   ),
@@ -205,7 +205,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                       });
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.green,
+                      backgroundColor: Colors.green,
                     ),
                     child: Text(localizations.cancel),
                   ),
@@ -328,7 +328,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                 ElevatedButton(
                   onPressed: () => Navigator.of(context).pop(),
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.green,
+                    backgroundColor: Colors.green,
                   ),
                   child: Text('Close'),
                 ),
@@ -493,7 +493,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                   Navigator.of(context).pop();
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.green,
+                  backgroundColor: Colors.green,
                 ),
                 child: Text(localizations.ok),
               ),

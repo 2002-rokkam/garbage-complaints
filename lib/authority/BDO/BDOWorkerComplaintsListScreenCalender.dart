@@ -271,7 +271,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                 ElevatedButton(
                   onPressed: () => Navigator.of(context).pop(),
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.green, // Set the background color to green
+                    backgroundColor: Colors.green, // Set the background color to green
                   ),
                   child: Text('Close'),
                 ),

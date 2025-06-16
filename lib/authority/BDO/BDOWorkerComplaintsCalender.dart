@@ -194,7 +194,7 @@ class _BDOWorkerComplaintsCalenderState
                       onPressed: _onViewPressed,
                       child: Text(localizations.view),
                       style: ElevatedButton.styleFrom(
-                        primary: Color(0xFF5C964A),
+                        backgroundColor: Color(0xFF5C964A),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
