@@ -1,7 +1,7 @@
 // D2DCalendarActivityBody.dart
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import 'authority/BDO/BDOD2D/QRDetailsScreen.dart';
@@ -83,7 +83,7 @@ class _D2DCalendarActivityBodyState extends State<D2DCalendarActivityBody> {
         trailing: ElevatedButton(
           onPressed: () => Navigator.push(
               context, MaterialPageRoute(builder: (context) => screen)),
-          child: Text('View All'),
+          child: const Text('View All'),
         ),
       ),
     );

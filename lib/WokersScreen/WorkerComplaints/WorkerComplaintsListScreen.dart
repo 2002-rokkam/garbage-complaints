@@ -1,7 +1,7 @@
 // WokersScreen/WorkerComplaints/WorkerComplaintsListScreen.dart
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:geocoding/geocoding.dart';
@@ -21,8 +21,8 @@ class WorkerComplaintsListScreen extends StatelessWidget {
   final List<dynamic> complaints;
   final VoidCallback onUpdate;
 
-  WorkerComplaintsListScreen(
-      {required this.date, required this.complaints, required this.onUpdate});
+  const WorkerComplaintsListScreen(
+      {super.key, required this.date, required this.complaints, required this.onUpdate});
 
   @override
   Widget build(BuildContext context) {
@@ -37,22 +37,22 @@ class WorkerComplaintsListScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'Complaints on ${date.toLocal()}'.split(' ')[0],
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Color(0xFF5C964A),
+        backgroundColor: const Color(0xFF5C964A),
         toolbarHeight: 80.0,
       ),
-      backgroundColor: Color.fromRGBO(239, 239, 239, 1),
+      backgroundColor: const Color.fromRGBO(239, 239, 239, 1),
       body: selectedDateComplaints.isEmpty
-          ? Center(
+          ? const Center(
               child: Text('No complaints found for this date.'),
             )
           : ListView.builder(
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               itemCount: selectedDateComplaints.length,
               itemBuilder: (context, index) {
                 final complaint = selectedDateComplaints[index];
@@ -70,7 +70,7 @@ class ComplaintCard extends StatefulWidget {
   final dynamic complaint;
   final VoidCallback onUpdate;
 
-  ComplaintCard({required this.complaint, required this.onUpdate});
+  const ComplaintCard({super.key, required this.complaint, required this.onUpdate});
 
   @override
   _ComplaintCardState createState() => _ComplaintCardState();
@@ -182,7 +182,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                   width: 200,
                   fit: BoxFit.cover,
                 ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -194,7 +194,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
                     ),
-                    child: Text('Submit'),
+                    child: const Text('Submit'),
                   ),
                   ElevatedButton(
                     onPressed: () {
@@ -248,7 +248,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
       return;
     }
 
-    double distance = await Geolocator.distanceBetween(
+    double distance = Geolocator.distanceBetween(
       complaintLatitude,
       complaintLongitude,
       _latitude!,
@@ -293,13 +293,13 @@ class _ComplaintCardState extends State<ComplaintCard> {
       );
 
       if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Complaint updated successfully'),
         ));
         widget.onUpdate();
         Navigator.pop(context, true);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Failed to update complaint'),
         ));
       }
@@ -324,13 +324,13 @@ class _ComplaintCardState extends State<ComplaintCard> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Image.network(imageUrl),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () => Navigator.of(context).pop(),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
                   ),
-                  child: Text('Close'),
+                  child: const Text('Close'),
                 ),
               ],
             ),
@@ -338,7 +338,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
         },
       );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('No resolved photo available'),
       ));
     }
@@ -367,7 +367,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
                             color: Colors.black26,
                             blurRadius: 10,
@@ -396,7 +396,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Container(
                     width: 370,
                     height: 45,
@@ -415,7 +415,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                       children: [
                         Text(
                           time,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.black,
                             fontSize: 14,
                             fontFamily: 'Nunito Sans',
@@ -445,7 +445,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                       children: [
                         Text(
                           location,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.black,
                             fontSize: 14,
                             fontFamily: 'Nunito Sans',
@@ -480,14 +480,14 @@ class _ComplaintCardState extends State<ComplaintCard> {
             children: [
               Text(
                 message,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pop();
@@ -527,10 +527,10 @@ class _ComplaintCardState extends State<ComplaintCard> {
     String time = '${createdAt.hour}:${createdAt.minute}:${createdAt.second}';
 
     int activeIndex = 0;
-    final PageController _pageController = PageController();
+    final PageController pageController = PageController();
 
     return Container(
-      margin: EdgeInsets.only(bottom: 16.0),
+      margin: const EdgeInsets.only(bottom: 16.0),
       width: 370,
       decoration: ShapeDecoration(
         color: Colors.white,
@@ -541,14 +541,14 @@ class _ComplaintCardState extends State<ComplaintCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
+          SizedBox(
             width: 370,
             height: 188.59,
             child: Stack(
               alignment: Alignment.bottomCenter,
               children: [
                 PageView.builder(
-                  controller: _pageController,
+                  controller: pageController,
                   itemCount: images.length,
                   onPageChanged: (index) {
                     setState(() {
@@ -579,9 +579,9 @@ class _ComplaintCardState extends State<ComplaintCard> {
                 Positioned(
                   bottom: 12,
                   child: SmoothPageIndicator(
-                    controller: _pageController,
+                    controller: pageController,
                     count: images.length,
-                    effect: ExpandingDotsEffect(
+                    effect: const ExpandingDotsEffect(
                       activeDotColor: Colors.white,
                       dotColor: Colors.black,
                       dotHeight: 6,
@@ -603,7 +603,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                             horizontal: 10, vertical: 5),
                         decoration: ShapeDecoration(
                           color: status == "Resolved" || status == "Verified"
-                              ? Color(0xFF5C964A)
+                              ? const Color(0xFF5C964A)
                               : Colors.orange,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(18),
@@ -612,7 +612,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                         child: Center(
                           child: Text(
                             status,
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
@@ -620,7 +620,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                           ),
                         ),
                       ),
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       Container(
                         width: 138,
                         height: 26,
@@ -635,7 +635,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                         child: Center(
                           child: Text(
                             '$time,${createdAt.day}/${createdAt.month}/${createdAt.year}',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Color(0xFF252525),
                               fontSize: 12,
                             ),
@@ -648,20 +648,20 @@ class _ComplaintCardState extends State<ComplaintCard> {
               ],
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12.0),
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
-                    Icon(Icons.location_pin, color: Colors.red),
-                    SizedBox(width: 8),
+                    const Icon(Icons.location_pin, color: Colors.red),
+                    const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         _address,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Color(0xFF252525),
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -676,30 +676,30 @@ class _ComplaintCardState extends State<ComplaintCard> {
                               'https://www.google.com/maps/search/?api=1&query=$dirlatitude,$dirlongitude');
                           _launchURL(url);
                         } else {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                             content: Text('Location not available'),
                           ));
                         }
                       },
+                      style: TextButton.styleFrom(
+                        backgroundColor: const Color.fromRGBO(231, 242, 228, 1),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
                       child: Text(
                         localizations.openMap,
                         style: TextStyle(
                             color: Color.fromRGBO(56, 102, 51, 1),
                             fontSize: 16),
                       ),
-                      style: TextButton.styleFrom(
-                        backgroundColor: Color.fromRGBO(231, 242, 228, 1),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
                     ),
                   ],
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
                   caption,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Color(0xFF252525),
                     fontSize: 16,
                   ),
@@ -707,14 +707,14 @@ class _ComplaintCardState extends State<ComplaintCard> {
               ],
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12.0),
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: Container(
               width: double.infinity,
               height: 40,
               decoration: ShapeDecoration(
-                color: Color(0xFF5C964A),
+                color: const Color(0xFF5C964A),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(100),
                 ),
@@ -727,7 +727,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                   (status == "Resolved" || status == "Verified")
                       ? 'View Reply'
                       : 'Reply with Image',
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
@@ -736,7 +736,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
               ),
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
         ],
       ),
     );

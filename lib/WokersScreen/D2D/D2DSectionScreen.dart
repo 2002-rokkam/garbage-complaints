@@ -1,6 +1,6 @@
 // WokersScreen/D2D/D2DSectionScreen.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../WorkerCommon/D2DBeforeAfterContainer.dart';
@@ -85,7 +85,6 @@ class _D2DSectionScreenState extends State<D2DSectionScreen>
               .toList();
         });
       } else {}
-    } catch (e) {
     } finally {
       setState(() {
         isLoading = false;
@@ -105,7 +104,7 @@ class _D2DSectionScreenState extends State<D2DSectionScreen>
     if (hasEmptyContainer) {
       // Show a message or prevent adding a new container
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Cannot add a new container while one is incomplete.'),
         ),
       );
@@ -150,7 +149,7 @@ class _D2DSectionScreenState extends State<D2DSectionScreen>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                '${widget.section}',
+                widget.section,
                 style: const TextStyle(
                   fontSize: 20,
                   color: Colors.white,
@@ -189,7 +188,7 @@ class _D2DSectionScreenState extends State<D2DSectionScreen>
           controller: _tabController,
           children: [
             _buildBeforeAfterTab(),
-            QRTab(),
+            const QRTab(),
             _buildGPSTab(),
           ],
         ),
@@ -199,11 +198,11 @@ class _D2DSectionScreenState extends State<D2DSectionScreen>
                 backgroundColor: const Color(0xFFFFD262),
                 label: Row(
                   children: [
-                    Icon(Icons.add, size: 24, color: Color(0xFF252525)),
-                    SizedBox(width: 12),
+                    const Icon(Icons.add, size: 24, color: Color(0xFF252525)),
+                    const SizedBox(width: 12),
                     Text(
                       localizations.addMore,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Color(0xFF252525),
                         fontSize: 14,
                         fontFamily: 'Nunito Sans',

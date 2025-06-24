@@ -1,6 +1,6 @@
 // WokersScreen/Wages/WagesActionScreen.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -55,7 +55,6 @@ class _WagesActionScreenState extends State<WagesActionScreen> {
 
       if (response.statusCode == 200) {
       } else {}
-    } catch (e) {
     } finally {
       setState(() {
         isLoading = false;
@@ -77,11 +76,11 @@ class _WagesActionScreenState extends State<WagesActionScreen> {
     final localizations = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: Color.fromRGBO(239, 239, 239, 1),
+      backgroundColor: const Color.fromRGBO(239, 239, 239, 1),
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(100),
+        preferredSize: const Size.fromHeight(100),
         child: AppBar(
-          backgroundColor: Color(0xFF5C964A),
+          backgroundColor: const Color(0xFF5C964A),
           centerTitle: true,
           automaticallyImplyLeading: false, // To remove the default back button
           title: Row(
@@ -89,20 +88,20 @@ class _WagesActionScreenState extends State<WagesActionScreen> {
                 .spaceBetween, // Ensures space between the elements
             children: [
               IconButton(
-                icon: Icon(Icons.arrow_back, color: Colors.white),
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
                 onPressed: () {
                   Navigator.pop(context); // Handle back navigation
                 },
               ),
               Text(
-                '${widget.section}',
-                style: TextStyle(
+                widget.section,
+                style: const TextStyle(
                   fontSize: 20,
                   color: Colors.white,
                 ),
               ),
               IconButton(
-                icon: Icon(Icons.calendar_today, color: Colors.white),
+                icon: const Icon(Icons.calendar_today, color: Colors.white),
                 onPressed: () {
                   // Navigate to the CalendarScreen
                   Navigator.push(
@@ -119,7 +118,7 @@ class _WagesActionScreenState extends State<WagesActionScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: isLoading
               ? [
@@ -143,18 +142,18 @@ class _WagesActionScreenState extends State<WagesActionScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: addNewContainer,
-        backgroundColor: Color(0xFFFFD262),
+        backgroundColor: const Color(0xFFFFD262),
         label: Row(
           children: [
-            Icon(
+            const Icon(
               Icons.add,
               size: 24,
               color: Color(0xFF252525),
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Text(
               localizations.addMore,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Color(0xFF252525),
                 fontSize: 14,
                 fontFamily: 'Nunito Sans',

@@ -1,6 +1,6 @@
 // authority/BDO/BDOResolvedWorkerComplaintsCalender.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'dart:async';
 import 'package:table_calendar/table_calendar.dart';
 import 'dart:convert';
@@ -9,6 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'BDOWorkerComplaintsListScreenCalender.dart';
 
 class BDOResolvedWorkerComplaintsCalender extends StatefulWidget {
+  const BDOResolvedWorkerComplaintsCalender({super.key});
+
   @override
   _BDOResolvedWorkerComplaintsCalenderState createState() =>
       _BDOResolvedWorkerComplaintsCalenderState();
@@ -68,7 +70,6 @@ class _BDOResolvedWorkerComplaintsCalenderState
       } else {
         throw Exception('Failed to load complaints');
       }
-    } catch (e) {
     } finally {
       setState(() {
         _isLoading = false;
@@ -96,16 +97,16 @@ class _BDOResolvedWorkerComplaintsCalenderState
       appBar: AppBar(
         title: Text(
           localizations.complaints,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Color(0xFF5C964A),
+        backgroundColor: const Color(0xFF5C964A),
         toolbarHeight: 80.0,
       ),
-      backgroundColor: Color.fromRGBO(239, 239, 239, 1),
+      backgroundColor: const Color.fromRGBO(239, 239, 239, 1),
       body: Column(
         children: [
           TableCalendar(
@@ -131,7 +132,7 @@ class _BDOResolvedWorkerComplaintsCalenderState
                 );
               }
             },
-            calendarStyle: CalendarStyle(
+            calendarStyle: const CalendarStyle(
               selectedDecoration: BoxDecoration(
                 color: Color(0xFF5C964A),
                 shape: BoxShape.circle,
@@ -152,14 +153,14 @@ class _BDOResolvedWorkerComplaintsCalenderState
                     child: Container(
                       width: 16,
                       height: 16,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.red,
                         shape: BoxShape.circle,
                       ),
                       child: Center(
                         child: Text(
                           '$count',
-                          style: TextStyle(color: Colors.white, fontSize: 10),
+                          style: const TextStyle(color: Colors.white, fontSize: 10),
                         ),
                       ),
                     ),
@@ -169,14 +170,14 @@ class _BDOResolvedWorkerComplaintsCalenderState
               },
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           complaintCount > 0
               ? Container()
               : Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
                     localizations.noComplaints,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
         ],

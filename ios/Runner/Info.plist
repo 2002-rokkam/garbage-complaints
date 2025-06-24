@@ -47,5 +47,22 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+    <string>This app requires access to the camera to capture photos for garbage complaints.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app requires access to your location to report garbage complaints accurately.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This app requires access to your location even when running in the background to report garbage complaints accurately.</string>
+	<key>CFBundleURLTypes</key>
+    <array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.959280236765-fba44htcai78pg5pp2vu6am0gj1ovt4o</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

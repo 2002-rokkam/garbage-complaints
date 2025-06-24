@@ -1,7 +1,7 @@
 // WokersScreen/WorkerCommon/D2DBeforeAfterContainer.dart
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:io' show Platform;
@@ -38,7 +38,7 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
   bool _isBeforeSliderEnabled = false;
   bool _isAfterSliderEnabled = false;
   String activityId = '';
-  bool _isSubmitting = false;
+  final bool _isSubmitting = false;
   bool _isLoading = false;
   late Locale _locale;
 
@@ -184,7 +184,7 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
     if (kIsWeb) {
       // Convert image to Base64 for PWA
       final bytes = await image.readAsBytes();
-      imagePath = 'data:image/jpeg;base64,' + base64Encode(bytes);
+      imagePath = 'data:image/jpeg;base64,${base64Encode(bytes)}';
     } else {
       imagePath = image.path;
     }
@@ -265,7 +265,7 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
                     Container(
                       width: screenWidth * 0.3,
                       height: screenWidth * 0.3,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                         color: Colors.transparent,
                       ),
@@ -283,7 +283,7 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
                         localizations.successfullySubmitted,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Color(0xFF1D1B20),
+                          color: const Color(0xFF1D1B20),
                           fontSize: screenWidth * 0.06,
                           fontFamily: 'Roboto',
                           fontWeight: FontWeight.w400,
@@ -305,7 +305,7 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
                           vertical: screenHeight * 0.01,
                         ),
                         decoration: ShapeDecoration(
-                          color: Color(0x335C964A),
+                          color: const Color(0x335C964A),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(18),
                           ),
@@ -314,7 +314,7 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
                           child: Text(
                             localizations.close,
                             style: TextStyle(
-                              color: Color(0xFF3E6632),
+                              color: const Color(0xFF3E6632),
                               fontSize: screenWidth * 0.035,
                               fontFamily: 'Nunito Sans',
                               fontWeight: FontWeight.w600,
@@ -382,12 +382,12 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
     final localizations = AppLocalizations.of(context)!;
 
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      padding: EdgeInsets.all(16),
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.black12,
             blurRadius: 4,
@@ -407,7 +407,7 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
               ),
             ],
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -421,7 +421,7 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
                       width: MediaQuery.of(context).size.width * 0.4,
                       height: 100,
                       decoration: BoxDecoration(
-                        border: Border.all(color: Color(0xFF6B6B6B), width: 1),
+                        border: Border.all(color: const Color(0xFF6B6B6B), width: 1),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: _beforeImage == null
@@ -433,8 +433,8 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
                                   width: 24,
                                   height: 24,
                                 ),
-                                SizedBox(height: 8),
-                                Text(
+                                const SizedBox(height: 8),
+                                const Text(
                                   'Before',
                                   style: TextStyle(
                                     color: Color(0xFF6B6B6B),
@@ -516,7 +516,7 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
                         right: 4,
                         child: GestureDetector(
                           onTap: () => _deleteImage('before'),
-                          child: Icon(Icons.close, color: Colors.red, size: 20),
+                          child: const Icon(Icons.close, color: Colors.red, size: 20),
                         ),
                       ),
                   ],
@@ -531,7 +531,7 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
                       width: MediaQuery.of(context).size.width * 0.4,
                       height: 100,
                       decoration: BoxDecoration(
-                        border: Border.all(color: Color(0xFF6B6B6B), width: 1),
+                        border: Border.all(color: const Color(0xFF6B6B6B), width: 1),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: _afterImage == null
@@ -543,8 +543,8 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
                                   width: 24,
                                   height: 24,
                                 ),
-                                SizedBox(height: 8),
-                                Text(
+                                const SizedBox(height: 8),
+                                const Text(
                                   'After',
                                   style: TextStyle(
                                     color: Color(0xFF6B6B6B),
@@ -597,7 +597,7 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
                         right: 4,
                         child: GestureDetector(
                           onTap: () => _deleteImage('after'),
-                          child: Icon(Icons.close, color: Colors.red, size: 20),
+                          child: const Icon(Icons.close, color: Colors.red, size: 20),
                         ),
                       ),
                   ],
@@ -605,9 +605,9 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
               ),
             ],
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           if (_beforeImage != null && !_isAfterSliderEnabled)
-            Container(
+            SizedBox(
               height: 50.0,
               child: _isLoading
                   ? Center(
@@ -631,16 +631,16 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
                             _isBeforeSliderEnabled = false;
                             _isAfterSliderEnabled = true;
                           });
-                        } catch (e) {
                         } finally {
                           setState(() {
                             _isLoading = false;
                           });
                         }
+                        return null;
                       },
                       label: Text(
                         localizations.slideToConfirmBefore,
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        style: const TextStyle(color: Colors.white, fontSize: 18),
                       ),
                       icon: Image.asset(
                         'assets/images/Icon.png', // Replace with your image path
@@ -648,13 +648,13 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
                         height: 40,
                       ),
                       width: MediaQuery.of(context).size.width * 0.8,
-                      backgroundColor: Color(0xFF5C964A),
+                      backgroundColor: const Color(0xFF5C964A),
                       buttonColor: Colors.white,
                       radius: 30,
                     ),
             ),
           if (_afterImage != null && !_isSubmitting)
-            Container(
+            SizedBox(
               height: 50.0,
               child: _isLoading
                   ? Center(
@@ -673,16 +673,16 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
                         });
                         try {
                           await _submitAfterImage();
-                        } catch (e) {
                         } finally {
                           setState(() {
                             _isLoading = false;
                           });
                         }
+                        return null;
                       },
                       label: Text(
                         localizations.slideToConfirmAfter,
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        style: const TextStyle(color: Colors.white, fontSize: 18),
                       ),
                       icon: Image.asset(
                         'assets/images/Icon.png', // Replace with your image path
@@ -690,7 +690,7 @@ class _D2DBeforeAfterContainerState extends State<D2DBeforeAfterContainer> {
                         height: 40,
                       ),
                       width: MediaQuery.of(context).size.width * 0.8,
-                      backgroundColor: Color(0xFF5C964A),
+                      backgroundColor: const Color(0xFF5C964A),
                       buttonColor: Colors.white,
                       radius: 30,
                     ),

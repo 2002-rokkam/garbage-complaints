@@ -1,6 +1,6 @@
 // authority/SMD/SMDScreen.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
@@ -19,6 +19,8 @@ import '../BDO/BDOWages/BDOWagesCalendarActivityScreen.dart';
 import 'SMDcontractorDetails.dart';
 
 class SMDScreen extends StatefulWidget {
+  const SMDScreen({super.key});
+
   @override
   _SMDScreenState createState() => _SMDScreenState();
 }
@@ -40,12 +42,12 @@ class _SMDScreenState extends State<SMDScreen> {
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: 0);
-    _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
+    _timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
       if (_pageController.hasClients) {
         int nextPage = (_pageController.page!.toInt() + 1) % 3;
         _pageController.animateToPage(
           nextPage,
-          duration: Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
         );
       }
@@ -248,7 +250,7 @@ class _SMDScreenState extends State<SMDScreen> {
         appBar: AppBar(
           automaticallyImplyLeading: false, // This removes the back button
           backgroundColor: const Color(0xFF5C964A),
-          flexibleSpace: Container(
+          flexibleSpace: SizedBox(
             height: 100,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -273,9 +275,9 @@ class _SMDScreenState extends State<SMDScreen> {
                               ),
                               child: Container(
                                 height: 500, // Adjust height as needed
-                                padding: EdgeInsets.all(16.0),
+                                padding: const EdgeInsets.all(16.0),
                                 child:
-                                    SMDselectRegion(), // Show your region selection screen inside the popup
+                                    const SMDselectRegion(), // Show your region selection screen inside the popup
                               ),
                             ),
                           );
@@ -302,7 +304,7 @@ class _SMDScreenState extends State<SMDScreen> {
                                         ? "${localizations.district}: $appbarselectedDistrict"
                                         : "${localizations.block}: $appbarselectedBlock")
                                     : "${localizations.gramPanchayat}: $appbarselectedGramPanchayat"),
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -312,12 +314,12 @@ class _SMDScreenState extends State<SMDScreen> {
                       ),
                     ]),
                     IconButton(
-                      icon: Icon(Icons.settings, color: Colors.white),
+                      icon: const Icon(Icons.settings, color: Colors.white),
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => WorkerSettingsPage(),
+                            builder: (context) => const WorkerSettingsPage(),
                           ),
                         );
                       },
@@ -328,7 +330,7 @@ class _SMDScreenState extends State<SMDScreen> {
             ),
           ),
         ),
-        backgroundColor: Color.fromRGBO(239, 239, 239, 1),
+        backgroundColor: const Color.fromRGBO(239, 239, 239, 1),
         body: Column(
           children: [
             // Fixed image slider
@@ -349,7 +351,7 @@ class _SMDScreenState extends State<SMDScreen> {
                 children: [
                   Container(
                     height: screenHeight * 0.14, // Adjust the height as needed
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Color(
                           0xFF5C964A), // Change this to your app's primary color
                       borderRadius: BorderRadius.only(
@@ -401,7 +403,7 @@ class _SMDScreenState extends State<SMDScreen> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   localizations.action,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
@@ -424,7 +426,7 @@ class _SMDScreenState extends State<SMDScreen> {
                           color: Colors.white,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8)),
-                          shadows: [
+                          shadows: const [
                             BoxShadow(
                               color: Color(0x14000000),
                               blurRadius: 16,
@@ -451,7 +453,7 @@ class _SMDScreenState extends State<SMDScreen> {
                                 children: [
                                   Text(
                                     localizations.totalComplaints,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.black,
                                       fontSize: 16,
                                       fontFamily: 'Nunito Sans',
@@ -463,7 +465,7 @@ class _SMDScreenState extends State<SMDScreen> {
                                   const SizedBox(height: 10),
                                   Text(
                                     totalComplaints.toString(),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.black,
                                       fontSize: 24,
                                       fontFamily: 'Nunito Sans',
@@ -481,7 +483,7 @@ class _SMDScreenState extends State<SMDScreen> {
                                 width: 64,
                                 height: 64,
                                 clipBehavior: Clip.antiAlias,
-                                decoration: BoxDecoration(),
+                                decoration: const BoxDecoration(),
                                 child: Image.asset(
                                   'assets/images/Complaints.png',
                                   fit: BoxFit.cover,
@@ -492,7 +494,7 @@ class _SMDScreenState extends State<SMDScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -513,8 +515,8 @@ class _SMDScreenState extends State<SMDScreen> {
                                   ),
                                   child: Container(
                                     height: 500, // Adjust height as needed
-                                    padding: EdgeInsets.all(16.0),
-                                    child: SMDselectRegion(),
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: const SMDselectRegion(),
                                   ),
                                 ),
                               );
@@ -545,7 +547,7 @@ class _SMDScreenState extends State<SMDScreen> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              shadows: [
+                              shadows: const [
                                 BoxShadow(
                                   color: Color(0x14000000),
                                   blurRadius: 16,
@@ -571,7 +573,7 @@ class _SMDScreenState extends State<SMDScreen> {
                                     width: 44,
                                     height: 44,
                                     clipBehavior: Clip.antiAlias,
-                                    decoration: BoxDecoration(),
+                                    decoration: const BoxDecoration(),
                                     child: Image.asset(
                                       'assets/images/pending.png',
                                       fit: BoxFit.cover,
@@ -580,7 +582,7 @@ class _SMDScreenState extends State<SMDScreen> {
                                   const SizedBox(height: 10),
                                   Text(
                                     pendingComplaints.toString(),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.black,
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
@@ -589,7 +591,7 @@ class _SMDScreenState extends State<SMDScreen> {
                                   const SizedBox(height: 5),
                                   Text(
                                     localizations.pending,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.black,
                                       fontSize: 16,
                                       fontFamily: 'Nunito Sans',
@@ -620,8 +622,8 @@ class _SMDScreenState extends State<SMDScreen> {
                                   ),
                                   child: Container(
                                     height: 500, // Adjust height as needed
-                                    padding: EdgeInsets.all(16.0),
-                                    child: SMDselectRegion(),
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: const SMDselectRegion(),
                                   ),
                                 ),
                               );
@@ -652,7 +654,7 @@ class _SMDScreenState extends State<SMDScreen> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              shadows: [
+                              shadows: const [
                                 BoxShadow(
                                   color: Color(0x14000000),
                                   blurRadius: 16,
@@ -678,7 +680,7 @@ class _SMDScreenState extends State<SMDScreen> {
                                     width: 44,
                                     height: 44,
                                     clipBehavior: Clip.antiAlias,
-                                    decoration: BoxDecoration(),
+                                    decoration: const BoxDecoration(),
                                     child: Image.asset(
                                       'assets/images/resved.png',
                                       fit: BoxFit.cover,
@@ -687,7 +689,7 @@ class _SMDScreenState extends State<SMDScreen> {
                                   const SizedBox(height: 10),
                                   Text(
                                     resolvedComplaints.toString(),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.black,
                                       fontSize: 18, // Adjust size as needed
                                       fontWeight: FontWeight.bold,
@@ -697,7 +699,7 @@ class _SMDScreenState extends State<SMDScreen> {
                                       height: 5), // Adjust spacing as needed
                                   Text(
                                     localizations.resolved,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.black,
                                       fontSize: 16,
                                       fontFamily: 'Nunito Sans',
@@ -720,7 +722,7 @@ class _SMDScreenState extends State<SMDScreen> {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           localizations.home,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
@@ -744,7 +746,7 @@ class _SMDScreenState extends State<SMDScreen> {
                         }).toList(),
                       ),
                     ),
-                    SizedBox(height: 26),
+                    const SizedBox(height: 26),
                     PoweredByBikaji(),
                   ],
                 ),
@@ -781,17 +783,17 @@ class _SMDScreenState extends State<SMDScreen> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
-          shadows: [
+          shadows: const [
             BoxShadow(
               color: Color(0x14000000),
               blurRadius: 16,
-              offset: const Offset(0, 8),
+              offset: Offset(0, 8),
               spreadRadius: 0,
             ),
             BoxShadow(
               color: Color(0x0A000000),
               blurRadius: 4,
-              offset: const Offset(0, 0),
+              offset: Offset(0, 0),
               spreadRadius: 0,
             ),
           ],
@@ -806,7 +808,7 @@ class _SMDScreenState extends State<SMDScreen> {
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
               child: Image.asset(imageUrl, fit: BoxFit.cover),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               number,
               style: const TextStyle(
@@ -816,7 +818,7 @@ class _SMDScreenState extends State<SMDScreen> {
                 letterSpacing: 0.16,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               label,
               textAlign: TextAlign.start,
@@ -855,8 +857,8 @@ class _SMDScreenState extends State<SMDScreen> {
           ),
           child: Container(
             height: 500,
-            padding: EdgeInsets.all(16.0),
-            child: SMDselectRegion(),
+            padding: const EdgeInsets.all(16.0),
+            child: const SMDselectRegion(),
           ),
         ),
       );
@@ -868,7 +870,7 @@ class _SMDScreenState extends State<SMDScreen> {
           );
         });
       }
-      return Scaffold();
+      return const Scaffold();
     }
     switch (routeName) {
       case 'DoorToDoorScreen':
@@ -939,7 +941,7 @@ class _SMDScreenState extends State<SMDScreen> {
           gramPanchayat: appbarselectedGramPanchayat,
         );
       default:
-        return Scaffold(body: Center(child: Text('Page not found')));
+        return const Scaffold(body: Center(child: Text('Page not found')));
     }
   }
 }

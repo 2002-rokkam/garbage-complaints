@@ -1,6 +1,6 @@
 // WokersScreen/Wages/WagesCalendarActivityScreen.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -22,7 +22,7 @@ class _WagesCalendarActivityScreenState
   List _activities = [];
   bool _isLoading = false;
   int _selectedMonth = DateTime.now().month;
-  int _selectedYear = DateTime.now().year;
+  final int _selectedYear = DateTime.now().year;
 
   late Locale _locale;
 
@@ -71,7 +71,6 @@ class _WagesCalendarActivityScreenState
       } else {
         throw Exception('Failed to load activities');
       }
-    } catch (e) {
     } finally {
       setState(() {
         _isLoading = false;
@@ -124,14 +123,14 @@ class _WagesCalendarActivityScreenState
             borderRadius: BorderRadius.circular(10),
           ),
           child: Container(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
+                const Text(
                   'Select Month',
                   style: TextStyle(
                     color: Color(0xFF5C964A),
@@ -139,10 +138,10 @@ class _WagesCalendarActivityScreenState
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 GridView.builder(
                   shrinkWrap: true,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
                     childAspectRatio: 2.5,
                     crossAxisSpacing: 10,
@@ -156,17 +155,17 @@ class _WagesCalendarActivityScreenState
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Color(0xFFE8F5E9),
+                          color: const Color(0xFFE8F5E9),
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
-                            color: Color(0xFF5C964A),
+                            color: const Color(0xFF5C964A),
                             width: 1,
                           ),
                         ),
                         alignment: Alignment.center,
                         child: Text(
                           months[index],
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Color(0xFF252525),
                             fontSize: 14,
                           ),
@@ -196,21 +195,21 @@ class _WagesCalendarActivityScreenState
       appBar: AppBar(
         title: Text(
           widget.section,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Color(0xFF5C964A),
+        backgroundColor: const Color(0xFF5C964A),
         actions: [
           IconButton(
-            icon: Icon(Icons.calendar_today),
+            icon: const Icon(Icons.calendar_today),
             onPressed: _showMonthPicker,
           ),
         ],
       ),
-      backgroundColor: Color.fromRGBO(239, 239, 239, 1),
+      backgroundColor: const Color.fromRGBO(239, 239, 239, 1),
       body: _isLoading
           ? Center(
               child: Image.asset(
@@ -220,7 +219,7 @@ class _WagesCalendarActivityScreenState
               ),
             )
           : _activities.isEmpty
-              ? Center(child: Text('No activities for the selected month.'))
+              ? const Center(child: Text('No activities for the selected month.'))
               : ListView.builder(
                   itemCount: _activities.length,
                   itemBuilder: (context, index) {
@@ -255,7 +254,7 @@ class _WagesCalendarActivityScreenState
                                 children: [
                                   Text(
                                     formatDateTime(activity['date_time']),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Color(0xFF252525),
                                       fontSize: 12,
                                     ),
@@ -268,7 +267,7 @@ class _WagesCalendarActivityScreenState
                               onPressed: () {
                                 _showImageFullscreen(activity['before_image']);
                               },
-                              child: Text(
+                              child: const Text(
                                 'View',
                                 style: TextStyle(
                                   color: Color(

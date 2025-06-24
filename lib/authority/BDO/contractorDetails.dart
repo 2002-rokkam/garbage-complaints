@@ -1,7 +1,7 @@
 // authority/BDO/contractorDetails.dart
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -136,7 +136,7 @@ Widget _buildContractorsCard(
               Text(
                 AppLocalizations.of(context)!
                     .capitalizeFirstLetter(entry.key.replaceAll('_', ' ')),
-                style: TextStyle(
+                style: const TextStyle(
                     fontSize: 16, color: Color.fromRGBO(107, 107, 107, 0.5)),
               ),
               Text(

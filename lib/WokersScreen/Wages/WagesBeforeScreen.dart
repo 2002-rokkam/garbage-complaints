@@ -1,7 +1,7 @@
 // WokersScreen/Wages/WagesBeforeScreen.dart
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
@@ -117,21 +117,21 @@ class _WagesBeforeScreenState extends State<WagesBeforeScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Select Image Source'),
+          title: const Text('Select Image Source'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                leading: Icon(Icons.camera),
-                title: Text('Camera'),
+                leading: const Icon(Icons.camera),
+                title: const Text('Camera'),
                 onTap: () {
                   Navigator.of(context).pop();
                   _captureImage(ImageSource.camera);
                 },
               ),
               ListTile(
-                leading: Icon(Icons.photo_library),
-                title: Text('Gallery'),
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Gallery'),
                 onTap: () {
                   Navigator.of(context).pop();
                   _captureImage(ImageSource.gallery);
@@ -222,7 +222,7 @@ class _WagesBeforeScreenState extends State<WagesBeforeScreen> {
                   width: screenWidth * 0.3,
                   height: screenWidth * 0.3,
                   clipBehavior: Clip.antiAlias,
-                  decoration: BoxDecoration(),
+                  decoration: const BoxDecoration(),
                   child: Image.asset(
                     'assets/images/done.png',
                     width: 24,
@@ -236,7 +236,7 @@ class _WagesBeforeScreenState extends State<WagesBeforeScreen> {
                     'Successfully uploaded receipt!',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: Color(0xFF1D1B20),
+                      color: const Color(0xFF1D1B20),
                       fontSize: screenWidth * 0.06,
                       fontFamily: 'Roboto',
                       fontWeight: FontWeight.w400,
@@ -258,7 +258,7 @@ class _WagesBeforeScreenState extends State<WagesBeforeScreen> {
                       vertical: screenHeight * 0.01,
                     ),
                     decoration: ShapeDecoration(
-                      color: Color(0x335C964A),
+                      color: const Color(0x335C964A),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(18),
                       ),
@@ -267,7 +267,7 @@ class _WagesBeforeScreenState extends State<WagesBeforeScreen> {
                       child: Text(
                         localizations.close,
                         style: TextStyle(
-                          color: Color(0xFF3E6632),
+                          color: const Color(0xFF3E6632),
                           fontSize: screenWidth * 0.035,
                           fontFamily: 'Nunito Sans',
                           fontWeight: FontWeight.w600,
@@ -288,12 +288,12 @@ class _WagesBeforeScreenState extends State<WagesBeforeScreen> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      padding: EdgeInsets.all(16),
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.black12,
             blurRadius: 4,
@@ -303,7 +303,7 @@ class _WagesBeforeScreenState extends State<WagesBeforeScreen> {
       ),
       child: Column(
         children: [
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           GestureDetector(
             onTap: _beforeImage == null ? _showImageSourceDialog : null,
             child: Stack(
@@ -312,7 +312,7 @@ class _WagesBeforeScreenState extends State<WagesBeforeScreen> {
                   width: MediaQuery.of(context).size.width * 0.8,
                   height: 200,
                   decoration: BoxDecoration(
-                    border: Border.all(color: Color(0xFF6B6B6B), width: 1),
+                    border: Border.all(color: const Color(0xFF6B6B6B), width: 1),
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: _beforeImage == null
@@ -324,8 +324,8 @@ class _WagesBeforeScreenState extends State<WagesBeforeScreen> {
                               width: 24,
                               height: 24,
                             ),
-                            SizedBox(height: 8),
-                            Text(
+                            const SizedBox(height: 8),
+                            const Text(
                               'Upload Receipt',
                               style: TextStyle(
                                 color: Color(0xFF6B6B6B),
@@ -347,15 +347,15 @@ class _WagesBeforeScreenState extends State<WagesBeforeScreen> {
                     right: 4,
                     child: GestureDetector(
                       onTap: _deleteImage,
-                      child: Icon(Icons.close, color: Colors.red, size: 20),
+                      child: const Icon(Icons.close, color: Colors.red, size: 20),
                     ),
                   ),
               ],
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           if (_beforeImage != null)
-            Container(
+            SizedBox(
               height: 50.0,
               child: _isLoading
                   ? Center(
@@ -373,7 +373,6 @@ class _WagesBeforeScreenState extends State<WagesBeforeScreen> {
 
                         try {
                           await _submitBeforeImage();
-                        } catch (e) {
                         } finally {
                           setState(() {
                             _isLoading = false;
@@ -381,14 +380,14 @@ class _WagesBeforeScreenState extends State<WagesBeforeScreen> {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white, backgroundColor: Color(0xFF5C964A),
+                        foregroundColor: Colors.white, backgroundColor: const Color(0xFF5C964A),
                         minimumSize:
                             Size(MediaQuery.of(context).size.width * 0.8, 50),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
                       ),
-                      child: Text(
+                      child: const Text(
                         "Upload Receipt",
                         style: TextStyle(
                           fontSize: 18,

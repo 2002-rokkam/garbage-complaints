@@ -1,10 +1,12 @@
 // WokersScreen/RRC/TripDetailCard.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TripDetailCard extends StatefulWidget {
+  const TripDetailCard({super.key});
+
   @override
   _TripDetailCardState createState() => _TripDetailCardState();
 }
@@ -103,7 +105,6 @@ class _TripDetailCardState extends State<TripDetailCard> {
         if (response.statusCode == 201) {
           _showSuccessDialog(context);
         } else {}
-      } catch (e) {
       } finally {
         setState(() {
           isLoading = false; // Stop loading
@@ -145,7 +146,7 @@ class _TripDetailCardState extends State<TripDetailCard> {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
+                SizedBox(
                   width: screenWidth * 0.3,
                   height: screenWidth * 0.3,
                   child: Image.asset(
@@ -159,7 +160,7 @@ class _TripDetailCardState extends State<TripDetailCard> {
                   'Successfully updated Trip details!',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Color(0xFF1D1B20),
+                    color: const Color(0xFF1D1B20),
                     fontSize: screenWidth * 0.06,
                     fontFamily: 'Roboto',
                     fontWeight: FontWeight.w400,
@@ -176,7 +177,7 @@ class _TripDetailCardState extends State<TripDetailCard> {
                     width: screenWidth * 0.25,
                     height: screenHeight * 0.05,
                     decoration: ShapeDecoration(
-                      color: Color(0x335C964A),
+                      color: const Color(0x335C964A),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(18),
                       ),
@@ -185,7 +186,7 @@ class _TripDetailCardState extends State<TripDetailCard> {
                       child: Text(
                         localizations.close,
                         style: TextStyle(
-                          color: Color(0xFF3E6632),
+                          color: const Color(0xFF3E6632),
                           fontSize: screenWidth * 0.035,
                           fontFamily: 'Nunito Sans',
                           fontWeight: FontWeight.w600,
@@ -244,7 +245,7 @@ class _TripDetailCardState extends State<TripDetailCard> {
                     textFieldHeight: textFieldHeight,
                     isValid: tripsValid,
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   _buildDetailContainer(
                     title: 'Quantity of Waste',
                     child: _buildTextField(quantityWasteController),
@@ -252,7 +253,7 @@ class _TripDetailCardState extends State<TripDetailCard> {
                     textFieldHeight: textFieldHeight,
                     isValid: quantityWasteValid,
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   _buildDetailContainer(
                     title: 'Segregated Degradable Waste',
                     child: _buildTextField(segregatedDegradableController),
@@ -260,7 +261,7 @@ class _TripDetailCardState extends State<TripDetailCard> {
                     textFieldHeight: textFieldHeight,
                     isValid: segregatedDegradableValid,
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   _buildDetailContainer(
                     title: 'Segregated Non-Degradable Waste',
                     child: _buildTextField(segregatedNonDegradableController),
@@ -268,7 +269,7 @@ class _TripDetailCardState extends State<TripDetailCard> {
                     textFieldHeight: textFieldHeight,
                     isValid: segregatedNonDegradableValid,
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   _buildDetailContainer(
                     title: 'Segregated Plastic Waste',
                     child: _buildTextField(segregatedPlasticController),
@@ -276,7 +277,7 @@ class _TripDetailCardState extends State<TripDetailCard> {
                     textFieldHeight: textFieldHeight,
                     isValid: segregatedPlasticValid,
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   GestureDetector(
                     onTap: _handleSubmit,
                     child: _buildSubmitButton(containerWidth),
@@ -305,7 +306,7 @@ class _TripDetailCardState extends State<TripDetailCard> {
     required double textFieldHeight,
     required bool isValid,
   }) {
-    return Container(
+    return SizedBox(
       width: containerWidth,
       height: textFieldHeight + 45,
       child: Column(
@@ -313,29 +314,29 @@ class _TripDetailCardState extends State<TripDetailCard> {
         children: [
           Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               color: Color(0xFF252525),
               fontSize: 16,
               fontFamily: 'Nunito Sans',
               fontWeight: FontWeight.w400,
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Container(
             width: double.infinity,
             height: textFieldHeight,
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 1),
             decoration: ShapeDecoration(
-              color: Color(0xFFEFEFEF),
+              color: const Color(0xFFEFEFEF),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
             child: child,
           ),
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           if (!isValid)
-            Text(
+            const Text(
               'This field is required',
               style: TextStyle(
                 color: Colors.red,
@@ -352,12 +353,12 @@ class _TripDetailCardState extends State<TripDetailCard> {
   Widget _buildTextField(TextEditingController controller) {
     return TextField(
       controller: controller,
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         hintText: 'Enter value',
         border: InputBorder.none,
         contentPadding: EdgeInsets.symmetric(horizontal: 0),
       ),
-      style: TextStyle(
+      style: const TextStyle(
         color: Color(0xFF252525),
         fontSize: 16,
         fontFamily: 'Nunito Sans',
@@ -373,10 +374,10 @@ class _TripDetailCardState extends State<TripDetailCard> {
       height: 40,
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
       decoration: BoxDecoration(
-        color: Color(0xFF5C964A),
+        color: const Color(0xFF5C964A),
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Center(
+      child: const Center(
         child: Text(
           'Submit',
           textAlign: TextAlign.center,

@@ -1,6 +1,6 @@
 // WokersScreen/WorkerCommon/CalendarActivityScreen.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -61,7 +61,6 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
       } else {
         throw Exception('Failed to load activities');
       }
-    } catch (e) {
     } finally {
       setState(() => _isLoading = false);
     }
@@ -116,14 +115,14 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          '${widget.section}',
-          style: TextStyle(
+          widget.section,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Color(0xFF5C964A),
+        backgroundColor: const Color(0xFF5C964A),
       ),
       body: Column(
         children: [
@@ -152,7 +151,7 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
                 );
               }
             },
-            calendarStyle: CalendarStyle(
+            calendarStyle: const CalendarStyle(
               selectedDecoration: BoxDecoration(
                 color: Color(0xFF5C964A),
                 shape: BoxShape.circle,
@@ -173,14 +172,14 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
                     child: Container(
                       width: 16,
                       height: 16,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.red, // Highlighting activities
                         shape: BoxShape.circle,
                       ),
                       child: Center(
                         child: Text(
                           '$count',
-                          style: TextStyle(color: Colors.white, fontSize: 10),
+                          style: const TextStyle(color: Colors.white, fontSize: 10),
                         ),
                       ),
                     ),
@@ -191,8 +190,8 @@ class _CalendarActivityScreenState extends State<CalendarActivityScreen> {
             ),
           ),
           if (activityCount == 0)
-            Padding(
-              padding: const EdgeInsets.all(16.0),
+            const Padding(
+              padding: EdgeInsets.all(16.0),
               child: Text(
                 "No activities available",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -243,7 +242,7 @@ class _SelectedDateActivitiesScreenState
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
                             color: Colors.black26,
                             blurRadius: 10,
@@ -272,7 +271,7 @@ class _SelectedDateActivitiesScreenState
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Container(
                     width: 370,
                     height: 45,
@@ -291,7 +290,7 @@ class _SelectedDateActivitiesScreenState
                       children: [
                         Text(
                           time,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.black,
                             fontSize: 14,
                             fontFamily: 'Nunito Sans',
@@ -319,7 +318,7 @@ class _SelectedDateActivitiesScreenState
                       children: [
                         Text(
                           location,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.black,
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -343,10 +342,10 @@ class _SelectedDateActivitiesScreenState
       appBar: AppBar(
         title: Text(
             'Activities on ${widget.selectedDate.toLocal().toString().split(' ')[0]}'),
-        backgroundColor: Color(0xFF5C964A),
+        backgroundColor: const Color(0xFF5C964A),
       ),
       body: widget.activities.isEmpty
-          ? Center(child: Text('No activities for selected date.'))
+          ? const Center(child: Text('No activities for selected date.'))
           : SingleChildScrollView(
               child: Column(
                 children: widget.activities.map((activity) {
@@ -358,7 +357,7 @@ class _SelectedDateActivitiesScreenState
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
-                          color: Color(0xFFFFD262),
+                          color: const Color(0xFFFFD262),
                           width: 1,
                         ),
                       ),
@@ -376,14 +375,14 @@ class _SelectedDateActivitiesScreenState
                                       width: 40.42,
                                       height: 40.42,
                                       decoration: ShapeDecoration(
-                                        color: Color(0xFFFFF2C6),
+                                        color: const Color(0xFFFFF2C6),
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(59),
                                         ),
                                       ),
                                     ),
-                                    SizedBox(width: 8),
+                                    const SizedBox(width: 8),
                                     Container(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 10, vertical: 5),
@@ -391,8 +390,8 @@ class _SelectedDateActivitiesScreenState
                                         color:
                                             (activity['status'] ?? 'Pending') ==
                                                     'Completed'
-                                                ? Color(0xFF5C964A)
-                                                : Color(0xFFFFA726),
+                                                ? const Color(0xFF5C964A)
+                                                : const Color(0xFFFFA726),
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(18),
@@ -401,7 +400,7 @@ class _SelectedDateActivitiesScreenState
                                       child: Center(
                                         child: Text(
                                           activity['status'] ?? 'Pending',
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 12,
                                             fontWeight: FontWeight.w600,
@@ -425,7 +424,7 @@ class _SelectedDateActivitiesScreenState
                                 ),
                               ],
                             ),
-                            SizedBox(height: 8),
+                            const SizedBox(height: 8),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
@@ -460,12 +459,12 @@ class _SelectedDateActivitiesScreenState
                                         bottom: 5,
                                         right: 5,
                                         child: Container(
-                                          padding: EdgeInsets.symmetric(
+                                          padding: const EdgeInsets.symmetric(
                                               horizontal: 6, vertical: 3),
                                           color: Colors.black54,
                                           child: Text(
                                             '${DateTime.parse(activity['created_at']).toLocal().hour}:${DateTime.parse(activity['created_at']).toLocal().minute}:${DateTime.parse(activity['created_at']).toLocal().second}',
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               color: Colors.white,
                                               fontSize: 12,
                                             ),
@@ -506,12 +505,12 @@ class _SelectedDateActivitiesScreenState
                                         bottom: 5,
                                         right: 5,
                                         child: Container(
-                                          padding: EdgeInsets.symmetric(
+                                          padding: const EdgeInsets.symmetric(
                                               horizontal: 6, vertical: 3),
                                           color: Colors.black54,
                                           child: Text(
                                             '${DateTime.parse(activity['updated_at']).toLocal().hour}:${DateTime.parse(activity['updated_at']).toLocal().minute}:${DateTime.parse(activity['updated_at']).toLocal().second}',
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               color: Colors.white,
                                               fontSize: 12,
                                             ),
@@ -523,10 +522,10 @@ class _SelectedDateActivitiesScreenState
                                 ),
                               ],
                             ),
-                            SizedBox(height: 8),
+                            const SizedBox(height: 8),
                             Text(
                               activity['address'] ?? 'No Address',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Color(0xFF252525),
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,

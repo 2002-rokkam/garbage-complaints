@@ -2,7 +2,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:flutter_application_2/PoweredByBikaji.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../ContactUsPage.dart';
@@ -12,6 +12,8 @@ import 'package:intl/intl.dart';
 import 'ComplaintsScreen/complaintsBottomBar.dart';
 
 class CitizensScreen extends StatefulWidget {
+  const CitizensScreen({super.key});
+
   @override
   _CitizensScreenState createState() => _CitizensScreenState();
 }
@@ -77,12 +79,12 @@ class _CitizensScreenState extends State<CitizensScreen> {
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: 0);
-    _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
+    _timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
       if (_pageController.hasClients) {
         int nextPage = (_pageController.page!.toInt() + 1) % 3;
         _pageController.animateToPage(
           nextPage,
-          duration: Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
         );
       }
@@ -111,7 +113,7 @@ class _CitizensScreenState extends State<CitizensScreen> {
       case 1:
         return complaintsBottomBar();
       case 2:
-        return SettingsPage();
+        return const SettingsPage();
       default:
         return _buildCitizenScreenContent();
     }
@@ -125,13 +127,13 @@ class _CitizensScreenState extends State<CitizensScreen> {
     return Column(
       children: [
         // Fixed image slider
-        Container(
+        SizedBox(
           height: 180,
           child: Stack(
             children: [
               Container(
                 height: screenHeight * 0.14, // Adjust the height as needed
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Color(
                       0xFF5C964A), // Change this to your app's primary color
                   borderRadius: BorderRadius.only(
@@ -193,7 +195,7 @@ class _CitizensScreenState extends State<CitizensScreen> {
                   Column(
                     children: [
                       IconButton(
-                        icon: Icon(Icons.camera_alt,
+                        icon: const Icon(Icons.camera_alt,
                             color: Color(0xFF5C964A)), // Green icon
                         iconSize: screenWidth < 600
                             ? 25
@@ -208,7 +210,7 @@ class _CitizensScreenState extends State<CitizensScreen> {
                         },
                       ),
                       Transform.translate(
-                        offset: Offset(0, -8),
+                        offset: const Offset(0, -8),
                         child: Text(
                           localizations.clickAndComplaints,
                           style: TextStyle(
@@ -271,7 +273,7 @@ class _CitizensScreenState extends State<CitizensScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ContactUsPage(),
+                            builder: (context) => const ContactUsPage(),
                           ),
                         );
                       },
@@ -283,7 +285,7 @@ class _CitizensScreenState extends State<CitizensScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          shadows: [
+                          shadows: const [
                             BoxShadow(
                               color: Color(0x14000000),
                               blurRadius: 16,
@@ -307,7 +309,7 @@ class _CitizensScreenState extends State<CitizensScreen> {
                               width: 64,
                               height: 64,
                               clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(),
+                              decoration: const BoxDecoration(),
                               child: Image.asset(
                                 'assets/images/Actin.png',
                                 fit: BoxFit.cover,
@@ -316,7 +318,7 @@ class _CitizensScreenState extends State<CitizensScreen> {
                             const SizedBox(height: 10),
                             Text(
                               localizations.helpLine,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 16,
                                 fontFamily: 'Nunito Sans',
@@ -346,7 +348,7 @@ class _CitizensScreenState extends State<CitizensScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          shadows: [
+                          shadows: const [
                             BoxShadow(
                               color: Color(0x14000000),
                               blurRadius: 16,
@@ -370,7 +372,7 @@ class _CitizensScreenState extends State<CitizensScreen> {
                               width: 64,
                               height: 64,
                               clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(),
+                              decoration: const BoxDecoration(),
                               child: Image.asset(
                                 'assets/images/Complaints.png',
                                 fit: BoxFit.cover,
@@ -379,7 +381,7 @@ class _CitizensScreenState extends State<CitizensScreen> {
                             const SizedBox(height: 10),
                             Text(
                               localizations.complaints,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 16,
                                 fontFamily: 'Nunito Sans',
@@ -394,9 +396,9 @@ class _CitizensScreenState extends State<CitizensScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 26),
+                const SizedBox(height: 26),
                 PoweredByBikaji(),
-                SizedBox(height: 26),
+                const SizedBox(height: 26),
               ],
             ),
           ),
@@ -415,35 +417,35 @@ class _CitizensScreenState extends State<CitizensScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xFF5C964A),
+          backgroundColor: const Color(0xFF5C964A),
           automaticallyImplyLeading: false, // Disable the back button
           title: Text(
             appBarTitle,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
           ),
         ),
-        backgroundColor: Color.fromRGBO(239, 239, 239, 1),
+        backgroundColor: const Color.fromRGBO(239, 239, 239, 1),
         body: _getSelectedScreen(),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,
-          selectedItemColor: Color(0xFF5C964A),
+          selectedItemColor: const Color(0xFF5C964A),
           unselectedItemColor: Colors.grey,
           items: [
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
+              icon: const Icon(Icons.home),
               label: localizations.home,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.list),
+              icon: const Icon(Icons.list),
               label: localizations.complaints,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.settings),
+              icon: const Icon(Icons.settings),
               label: localizations.settings,
             ),
           ],
@@ -464,17 +466,17 @@ class _CitizensScreenState extends State<CitizensScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
-        shadows: [
+        shadows: const [
           BoxShadow(
             color: Color(0x14000000),
             blurRadius: 16,
-            offset: const Offset(0, 8),
+            offset: Offset(0, 8),
             spreadRadius: 0,
           ),
           BoxShadow(
             color: Color(0x0A000000),
             blurRadius: 4,
-            offset: const Offset(0, 0),
+            offset: Offset(0, 0),
             spreadRadius: 0,
           ),
         ],
@@ -487,13 +489,13 @@ class _CitizensScreenState extends State<CitizensScreen> {
             width: 30,
             height: 30,
             clipBehavior: Clip.antiAlias,
-            decoration: BoxDecoration(),
+            decoration: const BoxDecoration(),
             child: Image.asset(
               imageUrl,
               fit: BoxFit.cover,
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             number,
             style: const TextStyle(
@@ -503,7 +505,7 @@ class _CitizensScreenState extends State<CitizensScreen> {
               letterSpacing: 0.16,
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             label,
             textAlign: TextAlign.start,

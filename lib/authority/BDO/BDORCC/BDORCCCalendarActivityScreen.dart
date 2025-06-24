@@ -1,7 +1,7 @@
 // authority/BDO/BDORCC/BDORCCCalendarActivityScreen.dart
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -90,7 +90,6 @@ class _BDORCCCalendarActivityScreenState
           _activities = sectionActivities;
         });
       }
-    } catch (e) {
     } finally {
       setState(() => _isLoading = false);
     }
@@ -116,7 +115,6 @@ class _BDORCCCalendarActivityScreenState
           _tripDetails = data['section_data']['Waste Details'] ?? [];
         });
       }
-    } catch (e) {
     } finally {
       setState(() => _isLoading = false);
     }
@@ -144,19 +142,19 @@ class _BDORCCCalendarActivityScreenState
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          '${widget.section}',
-          style: TextStyle(
+          widget.section,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Color(0xFF5C964A),
+        backgroundColor: const Color(0xFF5C964A),
         bottom: TabBar(
           controller: _tabController,
           labelColor: Colors.white,
           unselectedLabelColor: Colors.white,
-          indicatorColor: Color.fromRGBO(255, 210, 98, 1),
+          indicatorColor: const Color.fromRGBO(255, 210, 98, 1),
           indicatorWeight: 3.0,
           tabs: [
             Tab(text: localizations.beforeAfter),
@@ -207,7 +205,7 @@ class _BDORCCCalendarActivityScreenState
                   });
                 }
               },
-              calendarStyle: CalendarStyle(
+              calendarStyle: const CalendarStyle(
                 selectedDecoration: BoxDecoration(
                   color: Color(0xFF5C964A),
                   shape: BoxShape.circle,
@@ -238,14 +236,14 @@ class _BDORCCCalendarActivityScreenState
                       child: Container(
                         width: 16,
                         height: 16,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: Colors.red,
                           shape: BoxShape.circle,
                         ),
                         child: Center(
                           child: Text(
                             '$count',
-                            style: TextStyle(color: Colors.white, fontSize: 10),
+                            style: const TextStyle(color: Colors.white, fontSize: 10),
                           ),
                         ),
                       ),
@@ -256,7 +254,7 @@ class _BDORCCCalendarActivityScreenState
               ),
             ),
           ),
-          Container(
+          SizedBox(
             height: 80,
             child: _isLoading
                 ? Center(

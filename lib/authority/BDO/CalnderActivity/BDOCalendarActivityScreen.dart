@@ -1,6 +1,5 @@
 // authority/BDO/CalnderActivity/BDOCalendarActivityScreen.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
@@ -83,7 +82,6 @@ class _BDOCalendarActivityScreenState extends State<BDOCalendarActivityScreen> {
       } else {
         throw Exception('Failed to load activities');
       }
-    } catch (e) {
     } finally {
       setState(() {});
     }
@@ -106,14 +104,14 @@ class _BDOCalendarActivityScreenState extends State<BDOCalendarActivityScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          '${widget.section}',
-          style: TextStyle(
+          widget.section,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Color(0xFF5C964A),
+        backgroundColor: const Color(0xFF5C964A),
       ),
       body: ActivityCalendar(
         section: widget.section,

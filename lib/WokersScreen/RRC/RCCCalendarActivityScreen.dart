@@ -1,6 +1,6 @@
 // WokersScreen/RRC/RCCCalendarActivityScreen.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
@@ -73,7 +73,6 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
           _activities = data['activities'];
         });
       }
-    } catch (e) {
     } finally {
       setState(() => _isLoading = false);
     }
@@ -93,7 +92,6 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
           _tripDetails = data['activities'];
         });
       }
-    } catch (e) {
     } finally {
       setState(() => _isLoading = false);
     }
@@ -121,23 +119,23 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          '${widget.section}',
-          style: TextStyle(
+          widget.section,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Color(0xFF5C964A),
+        backgroundColor: const Color(0xFF5C964A),
         bottom: TabBar(
           controller: _tabController,
           labelColor: Colors.white,
           unselectedLabelColor: Colors.white,
-          indicatorColor: Color.fromRGBO(255, 210, 98, 1),
+          indicatorColor: const Color.fromRGBO(255, 210, 98, 1),
           indicatorWeight: 3.0,
           tabs: [
             Tab(text: localizations.beforeAfter),
-            Tab(text: 'Trip Details'),
+            const Tab(text: 'Trip Details'),
           ],
         ),
       ),
@@ -186,7 +184,7 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
                   });
                 }
               },
-              calendarStyle: CalendarStyle(
+              calendarStyle: const CalendarStyle(
                 selectedDecoration: BoxDecoration(
                   color: Color(0xFF5C964A),
                   shape: BoxShape.circle,
@@ -217,14 +215,14 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
                       child: Container(
                         width: 16,
                         height: 16,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: Colors.red,
                           shape: BoxShape.circle,
                         ),
                         child: Center(
                           child: Text(
                             '$count',
-                            style: TextStyle(color: Colors.white, fontSize: 10),
+                            style: const TextStyle(color: Colors.white, fontSize: 10),
                           ),
                         ),
                       ),
@@ -235,7 +233,7 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
               ),
             ),
           ),
-          Container(
+          SizedBox(
             height: 80,
             child: _isLoading
                 ? Center(
@@ -249,10 +247,10 @@ class _RCCCalendarActivityScreenState extends State<RCCCalendarActivityScreen>
                     controller: _tabController,
                     children: [
                       selectedActivities.isEmpty
-                          ? Center(child: Text('No Activities Available'))
+                          ? const Center(child: Text('No Activities Available'))
                           : Container(),
                       selectedTrips.isEmpty
-                          ? Center(child: Text('No Trip Details Available'))
+                          ? const Center(child: Text('No Trip Details Available'))
                           : Container(),
                     ],
                   ),
@@ -280,18 +278,18 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Trip Details'),
-        backgroundColor: Color(0xFF5C964A),
+        title: const Text('Trip Details'),
+        backgroundColor: const Color(0xFF5C964A),
       ),
       body: widget.tripDetails.isEmpty
-          ? Center(
+          ? const Center(
               child: Text(
                 'No trip details available for the selected date.',
                 style: TextStyle(fontSize: 16, color: Colors.grey),
               ),
             )
           : ListView.builder(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               itemCount: widget.tripDetails.length,
               itemBuilder: (context, index) {
                 final trip = widget.tripDetails[index];
@@ -300,7 +298,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  margin: EdgeInsets.symmetric(vertical: 8),
+                  margin: const EdgeInsets.symmetric(vertical: 8),
                   child: Padding(
                     padding: EdgeInsets.all(screenWidth * 0.04),
                     child: Column(
@@ -308,13 +306,13 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                       children: [
                         Text(
                           'Trips: ${trip['trips']}',
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.black,
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         _buildDetailRow('Quantity of Waste',
                             '${trip['quantity_waste']} kg'),
                         _buildDetailRow('Segregated Degradable',
@@ -405,7 +403,7 @@ class _BeforeAfterScreenState extends State<BeforeAfterScreen> {
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
                             color: Colors.black26,
                             blurRadius: 10,
@@ -434,7 +432,7 @@ class _BeforeAfterScreenState extends State<BeforeAfterScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Container(
                     width: 370,
                     height: 45,
@@ -453,7 +451,7 @@ class _BeforeAfterScreenState extends State<BeforeAfterScreen> {
                       children: [
                         Text(
                           time,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.black,
                             fontSize: 14,
                             fontFamily: 'Nunito Sans',
@@ -481,7 +479,7 @@ class _BeforeAfterScreenState extends State<BeforeAfterScreen> {
                       children: [
                         Text(
                           location,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.black,
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -505,7 +503,7 @@ class _BeforeAfterScreenState extends State<BeforeAfterScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(localizations.beforeAfter),
-        backgroundColor: Color(0xFF5C964A),
+        backgroundColor: const Color(0xFF5C964A),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -516,7 +514,7 @@ class _BeforeAfterScreenState extends State<BeforeAfterScreen> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: Color(0xFFFFD262),
+                    color: const Color(0xFFFFD262),
                     width: 1,
                   ),
                 ),
@@ -534,21 +532,21 @@ class _BeforeAfterScreenState extends State<BeforeAfterScreen> {
                                 width: 40.42,
                                 height: 40.42,
                                 decoration: ShapeDecoration(
-                                  color: Color(0xFFFFF2C6),
+                                  color: const Color(0xFFFFF2C6),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(59),
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 8),
+                              const SizedBox(width: 8),
                               Container(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 10, vertical: 5),
                                 decoration: ShapeDecoration(
                                   color: (activity['status'] ?? 'Pending') ==
                                           'Completed'
-                                      ? Color(0xFF5C964A)
-                                      : Color(0xFFFFA726),
+                                      ? const Color(0xFF5C964A)
+                                      : const Color(0xFFFFA726),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(18),
                                   ),
@@ -556,7 +554,7 @@ class _BeforeAfterScreenState extends State<BeforeAfterScreen> {
                                 child: Center(
                                   child: Text(
                                     activity['status'] ?? 'Pending',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 12,
                                       fontWeight: FontWeight.w600,
@@ -580,7 +578,7 @@ class _BeforeAfterScreenState extends State<BeforeAfterScreen> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -614,12 +612,12 @@ class _BeforeAfterScreenState extends State<BeforeAfterScreen> {
                                   bottom: 5,
                                   right: 5,
                                   child: Container(
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                         horizontal: 6, vertical: 3),
                                     color: Colors.black54,
                                     child: Text(
                                       '${DateTime.parse(activity['created_at']).toLocal().hour}:${DateTime.parse(activity['created_at']).toLocal().minute}:${DateTime.parse(activity['created_at']).toLocal().second}',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 12,
                                       ),
@@ -659,12 +657,12 @@ class _BeforeAfterScreenState extends State<BeforeAfterScreen> {
                                   bottom: 5,
                                   right: 5,
                                   child: Container(
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                         horizontal: 6, vertical: 3),
                                     color: Colors.black54,
                                     child: Text(
                                       '${DateTime.parse(activity['updated_at']).toLocal().hour}:${DateTime.parse(activity['updated_at']).toLocal().minute}:${DateTime.parse(activity['updated_at']).toLocal().second}',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 12,
                                       ),
@@ -676,7 +674,7 @@ class _BeforeAfterScreenState extends State<BeforeAfterScreen> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                     ],
                   ),
                 ),

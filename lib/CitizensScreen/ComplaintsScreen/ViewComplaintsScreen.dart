@@ -1,6 +1,6 @@
 // CitizensScreen/ComplaintsScreen/ViewComplaintsScreen.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -54,7 +54,7 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
   }
 
   Future<void> _fetchComplaints() async {
-    final String apiUrl = 'https://sbmgrajasthan.com/api/complaints';
+    const String apiUrl = 'https://sbmgrajasthan.com/api/complaints';
     try {
       final response = await http.get(
         Uri.parse(apiUrl),
@@ -101,13 +101,13 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Complaint Details'),
+          title: const Text('Complaint Details'),
           backgroundColor: const Color(0xFF5C964A),
           bottom: TabBar(
             controller: _tabController,
             labelColor: Colors.white,
             unselectedLabelColor: Colors.white,
-            indicatorColor: Color.fromRGBO(255, 210, 98, 1),
+            indicatorColor: const Color.fromRGBO(255, 210, 98, 1),
             indicatorWeight: 3.0,
             tabs: [
               Tab(text: localizations.pending),
@@ -115,7 +115,7 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
             ],
           ),
         ),
-        backgroundColor: Color.fromRGBO(239, 239, 239, 1),
+        backgroundColor: const Color.fromRGBO(239, 239, 239, 1),
         body: isLoading
             ? Center(
                 child: Image.asset(
@@ -154,23 +154,23 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
     String formattedDate = DateFormat('dd-MM-yyyy')
         .format(DateTime.parse(complaint['created_at']));
     List<dynamic> images = complaint['photos'];
-    final PageController _pageController = PageController();
+    final PageController pageController = PageController();
     final localizations = AppLocalizations.of(context)!;
 
     return Card(
-      margin: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Column(
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-            child: Container(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+            child: SizedBox(
               height: 150,
               child: Stack(
                 alignment: Alignment.bottomCenter,
                 children: [
                   PageView.builder(
-                    controller: _pageController,
+                    controller: pageController,
                     itemCount: images.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
@@ -190,9 +190,9 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
                   Positioned(
                     bottom: 8,
                     child: SmoothPageIndicator(
-                      controller: _pageController,
+                      controller: pageController,
                       count: images.length,
-                      effect: ExpandingDotsEffect(
+                      effect: const ExpandingDotsEffect(
                         activeDotColor: Colors.white,
                         dotColor: Colors.black,
                         dotHeight: 6,
@@ -208,12 +208,10 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
           ListTile(
             title: Text(
               '${complaint['district']}, ${complaint['gram_panchayat']}',
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            subtitle: Text(
-              utf8.decode(complaint['caption'].toString().codeUnits) ??
-                  'No description provided',
-            ),
+           subtitle: Text(
+              const Utf8Decoder(allowMalformed: true).convert(complaint['caption'].codeUnits),),
             trailing: Text(formattedDate),
           ),
           if (complaint['status'] == 'Resolved')
@@ -221,7 +219,7 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
               onPressed: () => _showResolvedPopup(complaint),
               child: Text(
                 localizations.viewReply,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Color(0xFF5C964A),
                   fontWeight: FontWeight.bold,
                 ),
@@ -245,7 +243,7 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(
                     color: Colors.black26,
                     blurRadius: 10,
@@ -304,8 +302,8 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
                       fit: BoxFit.cover,
                     ),
                   ),
-                  SizedBox(height: 20),
-                  Text(
+                  const SizedBox(height: 20),
+                  const Text(
                     'Complaint Resolved Successfully!',
                     style: TextStyle(
                       fontSize: 18,
@@ -313,13 +311,13 @@ class _ViewComplaintsScreenState extends State<ViewComplaintsScreen>
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: Text('Close'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
                     ),
+                    child: Text('Close'),
                   ),
                 ],
               ),

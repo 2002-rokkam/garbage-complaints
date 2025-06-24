@@ -1,6 +1,6 @@
 // WokersScreen/SchoolCampus/SchoolCampusSectionScreen.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../WorkerCommon/BeforeAfterContainer.dart';
@@ -88,7 +88,6 @@ class _SchoolCampusSectionScreenState extends State<SchoolCampusSectionScreen>
               .toList();
         });
       } else {}
-    } catch (e) {
     } finally {
       setState(() {
         isLoading = false;
@@ -128,7 +127,6 @@ class _SchoolCampusSectionScreenState extends State<SchoolCampusSectionScreen>
               .toList();
         });
       } else {}
-    } catch (e) {
     } finally {
       setState(() {
         isLoading = false;
@@ -148,7 +146,7 @@ class _SchoolCampusSectionScreenState extends State<SchoolCampusSectionScreen>
     if (hasEmptyContainer) {
       // Show a message or prevent adding a new container
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Cannot add a new container while one is incomplete.'),
         ),
       );
@@ -203,7 +201,7 @@ class _SchoolCampusSectionScreenState extends State<SchoolCampusSectionScreen>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                '${widget.section}',
+                widget.section,
                 style: const TextStyle(
                   fontSize: 20,
                   color: Colors.white,
@@ -250,11 +248,11 @@ class _SchoolCampusSectionScreenState extends State<SchoolCampusSectionScreen>
                 backgroundColor: const Color(0xFFFFD262),
                 label: Row(
                   children: [
-                    Icon(Icons.add, size: 24, color: Color(0xFF252525)),
-                    SizedBox(width: 12),
+                    const Icon(Icons.add, size: 24, color: Color(0xFF252525)),
+                    const SizedBox(width: 12),
                     Text(
                       localizations.addMore,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Color(0xFF252525),
                         fontSize: 14,
                         fontFamily: 'Nunito Sans',
@@ -269,11 +267,11 @@ class _SchoolCampusSectionScreenState extends State<SchoolCampusSectionScreen>
                 backgroundColor: const Color(0xFFFFD262),
                 label: Row(
                   children: [
-                    Icon(Icons.add, size: 24, color: Color(0xFF252525)),
-                    SizedBox(width: 12),
+                    const Icon(Icons.add, size: 24, color: Color(0xFF252525)),
+                    const SizedBox(width: 12),
                     Text(
                       localizations.addMore,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Color(0xFF252525),
                         fontSize: 14,
                         fontFamily: 'Nunito Sans',

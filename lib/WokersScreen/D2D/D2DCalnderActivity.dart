@@ -1,6 +1,6 @@
 // WokersScreen/D2D/D2DCalnderActivity.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -173,19 +173,19 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          '${widget.section}',
-          style: TextStyle(
+          widget.section,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Color(0xFF5C964A),
+        backgroundColor: const Color(0xFF5C964A),
         bottom: TabBar(
           controller: _tabController,
           labelColor: Colors.white,
           unselectedLabelColor: Colors.white,
-          indicatorColor: Color.fromRGBO(255, 210, 98, 1),
+          indicatorColor: const Color.fromRGBO(255, 210, 98, 1),
           indicatorWeight: 3.0,
           tabs: [
             Tab(text: localizations.beforeAfter),
@@ -221,7 +221,7 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
                         : qrCounts[selectedDateKey] ?? 0;
 
                     if (count > 0) {
-                      Future.delayed(Duration(milliseconds: 300), () {
+                      Future.delayed(const Duration(milliseconds: 300), () {
                         if (_tabController.index == 0) {
                           Navigator.push(
                             context,
@@ -247,7 +247,7 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
                       });
                     }
                   },
-                  calendarStyle: CalendarStyle(
+                  calendarStyle: const CalendarStyle(
                     selectedDecoration: BoxDecoration(
                       color: Color(0xFF5C964A),
                       shape: BoxShape.circle,
@@ -273,14 +273,14 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
                           child: Container(
                             width: 16,
                             height: 16,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               color: Colors.red,
                               shape: BoxShape.circle,
                             ),
                             child: Center(
                               child: Text(
                                 '$count',
-                                style: TextStyle(
+                                style: const TextStyle(
                                     color: Colors.white, fontSize: 10),
                               ),
                             ),
@@ -301,7 +301,7 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
                             child: Text(
                               localizations.noActivities,
                               style:
-                                  TextStyle(fontSize: 16, color: Colors.grey),
+                                  const TextStyle(fontSize: 16, color: Colors.grey),
                             ),
                           ),
                         )
@@ -313,7 +313,7 @@ class _D2DCalnderActivityScreenState extends State<D2DCalnderActivityScreen>
                                 child: Text(
                                   localizations
                                       .noActivities, // Use localization for consistency
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 16, color: Colors.grey),
                                 ),
                               ),
@@ -343,13 +343,13 @@ class _QRDetailsScreenState extends State<QRDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('QR Details'),
-        backgroundColor: Color(0xFF5C964A),
+        title: const Text('QR Details'),
+        backgroundColor: const Color(0xFF5C964A),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: widget.tripDetails.isEmpty
-            ? Center(
+            ? const Center(
                 child: Text('No trip details available for selected date.'))
             : Column(
                 children: widget.tripDetails.map((trip) {
@@ -358,7 +358,7 @@ class _QRDetailsScreenState extends State<QRDetailsScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    margin: EdgeInsets.only(bottom: 16),
+                    margin: const EdgeInsets.only(bottom: 16),
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
@@ -366,12 +366,12 @@ class _QRDetailsScreenState extends State<QRDetailsScreen> {
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.location_on, color: Colors.green),
-                              SizedBox(width: 8),
+                              const Icon(Icons.location_on, color: Colors.green),
+                              const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
                                   'QR Scanned Data: ${trip['QRAddress']}',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: Colors.black,
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -380,14 +380,14 @@ class _QRDetailsScreenState extends State<QRDetailsScreen> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 12),
+                          const SizedBox(height: 12),
                           Row(
                             children: [
-                              Icon(Icons.calendar_today, color: Colors.grey),
-                              SizedBox(width: 8),
+                              const Icon(Icons.calendar_today, color: Colors.grey),
+                              const SizedBox(width: 8),
                               Text(
                                 '${trip['date_time']}',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.black87,
                                   fontSize: 14,
                                 ),

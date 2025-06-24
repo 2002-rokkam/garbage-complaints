@@ -5,7 +5,7 @@ import 'package:flutter_application_2/LanguageSelectionScreen.dart';
 class OnboardingAnimation extends StatefulWidget {
   final Function(Locale) changeLanguage;
 
-  OnboardingAnimation({super.key, required this.changeLanguage});
+  const OnboardingAnimation({super.key, required this.changeLanguage});
 
   @override
   State<OnboardingAnimation> createState() => _OnboardingAnimationState();

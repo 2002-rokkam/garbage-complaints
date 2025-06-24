@@ -1,6 +1,6 @@
 // authority/BDO/BDORCC/BDOTripDetailsScreen.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:intl/intl.dart';
 
 class BDOTripDetailsScreen extends StatefulWidget {
@@ -29,7 +29,7 @@ class _BDOTripDetailsScreenState extends State<BDOTripDetailsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.tripDetails),
-        backgroundColor: Color(0xFF5C964A),
+        backgroundColor: const Color(0xFF5C964A),
       ),
       body: widget.tripDetails.isEmpty
           ? Center(
@@ -46,57 +46,57 @@ class _BDOTripDetailsScreenState extends State<BDOTripDetailsScreen> {
                         children: [
                           Text(
                             '${AppLocalizations.of(context)!.workerEmail} ${trip['worker_name']}',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.black,
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(
                             '${AppLocalizations.of(context)!.trips} ${trip['trips']}',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.black,
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(
                             '${AppLocalizations.of(context)!.quantityWaste} ${trip['quantity_waste']} kg',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Color(0xFF252525),
                               fontSize: 14,
                             ),
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(
                             '${AppLocalizations.of(context)!.segregatedDegradable} ${trip['segregated_degradable']} kg',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Color(0xFF252525),
                               fontSize: 14,
                             ),
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(
                             '${AppLocalizations.of(context)!.segregatedNonDegradable} ${trip['segregated_non_degradable']} kg',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Color(0xFF252525),
                               fontSize: 14,
                             ),
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(
                             '${AppLocalizations.of(context)!.segregatedPlastic} ${trip['segregated_plastic']} kg',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Color(0xFF252525),
                               fontSize: 14,
                             ),
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(
                             '${AppLocalizations.of(context)!.date} ${_formatLocalTime(trip['date_time'])}',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Color(0xFF252525),
                               fontSize: 14,
                             ),

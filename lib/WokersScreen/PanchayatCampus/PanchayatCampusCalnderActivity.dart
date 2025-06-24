@@ -1,6 +1,6 @@
 // WokersScreen/PanchayatCampus/PanchayatCampusCalnderActivity.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -177,21 +177,21 @@ class _PanchayatCampusActivityScreenState
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          '${widget.section}',
-          style: TextStyle(
+          widget.section,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Color(0xFF5C964A),
+        backgroundColor: const Color(0xFF5C964A),
         bottom: TabBar(
           controller: _tabController,
           labelColor: Colors.white,
           unselectedLabelColor: Colors.white,
-          indicatorColor: Color.fromRGBO(255, 210, 98, 1),
+          indicatorColor: const Color.fromRGBO(255, 210, 98, 1),
           indicatorWeight: 3.0,
-          tabs: [
+          tabs: const [
             Tab(text: 'Campus'),
             Tab(text: 'Toilet'),
           ],
@@ -234,7 +234,7 @@ class _PanchayatCampusActivityScreenState
                 );
               }
             },
-            calendarStyle: CalendarStyle(
+            calendarStyle: const CalendarStyle(
               selectedDecoration: BoxDecoration(
                 color: Color(0xFF5C964A),
                 shape: BoxShape.circle,
@@ -260,14 +260,14 @@ class _PanchayatCampusActivityScreenState
                     child: Container(
                       width: 16,
                       height: 16,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.red,
                         shape: BoxShape.circle,
                       ),
                       child: Center(
                         child: Text(
                           '$count',
-                          style: TextStyle(color: Colors.white, fontSize: 10),
+                          style: const TextStyle(color: Colors.white, fontSize: 10),
                         ),
                       ),
                     ),
@@ -284,9 +284,9 @@ class _PanchayatCampusActivityScreenState
                     (_tabController.index == 1 &&
                         PanchayatActivities.isNotEmpty)
                 ? Container()
-                : Center(
+                : const Center(
                     child: Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: EdgeInsets.all(16.0),
                       child: Text(
                         'No activities available',
                         style: TextStyle(fontSize: 16, color: Colors.grey),

@@ -1,13 +1,12 @@
 // Login/OTPVerificationScreen.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../CitizensScreen/CitizensScreen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/services.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OTPVerificationScreen extends StatefulWidget {
   final String verificationId;
@@ -263,7 +262,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                     ? const CircularProgressIndicator(color: Colors.black)
                     : Text(
                         localizations.submit_otp,
-                        style: TextStyle(fontSize: 16, color: Colors.white),
+                        style: const TextStyle(fontSize: 16, color: Colors.white),
                       ),
               ),
             ),

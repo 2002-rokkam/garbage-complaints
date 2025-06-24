@@ -1,7 +1,7 @@
 // CitizensScreen/ComplaintsScreen/ComplaintScreen.dart
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:io' show Platform;
@@ -13,6 +13,8 @@ import 'ComplaintRegisterScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ComplaintScreen extends StatefulWidget {
+  const ComplaintScreen({super.key});
+
   @override
   _ComplaintScreenState createState() => _ComplaintScreenState();
 }
@@ -222,7 +224,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
@@ -240,17 +242,17 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                     child: Text(
                       title,
                       style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),
-                  Divider(),
+                  const Divider(),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: TextField(
                       controller: searchController,
                       decoration: InputDecoration(
                         hintText: "${localizations.search} $title",
-                        prefixIcon: Icon(Icons.search),
+                        prefixIcon: const Icon(Icons.search),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -266,7 +268,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                       },
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Expanded(
                     child: ListView.builder(
                       controller: controller,
@@ -370,7 +372,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                     Expanded(
                       child: Text(
                         localizations.clickAndComplaints,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -519,7 +521,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                           width: double.infinity,
                           height: 56,
                           padding: const EdgeInsets.only(top: 4, bottom: 4),
-                          decoration: ShapeDecoration(
+                          decoration: const ShapeDecoration(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(4),
@@ -553,7 +555,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                                 fontFamily: 'Roboto',
                                 fontWeight: FontWeight.w400,
                               ),
-                              prefixIcon: Icon(Icons.description,
+                              prefixIcon: const Icon(Icons.description,
                                   color: Colors.grey), // Your icon here
                             ),
                           ),
@@ -573,7 +575,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                     Center(
                       child: GestureDetector(
                         onTap: _pickImage,
-                        child: Container(
+                        child: SizedBox(
                           width: screenWidth * 0.4,
                           height: screenHeight * 0.23,
                           child: Column(
@@ -595,7 +597,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                               const SizedBox(height: 18),
                               Text(
                                 localizations.clickAndComplaints,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 14,
                                   fontFamily: 'Roboto',
@@ -615,7 +617,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                         if (imageData.isNotEmpty) ...[
                           Text(
                             localizations.previewPhotos,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                           const SizedBox(height: 8),
@@ -720,7 +722,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                           onPressed: submitComplaint,
                           child: Text(
                             localizations.submitComplaint,
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 14,
                               fontFamily: 'Roboto',

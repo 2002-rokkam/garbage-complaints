@@ -1,6 +1,6 @@
 // authority/VDO/VDOD2DCalnderActivity.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -10,7 +10,7 @@ import 'VDObefreAfter.dart';
 class VDOD2DCalnderActivityScreen extends StatefulWidget {
   final String section;
 
-  VDOD2DCalnderActivityScreen({required this.section});
+  const VDOD2DCalnderActivityScreen({super.key, required this.section});
 
   @override
   _VDOD2DCalnderActivityScreenState createState() =>
@@ -98,7 +98,6 @@ class _VDOD2DCalnderActivityScreenState
       } else {
         throw Exception('Failed to load activities');
       }
-    } catch (e) {
     } finally {
       setState(() {
         _isLoading = false;
@@ -170,12 +169,12 @@ class _VDOD2DCalnderActivityScreenState
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.section),
-        backgroundColor: Color(0xFF5C964A),
+        backgroundColor: const Color(0xFF5C964A),
         bottom: TabBar(
           controller: _tabController,
           labelColor: Colors.white,
           unselectedLabelColor: Colors.white70,
-          indicatorColor: Color.fromRGBO(255, 210, 98, 1),
+          indicatorColor: const Color.fromRGBO(255, 210, 98, 1),
           indicatorWeight: 3.0,
           tabs: [
             Tab(text: localizations.beforeAfter),
@@ -203,7 +202,7 @@ class _VDOD2DCalnderActivityScreenState
                   : qrCounts[selectedDateKey] ?? 0;
 
               if (count > 0) {
-                Future.delayed(Duration(milliseconds: 300), () {
+                Future.delayed(const Duration(milliseconds: 300), () {
                   if (isBeforeAfterTab) {
                     Navigator.push(
                       context,
@@ -226,7 +225,7 @@ class _VDOD2DCalnderActivityScreenState
                 });
               }
             },
-            calendarStyle: CalendarStyle(
+            calendarStyle: const CalendarStyle(
               selectedDecoration: BoxDecoration(
                 color: Color(0xFF5C964A),
                 shape: BoxShape.circle,
@@ -250,14 +249,14 @@ class _VDOD2DCalnderActivityScreenState
                     child: Container(
                       width: 16,
                       height: 16,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.red,
                         shape: BoxShape.circle,
                       ),
                       child: Center(
                         child: Text(
                           '$count',
-                          style: TextStyle(color: Colors.white, fontSize: 10),
+                          style: const TextStyle(color: Colors.white, fontSize: 10),
                         ),
                       ),
                     ),
@@ -290,7 +289,7 @@ class _QRDetailsScreenState extends State<QRDetailsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(localizations.qrDetails),
-        backgroundColor: Color(0xFF5C964A),
+        backgroundColor: const Color(0xFF5C964A),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -303,7 +302,7 @@ class _QRDetailsScreenState extends State<QRDetailsScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    margin: EdgeInsets.only(bottom: 16),
+                    margin: const EdgeInsets.only(bottom: 16),
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
@@ -311,12 +310,12 @@ class _QRDetailsScreenState extends State<QRDetailsScreen> {
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.location_on, color: Colors.green),
-                              SizedBox(width: 8),
+                              const Icon(Icons.location_on, color: Colors.green),
+                              const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
                                   'QR Scanned Data: ${trip['QRAddress']}',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: Colors.black,
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -325,14 +324,14 @@ class _QRDetailsScreenState extends State<QRDetailsScreen> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 12),
+                          const SizedBox(height: 12),
                           Row(
                             children: [
-                              Icon(Icons.calendar_today, color: Colors.grey),
-                              SizedBox(width: 8),
+                              const Icon(Icons.calendar_today, color: Colors.grey),
+                              const SizedBox(width: 8),
                               Text(
                                 '${localizations.date}: ${trip['date_time']}',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.black87,
                                   fontSize: 14,
                                 ),

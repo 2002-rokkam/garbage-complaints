@@ -1,7 +1,7 @@
 // authority/CEO/CEOselectRegion.dart
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -141,7 +141,7 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
                   child: TextField(
                     decoration: InputDecoration(
                       hintText: AppLocalizations.of(context)!.search,
-                      prefixIcon: Icon(Icons.search),
+                      prefixIcon: const Icon(Icons.search),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(50)),
                     ),
@@ -190,7 +190,7 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     return Scaffold(
-      backgroundColor: Color.fromRGBO(239, 239, 239, 1),
+      backgroundColor: const Color.fromRGBO(239, 239, 239, 1),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -204,7 +204,7 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
                   color: Colors.white,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8)),
-                  shadows: [
+                  shadows: const [
                     BoxShadow(
                       color: Color(0x14000000),
                       blurRadius: 4,
@@ -235,8 +235,8 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
                             : selectedBlock != null && selectedBlock!.isNotEmpty
                                 ? localizations.currentlyViewingBlock
                                 : '',
-                        style: TextStyle(
-                          color: const Color(0xFF49454F),
+                        style: const TextStyle(
+                          color: Color(0xFF49454F),
                           fontSize: 8,
                           fontFamily: 'Nunito Sans',
                           fontWeight: FontWeight.w500,
@@ -273,8 +273,8 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
                           children: [
                             Text(
                               localizations.reset,
-                              style: TextStyle(
-                                color: const Color(0xFFB3261E),
+                              style: const TextStyle(
+                                color: Color(0xFFB3261E),
                                 fontSize: 14,
                                 fontFamily: 'Nunito Sans',
                                 fontWeight: FontWeight.w500,
@@ -289,8 +289,8 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
                   ],
                 ),
               ),
-            SizedBox(height: 16),
-            Text(localizations.district, style: TextStyle(fontSize: 16)),
+            const SizedBox(height: 16),
+            Text(localizations.district, style: const TextStyle(fontSize: 16)),
             GestureDetector(
               onTap: () {
                 if (selectedDistrict == null) {
@@ -305,7 +305,7 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
                 }
               },
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8),
@@ -313,18 +313,18 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.location_pin,
                       color: Colors.grey,
                     ),
                     Text(selectedDistrict ?? localizations.selectDistrict),
-                    Icon(Icons.arrow_drop_down),
+                    const Icon(Icons.arrow_drop_down),
                   ],
                 ),
               ),
             ),
-            SizedBox(height: 16),
-            Text(localizations.block, style: TextStyle(fontSize: 16)),
+            const SizedBox(height: 16),
+            Text(localizations.block, style: const TextStyle(fontSize: 16)),
             GestureDetector(
               onTap: () {
                 if (selectedDistrict != null) {
@@ -338,7 +338,7 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
                 }
               },
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8),
@@ -346,18 +346,18 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.location_pin,
                       color: Colors.grey,
                     ),
                     Text(selectedBlock ?? localizations.selectBlock),
-                    Icon(Icons.arrow_drop_down),
+                    const Icon(Icons.arrow_drop_down),
                   ],
                 ),
               ),
             ),
-            SizedBox(height: 16),
-            Text(localizations.gramPanchayat, style: TextStyle(fontSize: 16)),
+            const SizedBox(height: 16),
+            Text(localizations.gramPanchayat, style: const TextStyle(fontSize: 16)),
             GestureDetector(
               onTap: () {
                 if (selectedBlock != null) {
@@ -369,7 +369,7 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
                 }
               },
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8),
@@ -377,34 +377,34 @@ class _CEOselectRegionState extends State<CEOselectRegion> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.location_pin,
                       color: Colors.grey,
                     ),
                     Text(selectedGramPanchayat ??
                         localizations.selectGramPanchayat),
-                    Icon(Icons.arrow_drop_down),
+                    const Icon(Icons.arrow_drop_down),
                   ],
                 ),
               ),
             ),
-            Spacer(),
+            const Spacer(),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: submitSelection,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF5C964A),
+                  backgroundColor: const Color(0xFF5C964A),
                   foregroundColor: Colors.grey[800],
                   side: BorderSide(color: Colors.grey.shade300),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(40),
                   ),
-                  padding: EdgeInsets.symmetric(vertical: 16),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
                 child: Text(
                   localizations.submit,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                     color: Colors.white,

@@ -1,11 +1,13 @@
 // CitizensScreen/ComplaintsScreen/complaintsBottomBar.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'ComplaintScreen.dart';
 import 'ViewComplaintsScreen.dart';
 
 class complaintsBottomBar extends StatefulWidget {
+  const complaintsBottomBar({super.key});
+
   @override
   _ComplaintsBottomBarState createState() => _ComplaintsBottomBarState();
 }
@@ -31,7 +33,7 @@ class _ComplaintsBottomBarState extends State<complaintsBottomBar> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     return Scaffold(
-      backgroundColor: Color.fromRGBO(239, 239, 239, 1),
+      backgroundColor: const Color.fromRGBO(239, 239, 239, 1),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -68,7 +70,7 @@ class _ComplaintsBottomBarState extends State<complaintsBottomBar> {
                     const SizedBox(width: 8),
                     Text(
                       localizations.fileComplaint,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Color(0xFF252525),
                         fontSize: 16,
                         fontFamily: 'Nunito Sans',
@@ -80,13 +82,13 @@ class _ComplaintsBottomBarState extends State<complaintsBottomBar> {
               ),
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           GestureDetector(
             onTap: () {
               // Navigate to the "Previous Complaint" screen
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ViewComplaintsScreen()),
+                MaterialPageRoute(builder: (context) => const ViewComplaintsScreen()),
               );
             },
             child: Container(
@@ -111,7 +113,7 @@ class _ComplaintsBottomBarState extends State<complaintsBottomBar> {
                   const SizedBox(width: 8),
                   Text(
                     localizations.previousComplaint,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Color(0xFF252525),
                       fontSize: 16,
                       fontFamily: 'Nunito Sans',

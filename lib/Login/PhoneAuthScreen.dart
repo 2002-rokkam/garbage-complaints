@@ -1,11 +1,10 @@
 // Login/PhoneAuthScreen.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'AuthorityLoginScreen.dart';
 import 'OTPVerificationScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PhoneInputScreen extends StatefulWidget {
   const PhoneInputScreen({super.key});
@@ -19,7 +18,7 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   bool _isLoading = false;
 
-  String _countryCode = '+91';
+  final String _countryCode = '+91';
 
   late Locale _locale;
 
@@ -47,37 +46,72 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
       return;
     }
 
-    try {
-      await _auth.verifyPhoneNumber(
-        timeout: Duration.zero,
-        phoneNumber: _countryCode + phoneNumber,
-        verificationCompleted: (PhoneAuthCredential credential) async {
-          await _auth.signInWithCredential(credential);
-        },
-        verificationFailed: (FirebaseAuthException e) {
-          _showError(
-              e.message ?? AppLocalizations.of(context)!.verification_failed);
-        },
-        codeSent: (String verificationId, int? resendToken) {
-          setState(() => _isLoading = false);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => OTPVerificationScreen(
-                  verificationId: verificationId, phoneNumber: phoneNumber),
-            ),
-          );
-        },
-        codeAutoRetrievalTimeout: (String verificationId) {
-          setState(() {
-            _isLoading = false;
-          });
-        },
-      );
-    } catch (e) {
+    // try {
+    //   await _auth.verifyPhoneNumber(
+    //     timeout: Duration.zero,
+    //     phoneNumber: _countryCode + phoneNumber,
+    //     verificationCompleted: (PhoneAuthCredential credential) async {
+    //       await _auth.signInWithCredential(credential);
+    //     },
+    //     verificationFailed: (FirebaseAuthException e) {
+    //       _showError(
+    //           e.message ?? AppLocalizations.of(context)!.verification_failed);
+    //     },
+    //     codeSent: (String verificationId, int? resendToken) {
+    //       setState(() => _isLoading = false);
+    //       Navigator.push(
+    //         context,
+    //         MaterialPageRoute(
+    //           builder: (context) => OTPVerificationScreen(
+    //               verificationId: verificationId, phoneNumber: phoneNumber),
+    //         ),
+    //       );
+    //     },
+    //     codeAutoRetrievalTimeout: (String verificationId) {
+    //       setState(() {
+    //         _isLoading = false;
+    //       });
+    //     },
+    //   );
+    // } catch (e) {
+    //   setState(() => _isLoading = false);
+    //   _showError(e.toString());
+    // }
+
+   try {
+  await _auth.verifyPhoneNumber(
+    timeout: const Duration(seconds: 60),
+    phoneNumber: _countryCode + phoneNumber,
+    verificationCompleted: (PhoneAuthCredential credential) async {
+      debugPrint('Verification completed with credential: $credential');
+      await _auth.signInWithCredential(credential);
+    },
+    verificationFailed: (FirebaseAuthException e) {
+      debugPrint('Verification failed: ${e.message}');
+      _showError(
+          e.message ?? AppLocalizations.of(context)!.verification_failed);
+    },
+    codeSent: (String verificationId, int? resendToken) {
+      debugPrint('Code sent with verification ID: $verificationId');
       setState(() => _isLoading = false);
-      _showError(e.toString());
-    }
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => OTPVerificationScreen(
+              verificationId: verificationId, phoneNumber: phoneNumber),
+        ),
+      );
+    },
+    codeAutoRetrievalTimeout: (String verificationId) {
+      debugPrint('Code auto retrieval timeout with verification ID: $verificationId');
+      setState(() => _isLoading = false);
+    },
+  );
+} catch (e) {
+  debugPrint('Error during phone verification: $e');
+  setState(() => _isLoading = false);
+  _showError(e.toString());
+}
   }
 
   void _showError(String message) {
@@ -114,7 +148,7 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
               top: screenHeight * 0.2,
               child: Text(
                 localizations.login,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.black,
                   fontSize: 32,
                   fontFamily: 'Nunito Sans',
@@ -130,7 +164,7 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
                   children: [
                     TextSpan(
                       text: localizations.enter_mobile_number,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Color.fromARGB(255, 92, 150, 74),
                         fontSize: 20,
                         fontFamily: 'Nunito Sans',
@@ -149,7 +183,7 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
                 child: Text(
                   localizations.info_not_shared,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.black54,
                     fontSize: 14,
                     fontFamily: 'Roboto',
@@ -218,7 +252,7 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
                       ),
                       child: Text(
                         localizations.send_otp,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
@@ -240,7 +274,7 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
                 },
                 child: Text(
                   localizations.login_admin,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Color(0xFF5C964A),
                     fontSize: 16,
                     fontFamily: 'Nunito Sans',

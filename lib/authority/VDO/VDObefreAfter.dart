@@ -1,6 +1,6 @@
 // authority/VDO/VDObefreAfter.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 
 class VDOBeforeAfterScreen extends StatefulWidget {
   final List activities;
@@ -34,7 +34,7 @@ class _VDOBeforeAfterScreenState extends State<VDOBeforeAfterScreen> {
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
                             color: Colors.black26,
                             blurRadius: 10,
@@ -63,7 +63,7 @@ class _VDOBeforeAfterScreenState extends State<VDOBeforeAfterScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Container(
                     width: 370,
                     height: 45,
@@ -82,7 +82,7 @@ class _VDOBeforeAfterScreenState extends State<VDOBeforeAfterScreen> {
                       children: [
                         Text(
                           time,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.black,
                             fontSize: 14,
                             fontFamily: 'Nunito Sans',
@@ -110,7 +110,7 @@ class _VDOBeforeAfterScreenState extends State<VDOBeforeAfterScreen> {
                       children: [
                         Text(
                           location,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.black,
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -134,7 +134,7 @@ class _VDOBeforeAfterScreenState extends State<VDOBeforeAfterScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(localizations.beforeAfter),
-        backgroundColor: Color(0xFF5C964A),
+        backgroundColor: const Color(0xFF5C964A),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -145,7 +145,7 @@ class _VDOBeforeAfterScreenState extends State<VDOBeforeAfterScreen> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: Color(0xFFFFD262),
+                    color: const Color(0xFFFFD262),
                     width: 1,
                   ),
                 ),
@@ -163,21 +163,21 @@ class _VDOBeforeAfterScreenState extends State<VDOBeforeAfterScreen> {
                                 width: 40.42,
                                 height: 40.42,
                                 decoration: ShapeDecoration(
-                                  color: Color(0xFFFFF2C6),
+                                  color: const Color(0xFFFFF2C6),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(59),
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 8),
+                              const SizedBox(width: 8),
                               Container(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 10, vertical: 5),
                                 decoration: ShapeDecoration(
                                   color: (activity['status'] ?? 'Pending') ==
                                           'Completed'
-                                      ? Color(0xFF5C964A)
-                                      : Color(0xFFFFA726),
+                                      ? const Color(0xFF5C964A)
+                                      : const Color(0xFFFFA726),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(18),
                                   ),
@@ -185,7 +185,7 @@ class _VDOBeforeAfterScreenState extends State<VDOBeforeAfterScreen> {
                                 child: Center(
                                   child: Text(
                                     activity['status'] ?? 'Pending',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 12,
                                       fontWeight: FontWeight.w600,
@@ -197,7 +197,7 @@ class _VDOBeforeAfterScreenState extends State<VDOBeforeAfterScreen> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -231,12 +231,12 @@ class _VDOBeforeAfterScreenState extends State<VDOBeforeAfterScreen> {
                                   bottom: 5,
                                   right: 5,
                                   child: Container(
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                         horizontal: 6, vertical: 3),
                                     color: Colors.black54,
                                     child: Text(
                                       '${DateTime.parse(activity['created_at']).toLocal().hour}:${DateTime.parse(activity['created_at']).toLocal().minute}:${DateTime.parse(activity['created_at']).toLocal().second}',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 12,
                                       ),
@@ -276,12 +276,12 @@ class _VDOBeforeAfterScreenState extends State<VDOBeforeAfterScreen> {
                                   bottom: 5,
                                   right: 5,
                                   child: Container(
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                         horizontal: 6, vertical: 3),
                                     color: Colors.black54,
                                     child: Text(
                                       '${DateTime.parse(activity['updated_at']).toLocal().hour}:${DateTime.parse(activity['updated_at']).toLocal().minute}:${DateTime.parse(activity['updated_at']).toLocal().second}',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 12,
                                       ),
@@ -293,12 +293,12 @@ class _VDOBeforeAfterScreenState extends State<VDOBeforeAfterScreen> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Wrap(
                         children: [
                           Text(
                             '${activity['address']} \n${localizations.workedBy}: ${activity['worker_name']}',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Color(0xFF252525),
                               fontSize: 14,
                               fontWeight: FontWeight.w500,

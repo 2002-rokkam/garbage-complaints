@@ -1,6 +1,6 @@
 // WokersScreen/WorkerScreen.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import '../PoweredByBikaji.dart';
@@ -16,9 +16,11 @@ import 'WorkerCommon/AnimalScreen.dart';
 import 'WorkerComplaints/workerComplaintsScreen.dart';
 import 'package:intl/intl.dart';
 import '../../button_items.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 
 class WorkerScreen extends StatefulWidget {
+  const WorkerScreen({super.key});
+
   @override
   _WorkerScreenState createState() => _WorkerScreenState();
 }
@@ -32,12 +34,12 @@ class _WorkerScreenState extends State<WorkerScreen> {
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: 0);
-    _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
+    _timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
       if (_pageController.hasClients) {
         int nextPage = (_pageController.page!.toInt() + 1) % 3;
         _pageController.animateToPage(
           nextPage,
-          duration: Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
         );
       }
@@ -74,7 +76,7 @@ class _WorkerScreenState extends State<WorkerScreen> {
         appBar: AppBar(
           automaticallyImplyLeading: false, // This removes the back button
           backgroundColor: const Color(0xFF5C964A),
-          flexibleSpace: Container(
+          flexibleSpace: SizedBox(
             height: 100,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -86,7 +88,7 @@ class _WorkerScreenState extends State<WorkerScreen> {
                       padding: const EdgeInsets.all(16.0),
                       child: Text(
                         localizations.sbmgRajasthan,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -94,12 +96,12 @@ class _WorkerScreenState extends State<WorkerScreen> {
                       ),
                     ),
                     IconButton(
-                      icon: Icon(Icons.settings, color: Colors.white),
+                      icon: const Icon(Icons.settings, color: Colors.white),
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => WorkerSettingsPage(),
+                            builder: (context) => const WorkerSettingsPage(),
                           ),
                         );
                       },
@@ -110,7 +112,7 @@ class _WorkerScreenState extends State<WorkerScreen> {
             ),
           ),
         ),
-        backgroundColor: Color.fromRGBO(239, 239, 239, 1),
+        backgroundColor: const Color.fromRGBO(239, 239, 239, 1),
         body: Column(
           children: [
             // Fixed image slider
@@ -131,7 +133,7 @@ class _WorkerScreenState extends State<WorkerScreen> {
                 children: [
                   Container(
                     height: screenHeight * 0.14, // Adjust the height as needed
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Color(
                           0xFF5C964A), // Change this to your app's primary color
                       borderRadius: BorderRadius.only(
@@ -183,7 +185,7 @@ class _WorkerScreenState extends State<WorkerScreen> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   localizations.home,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
@@ -211,7 +213,7 @@ class _WorkerScreenState extends State<WorkerScreen> {
                         }).toList(),
                       ),
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16.0, vertical: 4.0),
@@ -219,7 +221,7 @@ class _WorkerScreenState extends State<WorkerScreen> {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           localizations.action,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
@@ -244,7 +246,7 @@ class _WorkerScreenState extends State<WorkerScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          shadows: [
+                          shadows: const [
                             BoxShadow(
                               color: Color(0x14000000),
                               blurRadius: 16,
@@ -272,7 +274,7 @@ class _WorkerScreenState extends State<WorkerScreen> {
                                   width: 64,
                                   height: 64,
                                   clipBehavior: Clip.antiAlias,
-                                  decoration: BoxDecoration(),
+                                  decoration: const BoxDecoration(),
                                   child: Image.asset(
                                     'assets/images/Complaints.png',
                                     fit: BoxFit.cover,
@@ -281,7 +283,7 @@ class _WorkerScreenState extends State<WorkerScreen> {
                                 const SizedBox(height: 10),
                                 Text(
                                   localizations.complaints,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: Colors.black,
                                     fontSize: 16,
                                     fontFamily: 'Nunito Sans',
@@ -296,7 +298,7 @@ class _WorkerScreenState extends State<WorkerScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 26),
+                    const SizedBox(height: 26),
                     PoweredByBikaji(),
                   ],
                 ),
@@ -329,17 +331,17 @@ class _WorkerScreenState extends State<WorkerScreen> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
-          shadows: [
+          shadows: const [
             BoxShadow(
               color: Color(0x14000000),
               blurRadius: 16,
-              offset: const Offset(0, 8),
+              offset: Offset(0, 8),
               spreadRadius: 0,
             ),
             BoxShadow(
               color: Color(0x0A000000),
               blurRadius: 4,
-              offset: const Offset(0, 0),
+              offset: Offset(0, 0),
               spreadRadius: 0,
             ),
           ],
@@ -362,7 +364,7 @@ class _WorkerScreenState extends State<WorkerScreen> {
                 fit: BoxFit.cover,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               label,
               textAlign: TextAlign.start,
@@ -383,23 +385,23 @@ class _WorkerScreenState extends State<WorkerScreen> {
   Widget _getPage(String routeName) {
     switch (routeName) {
       case 'DoorToDoorScreen':
-        return D2DSectionScreen(section: 'Door to Door');
+        return const D2DSectionScreen(section: 'Door to Door');
       case 'RoadSweepingScreen':
-        return ActionScreen(section: 'Road Sweeping');
+        return const ActionScreen(section: 'Road Sweeping');
       case 'DrainCleaningScreen':
-        return ActionScreen(section: 'Drainage Cleaning');
+        return const ActionScreen(section: 'Drainage Cleaning');
       case 'CSCScreen':
-        return ActionScreen(section: 'CSC');
+        return const ActionScreen(section: 'CSC');
       case 'RRCScreen':
-        return RRCScreen(section: 'RRC');
+        return const RRCScreen(section: 'RRC');
       case 'WagesScreen':
-        return WagesActionScreen(section: 'Wages');
+        return const WagesActionScreen(section: 'Wages');
       case 'SchoolCampus':
-        return SchoolCampusSectionScreen(section: 'School Campus');
+        return const SchoolCampusSectionScreen(section: 'School Campus');
       case 'PanchayatCampus':
-        return PanchayatCampusSectionScreen(section: 'Panchayat Campus');
+        return const PanchayatCampusSectionScreen(section: 'Panchayat Campus');
       case 'AnimalBodytransport':
-        return AnimalScreen(section: 'Animal Transport');
+        return const AnimalScreen(section: 'Animal Transport');
       case 'ContractorDetailsScreen':
         return FutureBuilder<String>(
           future: _getGramPanchayat(),
@@ -415,13 +417,13 @@ class _WorkerScreenState extends State<WorkerScreen> {
               ));
             }
             if (snapshot.hasError) {
-              return Scaffold(body: Center(child: Text("Error loading data")));
+              return const Scaffold(body: Center(child: Text("Error loading data")));
             }
             return Contractordetails(gramPanchayat: snapshot.data ?? '');
           },
         );
       default:
-        return Scaffold(body: Center(child: Text('Page not found')));
+        return const Scaffold(body: Center(child: Text('Page not found')));
     }
   }
 

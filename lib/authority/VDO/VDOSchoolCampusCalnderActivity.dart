@@ -1,6 +1,6 @@
 // authority/VDO/VDOSchoolCampusCalnderActivity.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -24,7 +24,7 @@ class _VDOSchoolCampusCalnderActivityState
   DateTime _selectedDate = DateTime.now();
   List _activities = [];
   List _tripDetails = [];
-  bool _isLoading = false;
+  final bool _isLoading = false;
   late TabController _tabController;
   Map<DateTime, int> activityCounts = {};
   Map<DateTime, int> tripCounts = {};
@@ -151,12 +151,12 @@ class _VDOSchoolCampusCalnderActivityState
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.section),
-        backgroundColor: Color(0xFF5C964A),
+        backgroundColor: const Color(0xFF5C964A),
         bottom: TabBar(
           controller: _tabController,
           labelColor: Colors.white,
           unselectedLabelColor: Colors.white,
-          indicatorColor: Color.fromRGBO(255, 210, 98, 1),
+          indicatorColor: const Color.fromRGBO(255, 210, 98, 1),
           indicatorWeight: 3.0,
           tabs: [
             Tab(text: AppLocalizations.of(context)!.campus),
@@ -198,7 +198,7 @@ class _VDOSchoolCampusCalnderActivityState
                 );
               }
             },
-            calendarStyle: CalendarStyle(
+            calendarStyle: const CalendarStyle(
               selectedDecoration: BoxDecoration(
                 color: Color(0xFF5C964A),
                 shape: BoxShape.circle,
@@ -222,14 +222,14 @@ class _VDOSchoolCampusCalnderActivityState
                     child: Container(
                       width: 16,
                       height: 16,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.red,
                         shape: BoxShape.circle,
                       ),
                       child: Center(
                         child: Text(
                           '$count',
-                          style: TextStyle(color: Colors.white, fontSize: 10),
+                          style: const TextStyle(color: Colors.white, fontSize: 10),
                         ),
                       ),
                     ),

@@ -1,8 +1,10 @@
 // PoweredByBikaji.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 
 class PoweredByBikaji extends StatefulWidget {
+  const PoweredByBikaji({super.key});
+
   @override
   _PoweredByBikajiState createState() => _PoweredByBikajiState();
 }
@@ -14,20 +16,20 @@ class _PoweredByBikajiState extends State<PoweredByBikaji> {
       width: 402,
       height: 127,
       padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 11),
-      decoration: BoxDecoration(color: Colors.white),
+      decoration: const BoxDecoration(color: Colors.white),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
+          SizedBox(
             height: 102,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(
+                SizedBox(
                   width: 111,
                   height: 63,
                   child: Image.asset(
@@ -36,9 +38,9 @@ class _PoweredByBikajiState extends State<PoweredByBikaji> {
                   ),
                 ),
                 const SizedBox(height: 7),
-                Container(
+                SizedBox(
                   width: double.infinity,
-                  child: Row(
+                  child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -52,7 +54,7 @@ class _PoweredByBikajiState extends State<PoweredByBikaji> {
                           fontWeight: FontWeight.w400,
                         ),
                       ),
-                      const SizedBox(width: 4),
+                      SizedBox(width: 4),
                       Text(
                         'Bikaji Foods International Ltd',
                         style: TextStyle(

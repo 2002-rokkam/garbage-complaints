@@ -1,7 +1,7 @@
 // WokersScreen/WorkerCommon/BeforeAfterContainer.dart
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:io' show Platform;
@@ -37,7 +37,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
   bool _isBeforeSliderEnabled = false;
   bool _isAfterSliderEnabled = false;
   String activityId = '';
-  bool _isSubmitting = false;
+  final bool _isSubmitting = false;
   bool _isLoading = false;
   late Locale _locale;
 
@@ -180,7 +180,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
     String imagePath;
     if (kIsWeb) {
       final bytes = await image.readAsBytes();
-      imagePath = 'data:image/jpeg;base64,' + base64Encode(bytes);
+      imagePath = 'data:image/jpeg;base64,${base64Encode(bytes)}';
     } else {
       imagePath = image.path;
     }
@@ -286,7 +286,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                     Container(
                       width: screenWidth * 0.3,
                       height: screenWidth * 0.3,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                         color: Colors.transparent,
                       ),
@@ -304,7 +304,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                         localizations.successfullySubmitted,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Color(0xFF1D1B20),
+                          color: const Color(0xFF1D1B20),
                           fontSize: screenWidth * 0.06,
                           fontFamily: 'Roboto',
                           fontWeight: FontWeight.w400,
@@ -326,7 +326,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                           vertical: screenHeight * 0.01,
                         ),
                         decoration: ShapeDecoration(
-                          color: Color(0x335C964A),
+                          color: const Color(0x335C964A),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(18),
                           ),
@@ -335,7 +335,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                           child: Text(
                             localizations.close,
                             style: TextStyle(
-                              color: Color(0xFF3E6632),
+                              color: const Color(0xFF3E6632),
                               fontSize: screenWidth * 0.035,
                               fontFamily: 'Nunito Sans',
                               fontWeight: FontWeight.w600,
@@ -384,7 +384,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
     double afterLatitude = _afterImage!['latitude'];
     double afterLongitude = _afterImage!['longitude'];
 
-    double distance = await Geolocator.distanceBetween(
+    double distance = Geolocator.distanceBetween(
         beforeLatitude, beforeLongitude, afterLatitude, afterLongitude);
 
     return distance <= 30.0;
@@ -414,12 +414,12 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      padding: EdgeInsets.all(16),
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.black12,
             blurRadius: 4,
@@ -439,7 +439,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
               ),
             ],
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -453,7 +453,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                       width: MediaQuery.of(context).size.width * 0.4,
                       height: 100,
                       decoration: BoxDecoration(
-                        border: Border.all(color: Color(0xFF6B6B6B), width: 1),
+                        border: Border.all(color: const Color(0xFF6B6B6B), width: 1),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: _beforeImage == null
@@ -465,10 +465,10 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                                   width: 24,
                                   height: 24,
                                 ),
-                                SizedBox(height: 8),
+                                const SizedBox(height: 8),
                                 Text(
                                   localizations.before,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: Color(0xFF6B6B6B),
                                     fontSize: 14,
                                     fontFamily: 'Nunito Sans',
@@ -548,7 +548,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                         right: 4,
                         child: GestureDetector(
                           onTap: () => _deleteImage('before'),
-                          child: Icon(Icons.close, color: Colors.red, size: 20),
+                          child: const Icon(Icons.close, color: Colors.red, size: 20),
                         ),
                       ),
                   ],
@@ -563,7 +563,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                       width: MediaQuery.of(context).size.width * 0.4,
                       height: 100,
                       decoration: BoxDecoration(
-                        border: Border.all(color: Color(0xFF6B6B6B), width: 1),
+                        border: Border.all(color: const Color(0xFF6B6B6B), width: 1),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: _afterImage == null
@@ -575,10 +575,10 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                                   width: 24,
                                   height: 24,
                                 ),
-                                SizedBox(height: 8),
+                                const SizedBox(height: 8),
                                 Text(
                                   localizations.after,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: Color(0xFF6B6B6B),
                                     fontSize: 14,
                                     fontFamily: 'Nunito Sans',
@@ -629,7 +629,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                         right: 4,
                         child: GestureDetector(
                           onTap: () => _deleteImage('after'),
-                          child: Icon(Icons.close, color: Colors.red, size: 20),
+                          child: const Icon(Icons.close, color: Colors.red, size: 20),
                         ),
                       ),
                   ],
@@ -637,9 +637,9 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
               ),
             ],
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           if (_beforeImage != null && !_isAfterSliderEnabled)
-            Container(
+            SizedBox(
               height: 50.0,
               child: _isLoading
                   ? Center(
@@ -663,16 +663,16 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                             _isBeforeSliderEnabled = false;
                             _isAfterSliderEnabled = true;
                           });
-                        } catch (e) {
                         } finally {
                           setState(() {
                             _isLoading = false;
                           });
                         }
+                        return null;
                       },
                       label: Text(
                         localizations.slideToConfirmBefore,
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        style: const TextStyle(color: Colors.white, fontSize: 18),
                       ),
                       icon: Image.asset(
                         'assets/images/Icon.png', // Replace with your image path
@@ -680,13 +680,13 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                         height: 40,
                       ),
                       width: MediaQuery.of(context).size.width * 0.8,
-                      backgroundColor: Color(0xFF5C964A),
+                      backgroundColor: const Color(0xFF5C964A),
                       buttonColor: Colors.white,
                       radius: 30,
                     ),
             ),
           if (_afterImage != null && !_isSubmitting)
-            Container(
+            SizedBox(
               height: 50.0,
               child: _isLoading
                   ? Center(
@@ -711,16 +711,16 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                           } else {
                             _showPopup(localizations.errorImageTooFar);
                           }
-                        } catch (e) {
                         } finally {
                           setState(() {
                             _isLoading = false;
                           });
                         }
+                        return null;
                       },
                       label: Text(
                         localizations.slideToConfirmAfter,
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        style: const TextStyle(color: Colors.white, fontSize: 18),
                       ),
                       icon: Image.asset(
                         'assets/images/Icon.png', // Replace with your image path
@@ -728,7 +728,7 @@ class _BeforeAfterContainerState extends State<BeforeAfterContainer> {
                         height: 40,
                       ),
                       width: MediaQuery.of(context).size.width * 0.8,
-                      backgroundColor: Color(0xFF5C964A),
+                      backgroundColor: const Color(0xFF5C964A),
                       buttonColor: Colors.white,
                       radius: 30,
                     ),

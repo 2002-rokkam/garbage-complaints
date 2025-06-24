@@ -1,6 +1,6 @@
 // authority/VDO/VDORCCCalendarActivityScreen.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
@@ -79,7 +79,6 @@ class _VDORCCCalendarActivityScreenState
           _activities = sectionActivities;
         });
       }
-    } catch (e) {
     } finally {
       setState(() => _isLoading = false);
     }
@@ -103,7 +102,6 @@ class _VDORCCCalendarActivityScreenState
           _tripDetails = data['section_data']['Waste Details'] ?? [];
         });
       }
-    } catch (e) {
     } finally {
       setState(() => _isLoading = false);
     }
@@ -131,19 +129,19 @@ class _VDORCCCalendarActivityScreenState
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          '${widget.section}',
-          style: TextStyle(
+          widget.section,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Color(0xFF5C964A),
+        backgroundColor: const Color(0xFF5C964A),
         bottom: TabBar(
           controller: _tabController,
           labelColor: Colors.white,
           unselectedLabelColor: Colors.white,
-          indicatorColor: Color.fromRGBO(255, 210, 98, 1),
+          indicatorColor: const Color.fromRGBO(255, 210, 98, 1),
           indicatorWeight: 3.0,
           tabs: [
             Tab(text: localizations.beforeAfter),
@@ -194,7 +192,7 @@ class _VDORCCCalendarActivityScreenState
                   });
                 }
               },
-              calendarStyle: CalendarStyle(
+              calendarStyle: const CalendarStyle(
                 selectedDecoration: BoxDecoration(
                   color: Color(0xFF5C964A),
                   shape: BoxShape.circle,
@@ -225,14 +223,14 @@ class _VDORCCCalendarActivityScreenState
                       child: Container(
                         width: 16,
                         height: 16,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: Colors.red,
                           shape: BoxShape.circle,
                         ),
                         child: Center(
                           child: Text(
                             '$count',
-                            style: TextStyle(color: Colors.white, fontSize: 10),
+                            style: const TextStyle(color: Colors.white, fontSize: 10),
                           ),
                         ),
                       ),
@@ -243,7 +241,7 @@ class _VDORCCCalendarActivityScreenState
               ),
             ),
           ),
-          Container(
+          SizedBox(
             height: 80,
             child: _isLoading
                 ? Center(
@@ -298,7 +296,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(localizations.tripDetails),
-        backgroundColor: Color(0xFF5C964A),
+        backgroundColor: const Color(0xFF5C964A),
       ),
       body: widget.tripDetails.isEmpty
           ? Center(
@@ -315,57 +313,57 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                         children: [
                           Text(
                             '${localizations.workerEmail} ${trip['worker_name']}',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.black,
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(
                             '${localizations.trips} ${trip['trips']}',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.black,
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(
                             '${localizations.quantityWaste} ${trip['quantity_waste']} kg',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Color(0xFF252525),
                               fontSize: 14,
                             ),
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(
                             '${localizations.segregatedDegradable} ${trip['segregated_degradable']} kg',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Color(0xFF252525),
                               fontSize: 14,
                             ),
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(
                             '${localizations.segregatedNonDegradable} ${trip['segregated_non_degradable']} kg',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Color(0xFF252525),
                               fontSize: 14,
                             ),
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(
                             '${localizations.segregatedPlastic} ${trip['segregated_plastic']} kg',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Color(0xFF252525),
                               fontSize: 14,
                             ),
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(
                             '${localizations.date} ${_formatLocalTime(trip['date_time'])}',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Color(0xFF252525),
                               fontSize: 14,
                             ),

@@ -1,6 +1,6 @@
 // customerLogout.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -41,8 +41,8 @@ class _SettingsPageState extends State<SettingsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 20),
-            Container(
+            const SizedBox(height: 20),
+            SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async {
@@ -57,12 +57,12 @@ class _SettingsPageState extends State<SettingsPage> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
-                  padding: EdgeInsets.symmetric(vertical: 12),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: Text(
+                child: const Text(
                   'Orders/Circulars',
                   style: TextStyle(
                     fontSize: 16,
@@ -72,9 +72,9 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             // FAQs Button
-            Container(
+            SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async {
@@ -89,12 +89,12 @@ class _SettingsPageState extends State<SettingsPage> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
-                  padding: EdgeInsets.symmetric(vertical: 12),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: Text(
+                child: const Text(
                   'FAQs',
                   style: TextStyle(
                     fontSize: 16,
@@ -105,8 +105,8 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             // Title
-            SizedBox(height: 20),
-            Container(
+            const SizedBox(height: 20),
+            SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
@@ -114,12 +114,12 @@ class _SettingsPageState extends State<SettingsPage> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.redAccent,
-                  padding: EdgeInsets.symmetric(vertical: 12),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: Text(
+                child: const Text(
                   'Logout',
                   style: TextStyle(
                     fontSize: 16,
@@ -130,7 +130,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             if (isLoggingOut) ...[
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Center(
                 child: Image.asset(
                   'assets/images/Loder.gif',
@@ -139,7 +139,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
             ],
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             GestureDetector(
               onTap: () async {
                 const url = 'https://techvysion.com/SBMG/privacypolicy';
@@ -148,11 +148,11 @@ class _SettingsPageState extends State<SettingsPage> {
                       mode: LaunchMode.externalApplication);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Could not open Privacy Policy.')),
+                    const SnackBar(content: Text('Could not open Privacy Policy.')),
                   );
                 }
               },
-              child: Text(
+              child: const Text(
                 'Privacy Policy',
                 style: TextStyle(
                   fontSize: 14,
@@ -172,8 +172,8 @@ class _SettingsPageState extends State<SettingsPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Logout'),
-        content: Text('Are you sure you want to log out?'),
+        title: const Text('Logout'),
+        content: const Text('Are you sure you want to log out?'),
         actions: [
           TextButton(
             onPressed: () {
@@ -195,7 +195,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 (Route<dynamic> route) => false,
               );
             },
-            child: Text('Logout'),
+            child: const Text('Logout'),
           ),
         ],
       ),
@@ -219,7 +219,7 @@ class _SettingsPageState extends State<SettingsPage> {
       String? token = prefs.getString('id_token');
 
       Map<String, String> headers = {
-        'Authorization': 'Token ${token}',
+        'Authorization': 'Token $token',
         'Content-Type': 'application/json',
       };
 
@@ -227,7 +227,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
       if (response.statusCode == 200) {
         await prefs.clear();
-        await Future.delayed(Duration(seconds: 1));
+        await Future.delayed(const Duration(seconds: 1));
 
         if (context.mounted) {
           Navigator.pushAndRemoveUntil(
@@ -245,7 +245,7 @@ class _SettingsPageState extends State<SettingsPage> {
       if (context.mounted) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Logout failed. Please try again.')),
+          const SnackBar(content: Text('Logout failed. Please try again.')),
         );
       }
     }

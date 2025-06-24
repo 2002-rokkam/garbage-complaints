@@ -1,6 +1,6 @@
 // LanguageSelectionScreen.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Login/PhoneAuthScreen.dart';
 
@@ -24,7 +24,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
 
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => PhoneInputScreen()),
+      MaterialPageRoute(builder: (context) => const PhoneInputScreen()),
     );
   }
 
@@ -53,19 +53,19 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
             Positioned(
               left: screenWidth * 0.22, // Adjust proportionally
               top: screenHeight * 0.42, // Adjust proportionally
-              child: Row(
+              child: const Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.language_sharp,
                     color: Colors.black,
                     size: 26,
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Text.rich(
                     TextSpan(
                       children: [
-                        const TextSpan(
+                        TextSpan(
                           text: 'Pick your ',
                           style: TextStyle(
                             color: Colors.black,
@@ -74,7 +74,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        const TextSpan(
+                        TextSpan(
                           text: 'language',
                           style: TextStyle(
                             color: Color(0xFF5C964A),
@@ -131,14 +131,14 @@ class LanguageButton extends StatelessWidget {
         decoration: ShapeDecoration(
           color: Colors.white,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-          shadows: [
-            const BoxShadow(
+          shadows: const [
+            BoxShadow(
               color: Color(0x14000000),
               blurRadius: 16,
               offset: Offset(0, 8),
               spreadRadius: 0,
             ),
-            const BoxShadow(
+            BoxShadow(
               color: Color(0x0A000000),
               blurRadius: 4,
               offset: Offset(0, 0),

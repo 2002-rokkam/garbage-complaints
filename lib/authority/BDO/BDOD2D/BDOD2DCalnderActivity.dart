@@ -1,6 +1,7 @@
 // authority/BDO/BDOD2D/BDOD2DCalnderActivity.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -109,7 +110,6 @@ class _BDOD2DCalnderActivityScreenState
       } else {
         throw Exception('Failed to load activities');
       }
-    } catch (e) {
     } finally {
       setState(() {
         _isLoading = false;
@@ -178,16 +178,16 @@ class _BDOD2DCalnderActivityScreenState
   @override
   Widget build(BuildContext context) {
     final isBeforeAfterTab = _tabController.index == 0;
-    final localizations = AppLocalizations.of(context)!;
+     final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.section),
-        backgroundColor: Color(0xFF5C964A),
+        backgroundColor: const Color(0xFF5C964A),
         bottom: TabBar(
           controller: _tabController,
           labelColor: Colors.white,
           unselectedLabelColor: Colors.white70,
-          indicatorColor: Color.fromRGBO(255, 210, 98, 1),
+          indicatorColor: const Color.fromRGBO(255, 210, 98, 1),
           indicatorWeight: 3.0,
           tabs: [
             Tab(text: localizations.beforeAfter),
@@ -215,7 +215,7 @@ class _BDOD2DCalnderActivityScreenState
                   : qrCounts[selectedDateKey] ?? 0;
 
               if (count > 0) {
-                Future.delayed(Duration(milliseconds: 300), () {
+                Future.delayed(const Duration(milliseconds: 300), () {
                   if (isBeforeAfterTab) {
                     Navigator.push(
                       context,
@@ -239,7 +239,7 @@ class _BDOD2DCalnderActivityScreenState
                 });
               }
             },
-            calendarStyle: CalendarStyle(
+            calendarStyle: const CalendarStyle(
               selectedDecoration: BoxDecoration(
                 color: Color(0xFF5C964A),
                 shape: BoxShape.circle,
@@ -263,14 +263,14 @@ class _BDOD2DCalnderActivityScreenState
                     child: Container(
                       width: 16,
                       height: 16,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.red,
                         shape: BoxShape.circle,
                       ),
                       child: Center(
                         child: Text(
                           '$count',
-                          style: TextStyle(color: Colors.white, fontSize: 10),
+                          style: const TextStyle(color: Colors.white, fontSize: 10),
                         ),
                       ),
                     ),

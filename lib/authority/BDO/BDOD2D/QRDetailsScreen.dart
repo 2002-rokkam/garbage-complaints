@@ -1,6 +1,6 @@
 // authority/BDO/BDOD2D/QRDetailsScreen.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+ import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class QRDetailsScreen extends StatefulWidget {
@@ -36,9 +36,9 @@ class _QRDetailsScreenState extends State<QRDetailsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(localizations.qrDetails),
-        backgroundColor: Color(0xFF5C964A),
+        backgroundColor: const Color(0xFF5C964A),
       ),
-      backgroundColor: Color.fromRGBO(239, 239, 239, 1),
+      backgroundColor: const Color.fromRGBO(239, 239, 239, 1),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: widget.tripDetails.isEmpty
@@ -52,7 +52,7 @@ class _QRDetailsScreenState extends State<QRDetailsScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    margin: EdgeInsets.only(bottom: 16),
+                    margin: const EdgeInsets.only(bottom: 16),
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
@@ -60,12 +60,12 @@ class _QRDetailsScreenState extends State<QRDetailsScreen> {
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.location_on, color: Colors.green),
-                              SizedBox(width: 8),
+                              const Icon(Icons.location_on, color: Colors.green),
+                              const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
                                   '${localizations.qrScannedData} ${trip['QRAddress']}',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: Colors.black,
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -74,14 +74,14 @@ class _QRDetailsScreenState extends State<QRDetailsScreen> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 12),
+                          const SizedBox(height: 12),
                           Row(
                             children: [
-                              Icon(Icons.calendar_today, color: Colors.grey),
-                              SizedBox(width: 8),
+                              const Icon(Icons.calendar_today, color: Colors.grey),
+                              const SizedBox(width: 8),
                               Text(
                                 '${trip['date_time']}',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.black87,
                                   fontSize: 14,
                                 ),

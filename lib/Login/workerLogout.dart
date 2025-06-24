@@ -1,6 +1,6 @@
 // Login/workerLogout.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart'; // Import url_launcher package
@@ -39,9 +39,9 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
       appBar: AppBar(
         title: Text(
           localizations.settings, // Localized 'Settings'
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white),
         ),
-        backgroundColor: Color(0xFF5C964A),
+        backgroundColor: const Color(0xFF5C964A),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -55,8 +55,8 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 20),
-            Container(
+            const SizedBox(height: 20),
+            SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async {
@@ -71,14 +71,14 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
-                  padding: EdgeInsets.symmetric(vertical: 12),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
                 child: Text(
                   localizations.ordersCirculars, // Localized 'Orders/Circulars'
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -86,9 +86,9 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             // FAQs Button
-            Container(
+            SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async {
@@ -103,14 +103,14 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
-                  padding: EdgeInsets.symmetric(vertical: 12),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
                 child: Text(
                   localizations.faqs, // Localized 'FAQs'
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -119,9 +119,9 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
               ),
             ),
             // Title
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             // Wide Logout Button
-            Container(
+            SizedBox(
               width: double.infinity, // Makes the button take the full width
               child: ElevatedButton(
                 onPressed: () {
@@ -130,14 +130,14 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.redAccent,
-                  padding: EdgeInsets.symmetric(vertical: 12),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
                 child: Text(
                   localizations.logout, // Localized 'Logout'
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -146,7 +146,7 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
               ),
             ),
             if (isLoggingOut) ...[
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Center(
                 child: Image.asset(
                   'assets/images/Loder.gif',
@@ -155,7 +155,7 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
                 ),
               ), // Show a loading indicator when logging out
             ],
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             // Privacy Policy Button
             TextButton(
               onPressed: () async {
@@ -169,14 +169,14 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
               },
               child: Text(
                 localizations.privacyPolicy, // Localized 'Privacy Policy'
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   color: Colors.blueAccent,
                   decoration: TextDecoration.underline,
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
           ],
         ),
       ),
@@ -261,7 +261,6 @@ class _WorkerSettingsPageState extends State<WorkerSettingsPage> {
       } else {
         throw Exception('Failed to log out');
       }
-    } catch (e) {
     } finally {
       setState(() {
         isLoggingOut = false;

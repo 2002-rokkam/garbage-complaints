@@ -1,6 +1,6 @@
 // WokersScreen/RRC/RRCSectionScreen.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../WorkerCommon/BeforeAfterContainer.dart';
@@ -81,7 +81,6 @@ class _RRCScreenState extends State<RRCScreen>
               .toList();
         });
       } else {}
-    } catch (e) {
     } finally {
       setState(() {
         isLoading = false;
@@ -114,17 +113,17 @@ class _RRCScreenState extends State<RRCScreen>
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     return Scaffold(
-      backgroundColor: Color.fromRGBO(239, 239, 239, 1),
+      backgroundColor: const Color.fromRGBO(239, 239, 239, 1),
       appBar: AppBar(
-        backgroundColor: Color(0xFF5C964A),
+        backgroundColor: const Color(0xFF5C964A),
         centerTitle: false, // Don't center the title
         title: Row(
           mainAxisAlignment:
               MainAxisAlignment.center, // Center title in the row
           children: [
             Text(
-              '${widget.section}',
-              style: TextStyle(
+              widget.section,
+              style: const TextStyle(
                 fontSize: 20,
                 color: Colors.white,
               ),
@@ -132,7 +131,7 @@ class _RRCScreenState extends State<RRCScreen>
           ],
         ),
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back,
             color: Colors.white, // Make back button white
           ),
@@ -142,7 +141,7 @@ class _RRCScreenState extends State<RRCScreen>
         ),
         actions: [
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.calendar_today,
               color: Colors.white, // Make calendar icon white
             ),
@@ -154,10 +153,10 @@ class _RRCScreenState extends State<RRCScreen>
           labelColor: Colors.white, // Set label color to white
           unselectedLabelColor:
               Colors.white, // Unselected tabs will also be white
-          indicatorColor: Color.fromRGBO(
+          indicatorColor: const Color.fromRGBO(
               255, 210, 98, 1), // The selected tab underline color
           indicatorWeight: 3.0,
-          tabs: [
+          tabs: const [
             Tab(text: 'Before After'),
             Tab(text: 'Trip Details'),
           ],
@@ -176,7 +175,7 @@ class _RRCScreenState extends State<RRCScreen>
               children: [
                 // Tab 1: Before After Containers
                 SingleChildScrollView(
-                  padding: EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
                   child: Column(
                     children: beforeAfterContainers.isNotEmpty
                         ? beforeAfterContainers
@@ -190,7 +189,7 @@ class _RRCScreenState extends State<RRCScreen>
                 ),
                 // Tab 2: Trip Details (Static or Empty)
                 SingleChildScrollView(
-                  padding: EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
                   child: Column(
                     children: [
                       TripDetailCard(),
@@ -202,18 +201,18 @@ class _RRCScreenState extends State<RRCScreen>
       floatingActionButton: _tabController.index == 0
           ? FloatingActionButton.extended(
               onPressed: addNewContainer,
-              backgroundColor: Color(0xFFFFD262),
+              backgroundColor: const Color(0xFFFFD262),
               label: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.add,
                     size: 24,
                     color: Color(0xFF252525),
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   Text(
                     localizations.addMore,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Color(0xFF252525),
                       fontSize: 14,
                       fontFamily: 'Nunito Sans',

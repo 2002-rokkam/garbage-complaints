@@ -1,6 +1,6 @@
 // Login/AuthorityLoginScreen.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,6 +12,8 @@ import '../authority/VDO/VDOScreen.dart';
 import 'PhoneAuthScreen.dart';
 
 class AuthorityLoginScreen extends StatefulWidget {
+  const AuthorityLoginScreen({super.key});
+
   @override
   _AuthorityLoginScreenState createState() => _AuthorityLoginScreenState();
 }
@@ -70,7 +72,7 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
           await prefs.setString('Bdo', user['gp']);
 
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Login successful!')),
+            const SnackBar(content: Text('Login successful!')),
           );
 
           if (user['Position'] == 'Worker') {
@@ -122,12 +124,12 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
           }
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Please try again')),
+            const SnackBar(content: Text('Please try again')),
           );
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Invalid credentials Please try again')),
+          const SnackBar(content: Text('Invalid credentials Please try again')),
         );
       }
     } catch (e) {
@@ -145,7 +147,7 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     return Scaffold(
-      backgroundColor: Color(0xFFEFEFEF),
+      backgroundColor: const Color(0xFFEFEFEF),
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
@@ -156,20 +158,20 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
                 children: [
                   Text(
                     localizations.login,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.black,
                       fontSize: 32,
                       fontFamily: 'Nunito Sans',
                       fontWeight: FontWeight.w800,
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Text.rich(
                     TextSpan(
                       children: [
                         TextSpan(
                           text: localizations.emailAddress,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Color(0xFF5C964A),
                             fontSize: 20,
                             fontFamily: 'Nunito Sans',
@@ -179,7 +181,7 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Text(
                     localizations.info_not_shared,
                     textAlign: TextAlign.center,
@@ -190,13 +192,13 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
                       fontWeight: FontWeight.w400,
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   _buildInputField(
                       localizations.email, _emailController, false),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   _buildInputField(
                       localizations.password, _passwordController, true),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   _isLoading
                       ? Center(
                           child: Image.asset(
@@ -208,34 +210,34 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
                       : ElevatedButton(
                           onPressed: _submitLogin,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF5C964A),
-                            minimumSize: Size(370, 50),
+                            backgroundColor: const Color(0xFF5C964A),
+                            minimumSize: const Size(370, 50),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(100),
                             ),
                           ),
                           child: Text(
                             localizations.submit,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   GestureDetector(
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              PhoneInputScreen(), // Replace with your CitizenLoginScreen
+                              const PhoneInputScreen(), // Replace with your CitizenLoginScreen
                         ),
                       );
                     },
                     child: Text(
                       localizations.login_citizen,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Color(0xFF5C964A),
                         fontSize: 16,
                         fontFamily: 'Roboto',
@@ -260,14 +262,14 @@ class _AuthorityLoginScreenState extends State<AuthorityLoginScreen> {
       children: [
         Text(
           label,
-          style: TextStyle(
+          style: const TextStyle(
             color: Color(0xFF252525),
             fontSize: 16,
             fontFamily: 'Nunito Sans',
             fontWeight: FontWeight.w400,
           ),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         TextFormField(
           controller: controller,
           obscureText: obscureText,

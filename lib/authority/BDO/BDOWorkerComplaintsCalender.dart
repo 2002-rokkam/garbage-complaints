@@ -1,6 +1,6 @@
 // authority/BDO/BDOWorkerComplaintsCalender.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'dart:async';
 import 'package:table_calendar/table_calendar.dart';
 import 'dart:convert';
@@ -9,6 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'BDOWorkerComplaintsListScreenCalender.dart';
 
 class BDOWorkerComplaintsCalender extends StatefulWidget {
+  const BDOWorkerComplaintsCalender({super.key});
+
   @override
   _BDOWorkerComplaintsCalenderState createState() =>
       _BDOWorkerComplaintsCalenderState();
@@ -68,7 +70,6 @@ class _BDOWorkerComplaintsCalenderState
       } else {
         throw Exception('Failed to load complaints');
       }
-    } catch (e) {
     } finally {
       setState(() {
         _isLoading = false;
@@ -117,16 +118,16 @@ class _BDOWorkerComplaintsCalenderState
       appBar: AppBar(
         title: Text(
           localizations.complaints,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Color(0xFF5C964A),
+        backgroundColor: const Color(0xFF5C964A),
         toolbarHeight: 80.0,
       ),
-      backgroundColor: Color.fromRGBO(239, 239, 239, 1),
+      backgroundColor: const Color.fromRGBO(239, 239, 239, 1),
       body: Column(
         children: [
           TableCalendar(
@@ -140,7 +141,7 @@ class _BDOWorkerComplaintsCalenderState
                 _selectedDay = selectedDay;
               });
             },
-            calendarStyle: CalendarStyle(
+            calendarStyle: const CalendarStyle(
               selectedDecoration: BoxDecoration(
                 color: Color(0xFF5C964A),
                 shape: BoxShape.circle,
@@ -161,14 +162,14 @@ class _BDOWorkerComplaintsCalenderState
                     child: Container(
                       width: 16,
                       height: 16,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.red,
                         shape: BoxShape.circle,
                       ),
                       child: Center(
                         child: Text(
                           '$count',
-                          style: TextStyle(color: Colors.white, fontSize: 10),
+                          style: const TextStyle(color: Colors.white, fontSize: 10),
                         ),
                       ),
                     ),
@@ -178,27 +179,27 @@ class _BDOWorkerComplaintsCalenderState
               },
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           complaintCount > 0
               ? Card(
                   elevation: 5,
-                  margin: EdgeInsets.symmetric(horizontal: 16),
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: ListTile(
-                    contentPadding: EdgeInsets.all(16),
+                    contentPadding: const EdgeInsets.all(16),
                     title: Text(
                         '${localizations.totalComplaints}: $complaintCount'),
                     trailing: ElevatedButton(
                       onPressed: _onViewPressed,
-                      child: Text(localizations.view),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF5C964A),
+                        backgroundColor: const Color(0xFF5C964A),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
+                      child: Text(localizations.view),
                     ),
                   ),
                 )
@@ -206,7 +207,7 @@ class _BDOWorkerComplaintsCalenderState
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
                     localizations.noComplaints,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
         ],

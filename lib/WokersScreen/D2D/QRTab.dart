@@ -1,6 +1,6 @@
 // WokersScreen/D2D/QRTab.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -168,7 +168,7 @@ class _QRTabState extends State<QRTab> {
         child: Container(
           width: 205.03,
           height: 159.17,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment(0.0, 1.00),
               end: Alignment(0, -1),

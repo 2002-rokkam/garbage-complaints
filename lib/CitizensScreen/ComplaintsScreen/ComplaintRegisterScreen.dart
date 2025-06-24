@@ -1,10 +1,12 @@
 // CitizensScreen/ComplaintsScreen/ComplaintRegisterScreen.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../CitizensScreen.dart';
 
 class ComplaintRegisterScreen extends StatefulWidget {
+  const ComplaintRegisterScreen({super.key});
+
   @override
   _ComplaintRegisterScreenState createState() =>
       _ComplaintRegisterScreenState();
@@ -36,7 +38,7 @@ class _ComplaintRegisterScreenState extends State<ComplaintRegisterScreen> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Color(0xFFEFEFEF),
         ),
         child: Stack(
@@ -48,7 +50,7 @@ class _ComplaintRegisterScreenState extends State<ComplaintRegisterScreen> {
               child: Container(
                 width: screenWidth,
                 height: screenHeight * 0.2, // 20% of screen height
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Color(0xFF5C964A),
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(24),
@@ -76,11 +78,11 @@ class _ComplaintRegisterScreenState extends State<ComplaintRegisterScreen> {
                         Navigator.pop(context);
                       },
                     ),
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
                     Expanded(
                       child: Text(
                         localizations.complaints,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Color(0xFFF5EFF7),
                           fontSize: 22,
                           fontFamily: 'Roboto',
@@ -99,7 +101,7 @@ class _ComplaintRegisterScreenState extends State<ComplaintRegisterScreen> {
               child: Container(
                 width: screenWidth,
                 height: screenHeight * 0.35, // 35% of screen height
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage('assets/images/successScreen.png'),
                     fit: BoxFit.fill,
@@ -114,10 +116,10 @@ class _ComplaintRegisterScreenState extends State<ComplaintRegisterScreen> {
               child: Container(
                 width: 62,
                 height: 62,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.transparent,
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.verified_rounded,
                   color: Colors.green,
                   size: 80,
@@ -149,7 +151,7 @@ class _ComplaintRegisterScreenState extends State<ComplaintRegisterScreen> {
               child: Container(
                 width: screenWidth,
                 height: 24,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.white,
                 ),
                 child: Center(
@@ -157,7 +159,7 @@ class _ComplaintRegisterScreenState extends State<ComplaintRegisterScreen> {
                     width: 108,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: Color(0xFF1D1B20),
+                      color: const Color(0xFF1D1B20),
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
@@ -179,7 +181,7 @@ class _ComplaintRegisterScreenState extends State<ComplaintRegisterScreen> {
                   width: 80,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: Color(0xFF5C964A),
+                    color: const Color(0xFF5C964A),
                     borderRadius: BorderRadius.circular(20),
                     shape: BoxShape.rectangle,
                   ),
@@ -187,7 +189,7 @@ class _ComplaintRegisterScreenState extends State<ComplaintRegisterScreen> {
                     child: Text(
                       localizations.back,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                         fontFamily: 'Roboto',

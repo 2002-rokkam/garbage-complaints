@@ -1,6 +1,6 @@
 // commonActvityCalnder.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_2/l10n/generated/app_localizations.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class ActivityCalendar extends StatefulWidget {
@@ -62,7 +62,7 @@ class _ActivityCalendarState extends State<ActivityCalendar> {
             });
             widget.onDateSelected(selectedDay);
           },
-          calendarStyle: CalendarStyle(
+          calendarStyle: const CalendarStyle(
             selectedDecoration: BoxDecoration(
               color: Color(0xFF5C964A),
               shape: BoxShape.circle,
@@ -84,14 +84,14 @@ class _ActivityCalendarState extends State<ActivityCalendar> {
                   child: Container(
                     width: 16,
                     height: 16,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.red,
                       shape: BoxShape.circle,
                     ),
                     child: Center(
                       child: Text(
                         '$count',
-                        style: TextStyle(color: Colors.white, fontSize: 10),
+                        style: const TextStyle(color: Colors.white, fontSize: 10),
                       ),
                     ),
                   ),
@@ -103,8 +103,8 @@ class _ActivityCalendarState extends State<ActivityCalendar> {
         ),
         selectedActivities.isNotEmpty
             ? Container()
-            : Padding(
-                padding: const EdgeInsets.all(16.0),
+            : const Padding(
+                padding: EdgeInsets.all(16.0),
                 child: Text(
                   'No activities for selected date.',
                   style: TextStyle(
